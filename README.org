@@ -216,7 +216,7 @@ When you can't remember all keybindings
 	   ("C-c M-x" . consult-mode-command)
 	   ("C-c h" . consult-history)
 	   ("C-c k" . consult-kmacro)
-	   ("C-c m" . consult-man)
+	   ;; ("C-c m" . consult-man)
 	   ("C-c i" . consult-info)
 	   ([remap Info-search] . consult-info)
 	   ;; C-x bindings in `ctl-x-map'
@@ -561,6 +561,7 @@ Prettify org mode
   (use-package mu4e
     :defer 20
     :straight '(mu4e :load-path  "/usr/local/share/emacs/site-lisp/mu4e/*.el")
+    :bind (("C-c m" . mu4e))
     :config
 
     (setq mu4e-get-mail-command "mbsync -a")
@@ -646,5 +647,31 @@ Prettify org mode
 		 '("org-contact-add" . mu4e-action-add-org-contact) t)
     (add-to-list 'mu4e-view-actions
 		 '("org-contact-add" . mu4e-action-add-org-contact) t))
-  )
+#+end_src
+* Version control
+#+begin_src emacs-lisp
+  (use-package magit
+    :ensure t
+    :bind (("C-x g" . magit-status)
+	   ("C-x C-g" . magit-status)))
+
+  (use-package git-gutter
+    :init
+    (global-git-gutter-mode 1)
+    :config
+    (setq git-gutter:update-interval 0.02))
+
+  (use-package git-gutter-fringe
+    :config
+    (define-fringe-bitmap 'git-gutter-fr:added [224] nil nil '(center repeated))
+    (define-fringe-bitmap 'git-gutter-fr:modified [224] nil nil '(center repeated))
+    (define-fringe-bitmap 'git-gutter-fr:deleted [128 192 224 240] nil nil 'bottom))
+  #+end_src
+
+* Programming
+#+begin_src emacs-lisp
+(use-package flycheck
+  :ensure t
+  :init (global-flycheck-mode))
+
 #+end_src

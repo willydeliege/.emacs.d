@@ -669,9 +669,37 @@ Prettify org mode
   #+end_src
 
 * Programming
+** Error checking
 #+begin_src emacs-lisp
 (use-package flycheck
   :ensure t
   :init (global-flycheck-mode))
+
+#+end_src
+** Java + Lsp
+#+begin_src emacs-lisp
+  (use-package lsp-java :ensure t)
+  (use-package lsp-mode
+    :ensure t
+    :bind-keymap ("C-c l" . lsp-command-map)
+    :init
+    ;; set prefix for lsp-command-keymap (few alternatives - "C-l", "C-c l")
+    :hook (;; replace XXX-mode with concrete major-mode(e. g. python-mode)
+	   (java-mode . lsp)
+	   ;; if you want which-key integration
+    :config (setq lsp-enable-which-key-integration 1)
+    :commands lsp)
+
+  ;; optionally
+  (use-package lsp-ui :ensure t :commands lsp-ui-mode)
+  (use-package lsp-treemacs :ensure t :commands lsp-treemacs-errors-list)
+
+  ;; optionally if you want to use debugger
+  (use-package  dap-mode :ensure t)
+  (use-package dap-java
+    :straight
+    (:type built-in)
+    :ensure t) ;;to load the dap adapter for your language
+
 
 #+end_src

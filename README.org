@@ -87,6 +87,8 @@ and use straight by default
   (recentf-mode 1)
   (setq recentf-max-menu-items 25)
   (setq recentf-max-saved-items 25)
+  (setq display-line-numbers-type 'relative) 
+  (global-display-line-numbers-mode)
 #+end_src
 ** Help
  Better help buffer
@@ -434,7 +436,6 @@ When you can't remember all keybindings
     (setq company-idle-delay 0.3))
   ;; prettify completion styles
   (use-package company-box
-    
     :hook (company-mode . company-box-mode))
 #+end_src
 ** Snippets

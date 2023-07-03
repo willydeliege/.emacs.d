@@ -743,7 +743,7 @@ Prettify org mode
 * Mails
 #+begin_src emacs-lisp
   (use-package mu4e
-    :defer 20
+    :defer 5
     :straight '(mu4e :load-path  "/usr/local/share/emacs/site-lisp/mu4e/*.el")
     :bind (("C-c m" . mu4e))
     :config

@@ -227,11 +227,20 @@ When you can't remember all keybindings
   (use-package anzu
     :init
     (global-anzu-mode +1))
-  (use-package evil-nzu :demand t)
+  (use-package evil-anzu :demand t)
 #+end_src
 
 #+RESULTS:
 
+** evil org mode
+#+begin_src emacs-lisp
+(use-package evil-org
+  :after org
+  :hook (org-mode . (lambda () evil-org-mode))
+  :config
+  (require 'evil-org-agenda)
+  (evil-org-agenda-set-keys))
+#+end_src
 * Completion
 ** Vertico + Marginalia
 #+begin_src emacs-lisp

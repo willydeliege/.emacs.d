@@ -77,6 +77,20 @@ and use straight by default
   (setq recentf-max-menu-items 25)
   (setq recentf-max-saved-items 25)
 #+end_src
+** Help
+ Better help buffer
+ #+begin_src emacs-lisp
+      (use-package helpful
+      :config
+   ;; Note that the built-in `describe-function' includes both functions
+;; and macros. `helpful-function' is functions only, so we provide
+;; `helpful-callable' as a drop-in replacement.
+(global-set-key (kbd "C-h f") #'helpful-callable)
+
+(global-set-key (kbd "C-h v") #'helpful-variable)
+(global-set-key (kbd "C-h k") #'helpful-key)
+(global-set-key (kbd "C-h x") #'helpful-command))
+ #+end_src
 * Personal information
 #+begin_src emacs-lisp 
   (setq user-full-name "Frédéric Willem"

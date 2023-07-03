@@ -38,10 +38,10 @@ Using [[https://github.com/radian-software/straight.el#getting-started][straight
 ** Using straight properly with initiating in early-init.el
 This will prevent to use package.el
 #+begin_src emacs-lisp :tangle early-init.el
-    ;;; early-init.el --- Emacs early init file
-    ;;; Commentary:
+      ;;; early-init.el --- Emacs early init file
+      ;;; Commentary:
   ;; Code to run before init.el is loaded.
-    ;;; Code:
+      ;;; Code:
 
   ;; Disable package.el
   (setq package-enable-at-startup nil)
@@ -51,9 +51,10 @@ This will prevent to use package.el
   ;;disable splash screen and startup message
   (setq inhibit-startup-message t) 
   (setq initial-scratch-message nil)
-
+  ;; trust the themes
+  (setq custom-safe-themes t)
   (provide 'early-init)
-	;;; early-init.el ends here
+	  ;;; early-init.el ends here
 #+end_src
 ** USE-PACKAGE
 We will use use-package

@@ -756,10 +756,10 @@ Prettify org mode
     (gnus-icalendar-org-setup)
     (setq +org-capture-emails-file "Inbox.org")
     (setq sendmail-program (executable-find "msmtp")
-	  send-mail-function #'smtpmail-send-it
-	  message-sendmail-f-is-evil t
-	  message-sendmail-extra-arguments '("--read-envelope-from")
-	  message-send-mail-function #'message-send-mail-with-sendmail)
+          send-mail-function #'smtpmail-send-it
+          message-sendmail-f-is-evil t
+          message-sendmail-extra-arguments '("--read-envelope-from")
+          message-send-mail-function #'message-send-mail-with-sendmail)
     ;; set a more visible mu4e view (with dark-mode enabled)
     (setq shr-color-visible-luminance-min 60)
     ;; use imagemagick, if available
@@ -786,19 +786,19 @@ Prettify org mode
     (setq mu4e-sent-folder   "/[Gmail]/Sent Mail")
     (setq mu4e-trash-folder  "/[Gmail]/Trash")
     (setq mu4e-maildir-shortcuts
-	  '( (:maildir "/INBOX" :key ?i)
-	     (:maildir "/[Gmail]/Sent Mail"  :key ?S)
-	     (:maildir "/[Gmail]/Trash" :key ?t)
-	     (:maildir "/[Gmail]/Starred" :key ?s)))
+          '( (:maildir "/INBOX" :key ?i)
+             (:maildir "/[Gmail]/Sent Mail"  :key ?S)
+             (:maildir "/[Gmail]/Trash" :key ?t)
+             (:maildir "/[Gmail]/Starred" :key ?s)))
 
     (add-to-list 'org-capture-templates
-		 '("m" "Email Workflow"))
+                 '("m" "Email Workflow"))
     (add-to-list 'org-capture-templates
-		 '("mf" "Follow Up" entry (file+olp "~/org/Inbox.org" "Follow Up")
-		   "* TODO Follow up with %:fromname on %a\nSCHEDULED:%t\nDEADLINE: %(org-insert-time-stamp (org-read-date nil t \"+2d\"))\n\n%i" :immediate-finish t))
+                 '("mf" "Follow Up" entry (file+olp "~/org/Inbox.org" "Follow Up")
+                   "* TODO Follow up with %:fromname on %a\nSCHEDULED:%t\nDEADLINE: %(org-insert-time-stamp (org-read-date nil t \"+2d\"))\n\n%i" :immediate-finish t))
     (add-to-list 'org-capture-templates
-		 '("mr" "Read Later" entry (file+olp "~/org/Inbox.org" "Read Later")
-		   "* TODO Read %:subject\nSCHEDULED:%t\nDEADLINE: %(org-insert-time-stamp (org-read-date nil t \"+2d\"))\n\n%a\n\n%i" :immediate-finish t))
+                 '("mr" "Read Later" entry (file+olp "~/org/Inbox.org" "Read Later")
+                   "* TODO Read %:subject\nSCHEDULED:%t\nDEADLINE: %(org-insert-time-stamp (org-read-date nil t \"+2d\"))\n\n%a\n\n%i" :immediate-finish t))
 
     (defun my/capture-mail-follow-up (msg)
       (interactive)
@@ -812,34 +812,51 @@ Prettify org mode
 
     ;; Add custom actions for our capture templates
     (add-to-list 'mu4e-headers-actions
-		 '("follow up" . my/capture-mail-follow-up) t)
+                 '("follow up" . my/capture-mail-follow-up) t)
     (add-to-list 'mu4e-view-actions
-		 '("follow up" . my/capture-mail-follow-up) t)
+                 '("follow up" . my/capture-mail-follow-up) t)
     (add-to-list 'mu4e-headers-actions
-		 '("read later" . my/capture-mail-read-later) t)
+                 '("read later" . my/capture-mail-read-later) t)
     (add-to-list 'mu4e-view-actions
-		 '("read later" . my/capture-mail-read-later) t)
-    (setq org-msg-signature "\n\nRegards,\n\n\n--\n\n*Frédéric Willem*\n\n/Tel: +32 456 64 00 02/\n")
-    (autoload 'bbdb-insinuate-mu4e "bbdb-mu4e")
-    (bbdb-initialize 'message 'mu4e)
+                 '("read later" . my/capture-mail-read-later) t)
 
-    (setq bbdb-mail-user-agent 'mu4e-user-agent)
-    (setq mu4e-view-rendered-hook 'bbdb-mua-auto-update)
-    (setq mu4e-compose-complete-addresses nil)
-    (setq bbdb-mua-pop-up t)
-    (setq bbdb-mua-pop-up-window-size 5)
     (setq mu4e-org-contacts-file "/home/willefi/org/contacts.org")
     (add-to-list 'mu4e-headers-actions
-		 '("org-contact-add" . mu4e-action-add-org-contact) t)
+                 '("org-contact-add" . mu4e-action-add-org-contact) t)
     (add-to-list 'mu4e-view-actions
-		 '("org-contact-add" . mu4e-action-add-org-contact) t))
+                 '("org-contact-add" . mu4e-action-add-org-contact) t))
 #+end_src
+** Org message
+#+begin_src emacs-lisp
+  (use-package org-msg
+    :config
+    (setq mail-user-agent 'mu4e-user-agent)
+    (setq org-msg-options "html-postamble:nil H:5 num:nil ^:{} toc:nil author:nil email:nil \\n:t"
+          org-msg-startup "hidestars indent inlineimages"
+          org-msg-greeting-fmt "\nHi%s,\n\n"
+          org-msg-recipient-names '(("frederic.willem@gmail.com" . "Frédéric"))
+          org-msg-greeting-name-limit 3
+          org-msg-default-alternatives '((new		. (text html))
+                                         (reply-to-html	. (text html))
+                                         (reply-to-text	. (text)))
+          org-msg-convert-citation t )
+    (setq org-msg-signature "\n\nRegards,\n\n\n--\n\n*Frédéric Willem*\n\n/Tel: +32 456 64 00 02/\n")
+    (org-msg-mode))
+
+#+end_src
+** org contacts
+#+begin_src emacs-lisp
+  (use-package org-contacts
+    :custom
+    (org-contacts-files '("~/org/contacts.org"))
+    :after org-msg)
+#+end_src
+
 * Version control
 #+begin_src emacs-lisp
   (use-package magit
     
-    :bind (("C-x g" . magit-status)
-	   ("C-x C-g" . magit-status)))
+    :bind (("C-x g" . magit-status)))
 
   (use-package git-gutter
     :init

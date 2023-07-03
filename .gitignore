@@ -1,0 +1,10 @@
+#README.org#
+early-init.el
+eln-cache/
+history
+init.el
+org-roam.db
+places
+projectile-bookmarks.eld
+recentf
+straight

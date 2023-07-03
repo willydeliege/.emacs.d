@@ -49,7 +49,7 @@ This will prevent to use package.el
   (add-to-list 'default-frame-alist '(fullscreen . maximized))
   (setq warning-minimum-level :emergency)
   ;;disable splash screen and startup message
-  (setq inhibit-startup-message t) 
+  (setq inhibit-startup-message t)
   (setq initial-scratch-message nil)
   ;; trust the themes
   (setq custom-safe-themes t)
@@ -79,7 +79,7 @@ and use straight by default
 * Defaults
 #+begin_src emacs-lisp
   ;; Save the last place edited in files
-  (save-place-mode 1) 
+  (save-place-mode 1)
   (setq save-place-file (locate-user-emacs-file "places" ".emacs-places"))
   (setq save-place-forget-unreadable-files nil)
   (menu-bar-mode -1)
@@ -87,7 +87,7 @@ and use straight by default
   (recentf-mode 1)
   (setq recentf-max-menu-items 25)
   (setq recentf-max-saved-items 25)
-  (setq display-line-numbers-type 'relative) 
+  (setq display-line-numbers-type 'relative)
   (global-display-line-numbers-mode)
 #+end_src
 ** Help
@@ -105,7 +105,7 @@ and use straight by default
 (global-set-key (kbd "C-h x") #'helpful-command))
  #+end_src
 * Personal information
-#+begin_src emacs-lisp 
+#+begin_src emacs-lisp
   (setq user-full-name "Frédéric Willem"
 	user-mail-address "frederic.willem@gmail.com")
 #+end_src
@@ -113,7 +113,7 @@ and use straight by default
 ** Theme
 #+begin_src emacs-lisp
   (use-package modus-themes
-    
+
     :config
     ;; Add all your customizations prior to loading the themes
   (setq modus-themes-italic-constructs t
@@ -173,7 +173,7 @@ and use straight by default
 *** Doom-modeline
 #+begin_src emacs-lisp
   (use-package doom-modeline
-    
+
     :hook (after-init . doom-modeline-mode))
 #+end_src
 * Editing
@@ -203,7 +203,7 @@ When you can't remember all keybindings
 #+begin_src emacs-lisp
   (use-package which-key
     :after evil
-    
+
     :hook (after-init . which-key-mode)
     :custom
     (which-key-allow-evil-operators t)
@@ -214,14 +214,14 @@ When you can't remember all keybindings
 ** Smartparens
 #+begin_src emacs-lisp
   (use-package smartparens
-    
+
     :init
     (smartparens-global-mode 1))
 #+end_src
 ** Evil commentary
 #+begin_src emacs-lisp
   (use-package evil-commentary
-    
+
     :init
     (evil-commentary-mode))
 #+end_src
@@ -248,7 +248,7 @@ When you can't remember all keybindings
 ** Vertico + Marginalia
 #+begin_src emacs-lisp
   (use-package vertico
-    
+
     :bind (:map vertico-map
 		("C-j" . vertico-next)
 		("C-k" . vertico-previous)
@@ -266,7 +266,7 @@ When you can't remember all keybindings
 
   (use-package marginalia
     :after vertico
-    
+
     :custom
     (marginalia-annotators '(marginalia-annotators-heavy marginalia-annotators-light nil))
     :init
@@ -467,7 +467,7 @@ When you can't remember all keybindings
     :after yasnippet)
   (use-package doom-snippets
     :after yasnippet
-    :straight (doom-snippets :type git :host github :repo "doomemacs/snippets" :files ("*.el" "*"))) 
+    :straight (doom-snippets :type git :host github :repo "doomemacs/snippets" :files ("*.el" "*")))
 #+end_src
 
 * Projectile
@@ -505,7 +505,7 @@ When you can't remember all keybindings
     :bind (("C-c a" . org-agenda))
   :hook ((org-mode . org-indent-mode))
     :config
-    (setq org-agenda-files '("~/org/")) 
+    (setq org-agenda-files '("~/org/"))
     (setq org-stuck-projects '("+Project/PROJ" ("NEXT" "WAIT") nil ""))
     (setq org-todo-keywords
           '((sequence
@@ -583,7 +583,7 @@ When you can't remember all keybindings
 ** Org auto tangle
 #+begin_src emacs-lisp
   (use-package org-auto-tangle
-    
+
     :hook (org-mode . org-auto-tangle-mode))
 #+end_src
 ** Org modern
@@ -855,7 +855,7 @@ Prettify org mode
 * Version control
 #+begin_src emacs-lisp
   (use-package magit
-    
+
     :bind (("C-x g" . magit-status)))
 
   (use-package git-gutter
@@ -875,7 +875,7 @@ Prettify org mode
 ** Error checking
 #+begin_src emacs-lisp
 (use-package flycheck
-  
+
   :init (global-flycheck-mode))
 
 #+end_src
@@ -883,7 +883,7 @@ Prettify org mode
 #+begin_src emacs-lisp
   (use-package lsp-java )
   (use-package lsp-mode
-    
+
     :bind-keymap ("C-c l" . lsp-command-map)
     :init
     ;; set prefix for lsp-command-keymap (few alternatives - "C-l", "C-c l")

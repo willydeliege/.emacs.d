@@ -216,10 +216,16 @@ When you can't remember all keybindings
     :config
     (global-evil-surround-mode 1))
 #+end_src
+* Jump
+#+begin_src emacs-lisp
+  (use-package avy
+    :demand t
+    :config
+    (global-set-key (kbd "C-c <SPC>") 'avy-goto-char-2))
+#+end_src
 ** Evil commentary
 #+begin_src emacs-lisp
   (use-package evil-commentary
-
     :init
     (evil-commentary-mode))
 #+end_src

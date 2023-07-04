@@ -741,6 +741,7 @@ Prettify org mode
     :straight '(mu4e :load-path  "/usr/local/share/emacs/site-lisp/mu4e/*.el")
     :bind (("<f5>" . mu4e))
     :config
+    (setq mu4e-confirm-quit nil)
     (setq mu4e-get-mail-command "mbsync -a")
     (require 'mu4e-icalendar)
     (mu4e-icalendar-setup)

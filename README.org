@@ -476,20 +476,12 @@ When you can't remember all keybindings
 * Perspective
 #+begin_src emacs-lisp
   (use-package perspective
-    :after consult
-    :demand t
     :hook (after-init . persp-mode)
     :bind
     ("C-x C-b" . persp-list-buffers)         ; or use a nicer switcher, see below
     :custom
-    (persp-mode-prefix-key (kbd "C-c M-p"))  ; pick your own prefix key here
-    :init
-    (consult-customize consult--source-buffer :hidden t :default nil)
-    (add-to-list 'consult-buffer-sources persp-consult-source))
+    (persp-mode-prefix-key (kbd "C-c M-p")))  ; pick your own prefix key here
 #+end_src
-
-#+RESULTS:
-: persp-list-buffers
 
 * Org mode
 #+begin_src emacs-lisp

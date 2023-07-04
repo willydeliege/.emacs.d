@@ -209,12 +209,13 @@ When you can't remember all keybindings
 #+begin_src emacs-lisp
   (use-package which-key
     :after evil
-
+    :init
+    (which-key-setup-minibuffer)
     :hook (after-init . which-key-mode)
     :custom
     (which-key-allow-evil-operators t)
     (which-key-use-C-h-commands nil)
-    (which-key-idle-delay 0.4))
+    (which-key-idle-delay 0.2))
 #+end_src
 
 ** Parens

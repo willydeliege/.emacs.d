@@ -400,6 +400,7 @@ When you can't remember all keybindings
 ** Embark
 #+begin_src emacs-lisp
   (use-package embark
+    :demand t ;; needed by eldoc otherwize eldoc error
     :bind
     (("C-h B" . embark-bindings) ;; alternative for `describe-bindings'
      (:map evil-normal-state-map

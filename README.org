@@ -376,7 +376,7 @@ When you can't remember all keybindings
     ;; (setq consult-preview-key '("S-<down>" "S-<up>"))
     ;; For some commands and buffer sources it is useful to configure the
     ;; :preview-key on a per-command basis using the `consult-customize' macro.
-    (consult-customize consult--source-buffer :hidden t :default nil)
+    ;; (consult-customize consult--source-buffer :hidden t :default nil)
     (consult-customize
      consult-theme :preview-key '(:debounce 0.2 any)
      consult-ripgrep consult-git-grep consult-grep

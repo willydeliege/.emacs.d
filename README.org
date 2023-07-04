@@ -175,6 +175,13 @@ Better help buffer
   (use-package doom-modeline
     :hook (after-init . doom-modeline-mode))
 #+end_src
+** Windos
+#+begin_src emacs-lisp
+  (use-package ace-window
+    :bind ("M-o" . ace-window)
+    :custom
+    (aw-dispatch-always t))
+#+end_src
 * Editing
 ** Evil mode
 Usage of evil mode as I used to work with vim binding for years

@@ -206,12 +206,15 @@ When you can't remember all keybindings
     (which-key-idle-delay 0.4))
 #+end_src
 
-** Smartparens
+** Parens
 #+begin_src emacs-lisp
-  (use-package smartparens
-
+  (use-package electric-pair 
+    :straight nil
     :init
-    (smartparens-global-mode 1))
+    (electric-pair-mode 1))
+  (use-package evil-surround
+    :config
+    (global-evil-surround-mode 1))
 #+end_src
 ** Evil commentary
 #+begin_src emacs-lisp

@@ -99,7 +99,6 @@ and use straight by default
 ;; and macros. `helpful-function' is functions only, so we provide
 ;; `helpful-callable' as a drop-in replacement.
 (global-set-key (kbd "C-h f") #'helpful-callable)
-
 (global-set-key (kbd "C-h v") #'helpful-variable)
 (global-set-key (kbd "C-h k") #'helpful-key)
 (global-set-key (kbd "C-h x") #'helpful-command))
@@ -113,7 +112,6 @@ and use straight by default
 ** Theme
 #+begin_src emacs-lisp
   (use-package modus-themes
-
     :config
     ;; Add all your customizations prior to loading the themes
   (setq modus-themes-italic-constructs t
@@ -173,7 +171,6 @@ and use straight by default
 *** Doom-modeline
 #+begin_src emacs-lisp
   (use-package doom-modeline
-
     :hook (after-init . doom-modeline-mode))
 #+end_src
 * Editing
@@ -248,7 +245,6 @@ When you can't remember all keybindings
 ** Vertico + Marginalia
 #+begin_src emacs-lisp
   (use-package vertico
-
     :bind (:map vertico-map
 		("C-j" . vertico-next)
 		("C-k" . vertico-previous)
@@ -266,7 +262,6 @@ When you can't remember all keybindings
 
   (use-package marginalia
     :after vertico
-
     :custom
     (marginalia-annotators '(marginalia-annotators-heavy marginalia-annotators-light nil))
     :init
@@ -420,7 +415,6 @@ When you can't remember all keybindings
 
   ;; Consult users will also want the embark-consult package.
   (use-package embark-consult
-                                          ; only need to install it, embark loads it after consult if found
     :hook
     (embark-collect-mode . consult-preview-at-point-mode))
 #+end_src
@@ -583,7 +577,6 @@ When you can't remember all keybindings
 ** Org auto tangle
 #+begin_src emacs-lisp
   (use-package org-auto-tangle
-
     :hook (org-mode . org-auto-tangle-mode))
 #+end_src
 ** Org modern
@@ -875,34 +868,40 @@ Prettify org mode
 ** Error checking
 #+begin_src emacs-lisp
 (use-package flycheck
-
   :init (global-flycheck-mode))
 
 #+end_src
 ** Java + Lsp
 #+begin_src emacs-lisp
-  (use-package lsp-java )
   (use-package lsp-mode
-
-    :bind-keymap ("C-c l" . lsp-command-map)
     :init
     ;; set prefix for lsp-command-keymap (few alternatives - "C-l", "C-c l")
+    (setq lsp-keymap-prefix "C-c l")
     :hook (;; replace XXX-mode with concrete major-mode(e. g. python-mode)
-	   (java-mode . lsp)
-	   ;; if you want which-key integration
-    :config (setq lsp-enable-which-key-integration 1)
+           (java-mode . lsp)
+           ;; if you want which-key integration
+           (lsp-mode . lsp-enable-which-key-integration))
     :commands lsp)
 
   ;; optionally
-  (use-package lsp-ui  :commands lsp-ui-mode)
-  (use-package lsp-treemacs  :commands lsp-treemacs-errors-list)
+  (use-package lsp-ui :commands lsp-ui-mode)
+  (use-package lsp-treemacs :commands lsp-treemacs-errors-list)
 
   ;; optionally if you want to use debugger
-  (use-package  dap-mode )
-  (use-package dap-java
-    :straight
-    (:type built-in)
-    ) ;;to load the dap adapter for your language
-
-
+  (use-package dap-mode)
+  (use-package lsp-java)
+  (use-package dap-java :straight nil)
+#+end_src
+* Tree-sitter
+#+begin_src emacs-lisp
+  (use-package tree-sitter :hook (java-mode . tree-sitter-mode))
+  (use-package tree-sitter-langs)
+#+end_src
+* Footer
+#+begin_src emacs-lisp 
+(provide 'init)
+;; Local Variables:
+;; byte-compile-warnings: (not free-vars)
+;; End:
+;;; init.el ends here (emacs-lisp-checkdoc)
 #+end_src

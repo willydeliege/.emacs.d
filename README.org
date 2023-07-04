@@ -89,11 +89,15 @@ and use straight by default
   (setq recentf-max-saved-items 25)
   (setq display-line-numbers-type 'relative)
   (global-display-line-numbers-mode)
+  (setq browse-url-browser-function 'browse-url-generic
+      browse-url-generic-program "google-chrome")
 #+end_src
 ** Help
 Better help buffer
  #+begin_src emacs-lisp
    (use-package helpful
+     :init
+     (setq helpful--view-literal t)
      :config
      ;; Note that the built-in `describe-function' includes both functions
      ;; and macros. `helpful-function' is functions only, so we provide

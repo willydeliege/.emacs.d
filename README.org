@@ -539,6 +539,7 @@ When you can't remember all keybindings
 #+end_src
 
 * Org mode
+** Org basics
 #+begin_src emacs-lisp
   (use-package org
     :straight
@@ -773,6 +774,7 @@ Prettify org mode
                    (my/org-roam-copy-todo-to-today))))
 		 #+end_src
 * Mails
+** Mu4e
 #+begin_src emacs-lisp
   (use-package mu4e
     :defer 5 ;; launch after 5 seconds
@@ -911,24 +913,24 @@ Prettify org mode
 #+end_src
 ** Java + Lsp
 #+begin_src emacs-lisp
-  (use-package lsp-mode
-    :init
-    ;; set prefix for lsp-command-keymap (few alternatives - "C-l", "C-c l")
-    (setq lsp-keymap-prefix "C-c l")
-    :hook (;; replace XXX-mode with concrete major-mode(e. g. python-mode)
-           (java-mode . lsp)
-           ;; if you want which-key integration
-           (lsp-mode . lsp-enable-which-key-integration))
-    :commands lsp)
+  ;; (use-package lsp-mode
+  ;;   :init
+  ;;   ;; set prefix for lsp-command-keymap (few alternatives - "C-l", "C-c l")
+  ;;   (setq lsp-keymap-prefix "C-c l")
+  ;;   :hook (;; replace XXX-mode with concrete major-mode(e. g. python-mode)
+  ;;          (java-mode . lsp)
+  ;;          ;; if you want which-key integration
+  ;;          (lsp-mode . lsp-enable-which-key-integration))
+  ;;   :commands lsp)
 
-  ;; optionally
-  (use-package lsp-ui :commands lsp-ui-mode)
-  (use-package lsp-treemacs :commands lsp-treemacs-errors-list)
+  ;; ;; optionally
+  ;; (use-package lsp-ui :commands lsp-ui-mode)
+  ;; (use-package lsp-treemacs :commands lsp-treemacs-errors-list)
 
-  ;; optionally if you want to use debugger
-  (use-package dap-mode)
-  (use-package lsp-java)
-  (use-package dap-java :straight nil)
+  ;; ;; optionally if you want to use debugger
+  ;; (use-package dap-mode)
+  ;; (use-package lsp-java)
+  ;; (use-package dap-java :straight nil)
 #+end_src
 * Tree-sitter
 #+begin_src emacs-lisp

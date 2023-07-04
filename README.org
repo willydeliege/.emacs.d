@@ -846,7 +846,6 @@ Prettify org mode
     (org-contacts-files '("~/org/contacts.org"))
     :after org-msg)
 #+end_src
-
 * Version control
 #+begin_src emacs-lisp
   (use-package magit

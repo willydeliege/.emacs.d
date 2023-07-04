@@ -777,10 +777,11 @@ Prettify org mode
 ** Mu4e
 #+begin_src emacs-lisp
   (use-package mu4e
-    :defer 5 ;; launch after 5 seconds
+    :demand t
     :straight '(mu4e :load-path  "/usr/local/share/emacs/site-lisp/mu4e/*.el")
     :bind (("<f5>" . mu4e))
     :config
+    (setq mail-user-agent 'mu4e-user-agent)
     (setq mu4e-confirm-quit nil)
     (setq mu4e-get-mail-command "mbsync -a")
     (require 'mu4e-icalendar)
@@ -864,8 +865,9 @@ Prettify org mode
 ** Org message
 #+begin_src emacs-lisp
   (use-package org-msg
+    :demand t
+    :after mu4e
     :config
-    (setq mail-user-agent 'mu4e-user-agent)
     (setq org-msg-options "html-postamble:nil H:5 num:nil ^:{} toc:nil author:nil email:nil \\n:t"
           org-msg-startup "hidestars indent inlineimages"
           org-msg-greeting-fmt "\nHi%s,\n\n"
@@ -875,16 +877,19 @@ Prettify org mode
                                          (reply-to-html	. (text html))
                                          (reply-to-text	. (text)))
           org-msg-convert-citation t )
-    (setq org-msg-signature "\n\nRegards,\n\n\n--\n\n*Frédéric Willem*\n\n/Tel: +32 456 64 00 02/\n")
+    (setq org-msg-signature "\n\nRegards,\n\n\n--\n\n*Frédéric Willem*\n/Tel: +32 456 64 00 02/\n")
     (org-msg-mode))
 
 #+end_src
 ** org contacts
 #+begin_src emacs-lisp
   (use-package org-contacts
+    :demand t
+    :after org-msg
+    :hook (org-msg-edit-mode . org-contacts-setup-completion-at-point)
     :custom
     (org-contacts-files '("~/org/contacts.org"))
-    :after org-msg)
+    :config)
 #+end_src
 * Version control
 #+begin_src emacs-lisp

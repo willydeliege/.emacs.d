@@ -7,17 +7,17 @@ After spending lot of time with doom emacs, willing to switch to a more native e
 * Header
 Header for the config init.el file
 #+begin_src emacs-lisp
-  ;;; init.el --- Willydeliege's Emacs configuration -*- lexical-binding: t -*-
+ ;;; init.el --- Willydeliege's Emacs configuration -*- lexical-binding: t -*-
 
-  ;; Copyright (C) 2023 Frédéric Willem
+ ;; Copyright (C) 2023 Frédéric Willem
 
-  ;; Author: Frédéric Willem <frederic.willem@gmail.com>
-  ;; Keywords: internal
+ ;; Author: Frédéric Willem <frederic.willem@gmail.com>
+ ;; Keywords: internal
 
-  ;;; Commentary:
-  ;; A fully fledged, reproducible Emacs configuration
+ ;;; Commentary:
+ ;; A fully fledged, reproducible Emacs configuration
 
-  ;;; Code:
+ ;;; Code:
 #+end_src
 * Package manager
 Using [[https://github.com/radian-software/straight.el#getting-started][straight]] as package manager

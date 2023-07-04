@@ -7,41 +7,41 @@ After spending lot of time with doom emacs, willing to switch to a more native e
 * Header
 Header for the config init.el file
 #+begin_src emacs-lisp
- ;;; init.el --- Willydeliege's Emacs configuration -*- lexical-binding: t -*-
+  ;;; init.el --- Willydeliege's Emacs configuration -*- lexical-binding: t -*-
 
- ;; Copyright (C) 2023 Frédéric Willem
+  ;; Copyright (C) 2023 Frédéric Willem
 
- ;; Author: Frédéric Willem <frederic.willem@gmail.com>
- ;; Keywords: internal
+  ;; Author: Frédéric Willem <frederic.willem@gmail.com>
+  ;; Keywords: internal
 
- ;;; Commentary:
- ;; A fully fledged, reproducible Emacs configuration
+  ;;; Commentary:
+  ;; A fully fledged, reproducible Emacs configuration
 
- ;;; Code:
+  ;;; Code:
 #+end_src
 * Package manager
 Using [[https://github.com/radian-software/straight.el#getting-started][straight]] as package manager
 #+begin_src emacs-lisp
   (defvar bootstrap-version)
   (let ((bootstrap-file
-	 (expand-file-name "straight/repos/straight.el/bootstrap.el" user-emacs-directory))
-	(bootstrap-version 6))
+         (expand-file-name "straight/repos/straight.el/bootstrap.el" user-emacs-directory))
+        (bootstrap-version 6))
     (unless (file-exists-p bootstrap-file)
       (with-current-buffer
-	  (url-retrieve-synchronously
-	   "https://raw.githubusercontent.com/radian-software/straight.el/develop/install.el"
-	   'silent 'inhibit-cookies)
-	(goto-char (point-max))
-	(eval-print-last-sexp)))
+          (url-retrieve-synchronously
+           "https://raw.githubusercontent.com/radian-software/straight.el/develop/install.el"
+           'silent 'inhibit-cookies)
+        (goto-char (point-max))
+        (eval-print-last-sexp)))
     (load bootstrap-file nil 'nomessage))
 #+end_src
 ** Using straight properly with initiating in early-init.el
 This will prevent to use package.el
 #+begin_src emacs-lisp :tangle early-init.el
-;;; early-init.el --- Emacs early init file
-;;; Commentary:
+  ;;; early-init.el --- Emacs early init file
+  ;;; Commentary:
   ;; Code to run before init.el is loaded.
-;;; Code:
+  ;;; Code:
 
   ;; Disable package.el
   (setq package-enable-at-startup nil)
@@ -65,7 +65,7 @@ This will prevent to use package.el
   (setq create-lockfiles nil)
 
   (provide 'early-init)
-;;; early-init.el ends here
+  ;;; early-init.el ends here
 #+end_src
 ** USE-PACKAGE
 We will use use-package
@@ -91,22 +91,22 @@ and use straight by default
   (global-display-line-numbers-mode)
 #+end_src
 ** Help
- Better help buffer
+Better help buffer
  #+begin_src emacs-lisp
-      (use-package helpful
-      :config
-   ;; Note that the built-in `describe-function' includes both functions
-;; and macros. `helpful-function' is functions only, so we provide
-;; `helpful-callable' as a drop-in replacement.
-(global-set-key (kbd "C-h f") #'helpful-callable)
-(global-set-key (kbd "C-h v") #'helpful-variable)
-(global-set-key (kbd "C-h k") #'helpful-key)
-(global-set-key (kbd "C-h x") #'helpful-command))
+   (use-package helpful
+     :config
+     ;; Note that the built-in `describe-function' includes both functions
+     ;; and macros. `helpful-function' is functions only, so we provide
+     ;; `helpful-callable' as a drop-in replacement.
+     (global-set-key (kbd "C-h f") #'helpful-callable)
+     (global-set-key (kbd "C-h v") #'helpful-variable)
+     (global-set-key (kbd "C-h k") #'helpful-key)
+     (global-set-key (kbd "C-h x") #'helpful-command))
  #+end_src
 * Personal information
 #+begin_src emacs-lisp
   (setq user-full-name "Frédéric Willem"
-	user-mail-address "frederic.willem@gmail.com")
+        user-mail-address "frederic.willem@gmail.com")
 #+end_src
 * UI
 ** Theme
@@ -114,40 +114,40 @@ and use straight by default
   (use-package modus-themes
     :config
     ;; Add all your customizations prior to loading the themes
-  (setq modus-themes-italic-constructs t
-	modus-themes-bold-constructs nil
-	modus-themes-mixed-fonts t
-	modus-themes-variable-pitch-ui nil
-	modus-themes-custom-auto-reload t
-	modus-themes-disable-other-themes t
+    (setq modus-themes-italic-constructs t
+          modus-themes-bold-constructs nil
+          modus-themes-mixed-fonts t
+          modus-themes-variable-pitch-ui nil
+          modus-themes-custom-auto-reload t
+          modus-themes-disable-other-themes t
 
-	;; Options for `modus-themes-prompts' are either nil (the
-	;; default), or a list of properties that may include any of those
-	;; symbols: `italic', `WEIGHT'
-	modus-themes-prompts '(italic bold)
+          ;; Options for `modus-themes-prompts' are either nil (the
+          ;; default), or a list of properties that may include any of those
+          ;; symbols: `italic', `WEIGHT'
+          modus-themes-prompts '(italic bold)
 
-	;; The `modus-themes-completions' is an alist that reads two
-	;; keys: `matches', `selection'.  Each accepts a nil value (or
-	;; empty list) or a list of properties that can include any of
-	;; the following (for WEIGHT read further below):
-	;;
-	;; `matches'   :: `underline', `italic', `WEIGHT'
-	;; `selection' :: `underline', `italic', `WEIGHT'
-	modus-themes-completions
-	'((matches . (extrabold))
-	  (selection . (semibold italic text-also)))
+          ;; The `modus-themes-completions' is an alist that reads two
+          ;; keys: `matches', `selection'.  Each accepts a nil value (or
+          ;; empty list) or a list of properties that can include any of
+          ;; the following (for WEIGHT read further below):
+          ;;
+          ;; `matches'   :: `underline', `italic', `WEIGHT'
+          ;; `selection' :: `underline', `italic', `WEIGHT'
+          modus-themes-completions
+          '((matches . (extrabold))
+            (selection . (semibold italic text-also)))
 
-	modus-themes-org-blocks 'gray-background ; {nil,'gray-background,'tinted-background}
+          modus-themes-org-blocks 'gray-background ; {nil,'gray-background,'tinted-background}
 
-	;; The `modus-themes-headings' is an alist: read the manual's
-	;; node about it or its doc string.  Basically, it supports
-	;; per-level configurations for the optional use of
-	;; `variable-pitch' typography, a height value as a multiple of
-	;; the base font size (e.g. 1.5), and a `WEIGHT'.
-	modus-themes-headings
-	'((agenda-date . (1.3))
-	  (agenda-structure . (variable-pitch light 1.8))
-	  (t . (1.1))))
+          ;; The `modus-themes-headings' is an alist: read the manual's
+          ;; node about it or its doc string.  Basically, it supports
+          ;; per-level configurations for the optional use of
+          ;; `variable-pitch' typography, a height value as a multiple of
+          ;; the base font size (e.g. 1.5), and a `WEIGHT'.
+          modus-themes-headings
+          '((agenda-date . (1.3))
+            (agenda-structure . (variable-pitch light 1.8))
+            (t . (1.1))))
     ;; Maybe define some palette overrides, such as by using our presets
     ;; (setq modus-themes-common-palette-overrides
     ;;       modus-themes-preset-overrides-intense)
@@ -234,23 +234,23 @@ When you can't remember all keybindings
 
 ** evil org mode
 #+begin_src emacs-lisp
-(use-package evil-org
-  :after org
-  :hook (org-mode . (lambda () evil-org-mode))
-  :config
-  (require 'evil-org-agenda)
-  (evil-org-agenda-set-keys))
+  (use-package evil-org
+    :after org
+    :hook (org-mode . (lambda () evil-org-mode))
+    :config
+    (require 'evil-org-agenda)
+    (evil-org-agenda-set-keys))
 #+end_src
 * Completion
 ** Vertico + Marginalia
 #+begin_src emacs-lisp
   (use-package vertico
     :bind (:map vertico-map
-		("C-j" . vertico-next)
-		("C-k" . vertico-previous)
-		("C-f" . vertico-exit)
-		:map minibuffer-local-map
-		("C-h" . backward-kill-word))
+                ("C-j" . vertico-next)
+                ("C-k" . vertico-previous)
+                ("C-f" . vertico-exit)
+                :map minibuffer-local-map
+                ("C-h" . backward-kill-word))
     :custom
     (vertico-cycle t)
     :init
@@ -273,57 +273,57 @@ When you can't remember all keybindings
   (use-package consult
     ;; Replace bindings. Lazily loaded due by `use-package'.
     :bind (;; C-c bindings in `mode-specific-map'
-	   ("C-c M-x" . consult-mode-command)
-	   ("C-c h" . consult-history)
-	   ("C-c k" . consult-kmacro)
-	   ;; ("C-c m" . consult-man)
-	   ("C-c i" . consult-info)
-	   ([remap Info-search] . consult-info)
-	   ;; C-x bindings in `ctl-x-map'
-	   ("C-x M-:" . consult-complex-command)     ;; orig. repeat-complex-command
-	   ("C-x b" . consult-buffer)                ;; orig. switch-to-buffer
-	   ("C-x C-r" . consult-recent-file)        ;; orig. recent-files-read-only
-	   ("C-x 4 b" . consult-buffer-other-window) ;; orig. switch-to-buffer-other-window
-	   ("C-x 5 b" . consult-buffer-other-frame)  ;; orig. switch-to-buffer-other-frame
-	   ("C-x r b" . consult-bookmark)            ;; orig. bookmark-jump
-	   ("C-x p b" . consult-project-buffer)      ;; orig. project-switch-to-buffer
-	   ;; Custom M-# bindings for fast register access
-	   ("M-#" . consult-register-load)
-	   ("M-'" . consult-register-store)          ;; orig. abbrev-prefix-mark (unrelated)
-	   ("C-M-#" . consult-register)
-	   ;; Other custom bindings
-	   ("M-y" . consult-yank-pop)                ;; orig. yank-pop
-	   ;; M-g bindings in `goto-map'
-	   ("M-g e" . consult-compile-error)
-	   ("M-g f" . consult-flymake)               ;; Alternative: consult-flycheck
-	   ("M-g g" . consult-goto-line)             ;; orig. goto-line
-	   ("M-g M-g" . consult-goto-line)           ;; orig. goto-line
-	   ("M-g o" . consult-outline)               ;; Alternative: consult-org-heading
-	   ("M-g m" . consult-mark)
-	   ("M-g k" . consult-global-mark)
-	   ("M-g i" . consult-imenu)
-	   ("M-g I" . consult-imenu-multi)
-	   ;; M-s bindings in `search-map'
-	   ("M-s d" . consult-find)
-	   ("M-s D" . consult-locate)
-	   ("M-s g" . consult-grep)
-	   ("M-s G" . consult-git-grep)
-	   ("M-s r" . consult-ripgrep)
-	   ("M-s l" . consult-line)
-	   ("M-s L" . consult-line-multi)
-	   ("M-s k" . consult-keep-lines)
-	   ("M-s u" . consult-focus-lines)
-	   ;; Isearch integration
-	   ("M-s e" . consult-isearch-history)
-	   :map isearch-mode-map
-	   ("M-e" . consult-isearch-history)         ;; orig. isearch-edit-string
-	   ("M-s e" . consult-isearch-history)       ;; orig. isearch-edit-string
-	   ("M-s l" . consult-line)                  ;; needed by consult-line to detect isearch
-	   ("M-s L" . consult-line-multi)            ;; needed by consult-line to detect isearch
-	   ;; Minibuffer history
-	   :map minibuffer-local-map
-	   ("M-s" . consult-history)                 ;; orig. next-matching-history-element
-	   ("M-r" . consult-history))                ;; orig. previous-matching-history-element
+           ("C-c M-x" . consult-mode-command)
+           ("C-c h" . consult-history)
+           ("C-c k" . consult-kmacro)
+           ;; ("C-c m" . consult-man)
+           ("C-c i" . consult-info)
+           ([remap Info-search] . consult-info)
+           ;; C-x bindings in `ctl-x-map'
+           ("C-x M-:" . consult-complex-command)     ;; orig. repeat-complex-command
+           ("C-x b" . consult-buffer)                ;; orig. switch-to-buffer
+           ("C-x C-r" . consult-recent-file)        ;; orig. recent-files-read-only
+           ("C-x 4 b" . consult-buffer-other-window) ;; orig. switch-to-buffer-other-window
+           ("C-x 5 b" . consult-buffer-other-frame)  ;; orig. switch-to-buffer-other-frame
+           ("C-x r b" . consult-bookmark)            ;; orig. bookmark-jump
+           ("C-x p b" . consult-project-buffer)      ;; orig. project-switch-to-buffer
+           ;; Custom M-# bindings for fast register access
+           ("M-#" . consult-register-load)
+           ("M-'" . consult-register-store)          ;; orig. abbrev-prefix-mark (unrelated)
+           ("C-M-#" . consult-register)
+           ;; Other custom bindings
+           ("M-y" . consult-yank-pop)                ;; orig. yank-pop
+           ;; M-g bindings in `goto-map'
+           ("M-g e" . consult-compile-error)
+           ("M-g f" . consult-flymake)               ;; Alternative: consult-flycheck
+           ("M-g g" . consult-goto-line)             ;; orig. goto-line
+           ("M-g M-g" . consult-goto-line)           ;; orig. goto-line
+           ("M-g o" . consult-outline)               ;; Alternative: consult-org-heading
+           ("M-g m" . consult-mark)
+           ("M-g k" . consult-global-mark)
+           ("M-g i" . consult-imenu)
+           ("M-g I" . consult-imenu-multi)
+           ;; M-s bindings in `search-map'
+           ("M-s d" . consult-find)
+           ("M-s D" . consult-locate)
+           ("M-s g" . consult-grep)
+           ("M-s G" . consult-git-grep)
+           ("M-s r" . consult-ripgrep)
+           ("M-s l" . consult-line)
+           ("M-s L" . consult-line-multi)
+           ("M-s k" . consult-keep-lines)
+           ("M-s u" . consult-focus-lines)
+           ;; Isearch integration
+           ("M-s e" . consult-isearch-history)
+           :map isearch-mode-map
+           ("M-e" . consult-isearch-history)         ;; orig. isearch-edit-string
+           ("M-s e" . consult-isearch-history)       ;; orig. isearch-edit-string
+           ("M-s l" . consult-line)                  ;; needed by consult-line to detect isearch
+           ("M-s L" . consult-line-multi)            ;; needed by consult-line to detect isearch
+           ;; Minibuffer history
+           :map minibuffer-local-map
+           ("M-s" . consult-history)                 ;; orig. next-matching-history-element
+           ("M-r" . consult-history))                ;; orig. previous-matching-history-element
 
     ;; Enable automatic preview at point in the *Completions* buffer. This is
     ;; relevant when you use the default completion UI.
@@ -336,7 +336,7 @@ When you can't remember all keybindings
     ;; preview for `consult-register', `consult-register-load',
     ;; `consult-register-store' and the Emacs built-ins.
     (setq register-preview-delay 0.5
-	  register-preview-function #'consult-register-format)
+          register-preview-function #'consult-register-format)
 
     ;; Optionally tweak the register preview window.
     ;; This adds thin lines, sorting and hides the mode line of the window.
@@ -344,7 +344,7 @@ When you can't remember all keybindings
 
     ;; Use Consult to select xref locations with preview
     (setq xref-show-xrefs-function #'consult-xref
-	  xref-show-definitions-function #'consult-xref)
+          xref-show-definitions-function #'consult-xref)
 
     ;; Configure other variables and modes in the :config section,
     ;; after lazily loading the package.
@@ -471,7 +471,7 @@ When you can't remember all keybindings
     :init
     (projectile-mode +1)
     :bind (:map projectile-mode-map
-		("C-c p" . projectile-command-map)))
+                ("C-c p" . projectile-command-map)))
 #+end_src
 
 * Perspective
@@ -490,7 +490,7 @@ When you can't remember all keybindings
     :straight
     (:type built-in)
     :bind (("C-c a" . org-agenda))
-  :hook ((org-mode . org-indent-mode))
+    :hook ((org-mode . org-indent-mode))
     :config
     (setq org-agenda-files '("~/org/"))
     (setq org-stuck-projects '("+Project/PROJ" ("NEXT" "WAIT") nil ""))
@@ -529,42 +529,42 @@ When you can't remember all keybindings
   (use-package org-super-agenda
     :config
     (setq org-agenda-custom-commands
-	  '(("z" "My view"
-	     (   (agenda "" ((org-agenda-span 'day)
-			     (org-agenda-start-day nil)
-			     (org-super-agenda-groups
-			      '((:name "Today"
-				       :time-grid t
-				       :date today
-				       :deadline today
-				       :scheduled today
-				       :order 1)))))
-		 (alltodo "" ((org-agenda-overriding-header "")
-			      (org-super-agenda-groups
-			       '(;; Each group has an implicit boolean OR operator between its selectors.
-				 (:name "Today"
-					:deadline today
-					:face (:background "black"))
-				 (:name "Passed deadline"
-					:and (:deadline past :todo ("TODO" "WAIT" "HOLD" "NEXT"))
-					:face (:background "#7f1b19"))
-				 (:name "Important"
-					:priority "A")
-				 (:priority<= "B"
-					      ;; Show this section after "Today" and "Important", because
-					      ;; their order is unspecified, defaulting to 0. Sections
-					      ;; are displayed lowest-number-first.
-					      :order 1)
-				 (:name "Next"
-					:todo "NEXT"
-					:order 8)
-				 (:name "Waiting"
-					:todo "WAIT"
-					:order 9)
-				 (:name "On hold"
-					:todo "HOLD"
-					:order 10)
-				 (:discard (:todo "PROJ"))))))))))
+          '(("z" "My view"
+             (   (agenda "" ((org-agenda-span 'day)
+                             (org-agenda-start-day nil)
+                             (org-super-agenda-groups
+                              '((:name "Today"
+                                       :time-grid t
+                                       :date today
+                                       :deadline today
+                                       :scheduled today
+                                       :order 1)))))
+                 (alltodo "" ((org-agenda-overriding-header "")
+                              (org-super-agenda-groups
+                               '(;; Each group has an implicit boolean OR operator between its selectors.
+                                 (:name "Today"
+                                        :deadline today
+                                        :face (:background "black"))
+                                 (:name "Passed deadline"
+                                        :and (:deadline past :todo ("TODO" "WAIT" "HOLD" "NEXT"))
+                                        :face (:background "#7f1b19"))
+                                 (:name "Important"
+                                        :priority "A")
+                                 (:priority<= "B"
+                                              ;; Show this section after "Today" and "Important", because
+                                              ;; their order is unspecified, defaulting to 0. Sections
+                                              ;; are displayed lowest-number-first.
+                                              :order 1)
+                                 (:name "Next"
+                                        :todo "NEXT"
+                                        :order 8)
+                                 (:name "Waiting"
+                                        :todo "WAIT"
+                                        :order 9)
+                                 (:name "On hold"
+                                        :todo "HOLD"
+                                        :order 10)
+                                 (:discard (:todo "PROJ"))))))))))
     (add-hook 'org-agenda-mode-hook 'org-super-agenda-mode))
 #+end_src
 ** Org auto tangle
@@ -578,7 +578,7 @@ Prettify org mode
   (use-package org-modern
     :after org
     :hook ((org-mode . org-modern-mode)
-	   (org-agenda-finalize . org-modern-agenda))
+           (org-agenda-finalize . org-modern-agenda))
     :config
     (setq
      ;; Edit settings
@@ -614,17 +614,17 @@ Prettify org mode
     (org-roam-directory "~/org")
     (org-roam-completion-everywhere t)
     :bind (("C-c n l" . org-roam-buffer-toggle)
-	   ("C-c n f" . org-roam-node-find)
-	   ("C-c n i" . org-roam-node-insert)
-	   ("C-c n I" . org-roam-node-insert-immediate)
-	   ("C-c n p" . my/org-roam-find-project)
-	   ("C-c n t" . my/org-roam-capture-task)
-	   ("C-c n b" . my/org-roam-capture-inbox)
-	   :map org-mode-map
-	   ("C-M-i" . completion-at-point)
-	   :map org-roam-dailies-map
-	   ("Y" . org-roam-dailies-capture-yesterday)
-	   ("T" . org-roam-dailies-capture-tomorrow))
+           ("C-c n f" . org-roam-node-find)
+           ("C-c n i" . org-roam-node-insert)
+           ("C-c n I" . org-roam-node-insert-immediate)
+           ("C-c n p" . my/org-roam-find-project)
+           ("C-c n t" . my/org-roam-capture-task)
+           ("C-c n b" . my/org-roam-capture-inbox)
+           :map org-mode-map
+           ("C-M-i" . completion-at-point)
+           :map org-roam-dailies-map
+           ("Y" . org-roam-dailies-capture-yesterday)
+           ("T" . org-roam-dailies-capture-tomorrow))
     :bind-keymap
     ("C-c n d" . org-roam-dailies-map)
     :config
@@ -634,8 +634,8 @@ Prettify org mode
   (defun org-roam-node-insert-immediate (arg &rest args)
     (interactive "P")
     (let ((args (push arg args))
-	  (org-roam-capture-templates (list (append (car org-roam-capture-templates)
-						    '(:immediate-finish t)))))
+          (org-roam-capture-templates (list (append (car org-roam-capture-templates)
+                                                    '(:immediate-finish t)))))
       (apply #'org-roam-node-insert args)))
 
   (defun my/org-roam-filter-by-tag (tag-name)
@@ -644,9 +644,9 @@ Prettify org mode
 
   (defun my/org-roam-list-notes-by-tag (tag-name)
     (mapcar #'org-roam-node-file
-	    (seq-filter
-	     (my/org-roam-filter-by-tag tag-name)
-	     (org-roam-node-list))))
+            (seq-filter
+             (my/org-roam-filter-by-tag tag-name)
+             (org-roam-node-list))))
 
   (defun my/org-roam-refresh-agenda-list ()
     (interactive)
@@ -664,7 +664,7 @@ Prettify org mode
     ;; Add project file to the agenda list if the capture was confirmed
     (unless org-note-abort
       (with-current-buffer (org-capture-get :buffer)
-	(add-to-list 'org-agenda-files (buffer-file-name)))))
+        (add-to-list 'org-agenda-files (buffer-file-name)))))
 
   (defun my/org-roam-find-project ()
     (interactive)
@@ -679,14 +679,14 @@ Prettify org mode
      nil
      :templates
      '(("p" "project" plain "* Goals\n\n%?\n\n* Tasks\n\n** TODO Add initial tasks\n\n* Dates\n\n"
-	:if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n#+category: ${title}\n#+filetags: Project")
-	:unnarrowed t))))
+        :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n#+category: ${title}\n#+filetags: Project")
+        :unnarrowed t))))
 
   (defun my/org-roam-capture-inbox ()
     (interactive)
     (org-roam-capture- :node (org-roam-node-create)
-		       :templates '(("i" "inbox" plain "* %?"
-				     :if-new (file+head "Inbox.org" "#+title: Inbox\n")))))
+                       :templates '(("i" "inbox" plain "* %?"
+                                     :if-new (file+head "Inbox.org" "#+title: Inbox\n")))))
 
   (defun my/org-roam-capture-task ()
     (interactive)
@@ -695,36 +695,36 @@ Prettify org mode
 
     ;; Capture the new task, creating the project file if necessary
     (org-roam-capture- :node (org-roam-node-read
-			      nil
-			      (my/org-roam-filter-by-tag "Project"))
-		       :templates '(("p" "project" plain "** TODO %?"
-				     :if-new (file+head+olp "%<%Y%m%d%H%M%S>-${slug}.org"
-							    "#+title: ${title}\n#+category: ${title}\n#+filetags: Project"
-							    ("Tasks"))))))
+                              nil
+                              (my/org-roam-filter-by-tag "Project"))
+                       :templates '(("p" "project" plain "** TODO %?"
+                                     :if-new (file+head+olp "%<%Y%m%d%H%M%S>-${slug}.org"
+                                                            "#+title: ${title}\n#+category: ${title}\n#+filetags: Project"
+                                                            ("Tasks"))))))
 
   (defun my/org-roam-copy-todo-to-today ()
     (interactive)
     (let ((org-refile-keep t) ;; Set this to nil to delete the original!
-	  (org-roam-dailies-capture-templates
-	   '(("t" "tasks" entry "%?"
-	      :if-new (file+head+olp "%<%Y-%m-%d>.org" "#+title: %<%Y-%m-%d>\n" ("Tasks")))))
-	  (org-after-refile-insert-hook #'save-buffer)
-	  today-file
-	  pos)
+          (org-roam-dailies-capture-templates
+           '(("t" "tasks" entry "%?"
+              :if-new (file+head+olp "%<%Y-%m-%d>.org" "#+title: %<%Y-%m-%d>\n" ("Tasks")))))
+          (org-after-refile-insert-hook #'save-buffer)
+          today-file
+          pos)
       (save-window-excursion
-	(org-roam-dailies--capture (current-time) t)
-	(setq today-file (buffer-file-name))
-	(setq pos (point)))
+        (org-roam-dailies--capture (current-time) t)
+        (setq today-file (buffer-file-name))
+        (setq pos (point)))
 
       ;; Only refile if the target file is different than the current file
       (unless (equal (file-truename today-file)
-		     (file-truename (buffer-file-name)))
-	(org-refile nil nil (list "Tasks" today-file nil pos)))))
+                     (file-truename (buffer-file-name)))
+        (org-refile nil nil (list "Tasks" today-file nil pos)))))
 
   (add-to-list 'org-after-todo-state-change-hook
-	       (lambda ()
-		 (when (equal org-state "DONE")
-		   (my/org-roam-copy-todo-to-today))))
+               (lambda ()
+                 (when (equal org-state "DONE")
+                   (my/org-roam-copy-todo-to-today))))
 		 #+end_src
 * Mails
 #+begin_src emacs-lisp
@@ -853,13 +853,13 @@ Prettify org mode
     (define-fringe-bitmap 'git-gutter-fr:added [224] nil nil '(center repeated))
     (define-fringe-bitmap 'git-gutter-fr:modified [224] nil nil '(center repeated))
     (define-fringe-bitmap 'git-gutter-fr:deleted [128 192 224 240] nil nil 'bottom))
-  #+end_src
+#+end_src
 
 * Programming
 ** Error checking
 #+begin_src emacs-lisp
-(use-package flycheck
-  :init (global-flycheck-mode))
+  (use-package flycheck
+    :init (global-flycheck-mode))
 
 #+end_src
 ** Java + Lsp
@@ -890,9 +890,9 @@ Prettify org mode
 #+end_src
 * Footer
 #+begin_src emacs-lisp 
-(provide 'init)
-;; Local Variables:
-;; byte-compile-warnings: (not free-vars)
-;; End:
-;;; init.el ends here (emacs-lisp-checkdoc)
+  (provide 'init)
+  ;; Local Variables:
+  ;; byte-compile-warnings: (not free-vars)
+  ;; End:
+  ;;; init.el ends here (emacs-lisp-checkdoc)
 #+end_src

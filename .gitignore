@@ -10,3 +10,11 @@ recentf
 straight
 auto-save-list
 tmp
+.cache
+.lsp-session-v1
+.org-id-locations
+bookmarks
+eclipse.jdt.ls
+elpa
+transient
+workspace

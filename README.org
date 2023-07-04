@@ -521,15 +521,7 @@ When you can't remember all keybindings
              "[X](D)")  ; Task was completed
             (sequence
              "READ(r)"
-             "WATCH(w)"))
-          org-todo-keyword-faces
-          '(("[-]"  . +org-todo-active)
-            ("NEXT"  . +org-todo-active)
-            ("WAIT" . +org-todo-onhold)
-            ("HOLD" . +org-todo-onhold)
-            ("PROJ" . +org-todo-project)
-            ("NO"   . +org-todo-cancel)
-            ("KILL" . +org-todo-cancel))))
+             "WATCH(w)"))))
 
 #+end_src
 ** Org-agenda

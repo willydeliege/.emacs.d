@@ -228,7 +228,7 @@ When you can't remember all keybindings
     :config
     (global-evil-surround-mode 1))
 #+end_src
-* Jump
+** Jump
 #+begin_src emacs-lisp
   (use-package avy
     :demand t

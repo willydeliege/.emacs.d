@@ -523,23 +523,30 @@ When you can't remember all keybindings
     :straight (doom-snippets :type git :host github :repo "doomemacs/snippets" :files ("*.el" "*")))
 #+end_src
 
-* Projectile
+* Projects
+** Projectile
 #+begin_src emacs-lisp
   (use-package projectile
-    :init
-    (projectile-mode +1)
+    :hook (after-init . projectile-mode)
+    :custom
+    (projectile-switch-project-action 'projectile-commander)
     :bind (:map projectile-mode-map
                 ("C-c p" . projectile-command-map)))
 #+end_src
 
-* Perspective
+** Perspective
 #+begin_src emacs-lisp
   (use-package perspective
     :hook (after-init . persp-mode)
     :bind
     ("C-x C-b" . persp-list-buffers)         ; or use a nicer switcher, see below
     :custom
-    (persp-mode-prefix-key (kbd "C-c M-p")))  ; pick your own prefix key here
+    (persp-mode-prefix-key (kbd "C-c w")))  ; pick your own prefix key here
+#+end_src
+
+** Persp project
+#+begin_src emacs-lisp
+  (use-package persp-projectile)
 #+end_src
 
 * Org mode

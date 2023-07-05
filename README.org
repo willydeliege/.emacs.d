@@ -863,6 +863,11 @@ Prettify org mode
     (add-to-list 'mu4e-view-actions
                  '("org-contact-add" . mu4e-action-add-org-contact) t))
 #+end_src
+*** Mu4e contrib
+#+begin_src emacs-lisp
+(use-package mu4e-contrib
+:straight nil)
+#+end_src
 ** Org message
 #+begin_src emacs-lisp
   (use-package org-msg

@@ -438,10 +438,10 @@ When you can't remember all keybindings
    ;; Eventually suppress previewing for certain functions
    (consult-customize
     consult-org-roam-forward-links
-    :preview-key (kbd "M-."))
+    :preview-key (kbd "C-;"))
    :bind
    ;; Define some convenient keybindings as an addition
-   ("C-c n e" . consult-org-roam-file-find)
+   ("C-c n f" . consult-org-roam-file-find)
    ("C-c n b" . consult-org-roam-backlinks)
    ("C-c n l" . consult-org-roam-forward-links)
    ("C-c n r" . consult-org-roam-search))

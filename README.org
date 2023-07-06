@@ -576,9 +576,12 @@ When you can't remember all keybindings
 ** Projectile
 #+begin_src emacs-lisp
   (use-package projectile
-    :hook (after-init . projectile-mode)
-    :custom
-    (projectile-switch-project-action 'projectile-commander)
+    :init
+    (projectile-mode +1)
+    (def-projectile-commander-method ?g
+                                     "Search in project."
+                                     (consult-grep))
+    (setq projectile-switch-project-action 'projectile-commander)
     :bind (:map projectile-mode-map
                 ("C-c p" . projectile-command-map)))
 #+end_src

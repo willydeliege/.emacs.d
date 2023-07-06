@@ -264,6 +264,15 @@ When you can't remember all keybindings
     (require 'evil-org-agenda)
     (evil-org-agenda-set-keys))
 #+end_src
+** God mode
+#+begin_src emacs-lisp
+  (use-package god-mode)
+  (use-package evil-god-state
+    :config
+    (evil-define-key 'normal global-map "," 'evil-execute-in-god-state)
+    (evil-define-key 'god global-map [escape] 'evil-god-state-bail))
+#+end_src
+
 * Completion
 ** Vertico + Marginalia
 #+begin_src emacs-lisp

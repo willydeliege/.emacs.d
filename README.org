@@ -606,13 +606,16 @@ When you can't remember all keybindings
 ** Org basics
 #+begin_src emacs-lisp
   (use-package org
-    :straight
-    (:type built-in)
+    ;; :straight
+    ;; (:type built-in)
     :bind (("C-c a" . org-agenda))
     :hook ((org-mode . org-indent-mode))
     :config
     (setq org-agenda-files '("~/org/"))
     (setq org-stuck-projects '("+Project/PROJ" ("NEXT" "WAIT") nil ""))
+    (setq org-refile-targets '((org-agenda-files :maxlevel . 1)))
+    (setq org-outline-path-complete-in-steps nil)         ; Refile in a single go
+    (setq org-startup-folded 'show2levels)
     (setq org-todo-keywords
           '((sequence
              "TODO(t)"  ; A task that needs doing & is ready to do

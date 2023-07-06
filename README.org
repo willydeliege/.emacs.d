@@ -177,7 +177,9 @@ Better help buffer
 *** Doom-modeline
 #+begin_src emacs-lisp
   (use-package doom-modeline
-    :hook (after-init . doom-modeline-mode))
+    :hook (after-init . doom-modeline-mode)
+    :config
+    (setq doom-modeline-mu4e t))
 #+end_src
 ** Windos
 #+begin_src emacs-lisp
@@ -842,6 +844,14 @@ Prettify org mode
                  (when (equal org-state "DONE")
                    (my/org-roam-copy-todo-to-today))))
                  #+end_src
+** Mu4e notifications
+#+begin_src emacs-lisp
+  (use-package mu4e-alert
+    :hook (after-init . mu4e-alert-enable-notifications)
+    :config
+    (mu4e-alert-set-default-style 'libnotify))
+
+#+end_src
 * Mails
 ** Mu4e
 #+begin_src emacs-lisp

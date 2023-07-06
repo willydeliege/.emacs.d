@@ -110,17 +110,6 @@ Better help buffer
      (global-set-key (kbd "C-h k") #'helpful-key)
      (global-set-key (kbd "C-h x") #'helpful-command))
  #+end_src
-** Ido mode
-#+begin_src emacs-lisp
-(use-package ido
-  :config
-  (setq ido-everywhere t
-    ido-virtual-buffers t
-    ido-use-faces t
-    ido-default-buffer-method 'selected-window
-    ido-auto-merge-work-directories-length -1)
-  (ido-mode))
-  #+end_src
 
 * Personal information
 #+begin_src emacs-lisp

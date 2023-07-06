@@ -218,6 +218,8 @@ When you can't remember all keybindings
     :init
     (which-key-setup-minibuffer)
     :hook (after-init . which-key-mode)
+    :init
+    (which-key-enable-god-mode-support)
     :custom
     (which-key-allow-evil-operators t)
     (which-key-use-C-h-commands nil)

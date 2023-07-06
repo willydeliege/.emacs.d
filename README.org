@@ -110,6 +110,18 @@ Better help buffer
      (global-set-key (kbd "C-h k") #'helpful-key)
      (global-set-key (kbd "C-h x") #'helpful-command))
  #+end_src
+** Ido mode
+#+begin_src emacs-lisp
+(use-package ido
+  :config
+  (setq ido-everywhere t
+    ido-virtual-buffers t
+    ido-use-faces t
+    ido-default-buffer-method 'selected-window
+    ido-auto-merge-work-directories-length -1)
+  (ido-mode))
+  #+end_src
+
 * Personal information
 #+begin_src emacs-lisp
   (setq user-full-name "Frédéric Willem"
@@ -847,12 +859,12 @@ Prettify org mode
     (setq mail-user-agent 'mu4e-user-agent)
     (setq mu4e-confirm-quit nil)
     (setq mu4e-get-mail-command "mbsync -a")
+    (setq mu4e-completing-read-function 'completing-read)
     (require 'mu4e-icalendar)
     (mu4e-icalendar-setup)
     (setq gnus-icalendar-org-capture-file "~/org/Inbox.org")
     (setq gnus-icalendar-org-capture-headline '("Calendar"))
     (gnus-icalendar-org-setup)
-    (setq +org-capture-emails-file "Inbox.org")
     (setq mu4e-change-filenames-when-moving t)
     (setq sendmail-program (executable-find "msmtp")
           send-mail-function #'smtpmail-send-it

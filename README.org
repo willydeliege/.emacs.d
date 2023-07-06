@@ -425,7 +425,6 @@ When you can't remember all keybindings
 *** Consult projectile
 #+begin_src emacs-lisp
   (use-package consult-projectile
-  :straight (consult-projectile :type git :host gitlab :repo "OlMon/consult-projectile" :branch "master"))
     :straight (consult-projectile :type git :host gitlab :repo "OlMon/consult-projectile" :branch "master")
     :config
     (setq consult-projectile-use-projectile-switch-project t))

@@ -461,9 +461,11 @@ When you can't remember all keybindings
     :demand t ;; needed by eldoc otherwize eldoc error
     :bind
     (("C-h B" . embark-bindings) ;; alternative for `describe-bindings'
-     (:map evil-normal-state-map
-           ("C-." . embark-act)         ;; pick some comfortable binding
-           ("M-." . embark-dwim)))        ;; good alternative: M-.
+     ("C-." . embark-act)         ;; pick some comfortable binding
+     ("M-." . embark-dwim)
+     (:map evil-normal-state-map)
+     ("C-." . embark-act)         ;; pick some comfortable binding
+     ("M-." . embark-dwim))        ;; good alternative: M-.
     :init
     ;; Optionally replace the key help with a completing-read interface
     (setq prefix-help-command #'embark-prefix-help-command)

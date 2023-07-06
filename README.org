@@ -224,7 +224,7 @@ When you can't remember all keybindings
 
 ** Parens
 #+begin_src emacs-lisp
-  (use-package electric-pair 
+  (use-package electric-pair
     :straight nil
     :init
     (electric-pair-mode 1))
@@ -410,16 +410,16 @@ When you can't remember all keybindings
 
     ;; By default `consult-project-function' uses `project-root' from project.el.
     ;; Optionally configure a different project root function.
-    ;;;; 1. project.el (the default)
+      ;;;; 1. project.el (the default)
     ;; (setq consult-project-function #'consult--default-project--function)
-    ;;;; 2. vc.el (vc-root-dir)
+      ;;;; 2. vc.el (vc-root-dir)
     ;; (setq consult-project-function (lambda (_) (vc-root-dir)))
-    ;;;; 3. locate-dominating-file
+      ;;;; 3. locate-dominating-file
     ;; (setq consult-project-function (lambda (_) (locate-dominating-file "." ".git")))
-    ;;;; 4. projectile.el (projectile-project-root)
+      ;;;; 4. projectile.el (projectile-project-root)
     (autoload 'projectile-project-root "projectile")
     (setq consult-project-function (lambda (_) (projectile-project-root)))
-    ;;;; 5. No project support
+      ;;;; 5. No project support
     ;; (setq consult-project-function nil)
     )
 #+end_src
@@ -839,7 +839,7 @@ Prettify org mode
                (lambda ()
                  (when (equal org-state "DONE")
                    (my/org-roam-copy-todo-to-today))))
-		 #+end_src
+                 #+end_src
 * Mails
 ** Mu4e
 #+begin_src emacs-lisp
@@ -848,11 +848,11 @@ Prettify org mode
     :straight '(mu4e :load-path  "/usr/local/share/emacs/site-lisp/mu4e/*.el")
     :bind (("<f5>" . mu4e))
     :config
+    (require 'mu4e-icalendar)
     (setq mail-user-agent 'mu4e-user-agent)
     (setq mu4e-confirm-quit nil)
     (setq mu4e-get-mail-command "mbsync -a")
     (setq mu4e-completing-read-function 'completing-read)
-    (require 'mu4e-icalendar)
     (mu4e-icalendar-setup)
     (setq gnus-icalendar-org-capture-file "~/org/Inbox.org")
     (setq gnus-icalendar-org-capture-headline '("Calendar"))
@@ -1015,7 +1015,7 @@ Prettify org mode
   (use-package tree-sitter-langs)
 #+end_src
 * Footer
-#+begin_src emacs-lisp 
+#+begin_src emacs-lisp
   (provide 'init)
   ;; Local Variables:
   ;; byte-compile-warnings: (not free-vars)

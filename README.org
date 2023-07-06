@@ -616,6 +616,8 @@ When you can't remember all keybindings
     (setq org-refile-targets '((org-agenda-files :maxlevel . 1)))
     (setq org-outline-path-complete-in-steps nil)         ; Refile in a single go
     (setq org-startup-folded 'show2levels)
+    (setq org-attach-preferred-new-method 'dir)
+    (setq org-attach-store-link-p 'attached)
     (setq org-todo-keywords
           '((sequence
              "TODO(t)"  ; A task that needs doing & is ready to do

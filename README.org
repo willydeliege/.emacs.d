@@ -90,7 +90,8 @@ and use straight by default
   (setq display-line-numbers-type 'relative)
   (global-display-line-numbers-mode)
   (setq browse-url-browser-function 'browse-url-generic
-      browse-url-generic-program "google-chrome")
+        browse-url-generic-program "google-chrome")
+  (set-face-attribute 'default nil :height 100)
 #+end_src
 ** Help
 Better help buffer

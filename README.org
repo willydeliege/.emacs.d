@@ -984,6 +984,13 @@ Prettify org mode
     (org-contacts-files '("~/org/contacts.org"))
     :config)
 #+end_src
+** PDF Tools
+#+begin_src emacs-lisp
+  (use-package pdf-tools)
+#+end_src
+
+#+RESULTS:
+
 * Version control
 #+begin_src emacs-lisp
   (use-package magit

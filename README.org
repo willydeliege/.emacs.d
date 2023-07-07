@@ -225,7 +225,6 @@ When you can't remember all keybindings
     (which-key-use-C-h-commands nil)
     (which-key-idle-delay 0.2))
 #+end_src
-
 ** Parens
 #+begin_src emacs-lisp
   (use-package electric-pair

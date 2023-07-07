@@ -854,6 +854,13 @@ Prettify org mode
     (mu4e-alert-set-default-style 'libnotify))
 
 #+end_src
+** Org notifications
+#+begin_src emacs-lisp
+  (use-package org-notifications
+    :after org
+    :init
+    (org-notifications-start))
+#+end_src
 * Mails
 ** Mu4e
 #+begin_src emacs-lisp

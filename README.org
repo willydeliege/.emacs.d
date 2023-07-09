@@ -1049,6 +1049,16 @@ Prettify org mode
   (use-package tree-sitter :hook (java-mode . tree-sitter-mode))
   (use-package tree-sitter-langs)
 #+end_src
+* Recentf
+#+begin_src emacs-lisp
+  (require 'recentf)
+  (require 'cl-lib)
+  (defun org-is-agenda-file (filename)
+    (message "recentf agenda")
+    (member (file-truename filename) org-agenda-files))
+  (cl-pushnew 'org-is-agenda-file recentf-exclude)
+  (recentf-mode 1)
+#+end_src
 * Footer
 #+begin_src emacs-lisp
   (provide 'init)

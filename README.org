@@ -864,10 +864,16 @@ Prettify org mode
 #+end_src
 ** Org notifications
 #+begin_src emacs-lisp
-  (use-package org-notifications
+  (use-package org-alert
     :after org
     :init
-    (org-notifications-start))
+    (setq alert-default-style 'libnotify))
+#+end_src
+** Org cliplink
+#+begin_src emacs-lisp
+  (use-package org-cliplink
+    :after org
+    :bind ("C-c l" . org-cliplink))
 #+end_src
 * Mails
 ** Mu4e

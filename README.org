@@ -1021,7 +1021,10 @@ Prettify org mode
     (define-fringe-bitmap 'git-gutter-fr:modified [224] nil nil '(center repeated))
     (define-fringe-bitmap 'git-gutter-fr:deleted [128 192 224 240] nil nil 'bottom))
 #+end_src
-
+** Orgit
+#+begin_src emacs-lisp
+  (use-package orgit)
+#+end_src
 * Programming
 ** Error checking
 #+begin_src emacs-lisp

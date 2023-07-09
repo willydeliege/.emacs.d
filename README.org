@@ -528,17 +528,13 @@ When you can't remember all keybindings
 
   (advice-add #'embark-completing-read-prompter
               :around #'embark-hide-which-key-indicator))
-  ;; Consult users will also want the embark-consult package.
-  (use-package embark-consult
-    :hook
-    (embark-collect-mode . consult-preview-at-point-mode))
 #+end_src
 
 ** Orderless
 #+begin_src emacs-lisp
   (use-package orderless
     :custom
-    (completion-styles '(orderless flex))
+    (completion-styles '(orderless basic))
     (orderless-matching-styles '(orderless-regexp orderless-flex)))
 #+end_src
 ** Company

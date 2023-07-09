@@ -19,3 +19,5 @@ elpa
 transient
 workspace
 eshell
+/multisession/
+/url/

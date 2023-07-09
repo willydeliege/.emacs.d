@@ -80,18 +80,17 @@ and use straight by default
 #+begin_src emacs-lisp
   ;; Save the last place edited in files
   (save-place-mode 1)
-  (setq save-place-file (locate-user-emacs-file "places" ".emacs-places"))
-  (setq save-place-forget-unreadable-files nil)
+  (setq save-place-file (locate-user-emacs-file "places" ".emacs-places")
+        save-place-forget-unreadable-files nil)
   (menu-bar-mode -1)
   (tool-bar-mode -1)
-  (recentf-mode 1)
   (setq recentf-max-menu-items 25)
   (setq recentf-max-saved-items 25)
   (setq display-line-numbers-type 'relative)
   (global-display-line-numbers-mode)
   (setq browse-url-browser-function 'browse-url-generic
         browse-url-generic-program "google-chrome")
-  (set-face-attribute 'default nil :height 100)
+  (set-face-attribute 'default nil :height 110) ;; 100 is 10pts
 #+end_src
 ** Help
 Better help buffer
@@ -266,7 +265,7 @@ When you can't remember all keybindings
 #+begin_src emacs-lisp
   (use-package evil-org
     :after org
-    :hook (org-mode . evil-org-mode)
+    :hook ((org-mode org-agenda-mode) . evil-org-mode)
     :config
     (evil-org-set-key-theme '(textobjects insert navigation additional shift todo heading))
     (require 'evil-org-agenda)

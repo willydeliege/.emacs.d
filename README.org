@@ -186,10 +186,10 @@ Better help buffer
     :config
     (setq doom-modeline-mu4e t))
 #+end_src
-** Windos
+** Windows
 #+begin_src emacs-lisp
   (use-package ace-window
-    :bind ("M-o" . ace-window)
+    :bind ("C-x o" . ace-window)
     :custom
     (aw-dispatch-always t))
 #+end_src

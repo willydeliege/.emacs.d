@@ -1004,8 +1004,7 @@ Prettify org mode
     :bind (("C-x g" . magit-status)))
 
   (use-package git-gutter
-    :init
-    (global-git-gutter-mode 1)
+    :hook ((prog-mode text mode) . git-gutter-mode)
     :config
     (setq git-gutter:update-interval 0.02))
 

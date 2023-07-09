@@ -1006,6 +1006,7 @@ Prettify org mode
 #+RESULTS:
 
 * Version control
+** Magit
 #+begin_src emacs-lisp
   (use-package magit
     :bind (("C-x g" . magit-status)))

@@ -111,7 +111,11 @@ Better help buffer
      (global-set-key (kbd "C-h k") #'helpful-key)
      (global-set-key (kbd "C-h x") #'helpful-command))
  #+end_src
-
+** Terminal
+#+begin_src emacs-lisp
+  (use-package vterm
+    :bind ("C-c v" . vterm))
+#+end_src
 * Personal information
 #+begin_src emacs-lisp
   (setq user-full-name "Frédéric Willem"

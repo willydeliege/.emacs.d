@@ -747,6 +747,7 @@ Prettify org mode
            ("C-c n p" . my/org-roam-find-project)
            ("C-c n t" . my/org-roam-capture-task)
            ("C-c n b" . my/org-roam-capture-inbox)
+           ("C-c x" . my/org-roam-capture-inbox)
            :map org-mode-map
            ("C-M-i" . completion-at-point)
            :map org-roam-dailies-map

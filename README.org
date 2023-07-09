@@ -1060,7 +1060,6 @@ Prettify org mode
   (require 'recentf)
   (require 'cl-lib)
   (defun org-is-agenda-file (filename)
-    (message "recentf agenda")
     (member (file-truename filename) org-agenda-files))
   (cl-pushnew 'org-is-agenda-file recentf-exclude)
   (recentf-mode 1)

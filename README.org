@@ -652,6 +652,10 @@ When you can't remember all keybindings
 #+begin_src emacs-lisp
   (use-package org-super-agenda
     :config
+    (setq org-agenda-skip-deadline-prewarning-if-scheduled t
+          org-agenda-skip-deadline-if-done t
+          org-agenda-skip-scheduled-if-deadline-is-shown t
+          org-agenda-skip-scheduled-if-done t)
     (setq org-agenda-custom-commands
           '(("z" "My view"
              (   (agenda "" ((org-agenda-span 'day)

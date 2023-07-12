@@ -806,7 +806,7 @@ Prettify org mode
 
   (defun my/org-roam-project-finalize-hook ()
     "Adds the captured project file to `org-agenda-files' if the
-    capture was not aborted."
+      capture was not aborted."
     ;; Remove the hook since it was added temporarily
     (remove-hook 'org-capture-after-finalize-hook #'my/org-roam-project-finalize-hook)
 
@@ -1029,6 +1029,31 @@ Prettify org mode
 #+end_src
 
 #+RESULTS:
+* Calendars
+** Calendar
+#+begin_src emacs-lisp
+  (use-package calfw
+    :commands (cfw:open-calendar-buffer))
+
+  (use-package calfw-org
+    :demand t
+    :bind ("C-c c" . my/open-calendar)
+    :config
+    (require 'calfw)
+    (defun my/open-calendar ()
+      (interactive)
+      (cfw:open-calendar-buffer
+       :contents-sources
+       (list
+        (cfw:org-create-source "Green")  ; orgmode source
+        ;; (cfw:ical-create-source "Moon" "~/moon.ics" "Gray")  ; ICS source1
+        ;; (cfw:ical-create-source "gcal" "https://..../basic.ics" "IndianRed") ; google calendar ICS
+        )))
+    :commands (cfw:open-org-calendar))
+
+
+#+end_src
+** Google calendar
 
 * Version control
 ** Magit

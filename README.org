@@ -733,7 +733,7 @@ Prettify org mode
      org-agenda-current-time-string
      "⭠ now ─────────────────────────────────────────────────"))
 #+end_src
-** org roaom
+** org roam
 #+begin_src emacs-lisp
   (use-package org-roam
     :demand t  ;; Ensure org-roam is loaded by default

@@ -1046,15 +1046,64 @@ Prettify org mode
        :contents-sources
        (list
         (cfw:org-create-source "Green")  ; orgmode source
+        (cfw:org-create-file-source
+            "P" "~/org/calendar.org" "Blue")
         ;; (cfw:ical-create-source "Moon" "~/moon.ics" "Gray")  ; ICS source1
         ;; (cfw:ical-create-source "gcal" "https://..../basic.ics" "IndianRed") ; google calendar ICS
         )))
     :commands (cfw:open-org-calendar))
-
-
+  (use-package org-gcal
+    :demand t
+    :hook (org-agenda-mode . org-gcal-sync)
+    :init
+    ;; (require 'plstore)
+    ;; (add-to-list 'plstore-encrypt-to '("frederic.willem@gmail.com"))
+   (setq plstore-cache-passphrase-for-symmetric-encryption t) 
+    (setq org-gcal-client-id "140991280434-1736v7des240n016cqe46cuof13ggvbc.apps.googleusercontent.com"
+            org-gcal-client-secret "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"
+    	org-gcal-fetch-file-alist '(("frederic.willem@gmail.com" .  "~/org/calendar.org"))))
+  ;; 140991280434-1736v7des240n016cqe46cuof13ggvbc.apps.googleusercontent.com
+  ;; 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
 #+end_src
-** Google calendar
-
+** Holidays calendar
+#+begin_src emacs-lisp
+  (require 'calendar)
+  (require 'holidays)
+  (setq calendar-christian-all-holidays-flag t)
+  (setq calendar-holidays '((holiday-fixed 1 1 "New Year's Day")
+  			  (holiday-fixed 2 2 "Groundhog Day")
+                          (holiday-fixed 2 14 "Valentine's Day")
+                          (holiday-fixed 3 17 "St. Patrick's Day")
+                          (holiday-fixed 4 1 "April Fools' Day")
+                          (holiday-float 5 0 2 "Mother's Day")
+                          (holiday-float 6 0 3 "Father's Day")
+                          (holiday-fixed 7 21 "Belgium National Day")
+                          (holiday-fixed 10 31 "Halloween")
+                          (holiday-fixed 11 11 "Veteran's Day")
+                          (holiday-float 11 4 4 "Thanksgiving")
+                          (holiday-easter-etc)
+                          (holiday-fixed 12 25 "Christmas")
+                          (if calendar-christian-all-holidays-flag
+                              (append
+                               (holiday-fixed 1 6 "Epiphany")
+                               (holiday-julian 12 25 "Christmas (Julian calendar)")
+                               (holiday-greek-orthodox-easter)
+                               (holiday-fixed 8 15 "Assumption")
+                               (holiday-advent 0 "Advent")))
+                          (solar-equinoxes-solstices)
+                          (holiday-sexp calendar-daylight-savings-starts
+                                        (format "Daylight Saving Time Begins %s"
+                                                (solar-time-string
+                                                 (/ calendar-daylight-savings-starts-time
+                                                    (float 60))
+                                                 calendar-standard-time-zone-name)))
+                          (holiday-sexp calendar-daylight-savings-ends
+                                        (format "Daylight Saving Time Ends %s"
+                                                (solar-time-string
+                                                 (/ calendar-daylight-savings-ends-time
+                                                    (float 60))
+                                                 calendar-daylight-time-zone-name)))))
+#+end_src
 * Version control
 ** Magit
 #+begin_src emacs-lisp

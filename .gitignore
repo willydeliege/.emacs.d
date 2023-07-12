@@ -21,3 +21,5 @@ workspace
 eshell
 /multisession/
 /url/
+/projectile.cache
+/tramp

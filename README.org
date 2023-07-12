@@ -896,6 +896,10 @@ Prettify org mode
     :after org
     :bind ("C-c l" . org-cliplink))
 #+end_src
+** Org download
+#+begin_src emacs-lisp
+  (use-package org-download)
+#+end_src
 * Mails
 ** Mu4e
 #+begin_src emacs-lisp

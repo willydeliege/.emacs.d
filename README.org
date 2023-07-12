@@ -268,6 +268,9 @@ When you can't remember all keybindings
     :hook ((org-mode org-agenda-mode) . evil-org-mode)
     :config
     (evil-org-set-key-theme '(textobjects insert navigation additional shift todo heading))
+    (evil-define-key '(insert normal emacs) 'evil-org-mode
+        (kbd "RET") 'evil-org-return)
+    (setq org-return-follows-link t)
     (require 'evil-org-agenda)
     (evil-org-agenda-set-keys))
 #+end_src

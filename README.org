@@ -760,11 +760,26 @@ Prettify org mode
     ("C-c n d" . org-roam-dailies-map)
     :config
     (require 'org-roam-dailies) ;; Ensure the keymap is available
+    (require 'org-roam-protocol)
+    (defun my/org-protocol-insert-selection-dwim (selection)
+      "Insert SELECTION as an org blockquote."
+      (unless (string= selection "")
+        ;; (format "#+begin_quote\n%s\n#+end_quote" selection)))
+        (format "%s\n" selection)))
+
+    (setq org-roam-capture-ref-templates
+
+  	'(("r" "ref" entry "* %(my/org-protocol-insert-selection-dwim \"%i\")%?"
+             :target (file+head "${slug}.org"
+                                "#+title: ${title}\n
+  ,#+created: %u\n"
+                                )
+             :unnarrowed t)))
     (org-roam-db-autosync-mode))
 
   (defun my/open-inbox ()
-  (interactive)
-  (find-file "~/org/Inbox.org"))
+    (interactive)
+    (find-file "~/org/Inbox.org"))
   (defun org-roam-node-insert-immediate (arg &rest args)
     (interactive "P")
     (let ((args (push arg args))

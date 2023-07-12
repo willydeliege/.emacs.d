@@ -23,3 +23,7 @@ eshell
 /url/
 /projectile.cache
 /tramp
+/persist/
+/request/
+/oauth2-auto.plist
+/.org-generic-id-locations

@@ -86,7 +86,8 @@ and use straight by default
   (tool-bar-mode -1)
   (setq recentf-max-menu-items 25)
   (setq recentf-max-saved-items 25)
-  (setq display-line-numbers-type 'relative)
+  (setq display-line-numbers-type 'relative
+        display-line-numbers-width 4)
   (global-display-line-numbers-mode)
   (setq browse-url-browser-function 'browse-url-generic
         browse-url-generic-program "google-chrome")

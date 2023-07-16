@@ -265,12 +265,12 @@ When you can't remember all keybindings
 ** evil org mode
 #+begin_src emacs-lisp
   (use-package evil-org
-    :after org
-    :hook ((org-mode org-agenda-mode) . evil-org-mode)
+    :hook (( org-agenda-mode . evil-org-mode)
+         (org-mode . evil-org-mode))
     :config
     (evil-org-set-key-theme '(textobjects insert navigation additional shift todo heading))
     (evil-define-key '(insert normal emacs) 'evil-org-mode
-        (kbd "RET") 'evil-org-return)
+      (kbd "RET") 'evil-org-return)
     (setq org-return-follows-link t)
     (require 'evil-org-agenda)
     (evil-org-agenda-set-keys))
@@ -1059,6 +1059,10 @@ Prettify org mode
     (add-to-list 'mu4e-view-actions
                  '("org-contact-add" . mu4e-action-add-org-contact) t))
 #+end_src
+
+#+RESULTS:
+: mu4e
+
 *** Mu4e contrib
 #+begin_src emacs-lisp
 (use-package mu4e-contrib
@@ -1102,39 +1106,26 @@ Prettify org mode
 * Calendars
 ** Calendar
 #+begin_src emacs-lisp
-  (use-package calfw
-    :commands (cfw:open-calendar-buffer))
+(use-package  password-store)
+#+end_src
+#+begin_src emacs-lisp
+  (use-package calfw)
 
   (use-package calfw-org
-    :demand t
-    :bind ("C-c c" . my/open-calendar)
-    :config
-    (require 'calfw)
-    (defun my/open-calendar ()
-      (interactive)
-      (cfw:open-calendar-buffer
-       :contents-sources
-       (list
-        (cfw:org-create-source "Green")  ; orgmode source
-        (cfw:org-create-file-source
-            "P" "~/org/calendar.org" "Blue")
-        ;; (cfw:ical-create-source "Moon" "~/moon.ics" "Gray")  ; ICS source1
-        ;; (cfw:ical-create-source "gcal" "https://..../basic.ics" "IndianRed") ; google calendar ICS
-        )))
-    :commands (cfw:open-org-calendar))
+    :bind ("C-c c" . cfw:open-org-calendar))
   (use-package org-gcal
-    :demand t
     :hook (org-agenda-mode . org-gcal-sync)
     :init
-    ;; (require 'plstore)
-    ;; (add-to-list 'plstore-encrypt-to '("frederic.willem@gmail.com"))
-   (setq plstore-cache-passphrase-for-symmetric-encryption t) 
+    (setq client-secret (password-store-get 'calendar))
+    (setq plstore-cache-passphrase-for-symmetric-encryption t)
     (setq org-gcal-client-id "140991280434-1736v7des240n016cqe46cuof13ggvbc.apps.googleusercontent.com"
-            org-gcal-client-secret "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"
-    	org-gcal-fetch-file-alist '(("frederic.willem@gmail.com" .  "~/org/calendar.org"))))
-  ;; 140991280434-1736v7des240n016cqe46cuof13ggvbc.apps.googleusercontent.com
-  ;; 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
+          org-gcal-client-secret client-secret
+      	org-gcal-fetch-file-alist '(("frederic.willem@gmail.com" .  "~/org/calendar.org"))))
 #+end_src
+
+#+RESULTS:
+| org-gcal-sync | org-super-agenda-mode | evil-org-mode |
+
 ** Holidays calendar
 #+begin_src emacs-lisp
   (require 'calendar)
@@ -1174,6 +1165,7 @@ Prettify org mode
                                                     (float 60))
                                                  calendar-daylight-time-zone-name)))))
 #+end_src
+
 * Version control
 ** Magit
 #+begin_src emacs-lisp
@@ -1190,7 +1182,7 @@ Prettify org mode
     (define-fringe-bitmap 'git-gutter-fr:added [224] nil nil '(center repeated))
     (define-fringe-bitmap 'git-gutter-fr:modified [224] nil nil '(center repeated))
     (define-fringe-bitmap 'git-gutter-fr:deleted [128 192 224 240] nil nil 'bottom))
-#+end_src
+    #+end_src
 ** Orgit
 #+begin_src emacs-lisp
   (use-package orgit)

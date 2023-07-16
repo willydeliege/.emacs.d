@@ -784,6 +784,9 @@ Prettify org mode
              :unnarrowed t)))
     (org-roam-db-autosync-mode))
 
+  (add-to-list 'org-roam-capture-templates  '("p" "project" plain "* Objective/Goals\n%?\n* Brainstorming\n* Tasks\n\n** TODO Add initial tasks\n* Dates\n* Communication \n* References\n"
+        :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n#+category: ${title}\n#+filetags: Project")
+        :unnarrowed t))
   (defun my/open-inbox ()
     (interactive)
     (find-file "~/org/Inbox.org"))
@@ -835,7 +838,7 @@ Prettify org mode
      (my/org-roam-filter-by-tag "Project")
      nil
      :templates
-     '(("p" "project" plain "* Goals\n\n%?\n\n* Tasks\n\n** TODO Add initial tasks\n\n* Dates\n\n"
+     '(("p" "project" plain "* Objective/Goals\n%?\n* Brainstorming\n* Tasks\n\n** TODO Add initial tasks\n* Dates\n* Communication \n* References\n"
         :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n#+category: ${title}\n#+filetags: Project")
         :unnarrowed t))))
 

@@ -890,6 +890,28 @@ Prettify org mode
                  (when (equal org-state "DONE")
                    (my/org-roam-copy-todo-to-today))))
                  #+end_src
+
+                 #+RESULTS:
+                 | lambda  | nil                   | (when (equal org-state DONE) (my/org-roam-copy-todo-to-today)) |                                                                      |
+                 | closure | (bootstrap-version t) | nil                                                            | (if (equal org-state DONE) (progn (my/org-roam-copy-todo-to-today))) |
+
+** Org Roam UI
+#+begin_src emacs-lisp
+  (use-package org-roam-ui
+    :straight
+    (:host github :repo "org-roam/org-roam-ui" :branch "main" :files ("*.el" "out"))
+    :after org-roam
+    ;;         normally we'd recommend hooking orui after org-roam, but since org-roam does not have
+    ;;         a hookable mode anymore, you're advised to pick something yourself
+    ;;         if you don't care about startup time, use
+    ;;  :hook (after-init . org-roam-ui-mode)
+    :config
+    (setq org-roam-ui-sync-theme t
+          org-roam-ui-follow t
+          org-roam-ui-update-on-save t
+          org-roam-ui-open-on-start t))
+
+#+end_src
 ** Mu4e notifications
 #+begin_src emacs-lisp
   (use-package mu4e-alert

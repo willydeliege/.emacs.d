@@ -150,7 +150,7 @@ Better help buffer
           '((matches . (extrabold))
             (selection . (semibold italic text-also)))
 
-          modus-themes-org-blocks 'gray-background ; {nil,'gray-background,'tinted-background}
+          modus-themes-org-blocks 'tinted-background ; {nil,'gray-background,'tinted-background}
 
           ;; The `modus-themes-headings' is an alist: read the manual's
           ;; node about it or its doc string.  Basically, it supports
@@ -166,7 +166,7 @@ Better help buffer
     ;;       modus-themes-preset-overrides-intense)
 
     ;; Load the theme of your choice.
-    (load-theme 'modus-vivendi))
+    (load-theme 'modus-operandi-tinted))
   #+end_src
 ** Modeline
 *** Nerd Icons

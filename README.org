@@ -939,10 +939,10 @@ Prettify org mode
 #+end_src
 ** Org ql
 #+begin_src emacs-lisp
-      (use-package org-ql
-      :demand t
+  (use-package org-ql
+    :demand t
     :config
-  (setq org-ql-view-buffers-files 'org-directory))
+    (setq org-ql-view-buffers-files 'org-directory))
          #+end_src
 #+begin_src emacs-lisp
   ;; (use-package cl-lib)

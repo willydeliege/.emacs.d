@@ -35,7 +35,16 @@ Using [[https://github.com/radian-software/straight.el#getting-started][straight
         (eval-print-last-sexp)))
     (load bootstrap-file nil 'nomessage))
 #+end_src
-** Using straight properly with initiating in early-init.el
+** USE-PACKAGE
+We will use use-package
+#+begin_src emacs-lisp
+  (straight-use-package 'use-package)
+#+end_src
+and use straight by default
+#+begin_src emacs-lisp
+  (setq straight-use-package-by-default t)
+#+end_src
+* Using straight properly with initiating in early-init.el
 This will prevent to use package.el
 #+begin_src emacs-lisp :tangle early-init.el
   ;;; early-init.el --- Emacs early init file
@@ -66,15 +75,6 @@ This will prevent to use package.el
 
   (provide 'early-init)
   ;;; early-init.el ends here
-#+end_src
-** USE-PACKAGE
-We will use use-package
-#+begin_src emacs-lisp
-  (straight-use-package 'use-package)
-#+end_src
-and use straight by default
-#+begin_src emacs-lisp
-  (setq straight-use-package-by-default t)
 #+end_src
 * Defaults
 #+begin_src emacs-lisp

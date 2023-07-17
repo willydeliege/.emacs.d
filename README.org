@@ -86,12 +86,19 @@ This will prevent to use package.el
   (tool-bar-mode -1)
   (setq recentf-max-menu-items 25)
   (setq recentf-max-saved-items 25)
-  (setq display-line-numbers-type 'relative
+  (add-hook 'text-mode-hook 'display-line-numbers-mode)
+  (add-hook 'prog-mode-hook 'display-line-numbers-mode)
+  (setq-default display-line-numbers-type 'relative
         display-line-numbers-width 4)
-  (global-display-line-numbers-mode)
   (setq browse-url-browser-function 'browse-url-generic
         browse-url-generic-program "google-chrome")
   (set-face-attribute 'default nil :height 110) ;; 100 is 10pts
+#+end_src
+** custom file
+#+begin_src emacs-lisp
+(setq custom-file (concat user-emacs-directory "custom.el"))
+(when (file-exists-p custom-file)
+  (load custom-file))
 #+end_src
 ** Help
 Better help buffer

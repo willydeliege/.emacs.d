@@ -1209,6 +1209,16 @@ Prettify org mode
 #+begin_src emacs-lisp
   (use-package orgit)
 #+end_src
+** Diff-hl
+#+begin_src emacs-lisp
+  (use-package diff-hl
+    :after magit
+    :hook ((magit-pre-refresh . diff-hl-magit-pre-refresh)
+  	 (magit-post-refresh . diff-hl-magit-post-refresh))
+    :init
+    (global-diff-hl-mode 1))
+#+end_src
+
 * Programming
 ** Error checking
 #+begin_src emacs-lisp

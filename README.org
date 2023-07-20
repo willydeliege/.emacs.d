@@ -662,6 +662,18 @@ When you can't remember all keybindings
              "WATCH(w)"))))
 
 #+end_src
+** Org capture
+Enter insert mode when capturing things
+#+begin_src emacs-lisp
+  (use-package org
+    :hook
+    (org-capture-mode . evil-insert-state))
+
+#+end_src
+
+#+RESULTS:
+| evil-insert-state |
+
 ** Org-agenda
 #+begin_src emacs-lisp
   (use-package org-super-agenda

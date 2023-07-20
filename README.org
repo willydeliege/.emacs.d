@@ -1135,19 +1135,7 @@ Prettify org mode
 
   (use-package calfw-org
     :bind ("C-c c" . cfw:open-org-calendar))
-  (use-package org-gcal
-    :hook (org-agenda-mode . org-gcal-sync)
-    :init
-    (setq client-secret (password-store-get 'calendar))
-    (setq plstore-cache-passphrase-for-symmetric-encryption t)
-    (setq org-gcal-client-id "140991280434-1736v7des240n016cqe46cuof13ggvbc.apps.googleusercontent.com"
-          org-gcal-client-secret client-secret
-      	org-gcal-fetch-file-alist '(("frederic.willem@gmail.com" .  "~/org/calendar.org"))))
 #+end_src
-
-#+RESULTS:
-| org-gcal-sync | org-super-agenda-mode | evil-org-mode |
-
 ** Holidays calendar
 #+begin_src emacs-lisp
   (require 'calendar)
@@ -1186,6 +1174,18 @@ Prettify org mode
                                                  (/ calendar-daylight-savings-ends-time
                                                     (float 60))
                                                  calendar-daylight-time-zone-name)))))
+#+end_src
+
+** Org-gcal
+#+begin_src emacs-lisp
+  (use-package org-gcal
+    :hook (org-agenda-mode . org-gcal-sync)
+    :init
+    (setq client-secret (password-store-get 'calendar))
+    (setq plstore-cache-passphrase-for-symmetric-encryption t)
+    (setq org-gcal-client-id "140991280434-1736v7des240n016cqe46cuof13ggvbc.apps.googleusercontent.com"
+  	org-gcal-client-secret client-secret
+  	org-gcal-fetch-file-alist '(("frederic.willem@gmail.com" .  "~/org/calendar.org"))))
 #+end_src
 
 * Version control

@@ -1178,11 +1178,13 @@ Prettify org mode
 
 ** Org-gcal
 #+begin_src emacs-lisp
+  (use-package emacs-oauth2-auto)
   (use-package org-gcal
     :hook (org-agenda-mode . org-gcal-sync)
     :init
+    (require 'plstore)
+    (add-to-list 'plstore-encrypt-to "E7446C9175DAAA79")
     (setq client-secret (password-store-get 'calendar))
-    (setq plstore-cache-passphrase-for-symmetric-encryption t)
     (setq org-gcal-client-id "140991280434-1736v7des240n016cqe46cuof13ggvbc.apps.googleusercontent.com"
   	org-gcal-client-secret client-secret
   	org-gcal-fetch-file-alist '(("frederic.willem@gmail.com" .  "~/org/calendar.org"))))

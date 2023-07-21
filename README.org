@@ -223,6 +223,7 @@ Usage of evil mode as I used to work with vim binding for years
     (evil-collection-init))
 #+end_src
 ** Which-key
+Emacs package that displays available keybindings in popup
 When you can't remember all keybindings
 #+begin_src emacs-lisp
   (use-package which-key
@@ -240,13 +241,20 @@ When you can't remember all keybindings
     (which-key-idle-delay 0.2))
 #+end_src
 ** Parens
+Use built-in electric pair mode
 #+begin_src emacs-lisp
   (electric-pair-mode 1)
+#+end_src
+*** Surround
+This package emulates surround.vim by Tim Pope. The functionality is wrapped into a minor mode.
+This package uses Evil as its vi layer.
+#+begin_src emacs-lisp
   (use-package evil-surround
     :config
     (global-evil-surround-mode 1))
 #+end_src
 ** Jump
+avy is a GNU Emacs package for jumping to visible text using a char-based decision tree
 #+begin_src emacs-lisp
   (use-package avy
     :demand t
@@ -260,6 +268,7 @@ When you can't remember all keybindings
     (evil-commentary-mode))
 #+end_src
 ** evil search
+anzu.el provides a minor mode which displays current match and total matches information in the mode-line in various search modes.
 #+begin_src emacs-lisp
   (use-package anzu
     :init
@@ -270,6 +279,7 @@ When you can't remember all keybindings
 #+RESULTS:
 
 ** evil org mode
+Supplemental evil-mode keybindings to emacs org-mode
 #+begin_src emacs-lisp
   (use-package evil-org
     :hook (( org-agenda-mode . evil-org-mode)

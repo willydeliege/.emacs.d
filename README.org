@@ -943,14 +943,6 @@ Prettify org mode
           org-roam-ui-open-on-start t))
 
 #+end_src
-** Mu4e notifications
-#+begin_src emacs-lisp
-  (use-package mu4e-alert
-    :hook (after-init . mu4e-alert-enable-notifications)
-    :config
-    (mu4e-alert-set-default-style 'libnotify))
-
-#+end_src
 ** Org notifications
 #+begin_src emacs-lisp
   (use-package org-alert
@@ -1099,6 +1091,14 @@ Prettify org mode
 #+begin_src emacs-lisp
 (use-package mu4e-contrib
 :straight nil)
+#+end_src
+** Mu4e notifications
+#+begin_src emacs-lisp
+  (use-package mu4e-alert
+    :hook (after-init . mu4e-alert-enable-notifications)
+    :config
+    (mu4e-alert-set-default-style 'libnotify))
+
 #+end_src
 ** Org message
 #+begin_src emacs-lisp

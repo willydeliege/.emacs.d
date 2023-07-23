@@ -1126,13 +1126,27 @@ Prettify org mode
 #+end_src
 ** org contacts
 #+begin_src emacs-lisp
-  (use-package org-contacts
-    :demand t
-    :after org-msg
-    :hook (org-msg-edit-mode . org-contacts-setup-completion-at-point)
-    :custom
-    (org-contacts-files '("~/org/contacts.org"))
-    :config)
+    (use-package org-contacts
+      :demand t
+      :after org-msg
+      :hook (org-msg-edit-mode . org-contacts-setup-completion-at-point)
+      :custom
+      (org-contacts-files '("~/org/contacts.org"))
+      :config
+      (add-to-list 'org-capture-templates
+          '("c" "Contacts" entry (file "~/org/contacts.org")
+           "* %(org-contacts-template-name)
+  :PROPERTIES:
+  :EMAIL: %(org-contacts-template-email)
+  :PHONE:
+  :ALIAS:
+  :NICKNAME:
+  :IGNORE:
+  :ICON:
+  :NOTE:
+  :ADDRESS:
+  :BIRTHDAY:
+  :END:")))
 #+end_src
 ** PDF Tools
 #+begin_src emacs-lisp

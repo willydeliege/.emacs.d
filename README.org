@@ -63,6 +63,7 @@ This will prevent to use package.el
   ;; trust the themes
   (setq custom-safe-themes t)
   (global-set-key (kbd "C-x c") 'save-buffers-kill-emacs)
+  (global-set-key (kbd "C-x k") 'kill-this-buffer)
   (setq backup-directory-alist `(("." . ,(expand-file-name "tmp/backups/" user-emacs-directory))))
 
   ;; auto-save-mode doesn't create the path automatically!

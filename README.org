@@ -134,6 +134,7 @@ Better help buffer
   (use-package modus-themes
     :config
     ;; Add all your customizations prior to loading the themes
+    (setq modus-themes-common-palette-overrides modus-themes-preset-overrides-intense)
     (setq modus-themes-italic-constructs t
           modus-themes-bold-constructs nil
           modus-themes-mixed-fonts t

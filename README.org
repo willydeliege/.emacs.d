@@ -767,17 +767,11 @@ Enter insert mode when capturing things
 ** Org modern
 Prettify org mode
 #+begin_src emacs-lisp
-  ;; Show hidden emphasis markers
-    (use-package org-appear
-      :hook (org-mode . org-appear-mode))
-
   (use-package org-modern
     :after org
     :hook ((org-mode . org-modern-mode)
-           (org-agenda-finalize . org-modern-agenda))
-    :config
-    )
-#+end_src
+           (org-agenda-finalize . org-modern-agenda)))
+           #+end_src
 ** org roam
 #+begin_src emacs-lisp
   (use-package org-roam

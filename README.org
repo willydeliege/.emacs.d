@@ -1168,6 +1168,7 @@ Prettify org mode
 ** Holidays calendar
 #+begin_src emacs-lisp
   (require 'calendar)
+  (setq calendar-week-start-day 1)
   (require 'holidays)
   (setq calendar-christian-all-holidays-flag t)
   (setq calendar-holidays '((holiday-fixed 1 1 "New Year's Day")
@@ -1201,16 +1202,21 @@ Prettify org mode
                                         (format "Daylight Saving Time Ends %s"
                                                 (solar-time-string
                                                  (/ calendar-daylight-savings-ends-time
-                                                    (float 60))
+
+                                     (float 60))
                                                  calendar-daylight-time-zone-name)))))
+  (setq calendar-latitude 50.63)
+  (setq calendar-longitude 5.58)
 #+end_src
 
 ** Org-gcal
+
 #+begin_src emacs-lisp
   (use-package emacs-oauth2-auto)
   (use-package org-gcal
-    :hook (org-agenda-mode . org-gcal-sync)
+    :hook (org-agenda-finalize . org-gcal-sync)
     :init
+    (setq org-gcal-notify-p nil)
     (require 'plstore)
     (add-to-list 'plstore-encrypt-to "E7446C9175DAAA79")
     (setq client-secret (password-store-get 'calendar))

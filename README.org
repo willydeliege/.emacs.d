@@ -825,7 +825,7 @@ Prettify org mode
     (org-roam-db-autosync-mode))
 
   (add-to-list 'org-roam-capture-templates  '("p" "project" plain
-                                              (file "~/.emacs.d/templates/project-template.org")
+                                              (file "~/org/.templates/project-template.org")
                                               :target (file "%<%Y%m%d%H%M%S>-${slug}.org")
                                               :unnarrowed t))
   (defun my/open-inbox ()
@@ -879,7 +879,7 @@ Prettify org mode
      (my/org-roam-filter-by-tag "Project")
      nil
      :templates
-     '(("p" "project" plain (file "~/.emacs.d/templates/project-template.org")
+     '(("p" "project" plain (file "~/org/.templates/project-template.org")
         :target (file "%<%Y%m%d%H%M%S>-${slug}.org")
         :unnarrowed t))))
 

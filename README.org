@@ -645,11 +645,12 @@ marginalia adds annotations in the mini buffer
     :init
     (org-babel-do-load-languages 'org-babel-load-languages
   			       (append org-babel-load-languages
-					 '((shell     . t)
-					   (java      . t))))
+  				       '((shell     . t)
+  					 (java      . t))))
     :config
     (setq
      ;; Edit settings
+     org-log-into-drawer t
      org-auto-align-tags nil
      org-tags-column 0
      org-catch-invisible-edits 'show-and-error

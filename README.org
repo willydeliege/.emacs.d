@@ -1151,7 +1151,9 @@ Prettify org mode
 #+end_src
 ** PDF Tools
 #+begin_src emacs-lisp
-  (use-package pdf-tools)
+  (use-package pdf-tools
+    :init
+    (pdf-loader-install))
 #+end_src
 
 #+RESULTS:

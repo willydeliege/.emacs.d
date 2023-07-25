@@ -198,9 +198,7 @@ Better help buffer
 ** Windows
 #+begin_src emacs-lisp
   (use-package ace-window
-    :bind ("C-x o" . ace-window)
-    :custom
-    (aw-dispatch-always t))
+    :bind ("C-x o" . ace-window))
 #+end_src
 * Editing
 ** Evil mode

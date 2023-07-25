@@ -802,7 +802,7 @@ Prettify org mode
     :config
     (require 'org-roam-dailies) ;; Ensure the keymap is available
     (setq org-roam-dailies-capture-templates
-  	'(("d" "default" entry "* %<%I:%M> %?" :target
+  	'(("d" "default" entry "* %<%H:%M> %?" :target
   	   (file+datetree "%<%Y-W%W>.org" 'week))))
     (require 'org-roam-protocol)
     (defun my/org-protocol-insert-selection-dwim (selection)

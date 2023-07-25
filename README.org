@@ -1005,14 +1005,14 @@ Prettify org mode
     :bind (("<f5>" . mu4e))
     :config
     (require 'mu4e-icalendar)
-    (setq mail-user-agent 'mu4e-user-agent)
-    (setq mu4e-confirm-quit nil)
-    (setq mu4e-get-mail-command "mbsync -a")
-    (setq mu4e-completing-read-function 'completing-read)
     (mu4e-icalendar-setup)
     (setq gnus-icalendar-org-capture-file "~/org/Inbox.org")
     (setq gnus-icalendar-org-capture-headline '("Calendar"))
     (gnus-icalendar-org-setup)
+    (setq mail-user-agent 'mu4e-user-agent)
+    (setq mu4e-confirm-quit nil)
+    (setq mu4e-get-mail-command "mbsync -a")
+    (setq mu4e-completing-read-function 'completing-read)
     (setq mu4e-change-filenames-when-moving t)
     (setq sendmail-program (executable-find "msmtp")
           send-mail-function #'smtpmail-send-it

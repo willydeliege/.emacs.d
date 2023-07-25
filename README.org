@@ -1215,7 +1215,6 @@ Prettify org mode
 #+begin_src emacs-lisp
   (use-package emacs-oauth2-auto)
   (use-package org-gcal
-    :hook (org-agenda-finalize . org-gcal-sync)
     :init
     (setq org-gcal-notify-p nil)
     (require 'plstore)

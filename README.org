@@ -1015,6 +1015,9 @@ Enter insert mode when capturing things
           message-sendmail-f-is-evil t
           message-sendmail-extra-arguments '("--read-envelope-from")
           message-send-mail-function #'message-send-mail-with-sendmail)
+    ;; don[t show buffer after sending
+    (setq message-kill-buffer-on-exit t)
+    (setq org-export-show-temporary-export-buffer nil)
     ;; set a more visible mu4e view (with dark-mode enabled)
     (setq shr-color-visible-luminance-min 60)
     ;; use imagemagick, if available

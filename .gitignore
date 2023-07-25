@@ -31,3 +31,5 @@ eshell
 /.dap-breakpoints
 /emojis/
 /bookmarks~
+/custom.el
+/timelog

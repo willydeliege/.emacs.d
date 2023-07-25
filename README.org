@@ -1261,7 +1261,7 @@ Prettify org mode
 ** Error checking
 #+begin_src emacs-lisp
   (use-package flycheck
-    :init (global-flycheck-mode))
+    :hook (prog-mode . flycheck-mode))
 
 #+end_src
 ** Java + Lsp

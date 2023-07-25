@@ -764,14 +764,11 @@ Enter insert mode when capturing things
   (use-package org-auto-tangle
     :hook (org-mode . org-auto-tangle-mode))
 #+end_src
-** Org modern
-Prettify org mode
+** Org pretty bullets
 #+begin_src emacs-lisp
-  (use-package org-modern
-    :after org
-    :hook ((org-mode . org-modern-mode)
-           (org-agenda-finalize . org-modern-agenda)))
-           #+end_src
+  (use-package org-superstar
+    :hook (org-mode . org-superstar-mode))
+#+end_src
 ** org roam
 #+begin_src emacs-lisp
   (use-package org-roam

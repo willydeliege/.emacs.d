@@ -812,6 +812,7 @@ marginalia adds annotations in the mini buffer
     :config
     (setq
      ;; Edit settings
+     org-log-done 'time
      org-log-into-drawer t
      org-auto-align-tags nil
      org-tags-column 0
@@ -836,7 +837,7 @@ marginalia adds annotations in the mini buffer
     (setq org-stuck-projects '("+Project/PROJ" ("NEXT" "WAIT") nil ""))
     (setq org-refile-targets '((org-agenda-files :maxlevel . 1)))
     (setq org-outline-path-complete-in-steps nil)         ; Refile in a single go
-    (setq org-startup-folded 'show2levels)
+    (setq org-startup-folded 'fold)
     (setq org-attach-preferred-new-method 'dir)
     (setq org-attach-store-link-p 'attached)
     (setq org-todo-keywords

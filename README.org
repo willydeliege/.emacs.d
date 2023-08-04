@@ -190,10 +190,8 @@ Better help buffer
 #+end_src
 *** Doom-modeline
 #+begin_src emacs-lisp
-  (use-package doom-modeline
-    :hook (after-init . doom-modeline-mode)
-    :config
-    (setq doom-modeline-mu4e t))
+(use-package doom-modeline
+  :hook (after-init . doom-modeline-mode))
 #+end_src
 ** Windows
 #+begin_src emacs-lisp

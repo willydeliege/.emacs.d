@@ -941,28 +941,31 @@ Enter insert mode when capturing things
     :custom
     (org-roam-directory "~/org")
     (org-roam-completion-everywhere t)
-    :bind (("C-c n l" . org-roam-buffer-toggle)
-  	 ("C-c n i" . org-roam-node-insert)
-  	 ("C-c n I" . org-roam-node-insert-immediate)
-  	 ("C-c n p" . my/org-roam-find-project)
-  	 ("C-c n t" . my/org-roam-capture-task)
-  	 ("C-c n b" . my/org-roam-capture-inbox)
-  	 ("C-c x" . my/org-roam-capture-inbox)
-  	 ("C-c n x" . my/close-project)
-  	 ("C-c i" . my/open-inbox)
-  	 ("C-c j" . org-roam-dailies-capture-today)
-  	 :map org-mode-map
-  	 ("C-M-i" . completion-at-point)
-  	 :map org-roam-dailies-map
-  	 ("Y" . org-roam-dailies-capture-yesterday)
-  	 ("T" . org-roam-dailies-capture-tomorrow))
-    :bind-keymap
+    :bind
+    (
+     ("C-c n l" . org-roam-buffer-toggle)
+     ("C-c n i" . org-roam-node-insert)
+     ("C-c n I" . org-roam-node-insert-immediate)
+     ("C-c n p" . my/org-roam-find-project)
+     ("C-c n t" . my/org-roam-capture-task)
+     ("C-c n b" . my/org-roam-capture-inbox)
+     ("C-c x" . my/org-roam-capture-inbox)
+     ("C-c n x" . my/close-project)
+     ("C-c i" . my/open-inbox)
+     ("C-c j" . org-roam-dailies-capture-today)
+     :map org-mode-map
+     ("C-M-i" . completion-at-point)
+     :map org-roam-dailies-map
+     ("Y" . org-roam-dailies-capture-yesterday)
+     ("T" . org-roam-dailies-capture-tomorrow)
+     )
+   :bind-keymap
     ("C-c n d" . org-roam-dailies-map)
     :config
     (require 'org-roam-dailies) ;; Ensure the keymap is available
     (setq org-roam-dailies-capture-templates
-  	'(("d" "default" entry "* %<%H:%M> %?" :target
-  	   (file+datetree "%<%Y-W%W>.org" 'week))))
+          '(("d" "default" entry "* %<%H:%M> %?" :target
+             (file+datetree "%<%Y-W%W>.org" 'week))))
     (require 'org-roam-protocol)
     (defun my/org-protocol-insert-selection-dwim (selection)
       "Insert SELECTION ."
@@ -971,10 +974,10 @@ Enter insert mode when capturing things
         (format "%s\n" selection)))
 
     (setq org-roam-capture-ref-templates
-        	'(("r" "ref" entry "* %(my/org-protocol-insert-selection-dwim \"%i\")%?"
+          '(("r" "ref" entry "* %(my/org-protocol-insert-selection-dwim \"%i\")%?"
              :target (file+head "${slug}.org"
                                 "#+title: ${title}\n
-        ,#+created: %u\n"
+                    ,#+created: %u\n"
                                 )
              :unnarrowed t)))
     (org-roam-db-autosync-mode))
@@ -1013,7 +1016,7 @@ Enter insert mode when capturing things
 
   (defun my/org-roam-project-finalize-hook ()
     "Adds the captured project file to `org-agenda-files' if the
-            capture was not aborted."
+                        capture was not aborted."
     ;; Remove the hook since it was added temporarily
     (remove-hook 'org-capture-after-finalize-hook #'my/org-roam-project-finalize-hook)
 
@@ -1032,11 +1035,7 @@ Enter insert mode when capturing things
      nil
      nil
      (my/org-roam-filter-by-tag "Project")
-     nil
-     :templates
-     '(("p" "project" plain (file "~/org/.templates/project-template.org")
-        :target (file "%<%Y%m%d%H%M%S>-${slug}.org")
-        :unnarrowed t))))
+     nil))
 
   (defun my/org-roam-capture-inbox ()
     (interactive)
@@ -1061,18 +1060,19 @@ Enter insert mode when capturing things
     (interactive)
     (org-roam-tag-add '("ARCHIVE"))
     (org-roam-tag-remove '("Project")))
+
   (defun my/org-roam-copy-todo-to-today ()
     (interactive)
+    (org-store-link nil)
     (let ((org-refile-keep t) ;; Set this to nil to delete the original!
-          ;; (org-roam-dailies-capture-templates
-          ;;  '(("t" "tasks" entry "%?"
-          ;;     :target (file+head+olp "%<%Y-%m-%d>.org" "#+title: %<%Y-%m-%d>\n" ("Tasks")))))
+          (org-roam-dailies-capture-templates
+           '(("t" "tasks" entry "%a\n%?"
+              :target (file+datetree "%<%Y-W%W>.org" 'week))))
           (org-after-refile-insert-hook #'save-buffer)
-  	(org-log-refile t)
           today-file
           pos)
       (save-window-excursion
-        (org-roam-dailies--capture (current-time) t "d")
+        (org-roam-dailies--capture (current-time) t)
         (setq today-file (buffer-file-name))
         (setq pos (point)))
 
@@ -1085,7 +1085,7 @@ Enter insert mode when capturing things
                (lambda ()
                  (when (equal org-state "DONE")
                    (my/org-roam-copy-todo-to-today))))
-                 #+end_src
+#+end_src
 
                  #+RESULTS:
                  | lambda  | nil                   | (when (equal org-state DONE) (my/org-roam-copy-todo-to-today)) |                                                                      |
@@ -1429,28 +1429,54 @@ Enter insert mode when capturing things
 #+end_src
 ** Java + Lsp
 #+begin_src emacs-lisp
-  (use-package lsp-mode
-    :init
-    ;; set prefix for lsp-command-keymap (few alternatives - "C-l", "C-c l")
-    (setq lsp-keymap-prefix "C-c l")
-    :hook (;; replace XXX-mode with concrete major-mode(e. g. python-mode)
-           (java-mode . lsp)
-           ;; if you want which-key integration
-           (lsp-mode . lsp-enable-which-key-integration))
-    :commands lsp)
-
-  ;; optionally
-  (use-package lsp-ui :commands lsp-ui-mode)
-  (use-package lsp-treemacs :commands lsp-treemacs-errors-list)
-
-  ;; optionally if you want to use debugger
-  (use-package dap-mode)
-  (use-package lsp-java)
-  (use-package dap-java :straight nil)
+  (use-package eglot
+    :straight nil
+    :custom
+    (eglot-autoshutdown t)
+    (eglot-extend-to-xref t)
+    :hook
+    ((typescript-ts-base-mode . eglot-ensure)
+     (c-ts-mode . eglot-ensure)
+     (c-mode . eglot-ensure)
+     (c++-mode . eglot-ensure)
+     (c++-ts-mode . eglot-ensure)
+     (js-mode . eglot-ensure)
+     (js-ts-mode . eglot-ensure)
+     (python-mode . eglot-ensure)
+     (python-ts-mode . eglot-ensure)
+     (java-mode . eglot-ensure)
+     (java-ts-mode . eglot-ensure)
+     (typescript-mode . eglot-ensure)
+     (typescript-ts-base-mode . eglot-ensure))
+    :config
+    :bind (:map eglot-mode-map
+  	      ("C-c l r" . eglot-rename)
+  	      ("C-c l f f" . eglot-format)
+  	      ("C-c l f b" . eglot-format-buffer)
+  	      ("C-c l a a" . eglot-code-actions)
+  	      ("C-c l a q" . eglot-code-action-quickfix)
+  	      ("C-c l a e" . eglot-code-action-extract)
+  	      ("C-c l a i" . eglot-code-action-inline)
+  	      ("C-c l a r" . eglot-code-action-rewrite)))  
+  (use-package eldoc
+    :straight nil
+    :after flymake)
+  (use-package eglot-java
+      :straight (eglot-java :type git :host github :repo "yveszoundi/eglot-java")
+       :custom
+          (eglot-java-server-install-dir "~/lsp/jdtls-lsp")
+      :hook ((java-mode . eglot-java-mode))
+      :bind (:map eglot-java-mode-map
+          ("C-c j n" . #'eglot-java-file-new)
+          ("C-c j x" . #'eglot-java-run-main)
+  	("C-c j t" . #'eglot-java-run-test)
+  	("C-c j p" . #'eglot-java-project-new)
+  	("C-c j T" . #'eglot-java-project-build-task)
+  	("C-c j R" . #'eglot-java-project-build-refresh)))
 #+end_src
 * Tree-sitter
 #+begin_src emacs-lisp
-  (use-package tree-sitter :hook (java-mode . tree-sitter-mode))
+  (use-package tree-sitter :straight nil :hook (java-mode . tree-sitter-mode))
   (use-package tree-sitter-langs)
 #+end_src
 * Recentf
@@ -1489,3 +1515,8 @@ Enter insert mode when capturing things
   ;; End:
   ;;; init.el ends here (emacs-lisp-checkdoc)
 #+end_src
+
+
+
+src
+

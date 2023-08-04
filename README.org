@@ -199,17 +199,25 @@ Better help buffer
     :bind ("C-x o" . ace-window))
 #+end_src
 * Editing
+** Sudo edit
+#+begin_src emacs-lisp
+  (use-package sudo-edit
+    :demand t)
+#+end_src
 ** Evil mode
 Usage of evil mode as I used to work with vim binding for years
 #+begin_src emacs-lisp
   (use-package undo-fu)
+  (use-package undo-fu-session
+    :config
+    (setq undo-fu-session-incompatible-files '("/COMMIT_EDITMSG\\'" "/git-rebase-todo\\'")))
+  (undo-fu-session-global-mode)
+
+  (use-package vundo)
 
   (use-package evil
     :init
     (setq evil-want-integration t) ;; This is optional since it's already set to t by default.
-    (setq evil-want-C-u-scroll t)
-    (global-set-key (kbd "M-u") 'universal-argument)
-    (define-key universal-argument-map (kbd "M-u") 'universal-argument-more)
     (setq evil-want-keybinding nil)
     (setq evil-undo-system 'undo-fu)
     :config

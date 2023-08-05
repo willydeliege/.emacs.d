@@ -1415,50 +1415,25 @@ Enter insert mode when capturing things
 #+end_src
 ** Java + Lsp
 #+begin_src emacs-lisp
-  (use-package eglot
-    :straight nil
-    :custom
-    (eglot-autoshutdown t)
-    (eglot-extend-to-xref t)
-    :hook
-    ((typescript-ts-base-mode . eglot-ensure)
-     (c-ts-mode . eglot-ensure)
-     (c-mode . eglot-ensure)
-     (c++-mode . eglot-ensure)
-     (c++-ts-mode . eglot-ensure)
-     (js-mode . eglot-ensure)
-     (js-ts-mode . eglot-ensure)
-     (python-mode . eglot-ensure)
-     (python-ts-mode . eglot-ensure)
-     (java-mode . eglot-ensure)
-     (java-ts-mode . eglot-ensure)
-     (typescript-mode . eglot-ensure)
-     (typescript-ts-base-mode . eglot-ensure))
-    :config
-    :bind (:map eglot-mode-map
-  	      ("C-c l r" . eglot-rename)
-  	      ("C-c l f f" . eglot-format)
-  	      ("C-c l f b" . eglot-format-buffer)
-  	      ("C-c l a a" . eglot-code-actions)
-  	      ("C-c l a q" . eglot-code-action-quickfix)
-  	      ("C-c l a e" . eglot-code-action-extract)
-  	      ("C-c l a i" . eglot-code-action-inline)
-  	      ("C-c l a r" . eglot-code-action-rewrite)))  
-  (use-package eldoc
-    :straight nil
-    :after flymake)
-  (use-package eglot-java
-      :straight (eglot-java :type git :host github :repo "yveszoundi/eglot-java")
-       :custom
-          (eglot-java-server-install-dir "~/lsp/jdtls-lsp")
-      :hook ((java-mode . eglot-java-mode))
-      :bind (:map eglot-java-mode-map
-          ("C-c j n" . #'eglot-java-file-new)
-          ("C-c j x" . #'eglot-java-run-main)
-  	("C-c j t" . #'eglot-java-run-test)
-  	("C-c j p" . #'eglot-java-project-new)
-  	("C-c j T" . #'eglot-java-project-build-task)
-  	("C-c j R" . #'eglot-java-project-build-refresh)))
+  (use-package lsp-mode
+    :init
+    ;; set prefix for lsp-command-keymap (few alternatives - "C-l", "C-c l")
+    (setq lsp-keymap-prefix "C-c l")
+    :hook (;; replace XXX-mode with concrete major-mode(e. g. python-mode)
+           (java-mode . lsp)
+           ;; if you want which-key integration
+           (lsp-mode . lsp-enable-which-key-integration))
+    :commands lsp)
+
+  (use-package lsp-java)
+  ;; optionally
+  (use-package lsp-ui :commands lsp-ui-mode)
+  (use-package lsp-treemacs :commands lsp-treemacs-errors-list)
+
+  ;; optionally if you want to use debugger
+  (use-package dap-mode)
+  (use-package dap-java :straight nil) 
+
 #+end_src
 * Tree-sitter
 #+begin_src emacs-lisp

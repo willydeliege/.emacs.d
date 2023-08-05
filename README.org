@@ -596,7 +596,7 @@ marginalia adds annotations in the mini buffer
 
     ;; Define orderless style with initialism by default
     (orderless-define-completion-style +orderless-with-initialism
-      (orderless-matching-styles '(orderless-initialism orderless-literal orderless-regexp)))
+      (orderless-matching-styles '(orderless-initialism orderless-literal orderless-regexp orderless-flex)))
 
     ;; You may want to combine the `orderless` style with `substring` and/or `basic`.
     ;; There are many details to consider, but the following configurations all work well.
@@ -622,7 +622,7 @@ marginalia adds annotations in the mini buffer
     ;; 4. (setq completion-styles '(substring orderless basic))
     ;; Combine substring, orderless and basic.
     ;;
-    (setq completion-styles '(orderless basic)
+    (setq completion-styles '(orderless basic flex)
           completion-category-defaults nil
           ;;; Enable partial-completion for files.
           ;;; Either give orderless precedence or partial-completion.
@@ -640,58 +640,39 @@ marginalia adds annotations in the mini buffer
 #+end_src
 ** Company
 #+begin_src emacs-lisp
-  ;; (use-package company
-
-  ;;   :bind (:map company-active-map
-  ;;               ("C-j" . company-select-next)
-  ;;               ("C-k" . company-select-previous))
-  ;;   :config
-  ;;   ;; Add yasnippet support for all company backends
-  ;;   ;; https://github.com/syl20bnr/spacemacs/pull/179
-  ;;   (defvar company-mode/enable-yas t
-  ;;     "Enable yasnippet for all backends.")
-
-  ;;   (defun my/company-backend-with-yas (backend)
-  ;;     (if (or (not company-mode/enable-yas) (and (listp backend) (member 'company-yasnippet backend)))
-  ;;         backend
-  ;;       (append (if (consp backend) backend (list backend))
-  ;;               '(:with company-yasnippet))))
-
-  ;;   (setq company-backends (mapcar #'my/company-backend-with-yas company-backends))
-  ;;   (setq company-minimum-prefix-length 2)
-  ;;   (setq company-idle-delay 0.3))
-  ;; ;; prettify completion styles
-  ;; (use-package company-box
-  ;;   :hook (company-mode . company-box-mode))
+  ;; needed to use with cape yasnippets
+  (use-package company)
 #+end_src
+** Corfu
+#+begin_src emacs-lisp
+  (use-package corfu
+    :straight (corfu :files (:defaults "extensions/*.el"))
+    :custom
+    ;; Works with `indent-for-tab-command'. Make sure tab doesn't indent when you
+    ;; want to perform completion
+    (tab-always-indent 'complete)
+    (completion-cycle-threshold nil)      ; Always show candidates in menu
+    (corfu-auto t)
+    (corfu-auto-prefix 2)
+    (corfu-auto-delay 0.25)
+    (corfu-min-width 80)
+    (corfu-max-width corfu-min-width)     ; Always have the same width
+    (corfu-count 14)
+    (corfu-preselect 'prompt)
+    (corfu-scroll-margin 4)
+    (corfu-cycle t)
+    (corfu-separator ?\s)            ; Use space
+    (corfu-quit-no-match 'separator) ; Don't quit if there is `corfu-separator' inserted
+    (corfu-preview-current 'insert)  ; Preview first candidate. Insert on input if only one
+    (corfu-preselect-first nil)        ; Preselect first candidate?
+    ;; Other
+    :init
+    (corfu-popupinfo-mode)
+    (global-corfu-mode))
+#+end_src
+
 ** Cape
 #+begin_src emacs-lisp
-  ;; Enable Corfu completion UI
-  ;; See the Corfu README for more configuration tips.
-  (use-package corfu
-    ;; Optional customizations
-    :custom
-    ;; (corfu-cycle t)                ;; Enable cycling for `corfu-next/previous'
-    (corfu-auto t)                 ;; Enable auto completion
-    (corfu-separator ?\s)          ;; Orderless field separator
-    ;; (corfu-quit-at-boundary nil)   ;; Never quit at completion boundary
-    ;; (corfu-quit-no-match nil)      ;; Never quit, even if there is no match
-    ;; (corfu-preview-current nil)    ;; Disable current candidate preview
-    ;; (corfu-preselect 'prompt)      ;; Preselect the prompt
-    ;; (corfu-on-exact-match nil)     ;; Configure handling of exact matches
-    ;; (corfu-scroll-margin 5)        ;; Use scroll margin
-
-    ;; Enable Corfu only for certain modes.
-    ;; :hook ((prog-mode . corfu-mode)
-    ;;        (shell-mode . corfu-mode)
-    ;;        (eshell-mode . corfu-mode))
-
-    ;; Recommended: Enable Corfu globally.
-    ;; This is recommended since Dabbrev can be used globally (M-/).
-    ;; See also `corfu-exclude-modes'.
-    :init
-    (global-corfu-mode))
-
   ;; A few more useful configurations...
   (use-package emacs
     :init
@@ -699,8 +680,8 @@ marginalia adds annotations in the mini buffer
     (setq completion-cycle-threshold 3)
     ;; Emacs 28: Hide commands in M-x which do not apply to the current mode.
     ;; Corfu commands are hidden, since they are not supposed to be used via M-x.
-    ;; (setq read-extended-command-predicate
-    ;;       #'command-completion-default-include-p)
+    (setq read-extended-command-predicate
+          #'command-completion-default-include-p)
     ;; Enable indentation+completion using the TAB key.
     ;; `completion-at-point' is often bound to M-TAB.
     (setq tab-always-indent 'complete))
@@ -709,44 +690,43 @@ marginalia adds annotations in the mini buffer
     ;; Bind dedicated completion commands
     ;; Alternative prefix keys: C-c p, M-p, M-+, ...
     :bind (("M-p p" . completion-at-point) ;; capf
-           ("M-p t" . complete-tag)        ;; etags
-           ("M-p d" . cape-dabbrev)        ;; or dabbrev-completion
-           ("M-p h" . cape-history)
-           ("M-p f" . cape-file)
-           ("M-p k" . cape-keyword)
-           ("M-p s" . cape-symbol)
-           ("M-p a" . cape-abbrev)
-           ("M-p l" . cape-line)
-           ("M-p w" . cape-dict)
-           ("M-p \\" . cape-tex)
-           ("M-p _" . cape-tex)
-           ("M-p ^" . cape-tex)
-           ("M-p &" . cape-sgml)
-           ("M-p r" . cape-rfc1345))
+  	 ("M-p t" . complete-tag)        ;; etags
+  	 ("M-p d" . cape-dabbrev)        ;; or dabbrev-completion
+  	 ("M-p h" . cape-history)
+  	 ("M-p f" . cape-file)
+  	 ("M-p k" . cape-keyword)
+  	 ("M-p s" . cape-symbol)
+  	 ("M-p a" . cape-abbrev)
+  	 ("M-p l" . cape-line)
+  	 ("M-p w" . cape-dict)
+  	 ("M-p \\" . cape-tex)
+  	 ("M-p _" . cape-tex)
+  	 ("M-p ^" . cape-tex)
+  	 ("M-p &" . cape-sgml)
+  	 ("M-p r" . cape-rfc1345))
     :init
     ;; Add `completion-at-point-functions', used by `completion-at-point'.
     ;; NOTE: The order matters!
-    (add-to-list 'completion-at-point-functions #'cape-dabbrev)
+
+    (setq completion-at-point-functions
+          (list (cape-super-capf (cape-company-to-capf #'company-yasnippet) #'cape-dict #'cape-dabbrev #'cape-keyword #'cape-symbol)))
+    ;; (add-to-list 'completion-at-point-functions #'cape-yasnippet)
+    ;; (add-to-list 'completion-at-point-functions #'cape-dabbrev)
     (add-to-list 'completion-at-point-functions #'cape-file)
     (add-to-list 'completion-at-point-functions #'cape-elisp-block)
-    (add-to-list 'completion-at-point-functions #'cape-yasnippet)
     ;;(add-to-list 'completion-at-point-functions #'cape-history)
     ;;(add-to-list 'completion-at-point-functions #'cape-keyword)
     ;;(add-to-list 'completion-at-point-functions #'cape-tex)
     ;;(add-to-list 'completion-at-point-functions #'cape-sgml)
     ;;(add-to-list 'completion-at-point-functions #'cape-rfc1345)
     ;;(add-to-list 'completion-at-point-functions #'cape-abbrev)
-    (add-to-list 'completion-at-point-functions #'cape-dict)
+    ;; (add-to-list 'completion-at-point-functions #'cape-dict)
     ;;(add-to-list 'completion-at-point-functions #'cape-symbol)
     ;;(add-to-list 'completion-at-point-functions #'cape-line)
+
     )
 #+end_src
-** Cape yasnippet
-#+begin_src emacs-lisp
-  (use-package cape-yasnippet
-    :after yasnippet
-    :straight (cape-yasnippet :type git :host github :repo "elken/cape-yasnippet"))
-#+end_src
+
 ** Icons
 #+begin_src emacs-lisp
   (use-package kind-icon

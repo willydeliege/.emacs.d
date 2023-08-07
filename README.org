@@ -442,7 +442,6 @@ marginalia adds annotations in the mini buffer
      consult--source-recent-file consult--source-project-recent-file
      ;; :preview-key "M-."
      :preview-key '(:debounce 0.4 any))
-    ;; (add-to-list 'consult-buffer-sources persp-consult-source)
     ;; Optionally configure the narrowing key.
     ;; Both < and C-+ work reasonably well.
     (setq consult-narrow-key "<") ;; "C-+"
@@ -759,11 +758,16 @@ marginalia adds annotations in the mini buffer
 ** Perspective
 #+begin_src emacs-lisp
   (use-package perspective
-    :hook (after-init . persp-mode)
+    :hook ((after-init . persp-mode)
+           (kill-emacs . persp-state-save))
     :bind
-    ("C-x C-b" . persp-list-buffers)         ; or use a nicer switcher, see below
+    (("C-x k" . persp-kill-buffer*)
+     ("C-x C-b" . persp-list-buffers))        ; or use a nicer switcher, see below
     :custom
-    (persp-mode-prefix-key (kbd "C-c w")))  ; pick your own prefix key here
+    (persp-mode-prefix-key (kbd "C-c w")) ; pick your own prefix key here
+    :config
+    (consult-customize consult--source-buffer :hidden t :default nil)
+    (add-to-list 'consult-buffer-sources persp-consult-source))  
 #+end_src
 
 ** Persp project

@@ -1000,6 +1000,9 @@ Enter insert mode when capturing things
    :bind-keymap
     ("C-c n d" . org-roam-dailies-map)
     :config
+      (setq org-roam-node-display-template
+        (concat "${title} "
+                (propertize "${tags:20}" 'face 'org-tag)))
     (require 'org-roam-dailies) ;; Ensure the keymap is available
     (setq org-roam-dailies-capture-templates
           '(("d" "default" entry "* %<%H:%M> %?" :target

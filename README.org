@@ -562,6 +562,13 @@ marginalia adds annotations in the mini buffer
    ("C-c n l" . consult-org-roam-forward-links)
    ("C-c n r" . consult-org-roam-search))
 #+end_src
+*** COMMENT Consult dir
+#+begin_src emacs-lisp
+  (use-package consult-dir
+    :bind ("C-x C-d" . consult-dir)
+    :config
+    (setq consult-dir-project-list-function #'consult-dir-projectile-dirs))
+#+end_src
 ** Embark
 #+begin_src emacs-lisp
   (use-package embark

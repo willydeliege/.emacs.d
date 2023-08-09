@@ -1466,33 +1466,39 @@ Enter insert mode when capturing things
     :hook (prog-mode . flycheck-mode))
 
 #+end_src
+** Compilation mode 
+Setup ansi colors for the compilation buffer
+#+begin_src emacs-lisp
+  (use-package xterm-color
+    :config
+    (setq compilation-environment '("TERM=xterm-256color"))
+
+    (defun my/advice-compilation-filter (f proc string)
+      (funcall f proc (xterm-color-filter string)))
+
+    (advice-add 'compilation-filter :around #'my/advice-compilation-filter) )
+#+end_src
 ** Java + Lsp
 #+begin_src emacs-lisp
   (use-package lsp-mode
     :init
     ;; set prefix for lsp-command-keymap (few alternatives - "C-l", "C-c l")
     (setq lsp-keymap-prefix "C-c l")
-    :hook (;; replace XXX-mode with concrete major-mode(e. g. python-mode)
-           (java-mode . lsp)
-           ;; if you want which-key integration
-           (lsp-mode . lsp-enable-which-key-integration))
+    :hook ((java-mode . lsp)
+         (lsp-mode . lsp-enable-which-key-integration))
     :commands lsp)
 
   (use-package lsp-java)
-  ;; optionally
-  (use-package lsp-ui :commands lsp-ui-mode)
-  (use-package lsp-treemacs :commands lsp-treemacs-errors-list)
+    ;; optionally
+    (use-package lsp-ui :commands lsp-ui-mode)
+    (use-package lsp-treemacs :commands lsp-treemacs-errors-list)
 
-  ;; optionally if you want to use debugger
-  (use-package dap-mode)
-  (use-package dap-java :straight nil) 
+    ;; optionally if you want to use debugger
+    (use-package dap-mode)
+    (use-package dap-java :straight nil) 
 
 #+end_src
-* Tree-sitter
-#+begin_src emacs-lisp
-  (use-package tree-sitter :straight nil :hook (java-mode . tree-sitter-mode))
-  (use-package tree-sitter-langs)
-#+end_src
+
 * Recentf
 #+begin_src emacs-lisp
   (require 'recentf)

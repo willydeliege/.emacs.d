@@ -1513,25 +1513,6 @@ Enter insert mode when capturing things
   (cl-pushnew 'org-is-agenda-file recentf-exclude)
   (recentf-mode 1)
 #+end_src
-* Emojis
-    Display emojis in Emacs
-#+begin_src emacs-lisp
-  (use-package emojify
-    :after company
-    :init
-    (setq emojify-company-tooltip-p t)
-    (global-emojify-mode))
-#+end_src
-** Company emoji
-#+begin_src emacs-lisp
-  (use-package company-emoji
-    :after company
-    :init
-    (add-to-list 'company-backends 'company-emoji))
-#+end_src
-
-#+RESULTS:
-  
 * Footer
 #+begin_src emacs-lisp
   (provide 'init)

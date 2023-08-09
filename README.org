@@ -771,23 +771,9 @@ marginalia adds annotations in the mini buffer
 
     (setq completion-at-point-functions
           (list (cape-super-capf (cape-company-to-capf #'company-yasnippet) #'cape-dict #'cape-dabbrev #'cape-keyword #'cape-symbol)))
-    ;; (add-to-list 'completion-at-point-functions #'cape-yasnippet)
-    ;; (add-to-list 'completion-at-point-functions #'cape-dabbrev)
     (add-to-list 'completion-at-point-functions #'cape-file)
-    (add-to-list 'completion-at-point-functions #'cape-elisp-block)
-    ;;(add-to-list 'completion-at-point-functions #'cape-history)
-    ;;(add-to-list 'completion-at-point-functions #'cape-keyword)
-    ;;(add-to-list 'completion-at-point-functions #'cape-tex)
-    ;;(add-to-list 'completion-at-point-functions #'cape-sgml)
-    ;;(add-to-list 'completion-at-point-functions #'cape-rfc1345)
-    ;;(add-to-list 'completion-at-point-functions #'cape-abbrev)
-    ;; (add-to-list 'completion-at-point-functions #'cape-dict)
-    ;;(add-to-list 'completion-at-point-functions #'cape-symbol)
-    ;;(add-to-list 'completion-at-point-functions #'cape-line)
-
-    )
+    (add-to-list 'completion-at-point-functions #'cape-elisp-block))
 #+end_src
-
 ** Icons
 #+begin_src emacs-lisp
   (use-package kind-icon

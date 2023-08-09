@@ -1236,7 +1236,7 @@ Enter insert mode when capturing things
     :config
     (require 'mu4e-icalendar)
     (mu4e-icalendar-setup)
-    (setq gnus-icalendar-org-capture-file "~/org/Inbox.org")
+    (setq gnus-icalendar-org-capture-file "~/org/calendar.orgq")
     (setq gnus-icalendar-org-capture-headline '("Calendar"))
     (gnus-icalendar-org-setup)
     (setq mail-user-agent 'mu4e-user-agent)
@@ -1253,7 +1253,7 @@ Enter insert mode when capturing things
     (setq message-kill-buffer-on-exit t)
     (setq org-export-show-temporary-export-buffer nil)
     ;; set a more visible mu4e view (with dark-mode enabled)
-    (setq shr-color-visible-luminance-min 60)
+    (setq shr-color-visible-luminance-min 0)
     ;; use imagemagick, if available
     (when (fboundp 'imagemagick-register-types)
       (imagemagick-register-types))
@@ -1322,10 +1322,6 @@ Enter insert mode when capturing things
     (add-to-list 'mu4e-view-actions
                  '("org-contact-add" . mu4e-action-add-org-contact) t))
 #+end_src
-
-#+RESULTS:
-: mu4e
-
 *** Mu4e contrib
 #+begin_src emacs-lisp
 (use-package mu4e-contrib

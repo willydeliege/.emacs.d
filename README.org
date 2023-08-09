@@ -723,7 +723,6 @@ marginalia adds annotations in the mini buffer
     :custom
     ;; Works with `indent-for-tab-command'. Make sure tab doesn't indent when you
     ;; want to perform completion
-    (tab-always-indent 'complete)
     (completion-cycle-threshold nil)      ; Always show candidates in menu
     (corfu-auto t)
     (corfu-auto-prefix 2)
@@ -1516,8 +1515,3 @@ Setup ansi colors for the compilation buffer
   ;; End:
   ;;; init.el ends here (emacs-lisp-checkdoc)
 #+end_src
-
-
-
-src
-

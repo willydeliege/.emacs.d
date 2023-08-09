@@ -562,6 +562,10 @@ marginalia adds annotations in the mini buffer
    ("C-c n l" . consult-org-roam-forward-links)
    ("C-c n r" . consult-org-roam-search))
 #+end_src
+*** Consult flyceck
+#+begin_src emacs-lisp
+  (use-package consult-flycheck)
+#+end_src
 *** COMMENT Consult dir
 #+begin_src emacs-lisp
   (use-package consult-dir

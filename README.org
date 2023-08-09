@@ -1427,9 +1427,7 @@ Enter insert mode when capturing things
 #+end_src
 
 ** Org-gcal
-
 #+begin_src emacs-lisp
-  (use-package emacs-oauth2-auto)
   (use-package org-gcal
     :init
     (setq org-gcal-notify-p nil)

@@ -167,6 +167,10 @@ Use vterm as multiplexer
     (evil-define-key 'normal vterm-mode-map (kbd "o")        #'evil-insert-resume)
     (evil-define-key 'normal vterm-mode-map (kbd "<return>") #'evil-insert-resume))
 #+end_src
+** Dired+
+#+begin_src emacs-lisp
+
+#+end_src
 * Personal information
 #+begin_src emacs-lisp
   (setq user-full-name "Frédéric Willem"

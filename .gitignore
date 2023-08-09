@@ -41,3 +41,7 @@ eshell
 /share/
 /.last-package-update-day
 /perspective
+games/
+tree-sitter/
+image-dired/
+/persist

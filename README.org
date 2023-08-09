@@ -223,7 +223,7 @@ Use vterm as multiplexer
     ;; Load the theme of your choice.
     (load-theme 'modus-operandi-tinted))
   #+end_src
-** Modeline
+** Icons
 *** Nerd Icons
 #+begin_src emacs-lisp
   (use-package nerd-icons
@@ -234,6 +234,23 @@ Use vterm as multiplexer
     ;; (nerd-icons-font-family "Symbols Nerd Font Mono")
     )
 #+end_src
+*** Nerd icons completion
+#+begin_src emacs-lisp
+  (use-package nerd-icons-completion
+    :after marginalia
+    :config
+    (nerd-icons-completion-mode)
+    (add-hook 'marginalia-mode-hook #'nerd-icons-completion-marginalia-setup))
+
+#+end_src
+*** Nerd icons for dired
+#+begin_src emacs-lisp
+  (use-package nerd-icons-dired
+    :hook
+    (dired-mode . nerd-icons-dired-mode))
+#+end_src
+
+** Modeline
 *** Doom-modeline
 #+begin_src emacs-lisp
 (use-package doom-modeline

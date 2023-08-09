@@ -224,7 +224,7 @@ Use vterm as multiplexer
     ;;       modus-themes-preset-overrides-intense)
 
     ;; Load the theme of your choice.
-    (load-theme 'modus-operandi-tinted))
+    (load-theme 'modus-vivendi-tritanopia))
   #+end_src
 ** Icons
 *** Nerd Icons

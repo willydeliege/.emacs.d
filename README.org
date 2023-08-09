@@ -252,7 +252,13 @@ Use vterm as multiplexer
     :hook
     (dired-mode . nerd-icons-dired-mode))
 #+end_src
-
+*** Nerd icons treemacs
+#+begin_src emacs-lisp
+  (use-package treemacs-nerd-icons
+    :after treemacs
+    :config
+    (treemacs-load-theme "nerd-icons"))
+#+end_src
 ** Modeline
 *** Doom-modeline
 #+begin_src emacs-lisp

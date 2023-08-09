@@ -259,7 +259,7 @@ Use vterm as multiplexer
 ** Windows
 #+begin_src emacs-lisp
   (use-package ace-window
-    :bind ("C-x o" . ace-window))
+    :bind ("M-o" . ace-window))
 #+end_src
 * Editing
 ** Sudo edit

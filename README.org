@@ -399,7 +399,7 @@ Supplemental evil-mode keybindings to emacs org-mode
 
 * Completion
 ** Vertico + Marginalia
-gertico.el - VERTical Interactive COmpletion
+vertico.el - VERTical Interactive COmpletion
 marginalia adds annotations in the mini buffer
 #+begin_src emacs-lisp
   (use-package vertico

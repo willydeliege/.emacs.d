@@ -1375,15 +1375,6 @@ Enter insert mode when capturing things
 :straight nil)
 #+end_src
 
-** Mu4e notifications
-#+begin_src emacs-lisp
-  (use-package mu4e-alert
-    :hook (after-init . mu4e-alert-enable-notifications)
-    :config
-    (mu4e-alert-set-default-style 'libnotify))
-
-#+end_src
-
 ** Org message
 #+begin_src emacs-lisp
   (use-package org-msg

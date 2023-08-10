@@ -174,7 +174,6 @@ Use vterm as multiplexer
     (evil-define-key 'normal vterm-mode-map (kbd "<return>") #'evil-insert-resume))
 #+end_src
 
-
 * Personal information
 #+begin_src emacs-lisp
   (setq user-full-name "Frédéric Willem"

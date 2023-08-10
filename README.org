@@ -1511,6 +1511,7 @@ Enter insert mode when capturing things
 ** Magit
 #+begin_src emacs-lisp
   (use-package magit
+    :hook (git-commit-mode . evil-insert-state)
     :bind (("C-x g" . magit-status)))
 
   (use-package git-gutter

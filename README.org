@@ -1070,16 +1070,16 @@ Enter insert mode when capturing things
      ("Y" . org-roam-dailies-capture-yesterday)
      ("T" . org-roam-dailies-capture-tomorrow)
      )
-   :bind-keymap
+    :bind-keymap
     ("C-c n d" . org-roam-dailies-map)
     :config
-      (setq org-roam-node-display-template
-        (concat "${title} "
-                (propertize "${tags:20}" 'face 'org-tag)))
+    (setq org-roam-node-display-template
+  	(concat "${title} "
+  		(propertize "${tags:20}" 'face 'org-tag)))
     (require 'org-roam-dailies) ;; Ensure the keymap is available
     (setq org-roam-dailies-capture-templates
-          '(("d" "default" entry "* %<%H:%M> %?" :target
-             (file+datetree "%<%Y-W%W>.org" 'week))))
+  	'(("d" "default" entry "* %<%H:%M> %?" :target
+  	   (file+datetree "%<%Y-W%W>.org" 'week))))
     (require 'org-roam-protocol)
     (defun my/org-protocol-insert-selection-dwim (selection)
       "Insert SELECTION ."

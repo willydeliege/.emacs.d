@@ -19,6 +19,7 @@ Header for the config init.el file
 
   ;;; Code:
 #+end_src
+
 * Package manager
 Using [[https://github.com/radian-software/straight.el#getting-started][straight]] as package manager
 #+begin_src emacs-lisp
@@ -44,6 +45,7 @@ and use straight by default
 #+begin_src emacs-lisp
   (setq straight-use-package-by-default t)
 #+end_src
+
 * Using straight properly with initiating in early-init.el
 This will prevent to use package.el
 #+begin_src emacs-lisp :tangle early-init.el
@@ -76,6 +78,7 @@ This will prevent to use package.el
   (provide 'early-init)
   ;;; early-init.el ends here
 #+end_src
+
 * Defaults
 #+begin_src emacs-lisp
   ;; Save the last place edited in files
@@ -105,6 +108,7 @@ This will prevent to use package.el
 (when (file-exists-p custom-file)
   (load custom-file))
 #+end_src
+
 ** Help
 Better help buffer
  #+begin_src emacs-lisp
@@ -123,11 +127,13 @@ Better help buffer
      (global-set-key (kbd "C-h k") #'helpful-key)
      (global-set-key (kbd "C-h x") #'helpful-command))
  #+end_src
+
 ** Terminal
 *** Vterm
 #+begin_src emacs-lisp
   (use-package vterm)
 #+end_src
+
 *** Mutli vterm
 Use vterm as multiplexer
 #+begin_src emacs-lisp
@@ -167,15 +173,14 @@ Use vterm as multiplexer
     (evil-define-key 'normal vterm-mode-map (kbd "o")        #'evil-insert-resume)
     (evil-define-key 'normal vterm-mode-map (kbd "<return>") #'evil-insert-resume))
 #+end_src
-** Dired+
-#+begin_src emacs-lisp
 
-#+end_src
+
 * Personal information
 #+begin_src emacs-lisp
   (setq user-full-name "Frédéric Willem"
         user-mail-address "frederic.willem@gmail.com")
 #+end_src
+
 * UI
 ** Theme
 #+begin_src emacs-lisp
@@ -204,7 +209,7 @@ Use vterm as multiplexer
           '((matches . (extrabold))
             (selection . (semibold italic text-also)))
 
-          modus-themes-org-blocks 'tinted-background ; {nil,'gray-background,'tinted-background}
+          modus-themes-org-blocks 'gray-background ; {nil,'gray-background,'tinted-background}
   	)
     ;; Increase intensity
     (setq modus-themes-common-palette-overrides
@@ -224,8 +229,9 @@ Use vterm as multiplexer
     ;;       modus-themes-preset-overrides-intense)
 
     ;; Load the theme of your choice.
-    (load-theme 'modus-vivendi-tritanopia))
+    (load-theme 'modus-vivendi-deuteranopia))
   #+end_src
+
 ** Icons
 *** Nerd Icons
 #+begin_src emacs-lisp
@@ -259,23 +265,27 @@ Use vterm as multiplexer
     :config
     (treemacs-load-theme "nerd-icons"))
 #+end_src
+
 ** Modeline
 *** Doom-modeline
 #+begin_src emacs-lisp
 (use-package doom-modeline
   :hook (after-init . doom-modeline-mode))
 #+end_src
+
 ** Windows
 #+begin_src emacs-lisp
   (use-package ace-window
     :bind ("M-o" . ace-window))
 #+end_src
+
 * Editing
 ** Sudo edit
 #+begin_src emacs-lisp
   (use-package sudo-edit
     :demand t)
 #+end_src
+
 ** Evil mode
 Usage of evil mode as I used to work with vim binding for years
 #+begin_src emacs-lisp
@@ -301,6 +311,7 @@ Usage of evil mode as I used to work with vim binding for years
     (setq evil-collection-corfu-key-themes '(tab-n-go))
     (evil-collection-init))
 #+end_src
+
 ** Which-key
 Emacs package that displays available keybindings in popup
 When you can't remember all keybindings
@@ -319,6 +330,7 @@ When you can't remember all keybindings
     (which-key-use-C-h-commands nil)
     (which-key-idle-delay 0.2))
 #+end_src
+
 ** Parens
 Use built-in electric pair mode
 #+begin_src emacs-lisp
@@ -332,6 +344,7 @@ This package uses Evil as its vi layer.
     :config
     (global-evil-surround-mode 1))
 #+end_src
+
 ** Jump
 avy is a GNU Emacs package for jumping to visible text using a char-based decision tree
 #+begin_src emacs-lisp
@@ -340,6 +353,7 @@ avy is a GNU Emacs package for jumping to visible text using a char-based decisi
     :config
     (global-set-key (kbd "C-c <SPC>") 'avy-goto-char-2))
 #+end_src
+
 ** Evil commentary
 Comment stuff out. A port of vim-commentary
 #+begin_src emacs-lisp
@@ -347,6 +361,7 @@ Comment stuff out. A port of vim-commentary
     :init
     (evil-commentary-mode))
 #+end_src
+
 ** evil search
 anzu.el provides a minor mode which displays current match and total matches information in the mode-line in various search modes.
 #+begin_src emacs-lisp
@@ -372,6 +387,7 @@ Supplemental evil-mode keybindings to emacs org-mode
     (require 'evil-org-agenda)
     (evil-org-agenda-set-keys))
 #+end_src
+
 ** God mode
 #+begin_src emacs-lisp
   (use-package god-mode)
@@ -409,6 +425,7 @@ marginalia adds annotations in the mini buffer
     :init
     (marginalia-mode))
 #+end_src
+
 ** Consult
 #+begin_src emacs-lisp
 
@@ -573,6 +590,7 @@ marginalia adds annotations in the mini buffer
     :config
     (setq consult-dir-project-list-function #'consult-dir-projectile-dirs))
 #+end_src
+
 ** Embark
 #+begin_src emacs-lisp
   (use-package embark
@@ -601,9 +619,9 @@ marginalia adds annotations in the mini buffer
                    (window-parameters (mode-line-format . none))))
     (defun embark-which-key-indicator ()
       "An embark indicator that displays keymaps using which-key.
-    The which-key help message will show the type and value of the
-    current target followed by an ellipsis if there are further
-    targets."
+        The which-key help message will show the type and value of the
+        current target followed by an ellipsis if there are further
+        targets."
       (lambda (&optional keymap targets prefix)
         (if (null keymap)
             (which-key--hide-popup-ignore-command)
@@ -664,6 +682,19 @@ marginalia adds annotations in the mini buffer
     (define-key embark-file-map     (kbd "3") (my/embark-split-action find-file split-window-right))
     (define-key embark-buffer-map   (kbd "3") (my/embark-split-action switch-to-buffer split-window-right))
     (define-key embark-bookmark-map (kbd "3") (my/embark-split-action bookmark-jump split-window-right))
+    ;; edit file as sudoer
+    (defun my/sudo-find-file (file)
+      "Open FILE as root."
+      (interactive "FOpen file as root: ")
+      (when (file-writable-p file)
+        (user-error "File is user writeable, aborting sudo"))
+      (find-file (if (file-remote-p file)
+                     (concat "/" (file-remote-p file 'method) ":"
+                             (file-remote-p file 'user) "@" (file-remote-p file 'host)
+                             "|sudo:root@"
+                             (file-remote-p file 'host) ":" (file-remote-p file 'localname))
+  		 (concat "/sudo:root@localhost:" file))))
+    (define-key embark-file-map (kbd "S") 'my/sudo-find-file)
 
     (advice-add #'embark-completing-read-prompter
                 :around #'embark-hide-which-key-indicator))
@@ -741,11 +772,13 @@ marginalia adds annotations in the mini buffer
           orderless-style-dispatchers (list #'+orderless-consult-dispatch
                                             #'orderless-affix-dispatch)))
 #+end_src
+
 ** Company
 #+begin_src emacs-lisp
   ;; needed to use with cape yasnippets
   (use-package company)
 #+end_src
+
 ** Corfu
 #+begin_src emacs-lisp
   (use-package corfu
@@ -808,6 +841,7 @@ marginalia adds annotations in the mini buffer
     (add-to-list 'completion-at-point-functions #'cape-file)
     (add-to-list 'completion-at-point-functions #'cape-elisp-block))
 #+end_src
+
 ** Icons
 #+begin_src emacs-lisp
   (use-package kind-icon
@@ -818,6 +852,7 @@ marginalia adds annotations in the mini buffer
     :config
     (add-to-list 'corfu-margin-formatters #'kind-icon-margin-formatter))
 #+end_src
+
 ** Snippets
 #+begin_src emacs-lisp
   (use-package yasnippet
@@ -859,6 +894,7 @@ marginalia adds annotations in the mini buffer
     (consult-customize consult--source-buffer :hidden t :default nil)
     (add-to-list 'consult-buffer-sources persp-consult-source))  
 #+end_src
+
 ** Persp project
 #+begin_src emacs-lisp
   (use-package persp-projectile)
@@ -934,6 +970,7 @@ marginalia adds annotations in the mini buffer
              "WATCH(w)"))))
 
 #+end_src
+
 ** Org capture
 Enter insert mode when capturing things
 #+begin_src emacs-lisp
@@ -994,16 +1031,19 @@ Enter insert mode when capturing things
   			       (:discard (:todo "PROJ"))))))))))
     (add-hook 'org-agenda-mode-hook 'org-super-agenda-mode))
 #+end_src
+
 ** Org auto tangle
 #+begin_src emacs-lisp
   (use-package org-auto-tangle
     :hook (org-mode . org-auto-tangle-mode))
 #+end_src
+
 ** Org pretty bullets
 #+begin_src emacs-lisp
   (use-package org-superstar
     :hook (org-mode . org-superstar-mode))
 #+end_src
+
 ** org roam
 #+begin_src emacs-lisp
   (use-package org-roam
@@ -1183,6 +1223,7 @@ Enter insert mode when capturing things
           org-roam-ui-open-on-start t))
 
 #+end_src
+
 ** Org notifications
 #+begin_src emacs-lisp
   (use-package org-alert
@@ -1190,16 +1231,19 @@ Enter insert mode when capturing things
     :init
     (setq alert-default-style 'libnotify))
 #+end_src
+
 ** Org cliplink
 #+begin_src emacs-lisp
   (use-package org-cliplink
     :after org
     :bind ("C-c l" . org-cliplink))
 #+end_src
+
 ** Org download
 #+begin_src emacs-lisp
   (use-package org-download)
 #+end_src
+
 ** Org ql
 #+begin_src emacs-lisp
   (use-package org-ql
@@ -1331,6 +1375,7 @@ Enter insert mode when capturing things
 (use-package mu4e-contrib
 :straight nil)
 #+end_src
+
 ** Mu4e notifications
 #+begin_src emacs-lisp
   (use-package mu4e-alert
@@ -1339,6 +1384,7 @@ Enter insert mode when capturing things
     (mu4e-alert-set-default-style 'libnotify))
 
 #+end_src
+
 ** Org message
 #+begin_src emacs-lisp
   (use-package org-msg
@@ -1358,6 +1404,7 @@ Enter insert mode when capturing things
     (org-msg-mode))
 
 #+end_src
+
 ** org contacts
 #+begin_src emacs-lisp
     (use-package org-contacts
@@ -1382,6 +1429,7 @@ Enter insert mode when capturing things
   :BIRTHDAY:
   :END:")))
 #+end_src
+
 ** PDF Tools
 #+begin_src emacs-lisp
   (use-package pdf-tools
@@ -1401,6 +1449,7 @@ Enter insert mode when capturing things
   (use-package calfw-org
     :bind ("C-c c" . cfw:open-org-calendar))
 #+end_src
+
 ** Holidays calendar
 #+begin_src emacs-lisp
   (require 'calendar)
@@ -1475,10 +1524,12 @@ Enter insert mode when capturing things
     (define-fringe-bitmap 'git-gutter-fr:modified [224] nil nil '(center repeated))
     (define-fringe-bitmap 'git-gutter-fr:deleted [128 192 224 240] nil nil 'bottom))
     #+end_src
+
 ** Orgit
 #+begin_src emacs-lisp
   (use-package orgit)
 #+end_src
+
 ** Diff-hl
 #+begin_src emacs-lisp
   (use-package diff-hl
@@ -1496,6 +1547,7 @@ Enter insert mode when capturing things
     :hook (prog-mode . flycheck-mode))
 
 #+end_src
+
 ** Compilation mode 
 Setup ansi colors for the compilation buffer
 #+begin_src emacs-lisp
@@ -1508,6 +1560,7 @@ Setup ansi colors for the compilation buffer
 
     (advice-add 'compilation-filter :around #'my/advice-compilation-filter) )
 #+end_src
+
 ** Java + Lsp
 #+begin_src emacs-lisp
   (use-package lsp-mode
@@ -1538,6 +1591,7 @@ Setup ansi colors for the compilation buffer
   (cl-pushnew 'org-is-agenda-file recentf-exclude)
   (recentf-mode 1)
 #+end_src
+
 * Footer
 #+begin_src emacs-lisp
   (provide 'init)

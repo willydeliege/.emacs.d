@@ -57,7 +57,7 @@ This will prevent to use package.el
   ;; Disable package.el
   (setq package-enable-at-startup nil)
   ;; start emacs window maximized
-  (add-to-list 'default-frame-alist '(fullscreen . fullboth))
+  (add-to-list 'default-frame-alist '(fullscreen . maximized))
   (setq warning-minimum-level :emergency)
   ;;disable splash screen and startup message
   (setq inhibit-startup-message t)

@@ -442,33 +442,51 @@ Supplemental evil-mode keybindings to emacs org-mode
     (evil-define-key 'god global-map [escape] 'evil-god-state-bail))
 #+end_src
 
+* Spelling
+** Jinx
+#+begin_src emacs-lisp 
+  (use-package jinx
+   :hook (emacs-startup . global-jinx-mode)
+   :bind (("M-$" . jinx-correct)
+          ("C-M-$" . jinx-languages))
+   :init
+   (setq jinx-languages "fr_FR en_US en_GB")) 
+#+end_src
 * Completion
 ** Vertico + Marginalia
 vertico.el - VERTical Interactive COmpletion
 marginalia adds annotations in the mini buffer
 #+begin_src emacs-lisp
-  (use-package vertico
-    :bind (:map vertico-map
-                ("C-j" . vertico-next)
-                ("C-k" . vertico-previous)
-                ("C-f" . vertico-exit)
-                :map minibuffer-local-map
-                ("C-h" . backward-kill-word))
-    :custom
-    (vertico-cycle t)
+   (use-package vertico
+     :straight (vertico :files (:defaults "extensions/*.el"))
+     :bind (:map vertico-map
+                 ("C-j" . vertico-next)
+                 ("C-k" . vertico-previous)
+                 ("C-f" . vertico-exit)
+                 :map minibuffer-local-map
+                 ("C-h" . backward-kill-word))
+     :custom
+     (vertico-cycle t)
+     :init
+     (vertico-mode))
+  (use-package vertico-multiform-mode
+    :after jinx
+    :straight nil
     :init
-    (vertico-mode))
+     (add-to-list 'vertico-multiform-categories
+                  '(jinx grid (vertico-grid-annotate . 20)))
+     (vertico-multiform-mode 1))
 
-  (use-package savehist
-    :init
-    (savehist-mode))
+   (use-package savehist
+     :init
+     (savehist-mode))
 
-  (use-package marginalia
-    :after vertico
-    :custom
-    (marginalia-annotators '(marginalia-annotators-heavy marginalia-annotators-light nil))
-    :init
-    (marginalia-mode))
+   (use-package marginalia
+     :after vertico
+     :custom
+     (marginalia-annotators '(marginalia-annotators-heavy marginalia-annotators-light nil))
+     :init
+     (marginalia-mode))
 #+end_src
 
 ** Consult
@@ -559,7 +577,7 @@ marginalia adds annotations in the mini buffer
 
     ;; Optionally configure preview. The default value
     ;; is 'any, such that any key triggers the preview.
-    ;; (setq consult-preview-key 'any)
+    ;; (setq consu lt-preview-key 'any)
     (setq consult-preview-key "M-.")	;
     ;; (setq consult-preview-key '("S-<down>" "S-<up>"))
     ;; For some commands and buffer sources it is useful to configure the
@@ -636,7 +654,7 @@ marginalia adds annotations in the mini buffer
            ("C-x C-d" . consult-dir)
            ("C-x C-j" . consult-dir-jump-file))
     :config
-    (setq consult-dir-project-list-function #'consult-dir-projectile-dirs)))
+    (setq consult-dir-project-list-function #'consult-dir-projectile-dirs))
 #+end_src
 
 ** Embark
@@ -1602,6 +1620,13 @@ Setup ansi colors for the compilation buffer
   (provide 'init)
   ;; Local Variables:
   ;; byte-compile-warnings: (not free-vars)
+  ;; jinx-local-words: "COmpletion Vertico"
   ;; End:
   ;;; init.el ends here (emacs-lisp-checkdoc)
 #+end_src
+
+customuzation
+
+
+
+testw

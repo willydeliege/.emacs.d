@@ -592,12 +592,15 @@ marginalia adds annotations in the mini buffer
 #+begin_src emacs-lisp
   (use-package consult-flycheck)
 #+end_src
-*** COMMENT Consult dir
+*** Consult dir
 #+begin_src emacs-lisp
   (use-package consult-dir
-    :bind ("C-x C-d" . consult-dir)
+    :bind (("C-x C-d" . consult-dir)
+           :map vertico-map
+           ("C-x C-d" . consult-dir)
+           ("C-x C-j" . consult-dir-jump-file))
     :config
-    (setq consult-dir-project-list-function #'consult-dir-projectile-dirs))
+    (setq consult-dir-project-list-function #'consult-dir-projectile-dirs)))
 #+end_src
 
 ** Embark

@@ -1624,9 +1624,3 @@ Setup ansi colors for the compilation buffer
   ;; End:
   ;;; init.el ends here (emacs-lisp-checkdoc)
 #+end_src
-
-customuzation
-
-
-
-testw

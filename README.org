@@ -316,6 +316,8 @@ Usage of evil mode as I used to work with vim binding for years
 
   (use-package evil-collection
     :after evil
+  :custom
+    (evil-collection-calendar-want-org-bindings t)
     :config
     (setq evil-collection-corfu-key-themes '(tab-n-go))
     (evil-collection-init))

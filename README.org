@@ -396,7 +396,7 @@ avy is a GNU Emacs package for jumping to visible text using a char-based decisi
   (use-package avy
     :demand t
     :config
-    (global-set-key (kbd "C-c <SPC>") 'avy-goto-char-2))
+    (evil-global-set-key 'normal "S" 'evil-avy-goto-char-2))
 #+end_src
 
 ** Evil commentary

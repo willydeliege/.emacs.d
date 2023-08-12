@@ -452,6 +452,7 @@ Supplemental evil-mode keybindings to emacs org-mode
    :init
    (setq jinx-languages "fr_FR en_US en_GB")) 
 #+end_src
+
 * Completion
 ** Vertico + Marginalia
 vertico.el - VERTical Interactive COmpletion

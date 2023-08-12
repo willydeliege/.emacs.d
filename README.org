@@ -403,6 +403,7 @@ avy is a GNU Emacs package for jumping to visible text using a char-based decisi
 Comment stuff out. A port of vim-commentary
 #+begin_src emacs-lisp
   (use-package evil-commentary
+    :bind ("M-;" . evil-commentary-line)
     :init
     (evil-commentary-mode))
 #+end_src

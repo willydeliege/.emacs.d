@@ -1371,6 +1371,17 @@ Enter insert mode when capturing things
 
 #+RESULTS:
 
+** Org crypt
+#+begin_src emacs-lisp
+  (use-package org-crypt
+    :straight nil
+    :config
+    (require 'org-crypt)
+    (org-crypt-use-before-save-magic)
+    (setq org-tags-exclude-from-inheritance '("crypt"))
+    (setq org-crypt-key nil))
+#+end_src
+
 * Mails
 ** Mu4e
 #+begin_src emacs-lisp

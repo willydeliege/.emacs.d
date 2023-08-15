@@ -865,43 +865,43 @@ marginalia adds annotations in the mini buffer
 #+begin_src emacs-lisp
   (use-package corfu
     :straight (corfu :files (:defaults "extensions/*.el"))
-    :bind
-
-    (:map corfu-map
-  	("C-j" . corfu-next)
-  	("C-k" . corfu-previous)
-  	("TAB" . corfu-next)
-  	([tab] . corfu-next)
-  	("S-TAB" . corfu-previous)
-  	([backtab] . corfu-previous)
-    	("<escape>" . evil-collection-corfu-quit-and-escape))
+    :bind (:map corfu-map
+                ("RET" . nil)
+                ("C-j" . corfu-next)
+                ("C-k" . corfu-previous)
+                ("TAB" . corfu-next)
+                ([tab] . corfu-next)
+                ("S-TAB" . corfu-previous)
+                ([backtab] . corfu-previous)
+                ("<escape>" . corfu-quit))
     :custom
     ;; Works with `indent-for-tab-command'. Make sure tab doesn't indent when you
     ;; want to perform completion
-    (completion-cycle-threshold nil)      ; Always show candidates in menu
-    (corfu-auto t)
+    (completion-cycle-threshold nil)  ; Always show candidates in menu
+    (corfu-auto nil)                  ;;enablw completion with tab
     (corfu-auto-prefix 2)
     (corfu-auto-delay 0.25)
     (corfu-min-width 80)
-    (corfu-max-width corfu-min-width)     ; Always have the same width
+    (corfu-max-width corfu-min-width) ; Always have the same width
     (corfu-preselect 'prompt)
     (corfu-scroll-margin 4)
     (corfu-cycle t)
-    (corfu-separator ?\s)            ; Use space
-    (corfu-quit-no-match 'separator) ; Don't quit if there is `corfu-separator' inserted
-    (corfu-preview-current 'insert)  ; Preview first candidate. Insert on input if only one
-    (corfu-preselect-first nil)        ; Preselect first candidate?
+    (corfu-separator ?\s)             ; Use space
+    (corfu-quit-no-match 'separator)  ; Don't quit if there is `corfu-separator' inserted
+    (corfu-preview-current 'insert)   ; Preview first candidate. Insert on input if only one
+    (corfu-preselect-first nil)       ; Preselect first candidate?
     (corfu-popupinfo-delay 0.5)
     :config
     (defun corfu-enable-in-minibuffer ()
       "Enable Corfu in the minibuffer if `completion-at-point' is bound."
       (when (where-is-internal #'completion-at-point (list (current-local-map)))
-        ;; (setq-local corfu-auto nil) ;; Enable/disable auto completion
+        (setq-local corfu-auto nil)       ;; Enable/disable auto completion
         (setq-local corfu-echo-delay nil ;; Disable automatic echo and popup
     		  corfu-popupinfo-delay nil)
         (corfu-mode 1)))
     (add-hook 'minibuffer-setup-hook #'corfu-enable-in-minibuffer)
     :init
+    (setq tab-always-indent 'complete)
     (corfu-popupinfo-mode)
     (corfu-indexed-mode)
     (global-corfu-mode))

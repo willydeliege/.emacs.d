@@ -1618,7 +1618,7 @@ Setup ansi colors for the compilation buffer
   	 (lsp-mode . lsp-enable-which-key-integration))
     :commands lsp)
 
-  (use-package lsp-java)
+  (use-package lsp-java )
   ;; optionally
   (use-package lsp-ui :commands lsp-ui-mode)
   (use-package lsp-treemacs :commands lsp-treemacs-errors-list)

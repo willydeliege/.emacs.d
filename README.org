@@ -138,7 +138,7 @@ Better help buffer
         evil-normal-state-cursor '(box "#E2E8EF")))
 #+end_src
 
-*** Mutli vterm
+*** Multi vterm
 Use vterm as multiplexer
 #+begin_src emacs-lisp
   (use-package multi-vterm

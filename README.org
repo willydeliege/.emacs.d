@@ -337,6 +337,9 @@ Usage of evil mode as I used to work with vim binding for years
     (setq evil-want-integration t) ;; This is optional since it's already set to t by default.
     (setq evil-want-keybinding nil)
     (setq evil-undo-system 'undo-fu)
+    (setq evil-insert-state-cursor '(bar "#00FF00")
+        evil-visual-state-cursor '(box "#FF00FF")
+        evil-normal-state-cursor '(box "#E2E8EF"))
     :config
     (evil-mode 1))
 

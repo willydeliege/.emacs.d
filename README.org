@@ -3,7 +3,7 @@
 #+OPTIONS: toc:2 num:nil
 #+auto_tangle: t
 * Emacs configuration
-After spending lot of time with doom emacs, willing to switch to a more native emacs config while keeping evil mode
+After spending lot of time with doom Emacs, willing to switch to a more native emacs config while keeping evil mode
 * Header
 Header for the config init.el file
 #+begin_src emacs-lisp

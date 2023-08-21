@@ -1351,9 +1351,7 @@ Enter insert mode when capturing things
 ** Org ql
 #+begin_src emacs-lisp
   (use-package org-ql
-    :demand t
-    :config
-    (setq org-ql-view-buffers-files 'org-directory))
+    :demand t)
 #+end_src
 #+begin_src emacs-lisp
   ;; (use-package cl-lib)

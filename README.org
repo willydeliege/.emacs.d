@@ -1280,6 +1280,27 @@ Enter insert mode when capturing things
 | lambda  | nil                   | (when (equal org-state DONE) (my/org-roam-copy-todo-to-today)) |                                                                      |
 | closure | (bootstrap-version t) | nil                                                            | (if (equal org-state DONE) (progn (my/org-roam-copy-todo-to-today))) |
 
+** Org citar
+#+begin_src emacs-lisp
+  (use-package citar
+    :hook
+    (org-mode . citar-capf-setup)
+    :custom
+    (org-cite-global-bibliography '("~/bib/references.bib"))
+    (citar-library-paths '("~bib/files"))
+    (citar-notes-paths '("~/org"))
+    (org-cite-insert-processor 'citar)
+    (org-cite-follow-processor 'citar)
+    (org-cite-activate-processor 'citar)
+    (citar-bibliography org-cite-global-bibliography)
+    ;; optional: org-cite-insert is also bound to C-c C-x C-@
+    :bind
+    (:map org-mode-map ("C-c b" . #'org-cite-insert)))
+  (use-package citar-embark
+    :after citar embark
+    :no-require
+    :config (citar-embark-mode))
+#+end_src
 ** Org Roam UI
 #+begin_src emacs-lisp
   (use-package org-roam-ui
@@ -1296,6 +1317,12 @@ Enter insert mode when capturing things
           org-roam-ui-update-on-save t
           org-roam-ui-open-on-start t))
 
+#+end_src
+** Org roam citar
+#+begin_src emacs-lisp
+  (use-package citar-org-roam
+    :after (citar org-roam)
+    :config (citar-org-roam-mode))
 #+end_src
 
 ** Org notifications

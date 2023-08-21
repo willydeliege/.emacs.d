@@ -1449,7 +1449,7 @@ Enter insert mode when capturing things
                  '("mc" "Communication" entry (file+headline my/org-roam-node-find-project "Communication")
                    "* TODO Communication from %:fromname on %a" :immediate-finish t))
     (add-to-list 'org-capture-templates
-                 '("mr" "Read Later" entry (file+headline "~/org/Inbox.org" "Read Later")
+                 '("mr" "Read Later" entry (file+headline "~/org/to_read_to_watch.org" "To watch or read")
                    "* TODO Read %:subject\nSCHEDULED:%t\nDEADLINE: %(org-insert-time-stamp (org-read-date nil t \"+2d\"))\n\n%a\n\n%i" :immediate-finish t))
     (require 'org-roam)
     (defun my/org-roam-node-find-project ()

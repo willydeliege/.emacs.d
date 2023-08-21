@@ -1432,7 +1432,9 @@ Enter insert mode when capturing things
     (defun my/capture-mail-follow-up (msg)
       (interactive)
       (call-interactively 'org-store-link)
-      (org-capture nil "mc"))
+      (org-capture nil "mc")
+      (mu4e-view-mark-for-flag))
+    
 
     (defun my/capture-mail-read-later (msg)
       (interactive)

@@ -1105,6 +1105,9 @@ Enter insert mode when capturing things
   					    ;; their order is unspecified, defaulting to 0. Sections
   					    ;; are displayed lowest-number-first.
   					    :order 1)
+  			       (:name "Meeting"
+  				      :todo "MEETING"
+  				      :order 7)
   			       (:name "Next"
   				      :todo "NEXT"
   				      :order 8)

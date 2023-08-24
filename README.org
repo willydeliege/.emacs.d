@@ -1280,10 +1280,6 @@ Enter insert mode when capturing things
                     (my/org-roam-copy-todo-to-today))))
 #+end_src
 
-#+RESULTS:
-| lambda  | nil                   | (when (equal org-state DONE) (my/org-roam-copy-todo-to-today)) |                                                                      |
-| closure | (bootstrap-version t) | nil                                                            | (if (equal org-state DONE) (progn (my/org-roam-copy-todo-to-today))) |
-
 ** Org citar
 #+begin_src emacs-lisp
   (use-package citar
@@ -1353,27 +1349,6 @@ Enter insert mode when capturing things
 #+begin_src emacs-lisp
   (use-package org-ql
     :demand t)
-#+end_src
-#+begin_src emacs-lisp
-  ;; (use-package cl-lib)
-  ;; (use-package crm)
-  ;; (use-package map)
-  ;; (use-package org)
-  ;; (use-package org-element :straight nil)
-  ;; (use-package org-agenda :straight nil)
-
-  ;; (use-package seq)
-  ;; (use-package rx)
-  ;; (use-package subr-x :straight nil)
-
-  ;; (use-package org-ql)
-
-
-  ;; (use-package dash)
-  ;; (use-package s)
-  ;; (use-package org-super-agenda)
-  ;; (use-package ov)
-  ;; (use-package ts)
 #+end_src
 
 #+RESULTS:

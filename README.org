@@ -1378,9 +1378,10 @@ Enter insert mode when capturing things
     :demand t
     :bind (("<f5>" . mu4e))
     :config
+  (evil-define-key 'normal mu4e-headers-mode-map "T" 'mu4e-headers-mark-thread )
     (require 'mu4e-icalendar)
     (mu4e-icalendar-setup)
-    (setq gnus-icalendar-org-capture-file "~/org/calendar.orgq")
+    (setq gnus-icalendar-org-capture-file "~/org/Inbox.org")
     (setq gnus-icalendar-org-capture-headline '("Calendar"))
     (gnus-icalendar-org-setup)
     (setq mail-user-agent 'mu4e-user-agent)

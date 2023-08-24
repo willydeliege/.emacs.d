@@ -1398,7 +1398,7 @@ Enter insert mode when capturing things
     (setq message-kill-buffer-on-exit t)
     (setq org-export-show-temporary-export-buffer nil)
     ;; set a more visible mu4e view (with dark-mode enabled)
-    (setq shr-color-visible-luminance-min 0)
+    (setq shr-color-visible-luminance-min 100)
     ;; use imagemagick, if available
     (when (fboundp 'imagemagick-register-types)
       (imagemagick-register-types))

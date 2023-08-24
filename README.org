@@ -1587,14 +1587,16 @@ Enter insert mode when capturing things
 ** Org-gcal
 #+begin_src emacs-lisp
   (use-package org-gcal
+    :bind (:map org-mode-map
+              ("C-c g" . org-gcal-post-at-point))
     :init
     (setq org-gcal-notify-p nil)
     (require 'plstore)
     (add-to-list 'plstore-encrypt-to "E7446C9175DAAA79")
     (setq client-secret (password-store-get 'calendar))
     (setq org-gcal-client-id "140991280434-1736v7des240n016cqe46cuof13ggvbc.apps.googleusercontent.com"
-  	org-gcal-client-secret client-secret
-  	org-gcal-fetch-file-alist '(("frederic.willem@gmail.com" .  "~/org/calendar.org"))))
+    	org-gcal-client-secret client-secret
+    	org-gcal-fetch-file-alist '(("frederic.willem@gmail.com" .  "~/org/calendar.org"))))
 #+end_src
 
 * Programming

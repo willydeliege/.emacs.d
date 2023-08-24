@@ -1095,9 +1095,6 @@ Enter insert mode when capturing things
   	       (alltodo "" ((org-agenda-overriding-header "")
   			    (org-super-agenda-groups
   			     '(;; Each group has an implicit boolean OR operator between its selectors.
-  			       (:name "Today"
-  				      :deadline today
-  				      :face (:background "black"))
   			       (:name "Passed deadline"
   				      :and (:deadline past :todo ("TODO" "WAIT" "HOLD" "NEXT"))
   				      :face (:background "#7f1b19"))

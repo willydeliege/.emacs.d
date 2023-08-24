@@ -985,73 +985,80 @@ marginalia adds annotations in the mini buffer
 * Org mode
 ** Org basics
 #+begin_src emacs-lisp
-  (use-package org
-    ;; :straight
-    ;; (:type built-in)
-    :bind (("C-c a" . org-agenda))
-    :hook ((org-mode . org-indent-mode))
-    :init
-    (org-babel-do-load-languages 'org-babel-load-languages
-  			       (append org-babel-load-languages
-  				       '((shell     . t)
-  					 (java      . t))))
-    :config
-    (setq
-     ;; Edit settings
-     org-log-done 'time
-     org-log-into-drawer t
-     org-auto-align-tags nil
-     org-tags-column 0
-     org-catch-invisible-edits 'show-and-error
-     org-special-ctrl-a/e t
-     org-insert-heading-respect-content t
+    (use-package org
+      ;; :straight
+      ;; (:type built-in)
+      :bind (("C-c a" . org-agenda)
+  	   (:map org-mode-map)
+  	   ("C-c $" . org-archive-subtree-default))
+      :hook ((org-mode . org-indent-mode))
+      :init
+      (org-babel-do-load-languages 'org-babel-load-languages
+    			       (append org-babel-load-languages
+    				       '((shell     . t)
+    					 (java      . t))))
+      :config
+      (require 'org-archive)
+      (setq org-archive-default-command 'org-archive-to-archive-sibling)
+      (setq
+       ;; Edit settings
+       org-log-done 'time
+       org-log-into-drawer t
+       org-auto-align-tags nil
+       org-tags-column 0
+       org-catch-invisible-edits 'show-and-error
+       org-special-ctrl-a/e t
+       org-insert-heading-respect-content t
 
-     ;; Org styling, hide markup etc.
-     org-hide-emphasis-markers t
-     org-pretty-entities t
-     org-ellipsis "…"
+       ;; Org styling, hide markup etc.
+       org-hide-emphasis-markers t
+       org-pretty-entities t
+       org-ellipsis "…"
 
-     ;; Agenda styling
-     org-agenda-tags-column 0
-     org-agenda-block-separator ?─
-     org-agenda-time-grid
-     '((daily today require-timed)
-       (800 1000 1200 1400 1600 1800 2000)
-       " ┄┄┄┄┄ " "┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄")
-     org-agenda-current-time-string
-     "⭠ now ─────────────────────────────────────────────────")
-    (setq org-stuck-projects '("+Project/PROJ" ("NEXT" "WAIT") nil ""))
-    (setq org-refile-targets '((org-agenda-files :maxlevel . 1)))
-    (setq org-outline-path-complete-in-steps nil)         ; Refile in a single go
-    (setq org-startup-folded 'fold)
-    (setq org-attach-preferred-new-method 'dir)
-    (setq org-attach-store-link-p 'attached)
-    (setq org-todo-keywords
-          '((sequence
-             "TODO(t)"  ; A task that needs doing & is ready to do
-             "NEXT(n)"  ; The nex task in to perform in the project
-             "MEETING"  ; Meeting
-             "PROJ(p)"  ; A project, which usually contains other tasks
-             "WAIT(W@)"  ; Something external is holding up this task
-             "HOLD(H@)"  ; This task is paused/on hold because of me
-             "IDEA(i)"  ; An unconfirmed and unapproved task or notion
-             "|"
-             "DONE(d!)"  ; Task successfully completed
-  	   "KILL(k)") ; Task was cancelled, aborted or is no longer applicable
-  	  (sequence
-  	   "REPLY(r)" 
-  	   "|"
-  	   "REPLIED(R!)") 
-  	  (sequence
-  	   "[ ](T)"   ; A task that needs doing
-             "[-](S)"   ; Task is in progress
-             "|"
-             "[X](D)")  ; Task was completed
-            (sequence
-             "READ(r)"
-             "WATCH(w)"))))
+       ;; Agenda styling
+       org-agenda-tags-column 0
+       org-agenda-block-separator ?─
+       org-agenda-time-grid
+       '((daily today require-timed)
+         (800 1000 1200 1400 1600 1800 2000)
+         " ┄┄┄┄┄ " "┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄")
+       org-agenda-current-time-string
+       "⭠ now ─────────────────────────────────────────────────")
+      (setq org-stuck-projects '("+Project/PROJ" ("NEXT" "WAIT" "MEETING" "HOLD") nil ""))
+      (setq org-refile-targets '((org-agenda-files :maxlevel . 1)))
+      (setq org-outline-path-complete-in-steps nil)         ; Refile in a single go
+      (setq org-startup-folded 'fold)
+      (setq org-attach-preferred-new-method 'dir)
+      (setq org-attach-store-link-p 'attached)
+      (setq org-todo-keywords
+            '((sequence
+               "TODO(t)"  ; A task that needs doing & is ready to do
+               "NEXT(n)"  ; The nex task in to perform in the project
+               "MEETING"  ; Meeting
+               "PROJ(p)"  ; A project, which usually contains other tasks
+               "WAIT(W@)"  ; Something external is holding up this task
+               "HOLD(H@)"  ; This task is paused/on hold because of me
+               "IDEA(i)"  ; An unconfirmed and unapproved task or notion
+               "|"
+               "DONE(d!)"  ; Task successfully completed
+    	   "KILL(k)") ; Task was cancelled, aborted or is no longer applicable
+    	  (sequence
+    	   "REPLY(r)" 
+    	   "|"
+    	   "REPLIED(R!)") 
+    	  (sequence
+    	   "[ ](T)"   ; A task that needs doing
+               "[-](S)"   ; Task is in progress
+               "|"
+               "[X](D)")  ; Task was completed
+              (sequence
+               "READ(r)"
+               "WATCH(w)"))))
 
 #+end_src
+
+#+RESULTS:
+: org-arcive-subtree-default
 
 ** Org capture
 Enter insert mode when capturing things

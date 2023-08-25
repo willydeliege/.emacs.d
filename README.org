@@ -365,8 +365,6 @@ anzu.el provides a minor mode which displays current match and total matches inf
   (use-package evil-anzu :demand t)
 #+end_src
 
-#+RESULTS:
-
 ** evil org mode
 Supplemental evil-mode keybindings to emacs org-mode
 #+begin_src emacs-lisp
@@ -939,8 +937,6 @@ marginalia adds annotations in the mini buffer
 ** Org basics
 #+begin_src emacs-lisp
     (use-package org
-      ;; :straight
-      ;; (:type built-in)
       :bind (("C-c a" . org-agenda)
   	   (:map org-mode-map)
   	   ("C-c $" . org-archive-subtree-default))
@@ -1010,9 +1006,6 @@ marginalia adds annotations in the mini buffer
 
 #+end_src
 
-#+RESULTS:
-: org-arcive-subtree-default
-
 ** Org capture
 Enter insert mode when capturing things
 #+begin_src emacs-lisp
@@ -1021,9 +1014,6 @@ Enter insert mode when capturing things
     (org-capture-mode . evil-insert-state))
 
 #+end_src
-
-#+RESULTS:
-| evil-insert-state |
 
 ** Org-agenda
 #+begin_src emacs-lisp
@@ -1311,8 +1301,6 @@ Enter insert mode when capturing things
     :demand t)
 #+end_src
 
-#+RESULTS:
-
 ** Org crypt
 #+begin_src emacs-lisp
   (use-package org-crypt
@@ -1491,7 +1479,6 @@ Enter insert mode when capturing things
     (pdf-loader-install))
 #+end_src
 
-#+RESULTS:
 * Calendars
 ** Calendar
 #+begin_src emacs-lisp

@@ -1399,7 +1399,7 @@ Enter insert mode when capturing things
                  '("#" "used by gnus-icalendar-org" entry
   		 (file+headline my/org-roam-node-find-project
   				"Dates")
-  		 "%i")) ;; don't immdeiate  finsh zant to be able to set a todo 
+  		 "%i")) ;; don't immdeiate-finsh want to be able to set a todo
     (require 'org-roam)
     (defun my/org-roam-node-find-project ()
       "Get path for node"

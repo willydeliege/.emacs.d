@@ -1384,11 +1384,22 @@ Enter insert mode when capturing things
     (add-to-list 'org-capture-templates
                  '("m" "Email Workflow"))
     (add-to-list 'org-capture-templates
-                 '("mc" "Communication" entry (file+headline my/org-roam-node-find-project "Communication")
-                   "* TODO Communication from %:fromname on %a" :immediate-finish t))
+                 '("mc" "Communication" entry
+  		 (file+headline my/org-roam-node-find-project "Communication")
+                   "* TODO Communication from %:fromname on %a"
+  		 :immediate-finish t))
     (add-to-list 'org-capture-templates
-                 '("mr" "Read Later" entry (file+headline "~/org/to_read_to_watch.org" "To watch or read")
-                   "* TODO Read %:subject\nSCHEDULED:%t\nDEADLINE: %(org-insert-time-stamp (org-read-date nil t \"+2d\"))\n\n%a\n\n%i" :immediate-finish t))
+                 '("mr" "Read Later" entry
+  		 (file+headline "~/org/to_read_to_watch.org"
+  				"To watch or read")
+                   "* TODO Read %:subject\nSCHEDULED:%t\nDEADLINE: %(org-insert-time-stamp (org-read-date nil t \"+2d\"))\n\n%a\n\n%i"
+  		 :immediate-finish t))
+    ;; template to capture events
+    (add-to-list 'org-capture-templates
+                 '("#" "used by gnus-icalendar-org" entry
+  		 (file+headline my/org-roam-node-find-project
+  				"Dates")
+  		 "%i")) ;; don't immdeiate  finsh zant to be able to set a todo 
     (require 'org-roam)
     (defun my/org-roam-node-find-project ()
       "Get path for node"

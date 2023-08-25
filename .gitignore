@@ -44,5 +44,5 @@ eshell
 games/
 tree-sitter/
 image-dired/
-/persist
+/persist*
 /tutorial/

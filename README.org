@@ -977,8 +977,6 @@ marginalia adds annotations in the mini buffer
       (setq org-refile-targets '((org-agenda-files :maxlevel . 1)))
       (setq org-outline-path-complete-in-steps nil)         ; Refile in a single go
       (setq org-startup-folded 'fold)
-      (setq org-attach-preferred-new-method 'dir)
-      (setq org-attach-store-link-p 'attached)
       (setq org-todo-keywords
             '((sequence
                "TODO(t)"  ; A task that needs doing & is ready to do
@@ -1106,13 +1104,18 @@ Enter insert mode when capturing things
     :bind-keymap
     ("C-c n d" . org-roam-dailies-map)
     :config
+    (setq org-roam-db-node-include-function
+  	(lambda ()
+  	  (not
+  	   (or (member "ATTACH" (org-get-tags)) ;; don't consider attach tags
+  	       (member "t" ( org-entry-member-in-multivalued-property nil "ICAL_EVENT" "t" )))))) ;; don't consider ical events
     (setq org-roam-node-display-template
-     	(concat "${title} "
-     		(propertize "${tags:20}" 'face 'org-tag)))
+  	(concat "${title} "
+  		(propertize "${tags:20}" 'face 'org-tag)))
     (require 'org-roam-dailies) ;; Ensure the keymap is available
     (setq org-roam-dailies-capture-templates
-     	'(("d" "default" entry "* %<%H:%M> %?" :target
-     	   (file+datetree "%<%Y-W%W>.org" 'week))))
+  	'(("d" "default" entry "* %<%H:%M> %?" :target
+  	   (file+datetree "%<%Y-W%W>.org" 'week))))
     (require 'org-roam-protocol)
     (defun my/org-protocol-insert-selection-dwim (selection)
       "Insert SELECTION ."
@@ -1124,8 +1127,7 @@ Enter insert mode when capturing things
           '(("r" "ref" entry "* %(my/org-protocol-insert-selection-dwim \"%i\")%?"
              :target (file+head "${slug}.org"
                                 "#+title: ${title}\n
-                                 ,#+created: %u\n"
-                                )
+                                       ,#+created: %u\n")
              :unnarrowed t)))
     (org-roam-db-autosync-mode))
 
@@ -1163,7 +1165,7 @@ Enter insert mode when capturing things
 
   (defun my/org-roam-project-finalize-hook ()
     "Adds the captured project file to `org-agenda-files' if the
-                                     capture was not aborted."
+                                           capture was not aborted."
     ;; Remove the hook since it was added temporarily
     (remove-hook 'org-capture-after-finalize-hook #'my/org-roam-project-finalize-hook)
 
@@ -1217,10 +1219,10 @@ Enter insert mode when capturing things
     (let ( ;; Set this to nil to delete the original!
           ( id (org-entry-get 1 "ID"))
           ( id-string "id:")
-       	(org-roam-dailies-capture-templates
-       	 '(("t" "tasks" plain "**** %(org-link-make-string
-                  (concat id-string id)
-                  (org-roam-node-title (org-roam-node-from-id id)))\n%(org-paste-subtree 5)\n%?"
+          (org-roam-dailies-capture-templates
+           '(("t" "tasks" plain "**** %(org-link-make-string
+                        (concat id-string id)
+                        (org-roam-node-title (org-roam-node-from-id id)))\n%(org-paste-subtree 5)\n%?"
               :target (file+datetree "%<%Y-W%W>.org" 'week)
               :immediate-finish t))))
       (save-window-excursion
@@ -1252,7 +1254,7 @@ Enter insert mode when capturing things
     :no-require
     :config (citar-embark-mode))
 #+end_src
-** Org Roam UI
+** Org Roqm-ui
 #+begin_src emacs-lisp
   (use-package org-roam-ui
     :straight

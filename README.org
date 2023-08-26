@@ -152,7 +152,7 @@ Use vterm as multiplexer
 #+end_src
 
 *** Eshell
-#+begin_src emacs-lisp 
+#+begin_src emacs-lisp
   (use-package eshell
     :bind ("C-c t e" . eshell))
   (use-package eshell-vterm
@@ -392,7 +392,7 @@ Supplemental evil-mode keybindings to emacs org-mode
 * Spelling
 ** Jinx
 Just install hunspell and hunspell-fr, hunspell-en, ...
-#+begin_src emacs-lisp 
+#+begin_src emacs-lisp
   (use-package jinx
     :hook (emacs-startup . global-jinx-mode)
     :bind (("C-M-$" . jinx-languages)
@@ -402,7 +402,7 @@ Just install hunspell and hunspell-fr, hunspell-en, ...
   	 ("[ s" . jinx-previous)
   	 ("] s" . jinx-next))
     :init
-    (setq jinx-languages "fr_FR en_US en_GB")) 
+    (setq jinx-languages "fr_FR en_US en_GB"))
 #+end_src
 
 * Completion
@@ -925,7 +925,7 @@ marginalia adds annotations in the mini buffer
     :config
     (setq persp-state-default-file "~/.emacs.d/persist")
     (consult-customize consult--source-buffer :hidden t :default nil)
-    (add-to-list 'consult-buffer-sources persp-consult-source))  
+    (add-to-list 'consult-buffer-sources persp-consult-source))
 #+end_src
 
 ** Persp project
@@ -1037,7 +1037,7 @@ Enter insert mode when capturing things
   				      :and (:deadline past :todo ("TODO" "WAIT" "HOLD" "NEXT"))
   				      :face (:background "#7f1b19"))
   			       (:scheduled past)
-  			       (:scheduled future) 
+  			       (:scheduled future)
   			       (:name "Important"
   				      :priority "A")
   			       (:priority<= "B"
@@ -1400,7 +1400,7 @@ Enter insert mode when capturing things
       (call-interactively 'org-store-link)
       (org-capture nil "mc")
       (mu4e-view-mark-for-flag))
-    
+
 
     (defun my/capture-mail-read-later (msg)
       (interactive)
@@ -1541,7 +1541,7 @@ Enter insert mode when capturing things
 #+begin_src emacs-lisp
   (use-package org-gcal
     :bind (:map org-mode-map
-              ("C-c g" . org-gcal-post-at-point))
+                ("C-c g" . org-gcal-post-at-point))
     :init
     (setq org-gcal-notify-p nil)
     (require 'plstore)
@@ -1560,7 +1560,7 @@ Enter insert mode when capturing things
 
 #+end_src
 
-** Compilation mode 
+** Compilation mode
 Setup ansi colors for the compilation buffer
 #+begin_src emacs-lisp
   (use-package xterm-color
@@ -1590,7 +1590,7 @@ Setup ansi colors for the compilation buffer
 
   ;; optionally if you want to use debugger
   (use-package dap-mode)
-  (use-package dap-java :straight nil) 
+  (use-package dap-java :straight nil)
 
 #+end_src
 

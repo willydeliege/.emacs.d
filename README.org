@@ -1319,9 +1319,21 @@ Enter insert mode when capturing things
 #+begin_src emacs-lisp
   (use-package mu4e
     :demand t
-    :bind (("<f5>" . mu4e))
+    :bind (("C-x m" . mu4e))
+    :custom
+    (mu4e-bookmarks
+    '(( :name  "Unread messages"
+        :query "maildir:/INBOX AND flag:unread AND NOT flag:trashed"
+        :key ?u)
+      ( :name "Today's messages"
+        :query "maildir:/INBOX AND date:today..now"
+        :key ?t)
+      ( :name "Last 7 days"
+        :query "date:7d..now"
+        :hide-unread t
+        :key ?w)))
     :config
-  (evil-define-key 'normal mu4e-headers-mode-map "T" 'mu4e-headers-mark-thread )
+    (evil-define-key 'normal mu4e-headers-mode-map "T" 'mu4e-headers-mark-thread )
     (require 'mu4e-icalendar)
     (mu4e-icalendar-setup)
     (setq gnus-icalendar-org-capture-file "~/org/Inbox.org")

@@ -1017,6 +1017,7 @@ Enter insert mode when capturing things
 #+begin_src emacs-lisp
   (use-package org-super-agenda
     :config
+    (setq org-deadline-warning-days 7)
     (setq org-agenda-custom-commands
   	'(("z" "My view"
   	   (   (agenda "" ((org-agenda-span 'day)

@@ -1038,7 +1038,6 @@ Enter insert mode when capturing things
   				     :date today
   				     :deadline today
   				     :scheduled today
-  				     :scheduled today
   				     :order 1)
   			      (:discard (:anything))))))
   	       (alltodo "" ((org-agenda-overriding-header "")

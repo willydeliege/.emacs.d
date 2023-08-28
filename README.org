@@ -977,6 +977,16 @@ marginalia adds annotations in the mini buffer
     (setq org-refile-targets '((org-agenda-files :maxlevel . 1)))
     (setq org-outline-path-complete-in-steps nil)         ; Refile in a single go
     (setq org-startup-folded 'fold)
+    (setq org-todo-keyword-faces
+    (quote (("TODO" :foreground "dark orange" :weight bold)
+            ("NEXT" :foreground "orange red" :weight bold)
+            ("DONE" :foreground "forest green" :weight bold)
+            ("WAIT" :foreground "magenta" :weight bold)
+            ("HOLD" :foreground "magenta" :weight bold)
+            ("CANCELLED" :foreground "dark red" :weight bold)
+            ("KILL" :foreground "dark red" :weight bold)
+            ("MEETING" :foreground "chocolate" :weight bold)
+            )))
     (setq org-todo-keywords
           '((sequence
              "TODO(t)"  ; A task that needs doing & is ready to do

@@ -1088,6 +1088,13 @@ Enter insert mode when capturing things
     (add-hook 'org-agenda-mode-hook 'org-super-agenda-mode))
 #+end_src
 
+** Ovilvetti
+#+begin_src emacs-lisp
+  (use-package olivetti
+    :custom (olivetti-body-width 92)
+    :bind ("C-c M-o" . olivetti-mode))
+#+end_src
+
 ** Org auto tangle
 #+begin_src emacs-lisp
   (use-package org-auto-tangle

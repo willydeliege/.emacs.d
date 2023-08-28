@@ -1104,18 +1104,23 @@ Enter insert mode when capturing things
     :bind-keymap
     ("C-c n d" . org-roam-dailies-map)
     :config
+    (add-to-list 'display-buffer-alist '("\\*org-roam\\*"
+                                       (display-buffer-in-side-window)
+                                       (side . right)
+  				       (window-width . 0.3)
+  				       (window-height . fit-window-to-buffer)))
     (setq org-roam-db-node-include-function
-  	(lambda ()
-  	  (not
-  	   (or (member "ATTACH" (org-get-tags)) ;; don't consider attach tags
-  	       (member "t" ( org-entry-member-in-multivalued-property nil "ICAL_EVENT" "t" )))))) ;; don't consider ical events
+    	(lambda ()
+    	  (not
+    	   (or (member "ATTACH" (org-get-tags)) ;; don't consider attach tags
+    	       (member "t" ( org-entry-member-in-multivalued-property nil "ICAL_EVENT" "t" )))))) ;; don't consider ical events
     (setq org-roam-node-display-template
-  	(concat "${title} "
-  		(propertize "${tags:20}" 'face 'org-tag)))
+    	(concat "${title} "
+    		(propertize "${tags:20}" 'face 'org-tag)))
     (require 'org-roam-dailies) ;; Ensure the keymap is available
     (setq org-roam-dailies-capture-templates
-  	'(("d" "default" entry "* %<%H:%M> %?" :target
-  	   (file+datetree "%<%Y-W%W>.org" 'week))))
+    	'(("d" "default" entry "* %<%H:%M> %?" :target
+    	   (file+datetree "%<%Y-W%W>.org" 'week))))
     (require 'org-roam-protocol)
     (defun my/org-protocol-insert-selection-dwim (selection)
       "Insert SELECTION ."

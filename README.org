@@ -990,6 +990,8 @@ marginalia adds annotations in the mini buffer
   	 (:map org-mode-map)
   	 ("C-c $" . org-archive-subtree-default))
     :hook ((org-mode . org-indent-mode))
+  :custom
+  (org-level-faces nil)
     :init
     (org-babel-do-load-languages 'org-babel-load-languages
   			       (append org-babel-load-languages

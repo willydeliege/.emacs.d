@@ -121,8 +121,8 @@ Better help buffer
     ;; `helpful-callable' as a drop-in replacement.
     (global-set-key (kbd "C-h f") #'helpful-callable)
     ;; Lookup the current symbol at point. C-c C-d is a common keybinding
-    ;; for this in lisp modes.
-    (global-set-key (kbd "C-c C-d") #'helpful-at-point)
+    ;; for this in lisp modes but C-c C-. is convenient for org-mode as well.
+    (global-set-key (kbd "C-c C-.") #'helpful-at-point)
     (global-set-key (kbd "C-h v") #'helpful-variable)
     (global-set-key (kbd "C-h k") #'helpful-key)
     (global-set-key (kbd "C-h x") #'helpful-command))
@@ -1109,6 +1109,55 @@ Enter insert mode when capturing things
   				      :order 10)
   			       (:discard (:todo "PROJ"))))))))))
     (add-hook 'org-agenda-mode-hook 'org-super-agenda-mode))
+#+end_src
+
+** Org timeblock
+#+begin_src emacs-lisp
+  (use-package org-timeblock
+    :hook ((org-timeblock-mode org-timeblock-list-mode) . my/org-timeblock-evil-map)
+    :straight (org-timeblock :type git
+  			   :host github
+  			   :repo "ichernyshovvv/org-timeblock")
+    :init
+    (defun my/org-timeblock-evil-map ()
+      "Set the keybindings for 'org-timeblock' to be compatible with evil mode"
+      (evil-define-key 'normal org-timeblock-mode-map
+        "+" 'org-timeblock-new-task
+        "j" 'org-timeblock-forward-block
+        "l" 'org-timeblock-forward-column
+        "h" 'org-timeblock-backward-column
+        "k" 'org-timeblock-backward-block
+        (kbd "C-<down>") 'org-timeblock-day-later
+        (kbd "C-<up>") 'org-timeblock-day-earlier
+        (kbd "RET") 'org-timeblock-goto
+        (kbd "TAB") 'org-timeblock-goto-other-window
+        "d" 'org-timeblock-set-duration
+        "r" 'org-timeblock-redraw-buffers
+        "gd" 'org-timeblock-jump-to-day
+        "s" 'org-timeblock-schedule
+        "t" 'org-timeblock-toggle-timeblock-list
+        "v" 'org-timeblock-switch-scaling
+        "V" 'org-timeblock-switch-view)
+      (evil-define-key 'normal org-timeblock-list-mode-map
+        "+" 'org-timeblock-new-task
+        "j" 'org-timeblock-list-next-line
+        "k" 'org-timeblock-list-previous-line
+        (kbd "C-<down>") 'org-timeblock-day-later
+        (kbd "C-<up>") 'org-timeblock-day-earlier
+        (kbd "C-s") 'org-timeblock-list-save
+        (kbd "M-<down>") 'org-timeblock-list-drag-line-forward
+        (kbd "M-<up>") 'org-timeblock-list-drag-line-backward
+        (kbd "RET") 'org-timeblock-list-goto
+        (kbd "TAB") 'org-timeblock-list-goto-other-window
+        "S" 'org-timeblock-list-toggle-sort-function
+        "d" 'org-timeblock-list-set-duration
+        "r" 'org-timeblock-redraw-buffers
+        "gd" 'org-timeblock-jump-to-day
+        "q" 'org-timeblock-quit
+        "s" 'org-timeblock-list-schedule
+        "t" 'org-timeblock-list-toggle-timeblock
+        "v" 'org-timeblock-switch-scaling
+        "V" 'org-timeblock-switch-view)))
 #+end_src
 
 ** Ovilvetti

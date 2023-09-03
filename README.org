@@ -162,6 +162,12 @@ Use vterm as multiplexer
     (eshell-vterm-mode))
 #+end_src
 
+** Org auto tangle
+#+begin_src emacs-lisp
+  (use-package org-auto-tangle
+    :hook (org-mode . org-auto-tangle-mode))
+#+end_src
+
 * Recentf
 #+begin_src emacs-lisp
   (require 'recentf)
@@ -1168,12 +1174,6 @@ Enter insert mode when capturing things
   (use-package olivetti
     :custom (olivetti-body-width 92)
     :bind ("C-c M-o" . olivetti-mode))
-#+end_src
-
-** Org auto tangle
-#+begin_src emacs-lisp
-  (use-package org-auto-tangle
-    :hook (org-mode . org-auto-tangle-mode))
 #+end_src
 
 ** Org pretty bullets

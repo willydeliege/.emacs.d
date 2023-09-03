@@ -1077,8 +1077,11 @@ Enter insert mode when capturing things
 ** Org-agenda
 #+begin_src emacs-lisp
   (use-package org-super-agenda
+    :custom 
+    (org-agenda-skip-scheduled-if-deadline-is-shown t)
+    (org-agenda-skip-timestamp-if-deadline-is-shown t)
     :config
-    (setq org-deadline-warning-days 7)
+    (setq org-deadline-warning-days 5)
     (setq org-agenda-custom-commands
   	'(("z" "My view"
   	   (   (agenda "" ((org-agenda-span 'day)
@@ -1128,7 +1131,9 @@ Enter insert mode when capturing things
     :hook ((org-timeblock-mode org-timeblock-list-mode) . my/org-timeblock-evil-map)
     :straight (org-timeblock :type git
   			   :host github
-  			   :repo "ichernyshovvv/org-timeblock")
+                             :repo "ichernyshovvv/org-timeblock")
+    :custom
+    (org-timeblock-inbox-file "/home/willefi/org/calendar.org")
     :init
     (defun my/org-timeblock-evil-map ()
       "Set the keybindings for 'org-timeblock' to be compatible with evil mode"

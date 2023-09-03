@@ -272,9 +272,12 @@ Use vterm as multiplexer
 
 #+begin_src emacs-lisp
   (use-package popper
+    :after perspective
     :bind (("C-`"   . popper-toggle-latest)
-  	 ("M-`"   . popper-cycle)
+  	 ("C-~"   . popper-cycle)
   	 ("C-M-`" . popper-toggle-type))
+    :config
+    (setq popper-group-function #'popper-group-by-perspective) ; group by perspective
     :init
     (setq popper-reference-buffers
   	'("\\*Messages\\*"

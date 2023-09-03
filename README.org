@@ -1183,7 +1183,10 @@ Enter insert mode when capturing things
 
 ** Org roam
 #+begin_src emacs-lisp
+  ;; needed for emacs 29 
+  (use-package emacsql-sqlite-builtin )
   (use-package org-roam
+    :after (org emacsql-sqlite-builtin)
     :demand t  ;; Ensure org-roam is loaded by default
     :init
     (setq org-roam-v2-ack t)

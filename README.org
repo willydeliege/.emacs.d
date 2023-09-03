@@ -1727,6 +1727,12 @@ Setup ansi colors for the compilation buffer
 
 #+end_src
 
+* scratch
+#+begin_src emacs-lisp
+
+  (use-package sqlite3)
+#+end_src
+
 * Footer
 #+begin_src emacs-lisp
   (provide 'init)

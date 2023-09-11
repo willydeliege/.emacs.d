@@ -1075,6 +1075,7 @@ Enter insert mode when capturing things
   (use-package org-super-agenda
     :custom 
     (org-agenda-skip-scheduled-if-deadline-is-shown t)
+    (org-agenda-skip-deadline-prewarning-if-scheduled t)
     (org-agenda-skip-timestamp-if-deadline-is-shown t)
     :config
     (setq org-deadline-warning-days 5)

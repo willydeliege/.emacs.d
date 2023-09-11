@@ -185,31 +185,35 @@ Use vterm as multiplexer
     :hook (git-commit-mode . evil-insert-state)
     :bind (("C-x g" . magit-status)))
 
-  (use-package git-gutter
-    :hook ((prog-mode text-mode) . git-gutter-mode)
-    :config
-    (setq git-gutter:update-interval 0.02))
-
-  (use-package git-gutter-fringe
-    :config
-    (define-fringe-bitmap 'git-gutter-fr:added [224] nil nil '(center repeated))
-    (define-fringe-bitmap 'git-gutter-fr:modified [224] nil nil '(center repeated))
-    (define-fringe-bitmap 'git-gutter-fr:deleted [128 192 224 240] nil nil 'bottom))
 #+end_src
-
 ** Orgit
 #+begin_src emacs-lisp
   (use-package orgit)
 #+end_src
 
+** Forge
+Used to play with forges like ghithub or gitlab
+#+begin_src emacs-lisp
+  (use-package forge
+    :after magit)
+#+end_src
+
+** Orgit for forge
+#+begin_src emacs-lisp
+  (use-package orgit-forge
+    :after forge)
+#+end_src
 ** Diff-hl
 #+begin_src emacs-lisp
   (use-package diff-hl
     :after magit
     :hook ((magit-pre-refresh . diff-hl-magit-pre-refresh)
-  	 (magit-post-refresh . diff-hl-magit-post-refresh))
+    	 (magit-post-refresh . diff-hl-magit-post-refresh))
+    :custom
+    (diff-hl-draw-borders nil)
     :init
-    (global-diff-hl-mode 1))
+    (global-diff-hl-mode 1)
+    (diff-hl-flydiff-mode 1))
 #+end_src
 
 * Personal information

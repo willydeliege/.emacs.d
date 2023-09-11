@@ -46,3 +46,4 @@ tree-sitter/
 image-dired/
 /persist*
 /tutorial/
+/*.sqlite

@@ -1434,6 +1434,24 @@ Enter insert mode when capturing things
     (setq org-crypt-key nil))
 #+end_src
 
+** Org passwords
+#+begin_src emacs-lisp
+  (use-package org-passwords
+    :bind (("C-c q" . org-passwords)
+  	 :map org-passwords-mode-map
+  	 ("C-c u" . org-passwords-copy-username)
+  	 ("C-c s" . org-passwords-copy-password)
+  	 ("C-c o" . org-passwords-open-url))
+    :custom
+    (org-passwords-file "~/org/password.org.gpg")
+    :config
+    (setq enable-recursive-minibuffers t)
+    (setq org-passwords-random-words-dictionary "/etc/dictionaries-common/words")
+    (add-to-list 'org-capture-templates
+  	       '("p" "password" entry (file "~/org/password.org.gpg")
+  		 "* %^{Title}\n  %^{URL}p %^{USERNAME}p %^{PASSWORD}p")))
+#+end_src
+
 * Mails
 ** Mu4e
 #+begin_src emacs-lisp

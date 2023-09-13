@@ -448,6 +448,7 @@ Supplemental evil-mode keybindings to emacs org-mode
 Just install hunspell and hunspell-fr, hunspell-en, ...
 #+begin_src emacs-lisp
   (use-package jinx
+    :if window-system
     :hook (emacs-startup . global-jinx-mode)
     :bind (("C-M-$" . jinx-languages)
         	 :map evil-normal-state-map
@@ -1459,6 +1460,7 @@ Enter insert mode when capturing things
 ** Mu4e
 #+begin_src emacs-lisp
   (use-package mu4e
+    :if window-system
     :demand t
     :bind (("C-x m" . mu4e))
     :custom

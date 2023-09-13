@@ -101,6 +101,8 @@ This will prevent to use package.el
   	      display-line-numbers-width 4)
   (setq browse-url-browser-function 'browse-url-generic
         browse-url-generic-program "google-chrome")
+  (setq my/uname (shell-command-to-string "uname -a"))
+  (setq my/using-android (string-match "Android" my/uname))
   (set-face-attribute 'default nil :height 110) ;; 100 is 10pts
 #+end_src
 ** custom file
@@ -1460,7 +1462,7 @@ Enter insert mode when capturing things
 ** Mu4e
 #+begin_src emacs-lisp
   (use-package mu4e
-    :if window-system
+    :unless my/using-android
     :demand t
     :bind (("C-x m" . mu4e))
     :custom

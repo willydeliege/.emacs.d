@@ -74,6 +74,7 @@ This will prevent to use package.el
         auto-save-file-name-transforms `((".*" ,(expand-file-name "tmp/auto-saves/" user-emacs-directory) t)))
 
   (setq create-lockfiles nil)
+  (add-to-list 'load-path (expand-file-name "~/.emacs.d/elisp/"))
 
   (provide 'early-init)
   ;;; early-init.el ends here
@@ -1219,6 +1220,7 @@ Enter insert mode when capturing things
     :bind-keymap
     ("C-c n d" . org-roam-dailies-map)
     :config
+    (require 'org-roam-logseq)
     (add-to-list 'display-buffer-alist '("\\*org-roam.*"
                                          (display-buffer-in-side-window)
                                          (side . right)

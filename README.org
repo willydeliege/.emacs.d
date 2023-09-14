@@ -58,9 +58,9 @@ This will prevent to use package.el
   (setq package-enable-at-startup nil)
   ;; start emacs window maximized
   (add-to-list 'default-frame-alist '(fullscreen . maximized))
-  ;; (setq warning-minimum-level :emergency)
+  (setq warning-minimum-level :error)
   ;;disable splash screen and startup message
-  ;; (setq inhibit-startup-message t)
+  (setq inhibit-startup-message t)
   ;; (setq initial-scratch-message nil)
   ;; trust the themes
   (setq custom-safe-themes t)

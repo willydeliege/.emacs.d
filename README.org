@@ -852,14 +852,14 @@ marginalia adds annotations in the mini buffer
   (use-package corfu
     :straight (corfu :files (:defaults "extensions/*.el"))
     :bind (:map corfu-map
-                ("RET" . nil)
-                ("C-j" . corfu-next)
-                ("C-k" . corfu-previous)
-                ("TAB" . corfu-next)
-                ([tab] . corfu-next)
-                ("S-TAB" . corfu-previous)
-                ([backtab] . corfu-previous)
-                ("<escape>" . corfu-quit))
+  	      ("RET" . nil)
+  	      ("C-j" . corfu-next)
+  	      ("C-k" . corfu-previous)
+  	      ("TAB" . corfu-next)
+  	      ([tab] . corfu-next)
+  	      ("S-TAB" . corfu-previous)
+  	      ([backtab] . corfu-previous)
+  	      ("<escape>" . corfu-quit))
     :custom
     ;; Works with `indent-for-tab-command'. Make sure tab doesn't indent when you
     ;; want to perform completion
@@ -883,7 +883,7 @@ marginalia adds annotations in the mini buffer
       (when (where-is-internal #'completion-at-point (list (current-local-map)))
         (setq-local corfu-auto nil)       ;; Enable/disable auto completion
         (setq-local corfu-echo-delay nil ;; Disable automatic echo and popup
-    		  corfu-popupinfo-delay nil)
+  		  corfu-popupinfo-delay nil)
         (corfu-mode 1)))
     (add-hook 'minibuffer-setup-hook #'corfu-enable-in-minibuffer)
     :init

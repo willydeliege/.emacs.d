@@ -195,7 +195,7 @@ Use vterm as multiplexer
 #+end_src
 
 ** Forge
-Used to play with forges like ghithub or gitlab
+Used to play with forges like GitHub or gitlab
 #+begin_src emacs-lisp
   (use-package forge
     :after magit)
@@ -447,12 +447,12 @@ Supplemental evil-mode keybindings to emacs org-mode
 
 * Spelling
 ** Jinx
-Just install hunspell and hunspell-fr, hunspell-en, ...
+Just install Hunspell and Hunspell-fr, Hunspell-en, ...
 #+begin_src emacs-lisp
   (use-package jinx
-    :if window-system
+    :unless my/using-android
     :hook (emacs-startup . global-jinx-mode)
-    :bind (("C-M-$" . jinx-languages)
+    :bind (("C-M-$" . jiinx-languages)
         	 :map evil-normal-state-map
         	 ("z =" . jinx-correct)
   	 :map evil-motion-state-map
@@ -644,7 +644,7 @@ marginalia adds annotations in the mini buffer
     ("C-c n l" . consult-org-roam-forward-links)
     ("C-c n r" . consult-org-roam-search))
 #+end_src
-*** Consult flyceck
+*** Consult flycheck
 #+begin_src emacs-lisp
   (use-package consult-flycheck)
 #+end_src
@@ -1132,7 +1132,7 @@ Enter insert mode when capturing things
     (add-hook 'org-agenda-mode-hook 'org-super-agenda-mode))
 #+end_src
 
-** Org timeblock
+** Org time block
 #+begin_src emacs-lisp
   (use-package org-timeblock
     :hook ((org-timeblock-mode org-timeblock-list-mode) . my/org-timeblock-evil-map)
@@ -1183,7 +1183,7 @@ Enter insert mode when capturing things
         "V" 'org-timeblock-switch-view)))
 #+end_src
 
-** Ovilvetti
+** Olivetti
 #+begin_src emacs-lisp
   (use-package olivetti
     :custom (olivetti-body-width 92)
@@ -1417,7 +1417,7 @@ Enter insert mode when capturing things
     (setq alert-default-style 'libnotify))
 #+end_src
 
-** Org cliplink
+** Org clip link
 #+begin_src emacs-lisp
   (use-package org-cliplink
     :after org
@@ -1724,7 +1724,7 @@ Enter insert mode when capturing things
 #+end_src
 
 ** Compilation mode
-Setup ansi colors for the compilation buffer
+Setup ANSI colors for the compilation buffer
 #+begin_src emacs-lisp
   (use-package xterm-color
     :config

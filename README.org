@@ -181,6 +181,494 @@ Use vterm as multiplexer
   (recentf-mode 1)
 #+end_src
 
+* Org mode
+** Org basics
+#+begin_src emacs-lisp
+  (use-package org
+  :straight (:type built-in)
+    :bind (("C-c a" . org-agenda)
+  	 (:map org-mode-map)
+  	 ("C-c $" . org-archive-subtree-default))
+    :hook ((org-mode . org-indent-mode))
+  :custom
+  (org-level-faces nil)
+    :init
+    (org-babel-do-load-languages 'org-babel-load-languages
+  			       (append org-babel-load-languages
+  				       '((shell     . t)
+  					 (java      . t))))
+    :config
+    (require 'org-archive)
+    (setq org-archive-default-command 'org-archive-to-archive-sibling)
+    (setq
+     ;; Edit settings
+     org-log-done 'time
+     org-log-into-drawer t
+     org-auto-align-tags nil
+     org-tags-column 0
+     org-catch-invisible-edits 'show-and-error
+     org-special-ctrl-a/e t
+     org-insert-heading-respect-content t
+
+     ;; Org styling, hide markup etc.
+     org-hide-emphasis-markers t
+     org-pretty-entities t
+     org-ellipsis "…"
+
+     ;; Agenda styling
+     org-agenda-tags-column 0
+     org-agenda-block-separator ?─
+     org-agenda-time-grid
+     '((daily today require-timed)
+       (800 1000 1200 1400 1600 1800 2000)
+       " ┄┄┄┄┄ " "┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄")
+     org-agenda-current-time-string
+     "⭠ now ─────────────────────────────────────────────────")
+    (setq org-stuck-projects '("+Project/PROJ" ("NEXT" "WAIT" "MEETING" "HOLD") nil ""))
+    (setq org-refile-targets '((org-agenda-files :maxlevel . 1)))
+    (setq org-outline-path-complete-in-steps nil)         ; Refile in a single go
+    (setq org-startup-folded 'fold)
+    (setq org-todo-keyword-faces
+    (quote (("TODO" :foreground "dark orange" :weight bold)
+            ("NEXT" :foreground "orange red" :weight bold)
+            ("DONE" :foreground "forest green" :weight bold)
+            ("WAIT" :foreground "magenta" :weight bold)
+            ("HOLD" :foreground "magenta" :weight bold)
+            ("CANCELLED" :foreground "dark red" :weight bold)
+            ("KILL" :foreground "dark red" :weight bold)
+            ("MEETING" :foreground "chocolate" :weight bold)
+            )))
+    (setq org-todo-keywords
+          '((sequence
+             "TODO(t)"  ; A task that needs doing & is ready to do
+             "NEXT(n)"  ; The nex task in to perform in the project
+             "MEETING"  ; Meeting
+             "PROJ(p)"  ; A project, which usually contains other tasks
+             "WAIT(W@)"  ; Something external is holding up this task
+             "HOLD(H@)"  ; This task is paused/on hold because of me
+             "IDEA(i)"  ; An unconfirmed and unapproved task or notion
+             "|"
+             "DONE(d!)"  ; Task successfully completed
+  	   "KILL(k)") ; Task was cancelled, aborted or is no longer applicable
+  	  (sequence
+  	   "REPLY(r)"
+  	   "|"
+  	   "REPLIED(R!)")
+  	  (sequence
+  	   "[ ](T)"   ; A task that needs doing
+             "[-](S)"   ; Task is in progress
+             "|"
+             "[X](D)")  ; Task was completed
+            (sequence
+             "READ(r)"
+             "WATCH(w)"))))
+
+#+end_src
+
+** Org capture
+Enter insert mode when capturing things
+#+begin_src emacs-lisp
+  (use-package org
+    :hook
+    (org-capture-mode . evil-insert-state))
+
+#+end_src
+
+** Org-agenda
+#+begin_src emacs-lisp
+  (use-package org-super-agenda
+    :custom 
+    (org-agenda-skip-scheduled-if-deadline-is-shown t)
+    (org-agenda-skip-deadline-prewarning-if-scheduled t)
+    (org-agenda-skip-timestamp-if-deadline-is-shown t)
+    :config
+    (setq org-deadline-warning-days 5)
+    (setq org-agenda-custom-commands
+  	'(("z" "My view"
+  	   (   (agenda "" ((org-agenda-span 'day)
+  			   (org-agenda-start-day nil)
+  			   (org-super-agenda-groups
+  			    '((:name "Today"
+  				     :time-grid t
+  				     :date today
+  				     :deadline today
+  				     :scheduled today
+  				     :order 1)
+  			      (:discard (:anything))))))
+  	       (alltodo "" ((org-agenda-overriding-header "")
+  			    (org-super-agenda-groups
+  			     '(;; Each group has an implicit boolean OR operator between its selectors.
+  			       (:name "Passed deadline"
+  				      :and (:deadline past :todo ("TODO" "WAIT" "HOLD" "NEXT"))
+  				      :face (:background "#7f1b19"))
+  			       (:scheduled past)
+  			       (:scheduled future)
+  			       (:name "Important"
+  				      :priority "A")
+  			       (:priority<= "B"
+  					    ;; Show this section after "Today" and "Important", because
+  					    ;; their order is unspecified, defaulting to 0. Sections
+  					    ;; are displayed lowest-number-first.
+  					    :order 1)
+  			       (:name "Meeting"
+  				      :todo "MEETING"
+  				      :order 7)
+  			       (:name "Next"
+  				      :todo "NEXT"
+  				      :order 8)
+  			       (:name "Waiting"
+  				      :todo "WAIT"
+  				      :order 9)
+  			       (:name "On hold"
+  				      :todo "HOLD"
+  				      :order 10)
+  			       (:discard (:todo "PROJ"))))))))))
+    (add-hook 'org-agenda-mode-hook 'org-super-agenda-mode))
+#+end_src
+
+** Org time block
+#+begin_src emacs-lisp
+  (use-package org-timeblock
+    :hook ((org-timeblock-mode org-timeblock-list-mode) . my/org-timeblock-evil-map)
+    :straight (org-timeblock :type git
+  			   :host github
+                             :repo "ichernyshovvv/org-timeblock")
+    :custom
+    (org-timeblock-inbox-file "/home/willefi/org/calendar.org")
+    :init
+    (defun my/org-timeblock-evil-map ()
+      "Set the keybindings for 'org-timeblock' to be compatible with evil mode"
+      (evil-define-key 'normal org-timeblock-mode-map
+        "+" 'org-timeblock-new-task
+        "j" 'org-timeblock-forward-block
+        "l" 'org-timeblock-forward-column
+        "h" 'org-timeblock-backward-column
+        "k" 'org-timeblock-backward-block
+        (kbd "C-<down>") 'org-timeblock-day-later
+        (kbd "C-<up>") 'org-timeblock-day-earlier
+        (kbd "RET") 'org-timeblock-goto
+        (kbd "TAB") 'org-timeblock-goto-other-window
+        "d" 'org-timeblock-set-duration
+        "r" 'org-timeblock-redraw-buffers
+        "gd" 'org-timeblock-jump-to-day
+        "s" 'org-timeblock-schedule
+        "t" 'org-timeblock-toggle-timeblock-list
+        "v" 'org-timeblock-switch-scaling
+        "V" 'org-timeblock-switch-view)
+      (evil-define-key 'normal org-timeblock-list-mode-map
+        "+" 'org-timeblock-new-task
+        "j" 'org-timeblock-list-next-line
+        "k" 'org-timeblock-list-previous-line
+        (kbd "C-<down>") 'org-timeblock-day-later
+        (kbd "C-<up>") 'org-timeblock-day-earlier
+        (kbd "C-s") 'org-timeblock-list-save
+        (kbd "M-<down>") 'org-timeblock-list-drag-line-forward
+        (kbd "M-<up>") 'org-timeblock-list-drag-line-backward
+        (kbd "RET") 'org-timeblock-list-goto
+        (kbd "TAB") 'org-timeblock-list-goto-other-window
+        "S" 'org-timeblock-list-toggle-sort-function
+        "d" 'org-timeblock-list-set-duration
+        "r" 'org-timeblock-redraw-buffers
+        "gd" 'org-timeblock-jump-to-day
+        "q" 'org-timeblock-quit
+        "s" 'org-timeblock-list-schedule
+        "t" 'org-timeblock-list-toggle-timeblock
+        "v" 'org-timeblock-switch-scaling
+        "V" 'org-timeblock-switch-view)))
+#+end_src
+
+** Olivetti
+#+begin_src emacs-lisp
+  (use-package olivetti
+    :custom (olivetti-body-width 92)
+    :bind ("C-c M-o" . olivetti-mode))
+#+end_src
+
+** Org pretty bullets
+#+begin_src emacs-lisp
+  (use-package org-superstar
+    :hook (org-mode . org-superstar-mode))
+#+end_src
+
+** Org roam
+#+begin_src emacs-lisp
+  ;; needed for emacs 29 
+  (use-package emacsql-sqlite-builtin )
+  (use-package org-roam
+    :after (org emacsql-sqlite-builtin)
+    :demand t  ;; Ensure org-roam is loaded by default
+    :init
+    (setq org-roam-v2-ack t)
+    :custom
+    (org-roam-directory "~/org")
+    (org-roam-completion-everywhere t)
+    :bind
+    (
+     ("C-c n l" . org-roam-buffer-toggle)
+     ("C-c n i" . org-roam-node-insert)
+     ("C-c n I" . org-roam-node-insert-immediate)
+     ("C-c n p" . my/org-roam-find-project)
+     ("C-c n t" . my/org-roam-capture-task)
+     ("C-c n b" . my/org-roam-capture-inbox)
+     ("C-c x" . my/org-roam-capture-inbox)
+     ("C-c n x" . my/close-project)
+     ("C-c i" . my/open-inbox)
+     ("C-c j" . org-roam-dailies-capture-today)
+     :map org-mode-map
+     ("C-M-i" . completion-at-point)
+     :map org-roam-dailies-map
+     ("Y" . org-roam-dailies-capture-yesterday)
+     ("T" . org-roam-dailies-capture-tomorrow)
+     )
+    :bind-keymap
+    ("C-c n d" . org-roam-dailies-map)
+    :config
+    (defun org-roam-preview-get-contents (file pt)
+      "Get preview content for FILE at PT."
+      (save-excursion
+        (org-roam-with-temp-buffer file
+        (org-with-wide-buffer
+         (goto-char pt)
+         (let ((beg (progn (org-roam-end-of-meta-data t)
+                             (point)))
+                 (end (progn (end-of-paragraph-text)
+                             (point))))
+             (string-trim (buffer-substring-no-properties beg end)))))))
+    (require 'org-roam-logseq)
+    (add-to-list 'display-buffer-alist '("\\*org-roam.*"
+                                         (display-buffer-in-side-window)
+                                         (side . right)
+   				       (window-width . 0.3)
+   				       (window-height . fit-window-to-buffer)))
+    (setq org-roam-db-node-include-function
+     	(lambda ()
+     	  (not
+     	   (or (member "ATTACH" (org-get-tags)) ;; don't consider attach tags
+     	       (member "t" ( org-entry-member-in-multivalued-property nil "ICAL_EVENT" "t" )))))) ;; don't consider ical events
+    (setq org-roam-node-display-template
+     	(concat "${title} "
+     		(propertize "${tags:20}" 'face 'org-tag)))
+    (require 'org-roam-dailies) ;; Ensure the keymap is available
+    (setq org-roam-dailies-capture-templates
+     	'(("d" "default" entry "* %<%H:%M> %?" :target
+     	   (file+datetree "%<%Y-W%W>.org" 'week))))
+    (require 'org-roam-protocol)
+    (defun my/org-protocol-insert-selection-dwim (selection)
+      "Insert SELECTION ."
+      (unless (string= selection "")
+        ;; (format "#+begin_quote\n%s\n#+end_quote" selection)))
+        (format "%s\n" selection)))
+
+    (setq org-roam-capture-ref-templates
+          '(("r" "ref" entry "* %(my/org-protocol-insert-selection-dwim \"%i\")%?"
+             :target (file+head "${slug}.org"
+                                "#+title: ${title}\n
+                                        ,#+created: %u\n")
+             :unnarrowed t)))
+    (org-roam-db-autosync-mode))
+
+  (add-to-list 'org-roam-capture-templates  '("p" "project" plain
+                                              (file "~/org/.templates/project-template.org")
+                                              :target (file "%<%Y%m%d%H%M%S>-${slug}.org")
+                                              :unnarrowed t))
+  (defun my/open-inbox ()
+    (interactive)
+    (find-file "~/org/Inbox.org"))
+  (defun org-roam-node-insert-immediate (arg &rest args)
+    (interactive "P")
+    (let ((args (push arg args))
+          (org-roam-capture-templates (list (append (car org-roam-capture-templates)
+                                                    '(:immediate-finish t)))))
+      (apply #'org-roam-node-insert args)))
+
+  (defun my/org-roam-filter-by-tag (tag-name)
+    (lambda (node)
+      (member tag-name (org-roam-node-tags node))))
+
+  (defun my/org-roam-list-notes-by-tag (tag-name)
+    (mapcar #'org-roam-node-file
+            (seq-filter
+             (my/org-roam-filter-by-tag tag-name)
+             (org-roam-node-list))))
+
+  (defun my/org-roam-refresh-agenda-list ()
+    (interactive)
+    (setq org-agenda-files (my/org-roam-list-notes-by-tag "Project"))
+    (add-to-list 'org-agenda-files "~/org/calendar.org"))
+
+  ;; Build the agenda list the first time for the session
+  (my/org-roam-refresh-agenda-list)
+
+  (defun my/org-roam-project-finalize-hook ()
+    "Adds the captured project file to `org-agenda-files' if the
+                                            capture was not aborted."
+    ;; Remove the hook since it was added temporarily
+    (remove-hook 'org-capture-after-finalize-hook #'my/org-roam-project-finalize-hook)
+
+    ;; Add project file to the agenda list if the capture was confirmed
+    (unless org-note-abort
+      (with-current-buffer (org-capture-get :buffer)
+        (add-to-list 'org-agenda-files (buffer-file-name)))))
+
+  (defun my/org-roam-find-project ()
+    (interactive)
+    ;; Add the project file to the agenda after capture is finished
+    (add-hook 'org-capture-after-finalize-hook #'my/org-roam-project-finalize-hook)
+
+    ;; Select a project file to open, creating it if necessary
+    (org-roam-node-find
+     nil
+     nil
+     (my/org-roam-filter-by-tag "Project")
+     nil))
+
+  (defun my/org-roam-capture-inbox ()
+    (interactive)
+    (org-roam-capture- :node (org-roam-node-create)
+                       :templates '(("i" "inbox" plain "** %?"
+                                     :target (file+head+olp "Inbox.org" "#+title: Inbox\n" ("Inbox"))))))
+
+  (defun my/org-roam-capture-task ()
+    (interactive)
+    ;; Add the project file to the agenda after capture is finished
+    (add-hook 'org-capture-after-finalize-hook #'my/org-roam-project-finalize-hook)
+
+    ;; Capture the new task, creating the project file if necessary
+    (org-roam-capture- :node (org-roam-node-read
+                              nil
+                              (my/org-roam-filter-by-tag "Project"))
+                       :templates '(("p" "project" plain "** TODO %?"
+                                     :target (file+olp "%<%Y%m%d%H%M%S>-${slug}.org"
+                                                       ("Tasks"))))))
+  (defun my/close-project ()
+    "close a project by removing Project tag and adding ARCHIVE tag"
+    (interactive)
+    (org-roam-tag-add '("ARCHIVE"))
+    (org-roam-tag-remove '("Project"))
+    (save-buffer))
+  (defvar id nil)
+  (defvar id-string nil)
+  (defun my/org-roam-copy-todo-to-today ()
+    (interactive)
+    ;; (org-store-link nil)
+    (org-copy-subtree)
+    (let ( ;; Set this to nil to delete the original!
+          ( id (org-entry-get 1 "ID"))
+          ( id-string "id:")
+          (org-roam-dailies-capture-templates
+           '(("t" "tasks" plain "**** %(org-link-make-string
+                         (concat id-string id)
+                         (org-roam-node-title (org-roam-node-from-id id)))\n%(org-paste-subtree 5)\n%?"
+              :target (file+datetree "%<%Y-W%W>.org" 'week)
+              :immediate-finish t))))
+      (save-window-excursion
+        (org-roam-dailies--capture (current-time) nil))))
+  (add-to-list 'org-after-todo-state-change-hook
+               (lambda ()
+                 (when (equal org-state "DONE")
+                   (my/org-roam-copy-todo-to-today))))
+#+end_src
+
+** Org citar
+#+begin_src emacs-lisp
+  (use-package citar
+    :hook
+    (org-mode . citar-capf-setup)
+    :custom
+    (org-cite-global-bibliography '("~/bib/references.bib"))
+    (citar-library-paths '("~bib/files"))
+    (citar-notes-paths '("~/org"))
+    (org-cite-insert-processor 'citar)
+    (org-cite-follow-processor 'citar)
+    (org-cite-activate-processor 'citar)
+    (citar-bibliography org-cite-global-bibliography)
+    ;; optional: org-cite-insert is also bound to C-c C-x C-@
+    :bind
+    (:map org-mode-map ("C-c b" . #'org-cite-insert)))
+  (use-package citar-embark
+    :after citar embark
+    :no-require
+    :config (citar-embark-mode))
+#+end_src
+** Org Roqm-ui
+#+begin_src emacs-lisp
+  (use-package org-roam-ui
+    :straight
+    (:host github :repo "org-roam/org-roam-ui" :branch "main" :files ("*.el" "out"))
+    :after org-roam
+    ;;         normally we'd recommend hooking orui after org-roam, but since org-roam does not have
+    ;;         a hookable mode anymore, you're advised to pick something yourself
+    ;;         if you don't care about startup time, use
+    ;;  :hook (after-init . org-roam-ui-mode)
+    :config
+    (setq org-roam-ui-sync-theme t
+          org-roam-ui-follow t
+          org-roam-ui-update-on-save t
+          org-roam-ui-open-on-start t))
+
+#+end_src
+** Org roam citar
+#+begin_src emacs-lisp
+  (use-package citar-org-roam
+    :after (citar org-roam)
+    :config (citar-org-roam-mode))
+#+end_src
+
+** Org notifications
+#+begin_src emacs-lisp
+  (use-package org-alert
+    :after org
+    :init
+    (setq alert-default-style 'libnotify))
+#+end_src
+
+** Org clip link
+#+begin_src emacs-lisp
+  (use-package org-cliplink
+    :after org
+    :bind ("C-c l" . org-cliplink))
+#+end_src
+
+** Org download
+#+begin_src emacs-lisp
+  (use-package org-download)
+#+end_src
+
+** Org ql
+#+begin_src emacs-lisp
+  (use-package org-ql
+    :demand t)
+#+end_src
+
+** Org crypt
+#+begin_src emacs-lisp
+  (use-package org-crypt
+    :straight nil
+    :config
+    (require 'org-crypt)
+    (org-crypt-use-before-save-magic)
+    (setq org-tags-exclude-from-inheritance '("crypt"))
+    (setq org-crypt-key nil))
+#+end_src
+
+** Org passwords
+#+begin_src emacs-lisp
+  (use-package org-passwords
+    :bind (("C-c q" . org-passwords)
+  	 :map org-passwords-mode-map
+  	 ("C-c u" . org-passwords-copy-username)
+  	 ("C-c s" . org-passwords-copy-password)
+  	 ("C-c o" . org-passwords-open-url))
+    :custom
+    (org-passwords-file "~/org/password.org.gpg")
+    :config
+    (setq enable-recursive-minibuffers t)
+    (setq org-passwords-random-words-dictionary "/etc/dictionaries-common/words")
+    (add-to-list 'org-capture-templates
+  	       '("p" "password" entry (file "~/org/password.org.gpg")
+  		 "* %^{Title}\n  %^{URL}p %^{USERNAME}p %^{PASSWORD}p")))
+#+end_src
+
 * Version control
 ** Magit
 #+begin_src emacs-lisp
@@ -663,6 +1151,7 @@ marginalia adds annotations in the mini buffer
 #+begin_src emacs-lisp
   (use-package embark
     :demand t ;; needed by eldoc otherwize eldoc error
+    :straight (embark :type git :files ("embark.el" "embark-org.el" "embark.texi" "embark-pkg.el") :host github :repo "oantolin/embark")
     :bind
     (("C-h B" . embark-bindings) ;; alternative for `describe-bindings'
      ("C-." . embark-act)         ;; pick some comfortable binding
@@ -677,7 +1166,7 @@ marginalia adds annotations in the mini buffer
     ;; Show the Embark target at point via Eldoc.  You may adjust the Eldoc
     ;; strategy, if you want to see the documentation from multiple providers.
     (add-hook 'eldoc-documentation-functions #'embark-eldoc-first-target)
-    ;; (setq eldoc-documentation-strategy #'eldoc-documentation-compose-eagerly)
+    (setq eldoc-documentation-strategy #'eldoc-documentation-compose-eagerly)
 
     :config
     ;; Hide the mode line of the Embark live/completions buffers
@@ -986,482 +1475,6 @@ marginalia adds annotations in the mini buffer
 ** Persp project
 #+begin_src emacs-lisp
   (use-package persp-projectile)
-#+end_src
-
-* Org mode
-** Org basics
-#+begin_src emacs-lisp
-  (use-package org
-    :bind (("C-c a" . org-agenda)
-  	 (:map org-mode-map)
-  	 ("C-c $" . org-archive-subtree-default))
-    :hook ((org-mode . org-indent-mode))
-  :custom
-  (org-level-faces nil)
-    :init
-    (org-babel-do-load-languages 'org-babel-load-languages
-  			       (append org-babel-load-languages
-  				       '((shell     . t)
-  					 (java      . t))))
-    :config
-    (require 'org-archive)
-    (setq org-archive-default-command 'org-archive-to-archive-sibling)
-    (setq
-     ;; Edit settings
-     org-log-done 'time
-     org-log-into-drawer t
-     org-auto-align-tags nil
-     org-tags-column 0
-     org-catch-invisible-edits 'show-and-error
-     org-special-ctrl-a/e t
-     org-insert-heading-respect-content t
-
-     ;; Org styling, hide markup etc.
-     org-hide-emphasis-markers t
-     org-pretty-entities t
-     org-ellipsis "…"
-
-     ;; Agenda styling
-     org-agenda-tags-column 0
-     org-agenda-block-separator ?─
-     org-agenda-time-grid
-     '((daily today require-timed)
-       (800 1000 1200 1400 1600 1800 2000)
-       " ┄┄┄┄┄ " "┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄")
-     org-agenda-current-time-string
-     "⭠ now ─────────────────────────────────────────────────")
-    (setq org-stuck-projects '("+Project/PROJ" ("NEXT" "WAIT" "MEETING" "HOLD") nil ""))
-    (setq org-refile-targets '((org-agenda-files :maxlevel . 1)))
-    (setq org-outline-path-complete-in-steps nil)         ; Refile in a single go
-    (setq org-startup-folded 'fold)
-    (setq org-todo-keyword-faces
-    (quote (("TODO" :foreground "dark orange" :weight bold)
-            ("NEXT" :foreground "orange red" :weight bold)
-            ("DONE" :foreground "forest green" :weight bold)
-            ("WAIT" :foreground "magenta" :weight bold)
-            ("HOLD" :foreground "magenta" :weight bold)
-            ("CANCELLED" :foreground "dark red" :weight bold)
-            ("KILL" :foreground "dark red" :weight bold)
-            ("MEETING" :foreground "chocolate" :weight bold)
-            )))
-    (setq org-todo-keywords
-          '((sequence
-             "TODO(t)"  ; A task that needs doing & is ready to do
-             "NEXT(n)"  ; The nex task in to perform in the project
-             "MEETING"  ; Meeting
-             "PROJ(p)"  ; A project, which usually contains other tasks
-             "WAIT(W@)"  ; Something external is holding up this task
-             "HOLD(H@)"  ; This task is paused/on hold because of me
-             "IDEA(i)"  ; An unconfirmed and unapproved task or notion
-             "|"
-             "DONE(d!)"  ; Task successfully completed
-  	   "KILL(k)") ; Task was cancelled, aborted or is no longer applicable
-  	  (sequence
-  	   "REPLY(r)"
-  	   "|"
-  	   "REPLIED(R!)")
-  	  (sequence
-  	   "[ ](T)"   ; A task that needs doing
-             "[-](S)"   ; Task is in progress
-             "|"
-             "[X](D)")  ; Task was completed
-            (sequence
-             "READ(r)"
-             "WATCH(w)"))))
-
-#+end_src
-
-** Org capture
-Enter insert mode when capturing things
-#+begin_src emacs-lisp
-  (use-package org
-    :hook
-    (org-capture-mode . evil-insert-state))
-
-#+end_src
-
-** Org-agenda
-#+begin_src emacs-lisp
-  (use-package org-super-agenda
-    :custom 
-    (org-agenda-skip-scheduled-if-deadline-is-shown t)
-    (org-agenda-skip-deadline-prewarning-if-scheduled t)
-    (org-agenda-skip-timestamp-if-deadline-is-shown t)
-    :config
-    (setq org-deadline-warning-days 5)
-    (setq org-agenda-custom-commands
-  	'(("z" "My view"
-  	   (   (agenda "" ((org-agenda-span 'day)
-  			   (org-agenda-start-day nil)
-  			   (org-super-agenda-groups
-  			    '((:name "Today"
-  				     :time-grid t
-  				     :date today
-  				     :deadline today
-  				     :scheduled today
-  				     :order 1)
-  			      (:discard (:anything))))))
-  	       (alltodo "" ((org-agenda-overriding-header "")
-  			    (org-super-agenda-groups
-  			     '(;; Each group has an implicit boolean OR operator between its selectors.
-  			       (:name "Passed deadline"
-  				      :and (:deadline past :todo ("TODO" "WAIT" "HOLD" "NEXT"))
-  				      :face (:background "#7f1b19"))
-  			       (:scheduled past)
-  			       (:scheduled future)
-  			       (:name "Important"
-  				      :priority "A")
-  			       (:priority<= "B"
-  					    ;; Show this section after "Today" and "Important", because
-  					    ;; their order is unspecified, defaulting to 0. Sections
-  					    ;; are displayed lowest-number-first.
-  					    :order 1)
-  			       (:name "Meeting"
-  				      :todo "MEETING"
-  				      :order 7)
-  			       (:name "Next"
-  				      :todo "NEXT"
-  				      :order 8)
-  			       (:name "Waiting"
-  				      :todo "WAIT"
-  				      :order 9)
-  			       (:name "On hold"
-  				      :todo "HOLD"
-  				      :order 10)
-  			       (:discard (:todo "PROJ"))))))))))
-    (add-hook 'org-agenda-mode-hook 'org-super-agenda-mode))
-#+end_src
-
-** Org time block
-#+begin_src emacs-lisp
-  (use-package org-timeblock
-    :hook ((org-timeblock-mode org-timeblock-list-mode) . my/org-timeblock-evil-map)
-    :straight (org-timeblock :type git
-  			   :host github
-                             :repo "ichernyshovvv/org-timeblock")
-    :custom
-    (org-timeblock-inbox-file "/home/willefi/org/calendar.org")
-    :init
-    (defun my/org-timeblock-evil-map ()
-      "Set the keybindings for 'org-timeblock' to be compatible with evil mode"
-      (evil-define-key 'normal org-timeblock-mode-map
-        "+" 'org-timeblock-new-task
-        "j" 'org-timeblock-forward-block
-        "l" 'org-timeblock-forward-column
-        "h" 'org-timeblock-backward-column
-        "k" 'org-timeblock-backward-block
-        (kbd "C-<down>") 'org-timeblock-day-later
-        (kbd "C-<up>") 'org-timeblock-day-earlier
-        (kbd "RET") 'org-timeblock-goto
-        (kbd "TAB") 'org-timeblock-goto-other-window
-        "d" 'org-timeblock-set-duration
-        "r" 'org-timeblock-redraw-buffers
-        "gd" 'org-timeblock-jump-to-day
-        "s" 'org-timeblock-schedule
-        "t" 'org-timeblock-toggle-timeblock-list
-        "v" 'org-timeblock-switch-scaling
-        "V" 'org-timeblock-switch-view)
-      (evil-define-key 'normal org-timeblock-list-mode-map
-        "+" 'org-timeblock-new-task
-        "j" 'org-timeblock-list-next-line
-        "k" 'org-timeblock-list-previous-line
-        (kbd "C-<down>") 'org-timeblock-day-later
-        (kbd "C-<up>") 'org-timeblock-day-earlier
-        (kbd "C-s") 'org-timeblock-list-save
-        (kbd "M-<down>") 'org-timeblock-list-drag-line-forward
-        (kbd "M-<up>") 'org-timeblock-list-drag-line-backward
-        (kbd "RET") 'org-timeblock-list-goto
-        (kbd "TAB") 'org-timeblock-list-goto-other-window
-        "S" 'org-timeblock-list-toggle-sort-function
-        "d" 'org-timeblock-list-set-duration
-        "r" 'org-timeblock-redraw-buffers
-        "gd" 'org-timeblock-jump-to-day
-        "q" 'org-timeblock-quit
-        "s" 'org-timeblock-list-schedule
-        "t" 'org-timeblock-list-toggle-timeblock
-        "v" 'org-timeblock-switch-scaling
-        "V" 'org-timeblock-switch-view)))
-#+end_src
-
-** Olivetti
-#+begin_src emacs-lisp
-  (use-package olivetti
-    :custom (olivetti-body-width 92)
-    :bind ("C-c M-o" . olivetti-mode))
-#+end_src
-
-** Org pretty bullets
-#+begin_src emacs-lisp
-  (use-package org-superstar
-    :hook (org-mode . org-superstar-mode))
-#+end_src
-
-** Org roam
-#+begin_src emacs-lisp
-  ;; needed for emacs 29 
-  (use-package emacsql-sqlite-builtin )
-  (use-package org-roam
-    :after (org emacsql-sqlite-builtin)
-    :demand t  ;; Ensure org-roam is loaded by default
-    :init
-    (setq org-roam-v2-ack t)
-    :custom
-    (org-roam-directory "~/org")
-    (org-roam-completion-everywhere t)
-    :bind
-    (
-     ("C-c n l" . org-roam-buffer-toggle)
-     ("C-c n i" . org-roam-node-insert)
-     ("C-c n I" . org-roam-node-insert-immediate)
-     ("C-c n p" . my/org-roam-find-project)
-     ("C-c n t" . my/org-roam-capture-task)
-     ("C-c n b" . my/org-roam-capture-inbox)
-     ("C-c x" . my/org-roam-capture-inbox)
-     ("C-c n x" . my/close-project)
-     ("C-c i" . my/open-inbox)
-     ("C-c j" . org-roam-dailies-capture-today)
-     :map org-mode-map
-     ("C-M-i" . completion-at-point)
-     :map org-roam-dailies-map
-     ("Y" . org-roam-dailies-capture-yesterday)
-     ("T" . org-roam-dailies-capture-tomorrow)
-     )
-    :bind-keymap
-    ("C-c n d" . org-roam-dailies-map)
-    :config
-    (require 'org-roam-logseq)
-    (add-to-list 'display-buffer-alist '("\\*org-roam.*"
-                                         (display-buffer-in-side-window)
-                                         (side . right)
-   				       (window-width . 0.3)
-   				       (window-height . fit-window-to-buffer)))
-    (setq org-roam-db-node-include-function
-     	(lambda ()
-     	  (not
-     	   (or (member "ATTACH" (org-get-tags)) ;; don't consider attach tags
-     	       (member "t" ( org-entry-member-in-multivalued-property nil "ICAL_EVENT" "t" )))))) ;; don't consider ical events
-    (setq org-roam-node-display-template
-     	(concat "${title} "
-     		(propertize "${tags:20}" 'face 'org-tag)))
-    (require 'org-roam-dailies) ;; Ensure the keymap is available
-    (setq org-roam-dailies-capture-templates
-     	'(("d" "default" entry "* %<%H:%M> %?" :target
-     	   (file+datetree "%<%Y-W%W>.org" 'week))))
-    (require 'org-roam-protocol)
-    (defun my/org-protocol-insert-selection-dwim (selection)
-      "Insert SELECTION ."
-      (unless (string= selection "")
-        ;; (format "#+begin_quote\n%s\n#+end_quote" selection)))
-        (format "%s\n" selection)))
-
-    (setq org-roam-capture-ref-templates
-          '(("r" "ref" entry "* %(my/org-protocol-insert-selection-dwim \"%i\")%?"
-             :target (file+head "${slug}.org"
-                                "#+title: ${title}\n
-                                        ,#+created: %u\n")
-             :unnarrowed t)))
-    (org-roam-db-autosync-mode))
-
-  (add-to-list 'org-roam-capture-templates  '("p" "project" plain
-                                              (file "~/org/.templates/project-template.org")
-                                              :target (file "%<%Y%m%d%H%M%S>-${slug}.org")
-                                              :unnarrowed t))
-  (defun my/open-inbox ()
-    (interactive)
-    (find-file "~/org/Inbox.org"))
-  (defun org-roam-node-insert-immediate (arg &rest args)
-    (interactive "P")
-    (let ((args (push arg args))
-          (org-roam-capture-templates (list (append (car org-roam-capture-templates)
-                                                    '(:immediate-finish t)))))
-      (apply #'org-roam-node-insert args)))
-
-  (defun my/org-roam-filter-by-tag (tag-name)
-    (lambda (node)
-      (member tag-name (org-roam-node-tags node))))
-
-  (defun my/org-roam-list-notes-by-tag (tag-name)
-    (mapcar #'org-roam-node-file
-            (seq-filter
-             (my/org-roam-filter-by-tag tag-name)
-             (org-roam-node-list))))
-
-  (defun my/org-roam-refresh-agenda-list ()
-    (interactive)
-    (setq org-agenda-files (my/org-roam-list-notes-by-tag "Project"))
-    (add-to-list 'org-agenda-files "~/org/calendar.org"))
-
-  ;; Build the agenda list the first time for the session
-  (my/org-roam-refresh-agenda-list)
-
-  (defun my/org-roam-project-finalize-hook ()
-    "Adds the captured project file to `org-agenda-files' if the
-                                            capture was not aborted."
-    ;; Remove the hook since it was added temporarily
-    (remove-hook 'org-capture-after-finalize-hook #'my/org-roam-project-finalize-hook)
-
-    ;; Add project file to the agenda list if the capture was confirmed
-    (unless org-note-abort
-      (with-current-buffer (org-capture-get :buffer)
-        (add-to-list 'org-agenda-files (buffer-file-name)))))
-
-  (defun my/org-roam-find-project ()
-    (interactive)
-    ;; Add the project file to the agenda after capture is finished
-    (add-hook 'org-capture-after-finalize-hook #'my/org-roam-project-finalize-hook)
-
-    ;; Select a project file to open, creating it if necessary
-    (org-roam-node-find
-     nil
-     nil
-     (my/org-roam-filter-by-tag "Project")
-     nil))
-
-  (defun my/org-roam-capture-inbox ()
-    (interactive)
-    (org-roam-capture- :node (org-roam-node-create)
-                       :templates '(("i" "inbox" plain "** %?"
-                                     :target (file+head+olp "Inbox.org" "#+title: Inbox\n" ("Inbox"))))))
-
-  (defun my/org-roam-capture-task ()
-    (interactive)
-    ;; Add the project file to the agenda after capture is finished
-    (add-hook 'org-capture-after-finalize-hook #'my/org-roam-project-finalize-hook)
-
-    ;; Capture the new task, creating the project file if necessary
-    (org-roam-capture- :node (org-roam-node-read
-                              nil
-                              (my/org-roam-filter-by-tag "Project"))
-                       :templates '(("p" "project" plain "** TODO %?"
-                                     :target (file+olp "%<%Y%m%d%H%M%S>-${slug}.org"
-                                                       ("Tasks"))))))
-  (defun my/close-project ()
-    "close a project by removing Project tag and adding ARCHIVE tag"
-    (interactive)
-    (org-roam-tag-add '("ARCHIVE"))
-    (org-roam-tag-remove '("Project"))
-    (save-buffer))
-  (defvar id nil)
-  (defvar id-string nil)
-  (defun my/org-roam-copy-todo-to-today ()
-    (interactive)
-    ;; (org-store-link nil)
-    (org-copy-subtree)
-    (let ( ;; Set this to nil to delete the original!
-          ( id (org-entry-get 1 "ID"))
-          ( id-string "id:")
-          (org-roam-dailies-capture-templates
-           '(("t" "tasks" plain "**** %(org-link-make-string
-                         (concat id-string id)
-                         (org-roam-node-title (org-roam-node-from-id id)))\n%(org-paste-subtree 5)\n%?"
-              :target (file+datetree "%<%Y-W%W>.org" 'week)
-              :immediate-finish t))))
-      (save-window-excursion
-        (org-roam-dailies--capture (current-time) nil))))
-  (add-to-list 'org-after-todo-state-change-hook
-               (lambda ()
-                 (when (equal org-state "DONE")
-                   (my/org-roam-copy-todo-to-today))))
-#+end_src
-
-** Org citar
-#+begin_src emacs-lisp
-  (use-package citar
-    :hook
-    (org-mode . citar-capf-setup)
-    :custom
-    (org-cite-global-bibliography '("~/bib/references.bib"))
-    (citar-library-paths '("~bib/files"))
-    (citar-notes-paths '("~/org"))
-    (org-cite-insert-processor 'citar)
-    (org-cite-follow-processor 'citar)
-    (org-cite-activate-processor 'citar)
-    (citar-bibliography org-cite-global-bibliography)
-    ;; optional: org-cite-insert is also bound to C-c C-x C-@
-    :bind
-    (:map org-mode-map ("C-c b" . #'org-cite-insert)))
-  (use-package citar-embark
-    :after citar embark
-    :no-require
-    :config (citar-embark-mode))
-#+end_src
-** Org Roqm-ui
-#+begin_src emacs-lisp
-  (use-package org-roam-ui
-    :straight
-    (:host github :repo "org-roam/org-roam-ui" :branch "main" :files ("*.el" "out"))
-    :after org-roam
-    ;;         normally we'd recommend hooking orui after org-roam, but since org-roam does not have
-    ;;         a hookable mode anymore, you're advised to pick something yourself
-    ;;         if you don't care about startup time, use
-    ;;  :hook (after-init . org-roam-ui-mode)
-    :config
-    (setq org-roam-ui-sync-theme t
-          org-roam-ui-follow t
-          org-roam-ui-update-on-save t
-          org-roam-ui-open-on-start t))
-
-#+end_src
-** Org roam citar
-#+begin_src emacs-lisp
-  (use-package citar-org-roam
-    :after (citar org-roam)
-    :config (citar-org-roam-mode))
-#+end_src
-
-** Org notifications
-#+begin_src emacs-lisp
-  (use-package org-alert
-    :after org
-    :init
-    (setq alert-default-style 'libnotify))
-#+end_src
-
-** Org clip link
-#+begin_src emacs-lisp
-  (use-package org-cliplink
-    :after org
-    :bind ("C-c l" . org-cliplink))
-#+end_src
-
-** Org download
-#+begin_src emacs-lisp
-  (use-package org-download)
-#+end_src
-
-** Org ql
-#+begin_src emacs-lisp
-  (use-package org-ql
-    :demand t)
-#+end_src
-
-** Org crypt
-#+begin_src emacs-lisp
-  (use-package org-crypt
-    :straight nil
-    :config
-    (require 'org-crypt)
-    (org-crypt-use-before-save-magic)
-    (setq org-tags-exclude-from-inheritance '("crypt"))
-    (setq org-crypt-key nil))
-#+end_src
-
-** Org passwords
-#+begin_src emacs-lisp
-  (use-package org-passwords
-    :bind (("C-c q" . org-passwords)
-  	 :map org-passwords-mode-map
-  	 ("C-c u" . org-passwords-copy-username)
-  	 ("C-c s" . org-passwords-copy-password)
-  	 ("C-c o" . org-passwords-open-url))
-    :custom
-    (org-passwords-file "~/org/password.org.gpg")
-    :config
-    (setq enable-recursive-minibuffers t)
-    (setq org-passwords-random-words-dictionary "/etc/dictionaries-common/words")
-    (add-to-list 'org-capture-templates
-  	       '("p" "password" entry (file "~/org/password.org.gpg")
-  		 "* %^{Title}\n  %^{URL}p %^{USERNAME}p %^{PASSWORD}p")))
 #+end_src
 
 * Mails

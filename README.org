@@ -98,7 +98,7 @@ This will prevent to use package.el
   (add-hook 'text-mode-hook 'display-line-numbers-mode)
   (add-hook 'prog-mode-hook 'display-line-numbers-mode)
   (setq-default display-line-numbers-type 'relative
-  	      display-line-numbers-width 4)
+                display-line-numbers-width 4)
   (setq browse-url-browser-function 'browse-url-generic
         browse-url-generic-program "google-chrome")
   (setq my/uname (shell-command-to-string "uname -a"))
@@ -185,18 +185,18 @@ Use vterm as multiplexer
 ** Org basics
 #+begin_src emacs-lisp
   (use-package org
-  :straight (:type built-in)
+    :straight (:type built-in)
     :bind (("C-c a" . org-agenda)
-  	 (:map org-mode-map)
-  	 ("C-c $" . org-archive-subtree-default))
+           (:map org-mode-map)
+           ("C-c $" . org-archive-subtree-default))
     :hook ((org-mode . org-indent-mode))
-  :custom
-  (org-level-faces nil)
+    :custom
+    (org-level-faces nil)
     :init
     (org-babel-do-load-languages 'org-babel-load-languages
-  			       (append org-babel-load-languages
-  				       '((shell     . t)
-  					 (java      . t))))
+                                 (append org-babel-load-languages
+                                         '((shell     . t)
+                                           (java      . t))))
     :config
     (require 'org-archive)
     (setq org-archive-default-command 'org-archive-to-archive-sibling)
@@ -229,15 +229,15 @@ Use vterm as multiplexer
     (setq org-outline-path-complete-in-steps nil)         ; Refile in a single go
     (setq org-startup-folded 'fold)
     (setq org-todo-keyword-faces
-    (quote (("TODO" :foreground "dark orange" :weight bold)
-            ("NEXT" :foreground "orange red" :weight bold)
-            ("DONE" :foreground "forest green" :weight bold)
-            ("WAIT" :foreground "magenta" :weight bold)
-            ("HOLD" :foreground "magenta" :weight bold)
-            ("CANCELLED" :foreground "dark red" :weight bold)
-            ("KILL" :foreground "dark red" :weight bold)
-            ("MEETING" :foreground "chocolate" :weight bold)
-            )))
+          (quote (("TODO" :foreground "dark orange" :weight bold)
+                  ("NEXT" :foreground "orange red" :weight bold)
+                  ("DONE" :foreground "forest green" :weight bold)
+                  ("WAIT" :foreground "magenta" :weight bold)
+                  ("HOLD" :foreground "magenta" :weight bold)
+                  ("CANCELLED" :foreground "dark red" :weight bold)
+                  ("KILL" :foreground "dark red" :weight bold)
+                  ("MEETING" :foreground "chocolate" :weight bold)
+                  )))
     (setq org-todo-keywords
           '((sequence
              "TODO(t)"  ; A task that needs doing & is ready to do
@@ -249,13 +249,13 @@ Use vterm as multiplexer
              "IDEA(i)"  ; An unconfirmed and unapproved task or notion
              "|"
              "DONE(d!)"  ; Task successfully completed
-  	   "KILL(k)") ; Task was cancelled, aborted or is no longer applicable
-  	  (sequence
-  	   "REPLY(r)"
-  	   "|"
-  	   "REPLIED(R!)")
-  	  (sequence
-  	   "[ ](T)"   ; A task that needs doing
+             "KILL(k)") ; Task was cancelled, aborted or is no longer applicable
+            (sequence
+             "REPLY(r)"
+             "|"
+             "REPLIED(R!)")
+            (sequence
+             "[ ](T)"   ; A task that needs doing
              "[-](S)"   ; Task is in progress
              "|"
              "[X](D)")  ; Task was completed
@@ -284,45 +284,45 @@ Enter insert mode when capturing things
     :config
     (setq org-deadline-warning-days 5)
     (setq org-agenda-custom-commands
-  	'(("z" "My view"
-  	   (   (agenda "" ((org-agenda-span 'day)
-  			   (org-agenda-start-day nil)
-  			   (org-super-agenda-groups
-  			    '((:name "Today"
-  				     :time-grid t
-  				     :date today
-  				     :deadline today
-  				     :scheduled today
-  				     :order 1)
-  			      (:discard (:anything))))))
-  	       (alltodo "" ((org-agenda-overriding-header "")
-  			    (org-super-agenda-groups
-  			     '(;; Each group has an implicit boolean OR operator between its selectors.
-  			       (:name "Passed deadline"
-  				      :and (:deadline past :todo ("TODO" "WAIT" "HOLD" "NEXT"))
-  				      :face (:background "#7f1b19"))
-  			       (:scheduled past)
-  			       (:scheduled future)
-  			       (:name "Important"
-  				      :priority "A")
-  			       (:priority<= "B"
-  					    ;; Show this section after "Today" and "Important", because
-  					    ;; their order is unspecified, defaulting to 0. Sections
-  					    ;; are displayed lowest-number-first.
-  					    :order 1)
-  			       (:name "Meeting"
-  				      :todo "MEETING"
-  				      :order 7)
-  			       (:name "Next"
-  				      :todo "NEXT"
-  				      :order 8)
-  			       (:name "Waiting"
-  				      :todo "WAIT"
-  				      :order 9)
-  			       (:name "On hold"
-  				      :todo "HOLD"
-  				      :order 10)
-  			       (:discard (:todo "PROJ"))))))))))
+          '(("z" "My view"
+             (   (agenda "" ((org-agenda-span 'day)
+                             (org-agenda-start-day nil)
+                             (org-super-agenda-groups
+                              '((:name "Today"
+                                       :time-grid t
+                                       :date today
+                                       :deadline today
+                                       :scheduled today
+                                       :order 1)
+                                (:discard (:anything))))))
+                 (alltodo "" ((org-agenda-overriding-header "")
+                              (org-super-agenda-groups
+                               '(;; Each group has an implicit boolean OR operator between its selectors.
+                                 (:name "Passed deadline"
+                                        :and (:deadline past :todo ("TODO" "WAIT" "HOLD" "NEXT"))
+                                        :face (:background "#7f1b19"))
+                                 (:scheduled past)
+                                 (:scheduled future)
+                                 (:name "Important"
+                                        :priority "A")
+                                 (:priority<= "B"
+                                              ;; Show this section after "Today" and "Important", because
+                                              ;; their order is unspecified, defaulting to 0. Sections
+                                              ;; are displayed lowest-number-first.
+                                              :order 1)
+                                 (:name "Meeting"
+                                        :todo "MEETING"
+                                        :order 7)
+                                 (:name "Next"
+                                        :todo "NEXT"
+                                        :order 8)
+                                 (:name "Waiting"
+                                        :todo "WAIT"
+                                        :order 9)
+                                 (:name "On hold"
+                                        :todo "HOLD"
+                                        :order 10)
+                                 (:discard (:todo "PROJ"))))))))))
     (add-hook 'org-agenda-mode-hook 'org-super-agenda-mode))
 #+end_src
 
@@ -331,7 +331,7 @@ Enter insert mode when capturing things
   (use-package org-timeblock
     :hook ((org-timeblock-mode org-timeblock-list-mode) . my/org-timeblock-evil-map)
     :straight (org-timeblock :type git
-  			   :host github
+                             :host github
                              :repo "ichernyshovvv/org-timeblock")
     :custom
     (org-timeblock-inbox-file "/home/willefi/org/calendar.org")
@@ -427,9 +427,9 @@ Enter insert mode when capturing things
       "Get preview content for FILE at PT."
       (save-excursion
         (org-roam-with-temp-buffer file
-        (org-with-wide-buffer
-         (goto-char pt)
-         (let ((beg (progn (org-roam-end-of-meta-data t)
+          (org-with-wide-buffer
+           (goto-char pt)
+           (let ((beg (progn (org-roam-end-of-meta-data t)
                              (point)))
                  (end (progn (end-of-paragraph-text)
                              (point))))
@@ -438,20 +438,20 @@ Enter insert mode when capturing things
     (add-to-list 'display-buffer-alist '("\\*org-roam.*"
                                          (display-buffer-in-side-window)
                                          (side . right)
-   				       (window-width . 0.3)
-   				       (window-height . fit-window-to-buffer)))
+                                         (window-width . 0.3)
+                                         (window-height . fit-window-to-buffer)))
     (setq org-roam-db-node-include-function
-     	(lambda ()
-     	  (not
-     	   (or (member "ATTACH" (org-get-tags)) ;; don't consider attach tags
-     	       (member "t" ( org-entry-member-in-multivalued-property nil "ICAL_EVENT" "t" )))))) ;; don't consider ical events
+          (lambda ()
+            (not
+             (or (member "ATTACH" (org-get-tags)) ;; don't consider attach tags
+                 (member "t" ( org-entry-member-in-multivalued-property nil "ICAL_EVENT" "t" )))))) ;; don't consider ical events
     (setq org-roam-node-display-template
-     	(concat "${title} "
-     		(propertize "${tags:20}" 'face 'org-tag)))
+          (concat "${title} "
+                  (propertize "${tags:20}" 'face 'org-tag)))
     (require 'org-roam-dailies) ;; Ensure the keymap is available
     (setq org-roam-dailies-capture-templates
-     	'(("d" "default" entry "* %<%H:%M> %?" :target
-     	   (file+datetree "%<%Y-W%W>.org" 'week))))
+          '(("d" "default" entry "* %<%H:%M> %?" :target
+             (file+datetree "%<%Y-W%W>.org" 'week))))
     (require 'org-roam-protocol)
     (defun my/org-protocol-insert-selection-dwim (selection)
       "Insert SELECTION ."
@@ -655,18 +655,18 @@ Enter insert mode when capturing things
 #+begin_src emacs-lisp
   (use-package org-passwords
     :bind (("C-c q" . org-passwords)
-  	 :map org-passwords-mode-map
-  	 ("C-c u" . org-passwords-copy-username)
-  	 ("C-c s" . org-passwords-copy-password)
-  	 ("C-c o" . org-passwords-open-url))
+           :map org-passwords-mode-map
+           ("C-c u" . org-passwords-copy-username)
+           ("C-c s" . org-passwords-copy-password)
+           ("C-c o" . org-passwords-open-url))
     :custom
     (org-passwords-file "~/org/password.org.gpg")
     :config
     (setq enable-recursive-minibuffers t)
     (setq org-passwords-random-words-dictionary "/etc/dictionaries-common/words")
     (add-to-list 'org-capture-templates
-  	       '("p" "password" entry (file "~/org/password.org.gpg")
-  		 "* %^{Title}\n  %^{URL}p %^{USERNAME}p %^{PASSWORD}p")))
+                 '("p" "password" entry (file "~/org/password.org.gpg")
+                   "* %^{Title}\n  %^{URL}p %^{USERNAME}p %^{PASSWORD}p")))
 #+end_src
 
 * Version control
@@ -699,7 +699,7 @@ Used to play with forges like GitHub or gitlab
   (use-package diff-hl
     :after magit
     :hook ((magit-pre-refresh . diff-hl-magit-pre-refresh)
-    	 (magit-post-refresh . diff-hl-magit-post-refresh))
+           (magit-post-refresh . diff-hl-magit-post-refresh))
     :custom
     (diff-hl-draw-borders nil)
     :init
@@ -720,7 +720,7 @@ Used to play with forges like GitHub or gitlab
     :init
     (setq ef-themes-region '(intense no-extend neutral))
     (load-theme 'ef-dark
-  	      :no-confirm))
+                :no-confirm))
 
 #+end_src
 
@@ -775,41 +775,41 @@ Used to play with forges like GitHub or gitlab
   (use-package popper
     :after perspective
     :bind (("C-`"   . popper-toggle-latest)
-  	 ("C-~"   . popper-cycle)
-  	 ("C-M-`" . popper-toggle-type))
+           ("C-~"   . popper-cycle)
+           ("C-M-`" . popper-toggle-type))
     :config
     (setq popper-group-function #'popper-group-by-perspective) ; group by perspective
     :init
     (setq popper-reference-buffers
-  	'("\\*Messages\\*"
-  	  "Output\\*$"
-  	  "\\*Async Shell Command\\*"
-  	  "*Occur*"
-  	  help-mode
-  	  helpful-mode
-  	  compilation-mode))
+          '("\\*Messages\\*"
+            "Output\\*$"
+            "\\*Async Shell Command\\*"
+            "*Occur*"
+            help-mode
+            helpful-mode
+            compilation-mode))
     (popper-mode +1)
     (popper-echo-mode +1))                ; For echo area hints
   (use-package shackle
     :init
     (setq shackle-default-alignment 'below
-  	shackle-default-size 0.4
-  	shackle-rules '((help-mode           :align below :select t)
-  			(helpful-mode        :align below)
-  			(compilation-mode    :select t   :size 0.25)
-  			("*compilation*"     :select nil :size 0.25)
-  			("*ag search*"       :select nil :size 0.25)
-  			("*Flycheck errors*" :select nil :size 0.25)
-  			("*Warnings*"        :select nil :size 0.25)
-  			("*Error*"           :select nil :size 0.25)
-  			("*Org Links*"       :select nil :size 0.1)
-  			(magit-status-mode                :align bottom :size 0.5  :inhibit-window-quit t)
-  			(magit-log-mode                   :same t                  :inhibit-window-quit t)
-  			(magit-commit-mode                :ignore t)
-  			(magit-diff-mode     :select nil  :align left   :size 0.5)
-  			(git-commit-mode                  :same t)
-  			(vc-annotate-mode                 :same t)
-  			))
+          shackle-default-size 0.4
+          shackle-rules '((help-mode           :align below :select t)
+                          (helpful-mode        :align below)
+                          (compilation-mode    :select t   :size 0.25)
+                          ("*compilation*"     :select nil :size 0.25)
+                          ("*ag search*"       :select nil :size 0.25)
+                          ("*Flycheck errors*" :select nil :size 0.25)
+                          ("*Warnings*"        :select nil :size 0.25)
+                          ("*Error*"           :select nil :size 0.25)
+                          ("*Org Links*"       :select nil :size 0.1)
+                          (magit-status-mode                :align bottom :size 0.5  :inhibit-window-quit t)
+                          (magit-log-mode                   :same t                  :inhibit-window-quit t)
+                          (magit-commit-mode                :ignore t)
+                          (magit-diff-mode     :select nil  :align left   :size 0.5)
+                          (git-commit-mode                  :same t)
+                          (vc-annotate-mode                 :same t)
+                          ))
     :config
     (shackle-mode 1))
 #+end_src
@@ -914,7 +914,7 @@ Supplemental evil-mode keybindings to emacs org-mode
 #+begin_src emacs-lisp
   (use-package evil-org
     :hook (( org-agenda-mode . evil-org-mode)
-  	 (org-mode . evil-org-mode))
+           (org-mode . evil-org-mode))
     :config
     (evil-org-set-key-theme '(textobjects insert navigation additional shift todo))
     (evil-define-key '(insert normal emacs) 'evil-org-mode
@@ -941,11 +941,11 @@ Just install Hunspell and Hunspell-fr, Hunspell-en, ...
     :unless my/using-android
     :hook (emacs-startup . global-jinx-mode)
     :bind (("C-M-$" . jiinx-languages)
-        	 :map evil-normal-state-map
-        	 ("z =" . jinx-correct)
-  	 :map evil-motion-state-map
-  	 ("[ s" . jinx-previous)
-  	 ("] s" . jinx-next))
+           :map evil-normal-state-map
+           ("z =" . jinx-correct)
+           :map evil-motion-state-map
+           ("[ s" . jinx-previous)
+           ("] s" . jinx-next))
     :init
     (setq jinx-languages "fr_FR en_US en_GB"))
 #+end_src
@@ -1250,7 +1250,7 @@ marginalia adds annotations in the mini buffer
                              (file-remote-p file 'user) "@" (file-remote-p file 'host)
                              "|sudo:root@"
                              (file-remote-p file 'host) ":" (file-remote-p file 'localname))
-  		 (concat "/sudo:root@localhost:" file))))
+                   (concat "/sudo:root@localhost:" file))))
     (define-key embark-file-map (kbd "S") 'my/sudo-find-file)
 
     (advice-add #'embark-completing-read-prompter
@@ -1341,14 +1341,14 @@ marginalia adds annotations in the mini buffer
   (use-package corfu
     :straight (corfu :files (:defaults "extensions/*.el"))
     :bind (:map corfu-map
-  	      ("RET" . nil)
-  	      ("C-j" . corfu-next)
-  	      ("C-k" . corfu-previous)
-  	      ("TAB" . corfu-next)
-  	      ([tab] . corfu-next)
-  	      ("S-TAB" . corfu-previous)
-  	      ([backtab] . corfu-previous)
-  	      ("<escape>" . corfu-quit))
+                ("RET" . nil)
+                ("C-j" . corfu-next)
+                ("C-k" . corfu-previous)
+                ("TAB" . corfu-next)
+                ([tab] . corfu-next)
+                ("S-TAB" . corfu-previous)
+                ([backtab] . corfu-previous)
+                ("<escape>" . corfu-quit))
     :custom
     ;; Works with `indent-for-tab-command'. Make sure tab doesn't indent when you
     ;; want to perform completion
@@ -1372,7 +1372,7 @@ marginalia adds annotations in the mini buffer
       (when (where-is-internal #'completion-at-point (list (current-local-map)))
         (setq-local corfu-auto nil)       ;; Enable/disable auto completion
         (setq-local corfu-echo-delay nil ;; Disable automatic echo and popup
-  		  corfu-popupinfo-delay nil)
+                    corfu-popupinfo-delay nil)
         (corfu-mode 1)))
     (add-hook 'minibuffer-setup-hook #'corfu-enable-in-minibuffer)
     :init
@@ -1395,20 +1395,20 @@ marginalia adds annotations in the mini buffer
     ;; Bind dedicated completion commands
     ;; Alternative prefix keys: C-c p, M-p, M-+, ...
     :bind (("M-p p" . completion-at-point) ;; capf
-  	 ("M-p t" . complete-tag)        ;; etags
-  	 ("M-p d" . cape-dabbrev)        ;; or dabbrev-completion
-  	 ("M-p h" . cape-history)
-  	 ("M-p f" . cape-file)
-  	 ("M-p k" . cape-keyword)
-  	 ("M-p s" . cape-symbol)
-  	 ("M-p a" . cape-abbrev)
-  	 ("M-p l" . cape-line)
-  	 ("M-p w" . cape-dict)
-  	 ("M-p \\" . cape-tex)
-  	 ("M-p _" . cape-tex)
-  	 ("M-p ^" . cape-tex)
-  	 ("M-p &" . cape-sgml)
-  	 ("M-p r" . cape-rfc1345))
+           ("M-p t" . complete-tag)        ;; etags
+           ("M-p d" . cape-dabbrev)        ;; or dabbrev-completion
+           ("M-p h" . cape-history)
+           ("M-p f" . cape-file)
+           ("M-p k" . cape-keyword)
+           ("M-p s" . cape-symbol)
+           ("M-p a" . cape-abbrev)
+           ("M-p l" . cape-line)
+           ("M-p w" . cape-dict)
+           ("M-p \\" . cape-tex)
+           ("M-p _" . cape-tex)
+           ("M-p ^" . cape-tex)
+           ("M-p &" . cape-sgml)
+           ("M-p r" . cape-rfc1345))
     :init
     ;; Add `completion-at-point-functions', used by `completion-at-point'.
     ;; NOTE: The order matters!
@@ -1460,7 +1460,7 @@ marginalia adds annotations in the mini buffer
 #+begin_src emacs-lisp
   (use-package perspective
     :hook ((after-init . persp-mode)
-  	 (kill-emacs . persp-state-save))
+           (kill-emacs . persp-state-save))
     :bind
     (("C-x k" . persp-kill-buffer*)
      ("C-x C-b" . persp-list-buffers))        ; or use a nicer switcher, see below
@@ -1486,16 +1486,16 @@ marginalia adds annotations in the mini buffer
     :bind (("C-x m" . mu4e))
     :custom
     (mu4e-bookmarks
-    '(( :name  "Unread messages"
-        :query "maildir:/INBOX AND flag:unread AND NOT flag:trashed"
-        :key ?u)
-      ( :name "Today's messages"
-        :query "maildir:/INBOX AND date:today..now"
-        :key ?t)
-      ( :name "Last 7 days"
-        :query "date:7d..now"
-        :hide-unread t
-        :key ?w)))
+     '(( :name  "Unread messages"
+         :query "maildir:/INBOX AND flag:unread AND NOT flag:trashed"
+         :key ?u)
+       ( :name "Today's messages"
+         :query "maildir:/INBOX AND date:today..now"
+         :key ?t)
+       ( :name "Last 7 days"
+         :query "date:7d..now"
+         :hide-unread t
+         :key ?w)))
     :config
     (evil-define-key 'normal mu4e-headers-mode-map "T" 'mu4e-headers-mark-thread )
     (require 'mu4e-icalendar)
@@ -1551,21 +1551,21 @@ marginalia adds annotations in the mini buffer
                  '("m" "Email Workflow"))
     (add-to-list 'org-capture-templates
                  '("mc" "Communication" entry
-  		 (file+headline my/org-roam-node-find-project "Communication")
+                   (file+headline my/org-roam-node-find-project "Communication")
                    "* TODO Communication from %:fromname on %a"
-  		 :immediate-finish t))
+                   :immediate-finish t))
     (add-to-list 'org-capture-templates
                  '("mr" "Read Later" entry
-  		 (file+headline "~/org/to_read_to_watch.org"
-  				"To watch or read")
+                   (file+headline "~/org/to_read_to_watch.org"
+                                  "To watch or read")
                    "* TODO Read %:subject\nSCHEDULED:%t\nDEADLINE: %(org-insert-time-stamp (org-read-date nil t \"+2d\"))\n\n%a\n\n%i"
-  		 :immediate-finish t))
+                   :immediate-finish t))
     ;; template to capture events
     (add-to-list 'org-capture-templates
                  '("#" "used by gnus-icalendar-org" entry
-  		 (file+headline my/org-roam-node-find-project
-  				"Dates")
-  		 "%i")) ;; don't immdeiate-finsh want to be able to set a todo
+                   (file+headline my/org-roam-node-find-project
+                                  "Dates")
+                   "%i")) ;; don't immdeiate-finsh want to be able to set a todo
     (require 'org-roam)
     (defun my/org-roam-node-find-project ()
       "Get path for node"
@@ -1636,7 +1636,7 @@ marginalia adds annotations in the mini buffer
     :config
     (add-to-list 'org-capture-templates
                  '("c" "Contacts" entry (file "~/org/contacts.org")
-  		 "* %(org-contacts-template-name)
+                   "* %(org-contacts-template-name)
   :PROPERTIES:
   :EMAIL: %(org-contacts-template-email)
   :PHONE:
@@ -1676,7 +1676,7 @@ marginalia adds annotations in the mini buffer
   (require 'holidays)
   (setq calendar-christian-all-holidays-flag t)
   (setq calendar-holidays '((holiday-fixed 1 1 "New Year's Day")
-  			  (holiday-fixed 2 2 "Groundhog Day")
+                            (holiday-fixed 2 2 "Groundhog Day")
                             (holiday-fixed 2 14 "Valentine's Day")
                             (holiday-fixed 3 17 "St. Patrick's Day")
                             (holiday-fixed 4 1 "April Fools' Day")
@@ -1697,18 +1697,18 @@ marginalia adds annotations in the mini buffer
                                  (holiday-advent 0 "Advent")))
                             (solar-equinoxes-solstices)
                             (holiday-sexp calendar-daylight-savings-starts
-  					(format "Daylight Saving Time Begins %s"
-  						(solar-time-string
-  						 (/ calendar-daylight-savings-starts-time
+                                          (format "Daylight Saving Time Begins %s"
+                                                  (solar-time-string
+                                                   (/ calendar-daylight-savings-starts-time
                                                       (float 60))
-  						 calendar-standard-time-zone-name)))
+                                                   calendar-standard-time-zone-name)))
                             (holiday-sexp calendar-daylight-savings-ends
-  					(format "Daylight Saving Time Ends %s"
-  						(solar-time-string
-  						 (/ calendar-daylight-savings-ends-time
+                                          (format "Daylight Saving Time Ends %s"
+                                                  (solar-time-string
+                                                   (/ calendar-daylight-savings-ends-time
 
-  						    (float 60))
-  						 calendar-daylight-time-zone-name)))))
+                                                      (float 60))
+                                                   calendar-daylight-time-zone-name)))))
   (setq calendar-latitude 50.63)
   (setq calendar-longitude 5.58)
 #+end_src
@@ -1724,8 +1724,8 @@ marginalia adds annotations in the mini buffer
     (add-to-list 'plstore-encrypt-to "E7446C9175DAAA79")
     (setq client-secret (password-store-get 'calendar))
     (setq org-gcal-client-id "140991280434-1736v7des240n016cqe46cuof13ggvbc.apps.googleusercontent.com"
-    	org-gcal-client-secret client-secret
-    	org-gcal-fetch-file-alist '(("frederic.willem@gmail.com" .  "~/org/calendar.org"))))
+          org-gcal-client-secret client-secret
+          org-gcal-fetch-file-alist '(("frederic.willem@gmail.com" .  "~/org/calendar.org"))))
 #+end_src
 
 * Programming
@@ -1756,7 +1756,7 @@ Setup ANSI colors for the compilation buffer
     ;; set prefix for lsp-command-keymap (few alternatives - "C-l", "C-c l")
     (setq lsp-keymap-prefix "C-c l")
     :hook ((java-mode . lsp)
-  	 (lsp-mode . lsp-enable-which-key-integration))
+           (lsp-mode . lsp-enable-which-key-integration))
     :commands lsp)
 
   (use-package lsp-java )

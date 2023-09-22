@@ -8,6 +8,7 @@ places
 projectile-bookmarks.eld
 recentf
 straight
+!straight/versions/default.el
 auto-save-list
 tmp
 .cache

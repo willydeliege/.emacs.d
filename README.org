@@ -1543,7 +1543,6 @@ marginalia adds annotations in the mini buffer
 ** Icons
 #+begin_src emacs-lisp
   (use-package kind-icon
-    :ensure t
     :after corfu
     :custom
     (kind-icon-default-face 'corfu-default) ; to compute blended backgrounds correctly

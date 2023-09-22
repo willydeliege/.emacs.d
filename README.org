@@ -839,7 +839,6 @@ Usage of evil mode as I used to work with vim binding for years
     (evil-collection-calendar-want-org-bindings t)
     :config
     (setq forge-add-default-bindings nil)
-    (setq evil-collection-corfu-key-themes '(tab-n-go))
     (evil-collection-init))
 #+end_src
 
@@ -1033,8 +1032,6 @@ Supplemental evil-mode keybindings to emacs org-mode
            (org-mode . evil-org-mode))
     :config
     (evil-org-set-key-theme '(textobjects insert navigation additional shift todo))
-    (evil-define-key '(insert normal emacs) 'evil-org-mode
-      (kbd "RET") 'evil-org-return)
     (setq org-return-follows-link t)
     (require 'evil-org-agenda)
     (evil-org-agenda-set-keys))
@@ -1446,12 +1443,6 @@ marginalia adds annotations in the mini buffer
                                             #'orderless-affix-dispatch)))
 #+end_src
 
-** Company
-#+begin_src emacs-lisp
-  ;; needed to use with cape and yasnippets
-  (use-package company)
-#+end_src
-
 ** Corfu
 #+begin_src emacs-lisp
     (use-package corfu
@@ -1509,34 +1500,45 @@ marginalia adds annotations in the mini buffer
                   ("C-q" . corfu-quick-package)))
 #+end_src
 
+
+
 ** Cape
 #+begin_src emacs-lisp
-  ;; Add extensions
-  (use-package cape
-    ;; Bind dedicated completion commands
-    ;; Alternative prefix keys: C-c p, M-p, M-+, ...
-    :bind (("M-p p" . completion-at-point) ;; capf
-           ("M-p t" . complete-tag)        ;; etags
-           ("M-p d" . cape-dabbrev)        ;; or dabbrev-completion
-           ("M-p h" . cape-history)
-           ("M-p f" . cape-file)
-           ("M-p k" . cape-keyword)
-           ("M-p s" . cape-symbol)
-           ("M-p a" . cape-abbrev)
-           ("M-p l" . cape-line)
-           ("M-p w" . cape-dict)
-           ("M-p ^" . cape-tex)
-           ("M-p &" . cape-sgml)
-           ("M-p r" . cape-rfc1345))
-    :init
-    ;; Add `completion-at-point-functions', used by `completion-at-point'.
-    ;; NOTE: The order matters!
+    ;; Add extensions
+    (use-package cape
+      ;; Bind dedicated completion commands
+      ;; Alternative prefix keys: C-c p, M-p, M-+, ...
+      :bind (("M-p p" . completion-at-point) ;; capf
+             ("M-p t" . complete-tag)        ;; etags
+             ("M-p d" . cape-dabbrev)        ;; or dabbrev-completion
+             ("M-p h" . cape-history)
+             ("M-p f" . cape-file)
+             ("M-p k" . cape-keyword)
+             ("M-p s" . cape-symbol)
+             ("M-p a" . cape-abbrev)
+             ("M-p l" . cape-line)
+             ("M-p y" . yasnippet-capf)
+             ("M-p w" . cape-dict)
+             ("M-p ^" . cape-tex)
+             ("M-p &" . cape-sgml)
+             ("M-p r" . cape-rfc1345))
+      ;; Add `completion-at-point-functions', used by `completion-at-point'.
+      ;; NOTE: The order matters!
+      :init
+      (setq completion-at-point-functions
+            (list (cape-capf-super #'cape-dict #'cape-dabbrev #'cape-keyword #'cape-symbol)))
+      (add-to-list 'completion-at-point-functions #'cape-file)
+      (add-to-list 'completion-at-point-functions #'cape-elisp-block)
+  )
 
-    (setq completion-at-point-functions
-          (list (cape-super-capf (cape-company-to-capf #'company-yasnippet) #'cape-dict #'cape-dabbrev #'cape-keyword #'cape-symbol)))
-    (add-to-list 'completion-at-point-functions #'cape-file)
-    (add-to-list 'completion-at-point-functions #'cape-elisp-block))
+    (use-package yasnippet-capf
+      :after cape
+      :init
+    
+      (add-to-list 'completion-at-point-functions #'yasnippet-capf))
 #+end_src
+
+sr
 
 ** Icons
 #+begin_src emacs-lisp
@@ -1892,7 +1894,6 @@ Setup ANSI colors for the compilation buffer
   (use-package org-contrib
     :config
     (require 'org-checklist)) 
-
 #+end_src
 
 #+RESULTS:

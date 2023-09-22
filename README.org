@@ -940,25 +940,25 @@ Usage of evil mode as I used to work with vim binding for years
     :after (treemacs mu4e)
     :straight nil
     :config
-    (setq treemacs-mu4e--count-script "/home/willefi//.emacs.d/straight/repos/treemacs/src/scripts/treemacs-count-mail.py"))
+    (setq treemacs-mu4e--count-script "/home/willefi/.emacs.d/straight/repos/treemacs/src/scripts/treemacs-count-mail.py"))
 
   (use-package treemacs-evil
     :after (treemacs evil))
 
   (use-package treemacs-projectile
-    :after (treemacs projectile)
-    )
+    :after (treemacs projectile))
 
   (use-package treemacs-icons-dired
-    :hook (dired-mode . treemacs-icons-dired-enable-once)
-    )
+    :hook (dired-mode . treemacs-icons-dired-enable-once))
 
   (use-package treemacs-magit
     :after (treemacs magit))
 
   (use-package treemacs-perspective
     :after (treemacs perspective) ;; or perspective vs. persp-mode
-    :config (treemacs-set-scope-type 'Perspectives))
+    :config
+    (persp-mode)
+    (treemacs-set-scope-type 'Perspectives))
 
   (use-package treemacs-nerd-icons
     :after treemacs
@@ -1575,8 +1575,7 @@ marginalia adds annotations in the mini buffer
 ** Perspective
 #+begin_src emacs-lisp
   (use-package perspective
-    :hook ((after-init . persp-mode)
-           (kill-emacs . persp-state-save))
+    :hook ((kill-emacs . persp-state-save))
     :bind
     (("C-x k" . persp-kill-buffer*)
      ("C-x C-b" . persp-list-buffers))        ; or use a nicer switcher, see below

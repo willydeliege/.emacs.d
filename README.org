@@ -676,6 +676,7 @@ Enter insert mode when capturing things
     :bind (("C-x g" . magit-status)))
 
 #+end_src
+
 ** Orgit
 #+begin_src emacs-lisp
   (use-package orgit)
@@ -693,6 +694,7 @@ Used to play with forges like GitHub or gitlab
   (use-package orgit-forge
     :after forge)
 #+end_src
+
 ** Diff-hl
 #+begin_src emacs-lisp
   (use-package diff-hl

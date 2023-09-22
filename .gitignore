@@ -7,7 +7,8 @@ org-roam.db
 places
 projectile-bookmarks.eld
 recentf
-straight
+straight/*
+!straight/versions/default.el
 auto-save-list
 tmp
 .cache

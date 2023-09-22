@@ -1538,8 +1538,6 @@ marginalia adds annotations in the mini buffer
       (add-to-list 'completion-at-point-functions #'yasnippet-capf))
 #+end_src
 
-sr
-
 ** Icons
 #+begin_src emacs-lisp
   (use-package kind-icon

@@ -1043,7 +1043,7 @@ Supplemental evil-mode keybindings to emacs org-mode
   (use-package god-mode)
   (use-package evil-god-state
     :config
-    (evil-define-key 'normal global-map "," 'evil-execute-in-god-state)
+    (evil-define-key 'normal global-map " " 'evil-execute-in-god-state)
     (evil-define-key 'god global-map [escape] 'evil-god-state-bail))
 #+end_src
 
@@ -1238,13 +1238,13 @@ marginalia adds annotations in the mini buffer
     ;; Eventually suppress previewing for certain functions
     (consult-customize
      consult-org-roam-forward-links
-     :preview-key (kbd "C-;"))
+     :preview-key "M-.")
     :bind
     ;; Define some convenient keybindings as an addition
     ("C-c n f" . consult-org-roam-file-find)
     ("C-c n b" . consult-org-roam-backlinks)
     ("C-c n l" . consult-org-roam-forward-links)
-    ("C-c n r" . consult-org-roam-search))
+    ("C-c n s" . consult-org-roam-search))
 #+end_src
 *** Consult flycheck
 #+begin_src emacs-lisp

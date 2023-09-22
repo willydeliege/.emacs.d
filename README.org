@@ -750,14 +750,6 @@ Used to play with forges like GitHub or gitlab
     :hook
     (dired-mode . nerd-icons-dired-mode))
 #+end_src
-*** Nerd icons treemacs
-#+begin_src emacs-lisp
-  (use-package treemacs-nerd-icons
-    :after treemacs
-    :config
-    (treemacs-load-theme "nerd-icons"))
-#+end_src
-
 ** Modeline
 *** Doom-modeline
 #+begin_src emacs-lisp
@@ -967,10 +959,10 @@ Usage of evil mode as I used to work with vim binding for years
     :after (treemacs perspective) ;; or perspective vs. persp-mode
     :config (treemacs-set-scope-type 'Perspectives))
 
-  (use-package treemacs-all-the-icons
+  (use-package treemacs-nerd-icons
     :after treemacs
-    :init
-    (treemacs-load-theme 'all-the-icons))
+    :config
+    (treemacs-load-theme "nerd-icons"))
 #+end_src
 ** Which-key
 Emacs package that displays available keybindings in popup

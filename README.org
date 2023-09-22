@@ -185,7 +185,6 @@ Use vterm as multiplexer
 ** Org basics
 #+begin_src emacs-lisp
   (use-package org
-    :straight (:type built-in)
     :bind (("C-c a" . org-agenda)
            (:map org-mode-map)
            ("C-c $" . org-archive-subtree-default))
@@ -1632,7 +1631,7 @@ marginalia adds annotations in the mini buffer
     (setq message-kill-buffer-on-exit t)
     (setq org-export-show-temporary-export-buffer nil)
     ;; set a more visible mu4e view (with dark-mode enabled)
-    (setq shr-color-visible-luminance-min 100)
+    (setq shr-color-visible-luminance-min 0)
     ;; use imagemagick, if available
     (when (fboundp 'imagemagick-register-types)
       (imagemagick-register-types))

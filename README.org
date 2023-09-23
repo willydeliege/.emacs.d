@@ -1607,6 +1607,9 @@ marginalia adds annotations in the mini buffer
      '(( :name  "Unread messages"
          :query "maildir:/INBOX AND flag:unread AND NOT flag:trashed"
          :key ?u)
+       ( :name "Important messages"
+         :query "prio:high AND NOT flag:trashed AND NOT maildir:\"/[Gmail]/Sent mail\""
+         :key ?i)
        ( :name "Today's messages"
          :query "maildir:/INBOX AND date:today..now"
          :key ?t)
@@ -1635,26 +1638,10 @@ marginalia adds annotations in the mini buffer
     (setq message-kill-buffer-on-exit t)
     (setq org-export-show-temporary-export-buffer nil)
     ;; set a more visible mu4e view (with dark-mode enabled)
-    (setq shr-color-visible-luminance-min 0)
-    ;; use imagemagick, if available
-    (when (fboundp 'imagemagick-register-types)
-      (imagemagick-register-types))
-    (setq mu4e-use-fancy-chars t)
-    (setq
-     mu4e-headers-draft-mark     '("D" . "💈")
-     mu4e-headers-flagged-mark   '("F" . "📍")
-     mu4e-headers-new-mark       '("N" . "🔥")
-     mu4e-headers-passed-mark    '("P" . "❯")
-     mu4e-headers-replied-mark   '("R" . "❮")
-     mu4e-headers-seen-mark      '("S" . "☑")
-     mu4e-headers-trashed-mark   '("T" . "💀")
-     mu4e-headers-attach-mark    '("a" . "📎")
-     mu4e-headers-encrypted-mark '("x" . "🔒")
-     mu4e-headers-signed-mark    '("s" . "🔑")
-     mu4e-headers-unread-mark    '("u" . "⎕")
-     mu4e-headers-list-mark      '("l" . "🔈")
-     mu4e-headers-personal-mark  '("p" . "👨")
-     mu4e-headers-calendar-mark  '("c" . "📅"))
+    ;; (setq shr-color-visible-luminance-min 0)
+    ;; fancy markers
+    (use-package mu4e-marker-icons
+      :init (mu4e-marker-icons-mode 1))
     (setq mu4e-update-interval 60)
     (setq mu4e-drafts-folder "/[Gmail]/Drafts")
     (setq mu4e-sent-folder   "/[Gmail]/Sent Mail")
@@ -1728,7 +1715,14 @@ marginalia adds annotations in the mini buffer
   (use-package org-msg
     :demand t
     :after mu4e
+    :bind (:map org-msg-edit-mode-map
+                ("C-c C-i" . message-goto-importance))
     :config
+    (defun message-goto-importance ()
+      "Move point to the Importance header."
+      (interactive nil message-mode)
+      (push-mark) 
+      (message-position-on-field "Importance" "Subject"))
     (setq org-msg-options "html-postamble:nil H:5 num:nil ^:{} toc:nil author:nil email:nil \\n:t"
           org-msg-startup "hidestars indent inlineimages"
           org-msg-greeting-fmt "\nHi%s,\n\n"

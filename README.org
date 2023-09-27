@@ -45,7 +45,7 @@ We will use use-package
   See straight/versions/default.el"
     (interactive)
     (straight-pull-all)
-    (message "restore pinned versions")
+    (message "Restore pinned versions...")
     (straight-thaw-versions)
     (message "Done"))
     (keymap-global-set "C-c M-p" 'straight-update-packages)

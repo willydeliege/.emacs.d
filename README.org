@@ -250,7 +250,7 @@ Use vterm as multiplexer
     (setq org-stuck-projects '("+Project/PROJ" ("NEXT" "WAIT" "MEETING" "HOLD") nil ""))
     (setq org-refile-targets '((org-agenda-files :maxlevel . 1)))
     (setq org-outline-path-complete-in-steps nil)         ; Refile in a single go
-    (setq org-startup-folded 'fold)
+    (setq org-startup-folded 'show2levels)
     (setq org-todo-keyword-faces
           (quote (("TODO" :foreground "dark orange" :weight bold)
                   ("NEXT" :foreground "orange red" :weight bold)
@@ -308,44 +308,44 @@ Enter insert mode when capturing things
     (setq org-deadline-warning-days 5)
     (setq org-agenda-custom-commands
           '(("z" "My view"
-             (   (agenda "" ((org-agenda-span 'day)
-                             (org-agenda-start-day nil)
-                             (org-super-agenda-groups
-                              '((:name "Today"
-                                       :time-grid t
-                                       :date today
-                                       :deadline today
-                                       :scheduled today
-                                       :order 1)
-                                (:discard (:anything))))))
-                 (alltodo "" ((org-agenda-overriding-header "")
-                              (org-super-agenda-groups
-                               '(;; Each group has an implicit boolean OR operator between its selectors.
-                                 (:name "Passed deadline"
-                                        :and (:deadline past :todo ("TODO" "WAIT" "HOLD" "NEXT"))
-                                        :face (:background "#7f1b19"))
-                                 (:scheduled past)
-                                 (:scheduled future)
-                                 (:name "Important"
-                                        :priority "A")
-                                 (:priority<= "B"
-                                              ;; Show this section after "Today" and "Important", because
-                                              ;; their order is unspecified, defaulting to 0. Sections
-                                              ;; are displayed lowest-number-first.
-                                              :order 1)
-                                 (:name "Meeting"
-                                        :todo "MEETING"
-                                        :order 7)
-                                 (:name "Next"
-                                        :todo "NEXT"
-                                        :order 8)
-                                 (:name "Waiting"
-                                        :todo "WAIT"
-                                        :order 9)
-                                 (:name "On hold"
-                                        :todo "HOLD"
-                                        :order 10)
-                                 (:discard (:todo "PROJ"))))))))))
+             ((agenda "" ((org-agenda-span 'day)
+                          (org-agenda-start-day nil)
+                          (org-super-agenda-groups
+                           '((:name "Today"
+                                    :time-grid t
+                                    :date today
+                                    :deadline today
+                                    :scheduled today
+                                    :order 1)
+                             (:discard (:anything))))))
+              (alltodo "" ((org-agenda-overriding-header "")
+                           (org-super-agenda-groups
+                            '(;; Each group has an implicit boolean OR operator between its selectors.
+                              (:name "Passed deadline"
+                                     :and (:deadline past :todo ("TODO" "WAIT" "HOLD" "NEXT"))
+                                     :face (:background "#7f1b19"))
+                              (:scheduled past)
+                              (:scheduled future)
+                              (:name "Important"
+                                     :priority "A")
+                              (:priority<= "B"
+                                           ;; Show this section after "Today" and "Important", because
+                                           ;; their order is unspecified, defaulting to 0. Sections
+                                           ;; are displayed lowest-number-first.
+                                           :order 1)
+                              (:name "Meeting"
+                                     :todo "MEETING"
+                                     :order 7)
+                              (:name "Next"
+                                     :todo "NEXT"
+                                     :order 8)
+                              (:name "Waiting"
+                                     :todo "WAIT"
+                                     :order 9)
+                              (:name "On hold"
+                                     :todo "HOLD"
+                                     :order 10)
+                              (:discard (:todo "PROJ"))))))))))
     (add-hook 'org-agenda-mode-hook 'org-super-agenda-mode))
 #+end_src
 
@@ -613,6 +613,7 @@ Enter insert mode when capturing things
     :no-require
     :config (citar-embark-mode))
 #+end_src
+
 ** Org Roqm-ui
 #+begin_src emacs-lisp
   (use-package org-roam-ui
@@ -630,6 +631,7 @@ Enter insert mode when capturing things
           org-roam-ui-open-on-start t))
 
 #+end_src
+
 ** Org roam citar
 #+begin_src emacs-lisp
   (use-package citar-org-roam
@@ -727,7 +729,9 @@ Used to play with forges like GitHub or gitlab
            (magit-post-refresh . diff-hl-magit-post-refresh))
     :custom
     (diff-hl-draw-borders nil)
+    (diff-hl-show-hunk-function 'diff-hl-show-hunk-posframe)
     :init
+    (require 'diff-hl-show-hunk-posframe)
     (global-diff-hl-mode 1)
     (diff-hl-flydiff-mode 1))
 #+end_src
@@ -759,6 +763,7 @@ Used to play with forges like GitHub or gitlab
     ;; (nerd-icons-font-family "Symbols Nerd Font Mono")
     )
 #+end_src
+
 *** Nerd icons completion
 #+begin_src emacs-lisp
   (use-package nerd-icons-completion
@@ -768,12 +773,14 @@ Used to play with forges like GitHub or gitlab
     (add-hook 'marginalia-mode-hook #'nerd-icons-completion-marginalia-setup))
 
 #+end_src
+
 *** Nerd icons for dired
 #+begin_src emacs-lisp
   (use-package nerd-icons-dired
     :hook
     (dired-mode . nerd-icons-dired-mode))
 #+end_src
+
 ** Modeline
 *** Doom-modeline
 #+begin_src emacs-lisp
@@ -989,6 +996,7 @@ Usage of evil mode as I used to work with vim binding for years
     :config
     (treemacs-load-theme "nerd-icons"))
 #+end_src
+
 ** Which-key
 Emacs package that displays available keybindings in popup
 When you can't remember all keybindings
@@ -1470,62 +1478,61 @@ marginalia adds annotations in the mini buffer
 
 ** Corfu
 #+begin_src emacs-lisp
-    (use-package corfu
-      :straight (corfu :files (:defaults "extensions/*.el"))
-      :bind (:map corfu-map
-                  ("C-j" . corfu-next)
-                  ("C-k" . corfu-previous)
-                  ("TAB" . corfu-next)
-                  ([tab] . corfu-next)
-                  ("S-TAB" . corfu-previous)
-                  ([backtab] . corfu-previous)
-                  ("<escape>" . corfu-quit))
-      :custom
+  ;; test
+  (use-package corfu
+    :straight (corfu :files (:defaults "extensions/*.el"))
+    :bind (:map corfu-map
+                ("C-j" . corfu-next)
+                ("C-k" . corfu-previous)
+                ("TAB" . corfu-next)
+                ([tab] . corfu-next)
+                ("S-TAB" . corfu-previous)
+                ([backtab] . corfu-previous)
+                ("<escape>" . corfu-quit))
+    :custom
 
-      ;; Works with `indent-for-tab-command'. Make sure tab doesn't indent when you
-      ;; want to perform completion
-      (completion-cycle-threshold nil)  ; Always show candidates in menu
-      (corfu-auto nil)                  ;;enablw completion with tab
-      (corfu-auto-prefix 2)
-      (corfu-auto-delay 0.25)
-      (corfu-min-width 80)
-      (corfu-max-width corfu-min-width) ; Always have the same width
-      ;; (corfu-preselect 'prompt)
-      (corfu-scroll-margin 4)
-      (corfu-cycle t)
-      (corfu-separator ?\s)             ; Use space
-      (corfu-quit-no-match 'separator)  ; Don't quit if there is `corfu-separator' inserted
-      (corfu-preview-current nil)   ; Preview first candidate. Insert on input if only one
-      (corfu-preselect-first nil)       ; Preselect first candidate?
-      (corfu-popupinfo-delay 0.5)
-      :config
-      (defun corfu-enable-in-minibuffer ()
-        "Enable Corfu in the minibuffer if `completion-at-point' is bound."
-        (when (where-is-internal #'completion-at-point (list (current-local-map)))
-          (setq-local corfu-auto nil)       ;; Enable/disable auto completion
-          (setq-local corfu-echo-delay nil ;; Disable automatic echo and popup
-                      corfu-popupinfo-delay nil)
-          (corfu-mode 1)))
-      (add-hook 'minibuffer-setup-hook #'corfu-enable-in-minibuffer)
-      :init
-      (setq tab-always-indent 'complete)
-      (corfu-popupinfo-mode)
-      (corfu-indexed-mode)
-      (global-corfu-mode))
+    ;; Works with `indent-for-tab-command'. Make sure tab doesn't indent when you
+    ;; want to perform completion
+    (completion-cycle-threshold nil)  ; Always show candidates in menu
+    (corfu-auto nil)                  ;;enablw completion with tab
+    (corfu-auto-prefix 2)
+    (corfu-auto-delay 0.25)
+    (corfu-min-width 80)
+    (corfu-max-width corfu-min-width) ; Always have the same width
+    ;; (corfu-preselect 'prompt)
+    (corfu-scroll-margin 4)
+    (corfu-cycle t)
+    (corfu-separator ?\s)             ; Use space
+    (corfu-quit-no-match 'separator)  ; Don't quit if there is `corfu-separator' inserted
+    (corfu-preview-current nil)   ; Preview first candidate. Insert on input if only one
+    (corfu-preselect-first nil)       ; Preselect first candidate?
+    (corfu-popupinfo-delay 0.5)
+    :config
+    (defun corfu-enable-in-minibuffer ()
+      "Enable Corfu in the minibuffer if `completion-at-point' is bound."
+      (when (where-is-internal #'completion-at-point (list (current-local-map)))
+        (setq-local corfu-auto nil)       ;; Enable/disable auto completion
+        (setq-local corfu-echo-delay nil ;; Disable automatic echo and popup
+                    corfu-popupinfo-delay nil)
+        (corfu-mode 1)))
+    (add-hook 'minibuffer-setup-hook #'corfu-enable-in-minibuffer)
+    :init
+    (setq tab-always-indent 'complete)
+    (corfu-popupinfo-mode)
+    (corfu-indexed-mode)
+    (global-corfu-mode))
 
-    (use-package corfu-terminal
-      :straight (corfu-terminal
-                 :type git
-                 :repo "https://codeberg.org/akib/emacs-corfu-terminal.git"))
-    (use-package corfu-quick
-      :straight (:type built-in)
-      :after corfu
-      :bind (:map corfu-map
-                  ("M-q" . corfu-quick-complete)
-                  ("C-q" . corfu-quick-package)))
+  (use-package corfu-terminal
+    :straight (corfu-terminal
+               :type git
+               :repo "https://codeberg.org/akib/emacs-corfu-terminal.git"))
+  (use-package corfu-quick
+    :straight (:type built-in)
+    :after corfu
+    :bind (:map corfu-map
+                ("M-q" . corfu-quick-complete)
+                ("C-q" . corfu-quick-package)))
 #+end_src
-
-
 
 ** Cape
 #+begin_src emacs-lisp

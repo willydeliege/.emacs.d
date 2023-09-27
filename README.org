@@ -701,6 +701,7 @@ Enter insert mode when capturing things
     :hook (git-commit-mode . evil-insert-state)
     :custom
     (magit-diff-refine-hunk 'all)
+  
     :bind (("C-x g" . magit-status)))
 
 #+end_src
@@ -729,17 +730,17 @@ Used to play with forges like GitHub or gitlab
     :after (magit evil)
      :bind ((:map evil-motion-state-map
             ("] h" . diff-hl-next-hunk)
-            ("[ h" . diff-hl-prev-hunk))
+            ("[ h" . diff-hl-previous-hunk)))
     :hook ((magit-pre-refresh . diff-hl-magit-pre-refresh)
            (magit-post-refresh . diff-hl-magit-post-refresh))
     :custom
     (diff-hl-draw-borders nil)
+    (diff-hl-show-hunk-inline-popup-smart-lines nil)
+    (diff-hl-show-staged-changes nil)
     :init
     (setq vc-git-diff-switches '("--histogram"))
     (global-diff-hl-mode 1)
-    ;; (diff-hl-flydiff-mode 1)
-    )
-
+    (diff-hl-flydiff-mode 1))
 #+end_src
 
 * Personal information

@@ -40,6 +40,16 @@ Using [[https://github.com/radian-software/straight.el#getting-started][straight
 We will use use-package
 #+begin_src emacs-lisp
   (straight-use-package 'use-package)
+  (defun straight-update-packages ()
+    "Update all packages and restore pinned packages.
+  See straight/versions/default.el"
+    (interactive)
+    (straight-pull-all)
+    (message "restore pinned versions")
+    (straight-thaw-versions)
+    (message "Done"))
+    (keymap-global-set "C-c M-p" 'straight-update-packages)
+
 #+end_src
 and use straight by default
 #+begin_src emacs-lisp

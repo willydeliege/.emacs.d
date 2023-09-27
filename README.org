@@ -726,8 +726,8 @@ Used to play with forges like GitHub or gitlab
 ** Diff-hl
 #+begin_src emacs-lisp
   (use-package diff-hl
-    :after magit
-    :bind ( :map evil-motion-state-map
+    :after (magit evil)
+     :bind ((:map evil-motion-state-map
             ("] h" . diff-hl-next-hunk)
             ("[ h" . diff-hl-prev-hunk))
     :hook ((magit-pre-refresh . diff-hl-magit-pre-refresh)

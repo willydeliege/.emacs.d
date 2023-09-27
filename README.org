@@ -738,7 +738,6 @@ Used to play with forges like GitHub or gitlab
     (diff-hl-show-hunk-inline-popup-smart-lines nil)
     (diff-hl-show-staged-changes nil)
     :init
-    (setq vc-git-diff-switches '("--histogram"))
     (global-diff-hl-mode 1)
     (diff-hl-flydiff-mode 1))
 #+end_src

@@ -699,6 +699,8 @@ Enter insert mode when capturing things
 #+begin_src emacs-lisp
   (use-package magit
     :hook (git-commit-mode . evil-insert-state)
+    :custom
+    (magit-diff-refine-hunk 'all)
     :bind (("C-x g" . magit-status)))
 
 #+end_src
@@ -725,15 +727,19 @@ Used to play with forges like GitHub or gitlab
 #+begin_src emacs-lisp
   (use-package diff-hl
     :after magit
+    :bind ( :map evil-motion-state-map
+            ("] h" . diff-hl-next-hunk)
+            ("[ h" . diff-hl-prev-hunk))
     :hook ((magit-pre-refresh . diff-hl-magit-pre-refresh)
            (magit-post-refresh . diff-hl-magit-post-refresh))
     :custom
     (diff-hl-draw-borders nil)
-    (diff-hl-show-hunk-function 'diff-hl-show-hunk-posframe)
     :init
-    (require 'diff-hl-show-hunk-posframe)
+    (setq vc-git-diff-switches '("--histogram"))
     (global-diff-hl-mode 1)
-    (diff-hl-flydiff-mode 1))
+    ;; (diff-hl-flydiff-mode 1)
+    )
+
 #+end_src
 
 * Personal information

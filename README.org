@@ -1175,9 +1175,9 @@ Supplemental evil-mode keybindings to emacs org-mode
 #+end_src
 
 ** Scratch buffer
-#+begin_src emacs-lisp :tangle yes
-  (use-package scratchh
-  :bind  (("C-c s") . scratch))
+#+begin_src emacs-lisp
+  (use-package scratch
+  :bind  ("C-c s" . scratch))
 #+end_src
 
 * Spelling

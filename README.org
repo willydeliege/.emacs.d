@@ -59,11 +59,12 @@ and use straight by default
 * Using straight properly with initiating in early-init.el
 This will prevent to use package.el
 #+begin_src emacs-lisp :tangle early-init.el
-  ;;; early-init.el --- Emacs early init file
-  ;;; Commentary:
+    ;;; early-init.el --- Emacs early init file
+    ;;; Commentary:
   ;; Code to run before init.el is loaded.
-  ;;; Code:
-
+    ;;; Code:
+  (add-to-list 'default-frame-alist '(font . "JetBrains Mono-12"))
+  (add-to-list 'default-frame-alist '(line-spacing . 0.2))
   ;; Disable package.el
   (setq package-enable-at-startup nil)
   ;; start emacs window maximized
@@ -212,6 +213,8 @@ Use vterm as multiplexer
   (defun org-is-agenda-file (filename)
     (member (file-truename filename) org-agenda-files))
   (cl-pushnew 'org-is-agenda-file recentf-exclude)
+  (add-to-list 'recentf-exclude "~/org/calendar.org") 
+  (add-to-list 'recentf-exclude "~/.emacs.d/.cache/treemacs-persist") 
   (recentf-mode 1)
 #+end_src
 

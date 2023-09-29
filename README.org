@@ -87,7 +87,7 @@ This will prevent to use package.el
 
   (setq create-lockfiles nil)
   (add-to-list 'load-path (expand-file-name "~/.emacs.d/elisp/"))
-
+  (global-hl-line-mode 1)
   (provide 'early-init)
     ;;; early-init.el ends here
 #+end_src
@@ -115,7 +115,6 @@ This will prevent to use package.el
         browse-url-generic-program "google-chrome")
   (setq my/uname (shell-command-to-string "uname -a"))
   (setq my/using-android (string-match "Android" my/uname))
-  (set-face-attribute 'default nil :height 110) ;; 100 is 10pts
 #+end_src
 
 ** custom file
@@ -1908,6 +1907,7 @@ marginalia adds annotations in the mini buffer
 #+begin_src emacs-lisp
   (use-package  password-store)
 #+end_src
+
 #+begin_src emacs-lisp
   (use-package calfw)
 
@@ -1955,8 +1955,6 @@ marginalia adds annotations in the mini buffer
 
                                                       (float 60))
                                                    calendar-daylight-time-zone-name)))))
-  (setq calendar-latitude 50.63)
-  (setq calendar-longitude 5.58)
 #+end_src
 
 ** Org-gcal

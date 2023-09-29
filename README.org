@@ -1652,6 +1652,7 @@ marginalia adds annotations in the mini buffer
              ("M-p t" . complete-tag)        ;; etags
              ("M-p d" . cape-dabbrev)        ;; or dabbrev-completion
              ("M-p h" . cape-history)
+             ("M-p :" . cape-emoji)
              ("M-p f" . cape-file)
              ("M-p k" . cape-keyword)
              ("M-p s" . cape-symbol)
@@ -1667,6 +1668,7 @@ marginalia adds annotations in the mini buffer
       :init
       (setq completion-at-point-functions
             (list (cape-capf-super #'cape-dict #'cape-dabbrev #'cape-keyword #'cape-symbol)))
+      (add-to-list 'completion-at-point-functions #'cape-emoji)
       (add-to-list 'completion-at-point-functions #'cape-file)
       (add-to-list 'completion-at-point-functions #'cape-elisp-block)
   )

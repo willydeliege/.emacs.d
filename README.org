@@ -1998,11 +1998,17 @@ Setup ANSI colors for the compilation buffer
 ** Java + Lsp
 #+begin_src emacs-lisp
   (use-package lsp-mode
+    :custom
+    (lsp-completion-provider :none) ;; we use Corfu!
     :init
     ;; set prefix for lsp-command-keymap (few alternatives - "C-l", "C-c l")
     (setq lsp-keymap-prefix "C-c l")
-    :hook ((java-mode . lsp)
-           (lsp-mode . lsp-enable-which-key-integration))
+    (defun my/lsp-mode-setup-completion ()
+      (setf (alist-get 'styles (alist-get 'lsp-capf completion-category-defaults))
+            '(orderless))) ;; Configure orderless
+    :hook (((java-mode java-ts-mode) . lsp)
+           (lsp-mode . lsp-enable-which-key-integration)
+           (lsp-completion-mode . my/lsp-mode-setup-completion))
     :commands lsp)
 
   (use-package lsp-java )

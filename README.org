@@ -179,7 +179,6 @@ Use vterm as multiplexer
     (evil-define-key 'insert vterm-mode-map (kbd "C-r")      #'vterm--self-insert)
     (evil-define-key 'insert vterm-mode-map (kbd "C-t")      #'vterm--self-insert)
     (evil-define-key 'insert vterm-mode-map (kbd "C-g")      #'vterm--self-insert)
-    (evil-define-key 'insert vterm-mode-map (kbd "C-c")      #'vterm--self-insert)
     (evil-define-key 'insert vterm-mode-map (kbd "C-SPC")    #'vterm--self-insert)
     (evil-define-key 'normal vterm-mode-map (kbd "C-d")      #'vterm--self-insert)
     (evil-define-key 'normal vterm-mode-map (kbd ",c")       #'multi-vterm)
@@ -2047,6 +2046,7 @@ Setup ANSI colors for the compilation buffer
     (add-to-list 'treesit-auto-recipe-list my-java-tsauto-config)
     (global-treesit-auto-mode))
 #+end_src
+
 *** Evil wit treesit
 #+begin_src emacs-lisp
   (use-package evil-textobj-tree-sitter
@@ -2091,6 +2091,7 @@ Setup ANSI colors for the compilation buffer
                   (interactive)
                   (evil-textobj-tree-sitter-goto-textobj "function.outer" t t))))
 #+end_src
+
 * scratch
 #+begin_src emacs-lisp
   (use-package org-contrib

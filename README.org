@@ -221,6 +221,7 @@ Use vterm as multiplexer
 ** Org basics
 #+begin_src emacs-lisp
   (use-package org
+    :hook ((org-mode prog-mode) . my/add-insert-state-exit-save-hook)
     :bind (("C-c a" . org-agenda)
            (:map org-mode-map)
            ("C-c $" . org-archive-subtree-default))
@@ -233,6 +234,14 @@ Use vterm as multiplexer
                                          '((shell     . t)
                                            (java      . t))))
     :config
+    (defun my/remove-insert-state-exit-save-hook()
+      "Remove save buffer wen leaving insert state."
+      (remove-hook 'evil-insert-state-exit-hook 'save-buffer t ))
+
+    (defun my/add-insert-state-exit-save-hook()
+      "Add save buffer wen leaving insert state."
+      (add-hook 'evil-insert-state-exit-hook 'save-buffer nil t ))
+
     (require 'org-archive)
     (setq org-archive-default-command 'org-archive-to-archive-sibling)
     (setq org-confirm-babel-evaluate nil)
@@ -295,9 +304,11 @@ Use vterm as multiplexer
 ** Org capture
 Enter insert mode when capturing things
 #+begin_src emacs-lisp
-  (use-package org
+  (use-package org-capture
+    :straight nil
     :hook
-    (org-capture-mode . evil-insert-state))
+    ((org-capture-mode . evil-insert-state)
+     (org-capture-mode . my/remove-insert-state-exit-save-hook )))
 #+end_src
 
 ** Org-agenda
@@ -1852,6 +1863,7 @@ marginalia adds annotations in the mini buffer
 ** Org message
 #+begin_src emacs-lisp
   (use-package org-msg
+    :hook (org-msg-edit-mode . my/remove-insert-state-exit-save-hook)
     :demand t
     :after mu4e
     :bind (:map org-msg-edit-mode-map

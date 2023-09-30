@@ -64,12 +64,11 @@ This will prevent to use package.el
     ;;; Commentary:
   ;; Code to run before init.el is loaded.
     ;;; Code:
-  (add-to-list 'default-frame-alist '(font . "JetBrains Mono-12"))
-  (add-to-list 'default-frame-alist '(line-spacing . 0.2))
   ;; Disable package.el
   (setq package-enable-at-startup nil)
   ;; start emacs window maximized
   (add-to-list 'default-frame-alist '(fullscreen . maximized))
+  (add-to-list 'default-frame-alist '(font . "JetBrains Mono-12"))
   (setq warning-minimum-level :error)
   ;;disable splash screen and startup message
   (setq inhibit-startup-message t)
@@ -299,7 +298,6 @@ Enter insert mode when capturing things
   (use-package org
     :hook
     (org-capture-mode . evil-insert-state))
-
 #+end_src
 
 ** Org-agenda

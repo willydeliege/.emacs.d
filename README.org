@@ -1766,6 +1766,11 @@ marginalia adds annotations in the mini buffer
          :query "date:7d..now"
          :hide-unread t
          :key ?w)))
+    (mu4e-headers-fields '((:human-date . 12)
+                           (:flags . 6)
+                           (:from . 30)
+                           (:subject)))
+
     :config
     (evil-define-key 'normal mu4e-headers-mode-map "T" 'mu4e-headers-mark-thread )
     (require 'mu4e-icalendar)

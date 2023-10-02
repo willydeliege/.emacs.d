@@ -548,8 +548,9 @@ Enter insert mode when capturing things
                                               :target (file "%<%Y%m%d%H%M%S>-${slug}.org")
                                               :unnarrowed t))
   (defun my/open-inbox ()
-    (interactive)
-    (find-file "~/org/Inbox.org"))
+    "Open Inbox.org file."
+  (interactive)
+  (find-file "~/org/Inbox.org"))
   (defun org-roam-node-insert-immediate (arg &rest args)
     (interactive "P")
     (let ((args (push arg args))

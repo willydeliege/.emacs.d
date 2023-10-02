@@ -453,17 +453,23 @@ Enter insert mode when capturing things
                   ("KILL" :background "dark red" :weight bold)
                   ("MEETING" :background "chocolate" :weight bold)
                   )))
+    (setq org-modern-block-name '(("quote" "«" "»") (t . t)))
+    (global-prettify-symbols-mode)
     (setq org-modern-priority
           (quote ((?A . "❗")
                   (?B . "⬆")
                   (?C . "⬇"))))
+    (setq org-modern-list
+          '((43 . "◦")
+            (45 . "—")
+            (42 . "•")))
     ( global-org-modern-mode ))
 #+end_src
 
 ** Org roam
 #+begin_src emacs-lisp
   ;; needed for emacs 29
-  (use-package emacsql-sqlite-builtin )
+  (use-package emacsql-sqlite-builtin :demand t )
   (use-package org-roam
     :after (org emacsql-sqlite-builtin)
     :demand t  ;; Ensure org-roam is loaded by default

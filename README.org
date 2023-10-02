@@ -442,8 +442,8 @@ Enter insert mode when capturing things
   (use-package org-modern
     :init
     (setq org-modern-todo-faces
-          (quote (("TODO" :background "dark orange" :weight bold)
-                  ("NEXT" :background "orange red" :weight bold)
+          (quote (("TODO" :background "dark orange" :foreground "black" :weight bold)
+                  ("NEXT" :background "orange red" :foreground "yellow" :weight bold)
                   ("DONE" :background "forest green" :weight bold)
                   ("WAIT" :background "magenta" :weight bold)
                   ("HOLD" :background "magenta" :weight bold)

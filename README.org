@@ -1634,7 +1634,7 @@ marginalia adds annotations in the mini buffer
     ;; Works with `indent-for-tab-command'. Make sure tab doesn't indent when you
     ;; want to perform completion
     (completion-cycle-threshold nil)  ; Always show candidates in menu
-    (corfu-auto nil)                  ;;enablw completion with tab
+    (corfu-auto t)                  ;;enablw completion with tab
     (corfu-auto-prefix 2)
     (corfu-auto-delay 0.25)
     (corfu-min-width 80)

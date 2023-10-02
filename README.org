@@ -415,10 +415,28 @@ Enter insert mode when capturing things
 #+end_src
 
 ** Olivetti
+  Distraction-free writing
 #+begin_src emacs-lisp
   (use-package olivetti
-    :custom (olivetti-body-width 92)
-    :bind ("C-c M-o" . olivetti-mode))
+    :config
+    (defun my/distraction-free ()
+      "Distraction-free writing environment using Olivetti package."
+      (interactive)
+      (if (equal olivetti-mode nil)
+          (progn
+            (window-configuration-to-register 1)
+            (delete-other-windows)
+            (text-scale-set 2)
+            (setq display-line-numbers nil)
+            (olivetti-mode t))
+        (progn
+          (if (eq (length (window-list)) 1)
+              (jump-to-register 1))
+          (setq display-line-numbers 'relative)
+          (olivetti-mode 0)
+          (text-scale-set 0))))
+    :bind
+    (("<f9>" . my/distraction-free)))
 #+end_src
 
 ** Org pretty bullets

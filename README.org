@@ -225,8 +225,6 @@ Use vterm as multiplexer
     :bind (("C-c a" . org-agenda)
 	   (:map org-mode-map)
 	   ("C-c $" . org-archive-subtree-default))
-    :custom
-    (org-level-faces nil)
     :init
     (setq org-startup-indented t)
     (org-babel-do-load-languages 'org-babel-load-languages

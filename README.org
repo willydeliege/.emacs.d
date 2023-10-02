@@ -1726,12 +1726,14 @@ marginalia adds annotations in the mini buffer
 #+begin_src emacs-lisp
   (use-package yasnippet
     :init
+    (unbind-key "C-c &" yas-minor-mode-map)
     (yas-global-mode 1))
   (use-package yasnippet-snippets
     :after yasnippet)
   (use-package doom-snippets
     :after yasnippet
     :straight (doom-snippets :type git :host github :repo "doomemacs/snippets" :files ("*.el" "*")))
+  (use-package java-snippets)
 #+end_src
 
 * Projects

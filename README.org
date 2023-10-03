@@ -117,7 +117,7 @@ This will prevent to use package.el
   (setq my/using-android (string-match "Android" my/uname))
 #+end_src
 
-** custom file
+** Custom file
 #+begin_src emacs-lisp
   (setq custom-file (concat user-emacs-directory "custom.el"))
   (when (file-exists-p custom-file)

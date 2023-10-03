@@ -45,6 +45,7 @@ We will use use-package
     "Update all packages and restore pinned packages.
   See straight/versions/default.el"
     (interactive)
+    (message "Update all packages")
     (straight-pull-all)
     (message "Restore pinned versions...")
     (straight-thaw-versions)

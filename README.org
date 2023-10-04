@@ -1207,7 +1207,6 @@ Supplemental evil-mode keybindings to emacs org-mode
            (org-mode . evil-org-mode))
     :config
     (evil-org-set-key-theme '(textobjects insert navigation additional shift todo))
-    (setq org-return-follows-link t)
     (require 'evil-org-agenda)
     (evil-org-agenda-set-keys))
 #+end_src

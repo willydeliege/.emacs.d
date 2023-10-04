@@ -1785,6 +1785,7 @@ marginalia adds annotations in the mini buffer
     :demand t
     :bind (("C-x m" . mu4e))
     :custom
+    (mu4e-attachment-dir "~/Downloads/")
     (mu4e-bookmarks
      '(( :name  "Unread messages"
          :query "maildir:/INBOX AND flag:unread AND NOT flag:trashed"

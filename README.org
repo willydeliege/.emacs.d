@@ -782,11 +782,18 @@ Used to play with forges like GitHub or gitlab
 #+begin_src emacs-lisp
   (use-package diff-hl
     :after (magit evil)
-     :bind ((:map evil-motion-state-map
-            ("] h" . diff-hl-next-hunk)
-            ("[ h" . diff-hl-previous-hunk)))
+    :bind ((:map evil-motion-state-map
+                 ("] h" . diff-hl-next-hunk)
+                 ("[ h" . diff-hl-previous-hunk)))
     :hook ((magit-pre-refresh . diff-hl-magit-pre-refresh)
            (magit-post-refresh . diff-hl-magit-post-refresh))
+    :custom-face
+    (diff-hl-insert ((((background light))
+                      (:background "blue"))
+                     (default
+                      (:background "light blue"))))
+    (diff-hl-change ((t (:background "dark orange"))))
+    (diff-hl-delete ((t (:background "red"))))
     :custom
     (diff-hl-draw-borders nil)
     (diff-hl-show-hunk-inline-popup-smart-lines nil)

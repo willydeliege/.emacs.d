@@ -696,7 +696,7 @@ Enter insert mode when capturing things
 ** Org notifications
 #+begin_src emacs-lisp
   (use-package org-alert
-    :after org
+    :hook (after-init . org-alert-enable)
     :init
     (setq alert-default-style 'libnotify))
 #+end_src

@@ -77,6 +77,7 @@ This will prevent to use package.el
   ;; trust the themes
   (setq custom-safe-themes t)
   (global-set-key (kbd "C-x C") 'save-buffers-kill-emacs)
+  (global-set-key (kbd "C-x k") 'kill-this-buffer)
   (setq backup-directory-alist `(("." . ,(expand-file-name "tmp/backups/" user-emacs-directory))))
 
   ;; auto-save-mode doesn't create the path automatically!
@@ -1755,7 +1756,7 @@ marginalia adds annotations in the mini buffer
   (use-package perspective
     :hook ((kill-emacs . persp-state-save))
     :bind
-    (("C-x k" . persp-kill-buffer*)
+    (("C-x K" . persp-kill-buffer*)
      ("C-x C-b" . persp-list-buffers))        ; or use a nicer switcher, see below
     :custom
     (persp-mode-prefix-key (kbd "C-c w")) ; pick your own prefix key here

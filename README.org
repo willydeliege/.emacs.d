@@ -1784,6 +1784,7 @@ marginalia adds annotations in the mini buffer
 #+begin_src emacs-lisp
   (use-package mu4e
     :unless my/using-android
+    :straight (mu :type git :host github :repo "dgcb/mu" :branch "release/1.10")
     :demand t
     :bind (("C-x m" . mu4e))
     :custom

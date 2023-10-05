@@ -223,15 +223,20 @@ Use vterm as multiplexer
 #+begin_src emacs-lisp
   (use-package org
     :hook ((org-mode prog-mode) . my/add-insert-state-exit-save-hook)
+    :hook ((org-mode . (lambda ()
+                        (setq-local prettify-symbols-alist '((":PROPERTIES:" . "»")
+                                                             )))))
     :bind (("C-c a" . org-agenda)
-	   (:map org-mode-map)
-	   ("C-c $" . org-archive-subtree-default))
+           ("C-c l" . org-store-link)
+           (:map org-mode-map)
+           ("C-c $" . org-archive-subtree-default))
     :init
     (setq org-startup-indented t)
+    (setq org-attach-store-link-p t)
     (org-babel-do-load-languages 'org-babel-load-languages
-				 (append org-babel-load-languages
-					 '((shell     . t)
-					   (java      . t))))
+                                 (append org-babel-load-languages
+                                         '((shell     . t)
+                                           (java      . t))))
     :config
     (defun my/remove-insert-state-exit-save-hook()
       "Remove save buffer wen leaving insert state."
@@ -264,29 +269,29 @@ Use vterm as multiplexer
     (setq org-startup-folded 'show2levels)
 
     (setq org-todo-keywords
-	  '((sequence
-	     "TODO(t)"  ; A task that needs doing & is ready to do
-	     "NEXT(n)"  ; The nex task in to perform in the project
-	     "MEETING"  ; Meeting
-	     "PROJ(p)"  ; A project, which usually contains other tasks
-	     "WAIT(W@)"  ; Something external is holding up this task
-	     "HOLD(H@)"  ; This task is paused/on hold because of me
-	     "IDEA(i)"  ; An unconfirmed and unapproved task or notion
-	     "|"
-	     "DONE(d!)"  ; Task successfully completed
-	     "KILL(k)") ; Task was cancelled, aborted or is no longer applicable
-	    (sequence
-	     "REPLY(r)"
-	     "|"
-	     "REPLIED(R!)")
-	    (sequence
-	     "[ ](T)"   ; A task that needs doing
-	     "[-](S)"   ; Task is in progress
-	     "|"
-	     "[X](D)")  ; Task was completed
-	    (sequence
-	     "READ(r)"
-	     "WATCH(w)"))))
+          '((sequence
+             "TODO(t)"  ; A task that needs doing & is ready to do
+             "NEXT(n)"  ; The nex task in to perform in the project
+             "MEETING"  ; Meeting
+             "PROJ(p)"  ; A project, which usually contains other tasks
+             "WAIT(W@)"  ; Something external is holding up this task
+             "HOLD(H@)"  ; This task is paused/on hold because of me
+             "IDEA(i)"  ; An unconfirmed and unapproved task or notion
+             "|"
+             "DONE(d!)"  ; Task successfully completed
+             "KILL(k)") ; Task was cancelled, aborted or is no longer applicable
+            (sequence
+             "REPLY(r)"
+             "|"
+             "REPLIED(R!)")
+            (sequence
+             "[ ](T)"   ; A task that needs doing
+             "[-](S)"   ; Task is in progress
+             "|"
+             "[X](D)")  ; Task was completed
+            (sequence
+             "READ(r)"
+             "WATCH(w)"))))
 
 #+end_src
 
@@ -335,7 +340,7 @@ Enter insert mode when capturing things
                             '(;; Each group has an implicit boolean OR operator between its selectors.
                               (:name "Important"
                                      :priority "A"
-                                     :face (:background "#ff0000" :foreground "#000000"))
+                                     :face (:background "firebrick1")) 
                               (:name "Passed deadline"
                                      :and (:deadline past :todo ("TODO" "WAIT" "HOLD" "NEXT"))
                                      :face (:background "#7f1b19"))
@@ -445,7 +450,6 @@ Enter insert mode when capturing things
     (setq org-modern-todo-faces
           (quote (("TODO" :background "dark orange" :foreground "black" :weight bold)
                   ("NEXT" :background "orange red" :foreground "yellow" :weight bold)
-                  ("DONE" :background "forest green" :weight bold)
                   ("WAIT" :background "magenta" :weight bold)
                   ("HOLD" :background "magenta" :weight bold)
                   ("CANCELLED" :background "dark red" :weight bold)
@@ -498,17 +502,6 @@ Enter insert mode when capturing things
     :bind-keymap
     ("C-c n d" . org-roam-dailies-map)
     :config
-    (defun org-roam-preview-get-contents (file pt)
-      "Get preview content for FILE at PT."
-      (save-excursion
-        (org-roam-with-temp-buffer file
-          (org-with-wide-buffer
-           (goto-char pt)
-           (let ((beg (progn (org-roam-end-of-meta-data t)
-                             (point)))
-                 (end (progn (end-of-paragraph-text)
-                             (point))))
-             (string-trim (buffer-substring-no-properties beg end)))))))
     (require 'org-roam-logseq)
     (add-to-list 'display-buffer-alist '("\\*org-roam.*"
                                          (display-buffer-in-side-window)
@@ -542,21 +535,33 @@ Enter insert mode when capturing things
              :unnarrowed t)))
     (org-roam-db-autosync-mode))
 
-  (add-to-list 'org-roam-capture-templates  '("p" "project" plain
-                                              (file "~/org/.templates/project-template.org")
-                                              :target (file "%<%Y%m%d%H%M%S>-${slug}.org")
-                                              :unnarrowed t))
+  (setq org-roam-capture-templates '(("p" "project" plain
+                                 (file "~/org/.templates/project-template.org")
+                                 :target
+                                 (file "%<%Y%m%d%H%M%S>-${slug}.org")
+                                 :unnarrowed t)
+                                ("P" "project - immediate finish" plain
+                                 (file "~/org/.templates/project-template.org")
+                                 :target
+                                 (file "%<%Y%m%d%H%M%S>-${slug}.org")
+                                 :unnarrowed t
+                                 :immediate-finish t)
+                                ("d" "default" plain "%?" :target
+                                 (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n")
+                                 :unnarrowed t)
+                                ("D" "default - immediate finish" plain "%?" :target
+                                 (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n")
+                                 :unnarrowed t
+                                 :immediate-finish t)))
   (defun my/open-inbox ()
     "Open Inbox.org file."
-  (interactive)
-  (find-file "~/org/Inbox.org"))
+    (interactive)
+    (find-file "~/org/Inbox.org"))
   (defun org-roam-node-insert-immediate (arg &rest args)
     (interactive "P")
-    (let ((args (push arg args))
-          (org-roam-capture-templates (list (append (car org-roam-capture-templates)
-                                                    '(:immediate-finish t)))))
+    (let ((args (push arg args)))
+  (print org-roam-capture-templates)
       (apply #'org-roam-node-insert args)))
-
   (defun my/org-roam-filter-by-tag (tag-name)
     (lambda (node)
       (member tag-name (org-roam-node-tags node))))
@@ -704,7 +709,7 @@ Enter insert mode when capturing things
 #+begin_src emacs-lisp
   (use-package org-cliplink
     :after org
-    :bind ("C-c l" . org-cliplink))
+    :bind ("C-c L" . org-cliplink))
 #+end_src
 
 ** Org download

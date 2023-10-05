@@ -69,6 +69,8 @@ This will prevent to use package.el
   (setq package-enable-at-startup nil)
   ;; start emacs window maximized
   (add-to-list 'default-frame-alist '(fullscreen . maximized))
+  (add-to-list 'default-frame-alist '(menu-bar-lines . 0))
+  (add-to-list 'default-frame-alist '(tool-bar-lines . 0))
   (add-to-list 'default-frame-alist '(font . "JetBrains Mono-12"))
   (setq warning-minimum-level :error)
   ;;disable splash screen and startup message
@@ -88,7 +90,6 @@ This will prevent to use package.el
 
   (setq create-lockfiles nil)
   (add-to-list 'load-path (expand-file-name "~/.emacs.d/elisp/"))
-  (global-hl-line-mode 1)
   (provide 'early-init)
   ;;; early-init.el ends here
 #+end_src
@@ -99,8 +100,6 @@ This will prevent to use package.el
   (save-place-mode 1)
   (setq save-place-file (locate-user-emacs-file "places" ".emacs-places")
         save-place-forget-unreadable-files nil)
-  (menu-bar-mode -1)
-  (tool-bar-mode -1)
   (setq display-time-day-and-date t)
   (setq display-time-default-load-average nil)
   (setq display-time-24hr-format t)

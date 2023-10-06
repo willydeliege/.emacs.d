@@ -765,7 +765,6 @@ Enter insert mode when capturing things
       :custom
       (magit-diff-refine-hunk 'all)
       (magit-define-global-key-bindings 'recommended)
-      ;; :bind (("C-x g" . magit-status)))
   )
 #+end_src
 

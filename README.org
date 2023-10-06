@@ -90,6 +90,7 @@ This will prevent to use package.el
 
   (setq create-lockfiles nil)
   (add-to-list 'load-path (expand-file-name "~/.emacs.d/elisp/"))
+  (setq-default word-wrap t)
   (provide 'early-init)
   ;;; early-init.el ends here
 #+end_src
@@ -114,6 +115,7 @@ This will prevent to use package.el
   (setq browse-url-browser-function 'browse-url-generic
         browse-url-generic-program "google-chrome")
   (setq my/uname (shell-command-to-string "uname -a"))
+  (global-prettify-symbols-mode)
   (setq my/using-android (string-match "Android" my/uname))
 #+end_src
 
@@ -224,8 +226,9 @@ Use vterm as multiplexer
   (use-package org
     :hook ((org-mode prog-mode) . my/add-insert-state-exit-save-hook)
     :hook ((org-mode . (lambda ()
-                        (setq-local prettify-symbols-alist '((":PROPERTIES:" . "»")
-                                                             )))))
+                         (setq prettify-symbols-alist '((":PROPERTIES:" . "⚙️")
+                                                        (":LOGBOOK:" . "📔")
+                                                        (":END:" . "🔚" ))))))
     :bind (("C-c a" . org-agenda)
            ("C-c l" . org-store-link)
            (:map org-mode-map)
@@ -446,6 +449,7 @@ Enter insert mode when capturing things
 ** Org pretty bullets
 #+begin_src emacs-lisp
   (use-package org-modern
+    :hook (org-mode . org-modern-mode)
     :init
     (setq org-modern-todo-faces
           (quote (("TODO" :background "dark orange" :foreground "black" :weight bold)
@@ -457,7 +461,6 @@ Enter insert mode when capturing things
                   ("MEETING" :background "chocolate" :weight bold)
                   )))
     (setq org-modern-block-name '(("quote" "«" "»") (t . t)))
-    (global-prettify-symbols-mode)
     (setq org-modern-priority
           (quote ((?A . "❗")
                   (?B . "⬆")
@@ -465,8 +468,7 @@ Enter insert mode when capturing things
     (setq org-modern-list
           '((43 . "◦")
             (45 . "—")
-            (42 . "•")))
-    ( global-org-modern-mode ))
+            (42 . "•"))))
 #+end_src
 
 ** Org roam

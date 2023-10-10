@@ -748,9 +748,6 @@ Enter insert mode when capturing things
 
 * Version control
 ** Magit
-:PROPERTIES:
-:org-gcal-managed: org
-:END:
 #+begin_src emacs-lisp
     (use-package magit
       :hook (git-commit-mode . evil-insert-state)

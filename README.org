@@ -446,29 +446,21 @@ Enter insert mode when capturing things
     (("<f9>" . my/distraction-free)))
 #+end_src
 
-** Org pretty bullets
+** Org modern
 #+begin_src emacs-lisp
   (use-package org-modern
     :hook (org-mode . org-modern-mode)
+    :hook (org-agenda-finalize . org-modern-agenda)
     :init
-    (setq org-modern-todo-faces
-          (quote (("TODO" :background "dark orange" :foreground "black" :weight bold)
-                  ("NEXT" :background "orange red" :foreground "yellow" :weight bold)
-                  ("WAIT" :background "magenta" :weight bold)
-                  ("HOLD" :background "magenta" :weight bold)
-                  ("CANCELLED" :background "dark red" :weight bold)
-                  ("KILL" :background "dark red" :weight bold)
-                  ("MEETING" :background "chocolate" :weight bold)
-                  )))
     (setq org-modern-block-name '(("quote" "«" "»") (t . t)))
-    (setq org-modern-priority
-          (quote ((?A . "❗")
-                  (?B . "⬆")
-                  (?C . "⬇"))))
+    (setq org-modern-priority nil) ;; use fancy priorities
     (setq org-modern-list
-          '((43 . "◦")
-            (45 . "—")
-            (42 . "•"))))
+          '((?+ . "◦")
+            (?- . "—")
+            (?* . "•")))) 
+    (use-package org-fancy-priorities
+      :hook
+      (org-mode . org-fancy-priorities-mode))
 #+end_src
 
 ** Org roam

@@ -1851,7 +1851,7 @@ marginalia adds annotations in the mini buffer
     (add-to-list 'org-capture-templates
                  '("mc" "Communication" entry
                    (file+headline my/org-roam-node-find-project "Communication")
-                   "* TODO Communication from %:fromname on %a"
+                   "* REPLY Communication from %:fromname on %a"
                    :immediate-finish t))
     (add-to-list 'org-capture-templates
                  '("mr" "Read Later" entry

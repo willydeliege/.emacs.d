@@ -628,27 +628,6 @@ Enter insert mode when capturing things
     (org-roam-tag-add '("ARCHIVE"))
     (org-roam-tag-remove '("Project"))
     (save-buffer))
-  (defvar id nil)
-  (defvar id-string nil)
-  (defun my/org-roam-copy-todo-to-today ()
-    (interactive)
-    ;; (org-store-link nil)
-    (org-copy-subtree)
-    (let ( ;; Set this to nil to delete the original!
-          ( id (org-entry-get 1 "ID"))
-          ( id-string "id:")
-          (org-roam-dailies-capture-templates
-           '(("t" "tasks" plain "**** %(org-link-make-string
-                         (concat id-string id)
-                         (org-roam-node-title (org-roam-node-from-id id)))\n%(org-paste-subtree 5)\n%?"
-              :target (file+datetree "%<%Y-W%W>.org" 'week)
-              :immediate-finish t))))
-      (save-window-excursion
-        (org-roam-dailies--capture (current-time) nil))))
-  (add-to-list 'org-after-todo-state-change-hook
-               (lambda ()
-                 (when (equal org-state "DONE")
-                   (my/org-roam-copy-todo-to-today))))
 #+end_src
 
 ** Org citar

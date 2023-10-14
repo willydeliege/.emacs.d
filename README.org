@@ -537,23 +537,23 @@ Enter insert mode when capturing things
     (org-roam-db-autosync-mode))
 
   (setq org-roam-capture-templates '(("p" "project" plain
-                                 (file "~/org/.templates/project-template.org")
-                                 :target
-                                 (file "%<%Y%m%d%H%M%S>-${slug}.org")
-                                 :unnarrowed t)
-                                ("P" "project - immediate finish" plain
-                                 (file "~/org/.templates/project-template.org")
-                                 :target
-                                 (file "%<%Y%m%d%H%M%S>-${slug}.org")
-                                 :unnarrowed t
-                                 :immediate-finish t)
-                                ("d" "default" plain "%?" :target
-                                 (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n")
-                                 :unnarrowed t)
-                                ("D" "default - immediate finish" plain "%?" :target
-                                 (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n")
-                                 :unnarrowed t
-                                 :immediate-finish t)))
+                                      (file "~/org/.templates/project-template.org")
+                                      :target
+                                      (file "%<%Y%m%d%H%M%S>-${slug}.org")
+                                      :unnarrowed t)
+                                     ("P" "project - immediate finish" plain
+                                      (file "~/org/.templates/project-template.org")
+                                      :target
+                                      (file "%<%Y%m%d%H%M%S>-${slug}.org")
+                                      :unnarrowed t
+                                      :immediate-finish t)
+                                     ("d" "default" plain "%?" :target
+                                      (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n")
+                                      :unnarrowed t)
+                                     ("D" "default - immediate finish" plain "%?" :target
+                                      (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n")
+                                      :unnarrowed t
+                                      :immediate-finish t)))
   (defun my/open-inbox ()
     "Open Inbox.org file."
     (interactive)
@@ -561,7 +561,6 @@ Enter insert mode when capturing things
   (defun org-roam-node-insert-immediate (arg &rest args)
     (interactive "P")
     (let ((args (push arg args)))
-  (print org-roam-capture-templates)
       (apply #'org-roam-node-insert args)))
   (defun my/org-roam-filter-by-tag (tag-name)
     (lambda (node)

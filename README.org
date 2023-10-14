@@ -1752,9 +1752,19 @@ marginalia adds annotations in the mini buffer
     :config
     (setq persp-state-default-file "~/.emacs.d/persist")
     (consult-customize consult--source-buffer :hidden t :default nil)
-    (add-to-list 'consult-buffer-sources persp-consult-source))
+    (add-to-list 'consult-buffer-sources persp-consult-source)
+    :init
+    (persp-mode))
 #+end_src
 
+*** Perspective wit tabs
+#+begin_src emacs-lisp
+  (use-package perspective-tabs
+    :after (perspective)
+    :straight (:host sourcehut :repo "woozong/perspective-tabs")
+    :init
+    (perspective-tabs-mode +1))
+#+end_src
 ** Persp project
 #+begin_src emacs-lisp
   (use-package persp-projectile)

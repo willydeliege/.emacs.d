@@ -1809,9 +1809,9 @@ marginalia adds annotations in the mini buffer
     (gnus-icalendar-org-setup)
     (setq mail-user-agent 'mu4e-user-agent)
     (setq mu4e-confirm-quit nil)
-    (setq mu4e-get-mail-command "mbsync -a")
+    (setq mu4e-get-mail-command "offlineimap")
     (setq mu4e-completing-read-function 'completing-read)
-    (setq mu4e-change-filenames-when-moving t)
+    ;; (setq mu4e-change-filenames-when-moving t)
     (setq sendmail-program (executable-find "msmtp")
           send-mail-function #'smtpmail-send-it
           message-sendmail-f-is-evil t
@@ -1826,14 +1826,15 @@ marginalia adds annotations in the mini buffer
     (use-package mu4e-marker-icons
       :init (mu4e-marker-icons-mode 1))
     (setq mu4e-update-interval 60)
-    (setq mu4e-drafts-folder "/[Gmail]/Drafts")
-    (setq mu4e-sent-folder   "/[Gmail]/Sent Mail")
-    (setq mu4e-trash-folder  "/[Gmail]/Trash")
+    (setq mu4e-drafts-folder "/[Gmail].Drafts")
+    (setq mu4e-sent-folder   "/[Gmail].Sent Mail")
+    (setq mu4e-trash-folder  "/[Gmail].Trash")
     (setq mu4e-maildir-shortcuts
           '( (:maildir "/INBOX" :key ?i)
-             (:maildir "/[Gmail]/Sent Mail"  :key ?S)
-             (:maildir "/[Gmail]/Trash" :key ?t)
-             (:maildir "/[Gmail]/Starred" :key ?s)))
+             (:maildir "/[Gmail].All Mail"  :key ?a)
+             (:maildir "/[Gmail].Sent Mail"  :key ?S)
+             (:maildir "/[Gmail].Trash" :key ?t)
+             (:maildir "/[Gmail].Starred" :key ?s)))
 
     (add-to-list 'org-capture-templates
                  '("m" "Email Workflow"))
@@ -1863,6 +1864,7 @@ marginalia adds annotations in the mini buffer
       (interactive)
       (call-interactively 'org-store-link)
       (org-capture nil "mc")
+      (mu4e-headers-mark-for-move)
       (mu4e-view-mark-for-flag))
 
 

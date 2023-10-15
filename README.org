@@ -533,8 +533,7 @@ Enter insert mode when capturing things
     (setq org-roam-capture-ref-templates
           '(("r" "ref" entry "* %(my/org-protocol-insert-selection-dwim \"%i\")%?"
              :target (file+head "${slug}.org"
-                                "#+title: ${title}\n
-                                        ,#+created: %u\n")
+                                "#+title: ${title}\n ,#+created: %u\n")
              :unnarrowed t)))
     (org-roam-db-autosync-mode))
 

@@ -1234,11 +1234,13 @@ marginalia adds annotations in the mini buffer
   (use-package vertico
     :straight (vertico :files (:defaults "extensions/*.el"))
     :bind (:map vertico-map
-                ("C-j" . vertico-next)
-                ("C-k" . vertico-previous)
-                ("C-f" . vertico-exit)
+                ("C-j"	.	vertico-next)
+                ("C-k"	.	vertico-previous)
+                ("C-f"	.	vertico-exit)
+                ("?"	.	minibuffer-completion-help)
+                ("M-RET"	.	minibuffer-complete)
                 :map minibuffer-local-map
-                ("C-h" . backward-kill-word))
+                ("C-h"	.	backward-kill-word))
     :custom
     (vertico-cycle t)
     :init

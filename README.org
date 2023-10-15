@@ -91,6 +91,7 @@ This will prevent to use package.el
   (setq create-lockfiles nil)
   (add-to-list 'load-path (expand-file-name "~/.emacs.d/elisp/"))
   (setq-default word-wrap t)
+  (setq use-short-answers t)
   (provide 'early-init)
   ;;; early-init.el ends here
 #+end_src

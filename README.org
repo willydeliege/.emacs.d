@@ -1832,11 +1832,12 @@ marginalia adds annotations in the mini buffer
     (setq mu4e-sent-folder   "/[Gmail].Sent Mail")
     (setq mu4e-trash-folder  "/[Gmail].Trash")
     (setq mu4e-maildir-shortcuts
-          '( (:maildir "/INBOX" :key ?i)
-             (:maildir "/[Gmail].All Mail"  :key ?a)
-             (:maildir "/[Gmail].Sent Mail"  :key ?S)
-             (:maildir "/[Gmail].Trash" :key ?t)
-             (:maildir "/[Gmail].Starred" :key ?s)))
+          '( ( :maildir "/INBOX" :key ?i)
+             ( :maildir "/archive" :key ?a)
+             ( :maildir "/[Gmail].All Mail"  :key ?A)
+             ( :maildir "/[Gmail].Sent Mail"  :key ?S)
+             ( :maildir "/[Gmail].Trash" :key ?t)
+             ( :maildir "/[Gmail].Starred" :key ?s)))
 
     (add-to-list 'org-capture-templates
                  '("m" "Email Workflow"))
@@ -1866,14 +1867,23 @@ marginalia adds annotations in the mini buffer
       (interactive)
       (call-interactively 'org-store-link)
       (org-capture nil "mc")
-      (mu4e-headers-mark-for-move)
-      (mu4e-view-mark-for-flag))
+      ;;mark the message
+      (mu4e-view-mark-for-flag)
+      ;; execute the mark
+      (mu4e-mark-execute-all t)
+      ;; move back to thhe message for the next action
+      (mu4e-view-headers-prev)
+      ;; archive the message
+      (mu4e-view-mark-for-refile)
+      (mu4e-mark-execute-all t))
 
 
     (defun my/capture-mail-read-later (msg)
       (interative)
       (call-interactively 'org-store-link)
-      (org-capture nil "mr"))
+      (org-capture nil "mr")
+      (mu4e-view-mark-for-refile)
+      (mu4e-mark-execute-all t))
 
     ;; Add custom actions for our capture templates
     (add-to-list 'mu4e-headers-actions

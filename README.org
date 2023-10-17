@@ -1378,8 +1378,15 @@ marginalia adds annotations in the mini buffer
 *** Consult projectile
 #+begin_src emacs-lisp
   (use-package consult-projectile
+    :demand t
     :straight (consult-projectile :type git :host gitlab :repo "OlMon/consult-projectile" :branch "master")
+    :bind (:map projectile-command-map
+                ("p" . consult-projectile)
     :config
+    (add-to-list 'consult-projectile-sources
+                 'consult-projectile--source-projectile-recentf)
+    (add-to-list 'consult-projectile-sources
+                 'consult-projectile--source-projectile-dir)
     (setq consult-projectile-use-projectile-switch-project t))
 #+end_src
 *** Consult org roam
@@ -1419,8 +1426,8 @@ marginalia adds annotations in the mini buffer
   (use-package consult-dir
     :bind (("C-x C-d" . consult-dir)
            :map vertico-map
-           ("C-x C-d" . consult-dir)
-           ("C-x C-j" . consult-dir-jump-file))
+           ("C-x d" . consult-dir)
+           ("C-x j" . consult-dir-jump-file))
     :config
     (setq consult-dir-project-list-function #'consult-dir-projectile-dirs))
 #+end_src
@@ -1739,7 +1746,7 @@ marginalia adds annotations in the mini buffer
                                      (consult-grep))
     (setq projectile-switch-project-action 'projectile-commander)
     :bind (:map projectile-mode-map
-                ("C-c p" . projectile-command-map)))
+                ("C-x p" . projectile-command-map)))
 #+end_src
 
 ** Perspective

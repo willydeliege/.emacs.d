@@ -1845,8 +1845,7 @@ marginalia adds annotations in the mini buffer
     (setq mu4e-trash-folder  "/[Gmail].Trash")
     (setq mu4e-maildir-shortcuts
           '( ( :maildir "/INBOX" :key ?i)
-             ( :maildir "/archive" :key ?a)
-             ( :maildir "/[Gmail].All Mail"  :key ?A)
+             ( :maildir "/[Gmail].All Mail"  :key ?a)
              ( :maildir "/[Gmail].Sent Mail"  :key ?S)
              ( :maildir "/[Gmail].Trash" :key ?t)
              ( :maildir "/[Gmail].Starred" :key ?s)))
@@ -1875,6 +1874,7 @@ marginalia adds annotations in the mini buffer
       "Get path for node"
       (org-roam-node-file (org-roam-node-read nil (my/org-roam-filter-by-tag "Project"))))
 
+    (setq mu4e-refile-folder "/[Gmail].All Mail")
     (defun my/capture-mail-follow-up (msg)
       (interactive)
       (call-interactively 'org-store-link)

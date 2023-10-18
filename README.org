@@ -93,6 +93,7 @@ This will prevent to use package.el
   (setq-default word-wrap t)
   (setq use-short-answers t)
   (provide 'early-init)
+  (scroll-bar-mode 0)
   ;;; early-init.el ends here
 #+end_src
 

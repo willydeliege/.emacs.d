@@ -1824,9 +1824,6 @@ marginalia adds annotations in the mini buffer
     (setq mail-user-agent 'mu4e-user-agent)
     (setq mu4e-confirm-quit nil)
     (setq mu4e-get-mail-command "offlineimap")
-    (setq
-     mu4e-index-cleanup nil      ;; don't do a full cleanup check
-     mu4e-index-lazy-check t)    ;; don't consider up-to-date dirs
     (setq mu4e-completing-read-function 'completing-read)
     ;; (setq mu4e-change-filenames-when-moving t)
     (setq sendmail-program (executable-find "msmtp")

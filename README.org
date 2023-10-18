@@ -1765,7 +1765,7 @@ marginalia adds annotations in the mini buffer
     (persp-mode-prefix-key (kbd "C-c w")) ; pick your own prefix key here
     :config
     (setq persp-state-default-file "~/.emacs.d/persist")
-    (consult-customize consult--source-buffer :hidden t :default nil)
+    ;; (consult-customize consult--source-buffer :hidden t :default nil)
     (add-to-list 'consult-buffer-sources persp-consult-source)
     :init
     (persp-mode))

@@ -1941,7 +1941,7 @@ marginalia adds annotations in the mini buffer
                                          (reply-to-html	. (text html))
                                          (reply-to-text	. (text)))
           org-msg-convert-citation t )
-    (setq org-msg-signature "\n\nRegards,\n\n\n--\n\n*Frédéric Willem*\n/Tel: +32 456 64 00 02/\n")
+    (setq org-msg-signature "\n\nRegards,\nFrédéric\n\n--\n\n*Frédéric Willem*\n/Tel: +32 456 64 00 02/\n")
     (org-msg-mode))
 
 #+end_src

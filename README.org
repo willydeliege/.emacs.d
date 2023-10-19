@@ -712,7 +712,7 @@ Enter insert mode when capturing things
     (require 'org-crypt)
     (org-crypt-use-before-save-magic)
     (setq org-tags-exclude-from-inheritance '("crypt"))
-    (setq org-crypt-key nil))
+    (setq org-crypt-key "frederic.willem@gmail.com"))
 #+end_src
 
 ** Org passwords

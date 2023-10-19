@@ -158,6 +158,7 @@ Use vterm as multiplexer
 #+begin_src emacs-lisp
   (use-package multi-vterm
     :hook (vterm-mode . evil-insert-state)
+    :hook (vterm-mode . my/remove-insert-state-exit-save-hook)
     :bind ( ("C-c t t" . multi-vterm)
             :map vterm-mode-map
             ("C-c t r" . multi-vterm-rename-buffer)
@@ -245,13 +246,17 @@ Use vterm as multiplexer
                                          '((shell     . t)
                                            (java      . t))))
     :config
+    (defun my/save-interactively ()
+      "Prevent to call a file to choose.
+  And not run save in special edit mode."
+      (call-interactively #'evil-write))
     (defun my/remove-insert-state-exit-save-hook()
       "Remove save buffer wen leaving insert state."
-      (remove-hook 'evil-insert-state-exit-hook 'save-buffer t ))
+      (remove-hook 'evil-insert-state-exit-hook 'my/save-interactively t ))
 
     (defun my/add-insert-state-exit-save-hook()
       "Add save buffer wen leaving insert state."
-      (add-hook 'evil-insert-state-exit-hook 'save-buffer nil t ))
+      (add-hook 'evil-insert-state-exit-hook 'my/save-interactively t ))
 
     (require 'org-archive)
     (setq org-archive-default-command 'org-archive-to-archive-sibling)
@@ -740,6 +745,7 @@ Enter insert mode when capturing things
 #+begin_src emacs-lisp
     (use-package magit
       :hook (git-commit-mode . evil-insert-state)
+      :hook (git-commit-mode . my/remove-insert-state-exit-save-hook)
       :custom
       (magit-diff-refine-hunk 'all)
       (magit-define-global-key-bindings 'recommended)

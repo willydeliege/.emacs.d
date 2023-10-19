@@ -795,6 +795,12 @@ Used to play with forges like GitHub or gitlab
     (diff-hl-flydiff-mode 1))
 #+end_src
 
+** Consult =vc=
+#+begin_src emacs-lisp
+  (use-package consult-vc-modified-files
+    :straight (consult-vc-modified-files :type git :host github :repo "chmouel/consult-vc-modified-files")
+    :bind ("C-x v /" . consult-vc-modified-files))
+#+end_src
 * Personal information
 #+begin_src emacs-lisp
   (setq user-full-name "Frédéric Willem"

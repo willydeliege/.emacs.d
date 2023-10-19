@@ -235,6 +235,8 @@ Use vterm as multiplexer
            ("C-c l" . org-store-link)
            (:map org-mode-map)
            ("C-c $" . org-archive-subtree-default))
+    :custom
+    (org-return-follows-link t)
     :init
     (setq org-startup-indented t)
     (setq org-attach-store-link-p t)
@@ -1189,10 +1191,16 @@ Supplemental evil-mode keybindings to emacs org-mode
   (use-package evil-org
     :hook (( org-agenda-mode . evil-org-mode)
            (org-mode . evil-org-mode))
-    :config
-    (evil-org-set-key-theme '(textobjects insert navigation additional shift todo))
+    :custom
+    (evil-org-key-theme '(textobjects insert navigation additional shift todo))
+    :init
+    (evil-org-set-key-theme)
     (require 'evil-org-agenda)
-    (evil-org-agenda-set-keys))
+    (evil-org-agenda-set-keys)
+    :config 
+      (evil-define-key '(normal) 'evil-org-mode
+        (kbd "RET") 'evil-org-return))
+
 #+end_src
 
 ** God mode

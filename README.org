@@ -1278,6 +1278,7 @@ marginalia adds annotations in the mini buffer
 
 ** Consult
 #+begin_src emacs-lisp
+
   ;; Consult users will also want the embark-consult package.
   (use-package embark-consult
     :hook

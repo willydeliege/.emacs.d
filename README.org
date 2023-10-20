@@ -246,13 +246,6 @@ Use vterm as multiplexer
                                          '((shell     . t)
                                            (java      . t))))
     :config
-    (defun my/remove-insert-state-exit-save-hook()
-      "Remove save buffer wen leaving insert state."
-      (remove-hook 'evil-insert-state-exit-hook 'save-buffer t ))
-
-    (defun my/add-insert-state-exit-save-hook()
-      "Add save buffer wen leaving insert state."
-      (add-hook 'evil-insert-state-exit-hook 'save-buffer 0 t ))
 
     (require 'org-archive)
     (setq org-archive-default-command 'org-archive-to-archive-sibling)
@@ -993,12 +986,20 @@ Usage of evil mode as I used to work with vim binding for years
     :bind ([remap undo] . vundo))
 
   (use-package evil
+    :hook (lisp-interaction-mode . my/remove-insert-state-exit-save-hook )
     :init
     (setq evil-want-integration t) ;; This is optional since it's already set to t by default.
     ;; (setq evil-want-minibuffer t)
     (setq evil-want-keybinding nil)
     (setq evil-undo-system 'undo-fu)
     :config
+    (defun my/remove-insert-state-exit-save-hook()
+      "Remove save buffer wen leaving insert state."
+      (remove-hook 'evil-insert-state-exit-hook 'evil-write t ))
+
+    (defun my/add-insert-state-exit-save-hook()
+      "Add save buffer wen leaving insert state."
+      (add-hook 'evil-insert-state-exit-hook 'evil-write 0 t ))
     (evil-mode 1))
 
   (use-package evil-collection

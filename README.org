@@ -2047,7 +2047,7 @@ marginalia adds annotations in the mini buffer
   (use-package calfw)
 
   (use-package calfw-org
-    :bind ("C-c c" . cfw:open-org-calendar))
+    :bind ("C-c C" . cfw:open-org-calendar))
 #+end_src
 
 ** Holidays calendar

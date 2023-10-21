@@ -637,11 +637,41 @@ Enter insert mode when capturing things
   (defun my/close-project ()
     "close a project by removing Project tag and adding ARCHIVE tag"
     (interactive)
+    (org-roam-tag-add '("ProjectArchive"))
     (org-roam-tag-add '("ARCHIVE"))
     (org-roam-tag-remove '("Project"))
     (save-buffer))
+  (defun my/org-roam-archive-project ()
+    (interactive)
+    ;; (org-store-link nil)
+    (defvar id nil)
+    (defvar id-string nil)
+    (org-copy-subtree)
+    (let (( id (org-entry-get 1 "ID"))
+          ( id-string "id:")
+          (org-roam-dailies-capture-templates
+           '(("t" "ARCHIVE" plain "**** DONE %(org-link-make-string
+                            (concat id-string id)
+                            (org-roam-node-title (org-roam-node-from-id id)))\n%(org-paste-subtree 5)\n"
+              :target (file+datetree "%<%Y-W%W>.org" 'week)
+              :immediate-finish t))))
+      (my/close-project)
+      (save-window-excursion
+        (org-roam-dailies--capture (current-time) nil))))
+  (defun make-archive()
+    (message "test archive")
+    (when (member "ARCHIVE" (org-get-tags))
+      (my/org-roam-archive-project)))
+  (add-hook 'org-after-tags-change-hook
+            'make-archive)
 #+end_src
 
+** Org roam modified time
+#+begin_src emacs-lisp
+  (use-package org-roam-timestamps
+    :after org-roam
+    :config (org-roam-timestamps-mode))
+#+end_src
 ** Org citar
 #+begin_src emacs-lisp
   (use-package citar

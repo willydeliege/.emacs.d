@@ -300,8 +300,11 @@ Use vterm as multiplexer
              "HOLD(H@)"  ; This task is paused/on hold because of me
              "IDEA(i)"  ; An unconfirmed and unapproved task or notion
              "|"
-             "DONE(d!)"  ; Task successfully completed
-             "KILL(k)") ; Task was cancelled, aborted or is no longer applicable
+             "DONE(d!)")  ; Task successfully completed
+            (sequence
+             "PROJ(p)"  ; A project, which usually contains other tasks
+             "|"
+             "KILL(k!)")
             (sequence
              "REPLY(r)"
              "|"

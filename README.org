@@ -1949,7 +1949,7 @@ marginalia adds annotations in the mini buffer
       (mu4e-mark-execute-all t))
 
     (defun my/capture-mail-read-later (msg)
-      (interative)
+      (interactive)
       (call-interactively 'org-store-link)
       (org-capture nil "mr")
       (mu4e-view-mark-for-refile)

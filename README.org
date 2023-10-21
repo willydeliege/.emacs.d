@@ -226,9 +226,18 @@ Use vterm as multiplexer
 * Org mode
 ** Org basics
 #+begin_src emacs-lisp
+  (use-package time-stamp
+    :init
+    (time-stamp-toggle-active 1)
+    (setq time-stamp-start "last_modified:[ 	]+\\\\?[\"<]+")
+    )
+#+end_src
+#+begin_src emacs-lisp
   (use-package org
     :hook ((org-mode prog-mode) . my/add-insert-state-exit-save-hook)
     :hook (org-src-mode . my/remove-insert-state-exit-save-hook)
+    :hook  (org-mode . (lambda ()
+                         (add-hook  'before-save-hook  'time-stamp nil t)))
     :hook ((org-mode . (lambda ()
                          (setq prettify-symbols-alist '((":PROPERTIES:" . "⚙️")
                                                         (":LOGBOOK:" . "📔")
@@ -491,9 +500,14 @@ Enter insert mode when capturing things
      ("C-c n t" . my/org-roam-capture-task)
      ("C-c n b" . my/org-roam-capture-inbox)
      ("C-c x" . my/org-roam-capture-inbox)
+     ("C-c c" . org-roam-capture)
      ("C-c n x" . my/close-project)
      ("C-c i" . my/open-inbox)
-     ("C-c j" . org-roam-dailies-capture-today)
+     ("C-c n n j" . org-roam-dailies-capture-today)
+     ("C-c n n t" . org-roam-tag-add)
+     ("C-c n n T" . org-roam-tag-remove)
+     ("C-c n n a" . org-roam-alias-add)
+     ("C-c n n A" . org-roam-alias-remove)
      :map org-mode-map
      ("C-M-i" . completion-at-point)
      :map org-roam-dailies-map

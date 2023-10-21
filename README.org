@@ -245,6 +245,8 @@ Use vterm as multiplexer
 #+end_src
 #+begin_src emacs-lisp
   (use-package org
+    ;; TODO: move evil before org 
+    :after evil
     :hook ((org-mode prog-mode) . my/add-insert-state-exit-save-hook)
     :hook (org-src-mode . my/remove-insert-state-exit-save-hook)
     :hook  (org-mode . (lambda ()

@@ -597,9 +597,20 @@ Enter insert mode when capturing things
              (org-roam-node-list))))
 
   (defun my/org-roam-refresh-agenda-list ()
+    "Set the agenda list.
+  These are the project files, the calendar file and the
+  weekly file"
     (interactive)
-    (setq org-agenda-files (my/org-roam-list-notes-by-tag "Project"))
-    (add-to-list 'org-agenda-files "~/org/calendar.org"))
+    (let ((org-roam-dailies-capture-templates
+           '(("d" "default" entry "" :target
+              (file+datetree "%<%Y-W%W>.org" 'week))))
+          today-file)
+      (save-window-excursion
+        (org-roam-dailies--capture (current-time) t)
+        (setq today-file (buffer-file-name))
+        (setq org-agenda-files (my/org-roam-list-notes-by-tag "Project"))
+        (add-to-list 'org-agenda-files "~/org/calendar.org")
+        (add-to-list 'org-agenda-files today-file))))
 
   ;; Build the agenda list the first time for the session
   (my/org-roam-refresh-agenda-list)

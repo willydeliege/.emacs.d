@@ -308,6 +308,7 @@ Update flag when saving files with last__{}modified
              "WAIT(W@)"  ; Something external is holding up this task
              "HOLD(H@)"  ; This task is paused/on hold because of me
              "IDEA(i)"  ; An unconfirmed and unapproved task or notion
+             "CANCELLED(c)"
              "|"
              "DONE(d!)")  ; Task successfully completed
             (sequence

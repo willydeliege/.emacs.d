@@ -447,7 +447,7 @@ Enter insert mode when capturing things
                     (org-agenda-start-day "-7d")
                     (org-agenda-skip-archived-trees nil)
                     (org-agenda-start-with-log-mode 'only)
-                    (org-agenda-log-mode-items '(state clock)))))
+                    (org-agenda-log-mode-items '(state closed clock)))))
     (add-hook 'org-agenda-mode-hook 'org-super-agenda-mode))
 #+end_src
 

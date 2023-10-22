@@ -508,7 +508,8 @@ Enter insert mode when capturing things
   ;; needed for emacs 29
   (use-package emacsql-sqlite-builtin :demand t )
   (use-package org-roam
-    :after (org emacsql-sqlite-builtin)
+    :after org
+    :after emacsql-sqlite-builtin
     :demand t  ;; Ensure org-roam is loaded by default
     :init
     (setq org-roam-v2-ack t)

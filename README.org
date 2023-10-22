@@ -580,11 +580,11 @@ Enter insert mode when capturing things
                                       (file "%<%Y%m%d%H%M%S>-${slug}.org")
                                       :unnarrowed t
                                       :immediate-finish t)
-                                      ("i" "inbox" plain "** %?"
-                                     :target (file+olp "Inbox.org" ("Inbox")))
+                                     ("i" "inbox" plain "** %?"
+                                      :target (file+olp "Inbox.org" ("Inbox")))
                                      ("t" "task" plain "** TODO %?"
-                                     :target (file+olp "%<%Y%m%d%H%M%S>-${slug}.org"
-                                                       ("Tasks")))
+                                      :target (file+olp "%<%Y%m%d%H%M%S>-${slug}.org"
+                                                        ("Tasks")))
                                      ("d" "default" plain "%?" :target
                                       (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n")
                                       :unnarrowed t)
@@ -612,8 +612,8 @@ Enter insert mode when capturing things
 
   (defun my/org-roam-refresh-agenda-list ()
     "Set the agenda list.
-  These are the project files, the calendar file and the
-  weekly file"
+    These are the project files, the calendar file and the
+    weekly file"
     (interactive)
     (let ((org-roam-dailies-capture-templates
            '(("d" "default" entry "" :target
@@ -631,7 +631,7 @@ Enter insert mode when capturing things
 
   (defun my/org-roam-project-finalize-hook ()
     "Adds the captured project file to `org-agenda-files' if the
-                                            capture was not aborted."
+                                              capture was not aborted."
     ;; Remove the hook since it was added temporarily
     (remove-hook 'org-capture-after-finalize-hook #'my/org-roam-project-finalize-hook)
 

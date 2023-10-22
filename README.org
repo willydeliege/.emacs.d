@@ -50,7 +50,11 @@ We will use use-package
     (message "Restore pinned versions...")
     (straight-thaw-versions)
     (message "Done"))
-    (keymap-global-set "C-c M-p" 'straight-update-packages)
+    (keymap-global-set "C-c M-p p" 'straight-update-packages)
+    (keymap-global-set "C-c M-p u" 'straight-use-package)
+    (keymap-global-set "C-c M-p v" 'straight-visit-package)
+    (keymap-global-set "C-c M-p V" 'straight-visit-package-website)
+    (keymap-global-set "C-c M-p t" 'straight-thaw-versions)
 
 #+end_src
 and use straight by default

@@ -236,13 +236,16 @@ Use vterm as multiplexer
 
 * Org mode
 ** Org basics
+*** Time-stamp
+Update flag when saving files with last__{}modified 
 #+begin_src emacs-lisp
   (use-package time-stamp
     :init
     (time-stamp-toggle-active 1)
-    (setq time-stamp-start "last_modified:[ 	]+\\\\?[\"<]+")
-    )
+    (setq time-stamp-start "last_modified:[ 	]+\\\\?[\"<]+"))
 #+end_src
+
+*** org-mode
 #+begin_src emacs-lisp
   (use-package org
     ;; TODO: move evil before org 

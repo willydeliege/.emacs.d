@@ -234,6 +234,45 @@ Use vterm as multiplexer
   (recentf-mode 1)
 #+end_src
 
+* Evil mode
+Usage of evil mode as I used to work with vim binding for years
+#+begin_src emacs-lisp
+  (use-package undo-fu)
+  (use-package undo-fu-session
+    :config
+    (setq undo-fu-session-incompatible-files '("/COMMIT_EDITMSG\\'" "/git-rebase-todo\\'")))
+  (undo-fu-session-global-mode)
+
+  (use-package vundo
+    :bind ([remap undo] . vundo))
+
+  (use-package evil
+    :hook (after-init . evil-mode)
+    :hook (lisp-interaction-mode . my/remove-insert-state-exit-save-hook ) ;; for scratch buffer
+    :init
+    (setq evil-want-integration t) ;; This is optional since it's already set to t by default.
+    ;; (setq evil-want-minibuffer t)
+    (setq evil-want-keybinding nil)
+    (setq evil-undo-system 'undo-fu)
+    :config
+    (defun my/remove-insert-state-exit-save-hook()
+      "Remove save buffer wen leaving insert state."
+      (remove-hook 'evil-insert-state-exit-hook 'save-buffer t ))
+
+    (defun my/add-insert-state-exit-save-hook()
+      "Add save buffer wen leaving insert state."
+      (add-hook 'evil-insert-state-exit-hook 'save-buffer 0 t ))
+    )
+
+  (use-package evil-collection
+    :after evil
+    :custom
+    (evil-collection-calendar-want-org-bindings t)
+    :config
+    (setq forge-add-default-bindings nil)
+    (evil-collection-init))
+#+end_src
+
 * Org mode
 ** Org basics
 *** Time-stamp
@@ -248,8 +287,7 @@ Update flag when saving files with last__{}modified
 *** org-mode
 #+begin_src emacs-lisp
   (use-package org
-    ;; TODO: move evil before org 
-    :after evil
+    :after  evil
     :hook ((org-mode prog-mode) . my/add-insert-state-exit-save-hook)
     :hook (org-src-mode . my/remove-insert-state-exit-save-hook)
     :hook  (org-mode . (lambda ()

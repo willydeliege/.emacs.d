@@ -663,15 +663,16 @@ Enter insert mode when capturing things
           ( id-string "id:")
           (org-roam-dailies-capture-templates
            '(("t" "ARCHIVE" plain "**** DONE %(org-link-make-string
-                            (concat id-string id)
-                            (org-roam-node-title (org-roam-node-from-id id)))\n%(org-paste-subtree 5)\n"
+                              (concat id-string id)
+                              (org-roam-node-title (org-roam-node-from-id id)))\n%(org-paste-subtree 5)\n"
               :target (file+datetree "%<%Y-W%W>.org" 'week)
               :immediate-finish t))))
-      (my/close-project)
+      (org-roam-tag-add '("ARCHIVE"))
+      (org-roam-tag-add '("ProjectArchive"))
+      (org-roam-tag-remove '("Project"))
       (save-window-excursion
         (org-roam-dailies--capture (current-time) nil))))
   (defun make-archive()
-    (message "test archive")
     (when (member "ARCHIVE" (org-get-tags))
       (my/org-roam-archive-project)))
   (add-hook 'org-after-tags-change-hook

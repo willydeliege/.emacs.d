@@ -1377,7 +1377,6 @@ marginalia adds annotations in the mini buffer
     ;; Replace bindings. Lazily loaded due by `use-package'.
     :bind (;; C-c bindings in `mode-specific-map'
            ("C-c M-x" . consult-mode-command)
-           ("C-c h" . consult-history)
            ;; ("C-c m" . consult-man)
            ([remap Info-search] . consult-info)
            ;; C-x bindings in `ctl-x-map'

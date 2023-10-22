@@ -291,7 +291,11 @@ Use vterm as multiplexer
     (setq org-refile-targets '((org-agenda-files :maxlevel . 1)))
     (setq org-outline-path-complete-in-steps nil)         ; Refile in a single go
     (setq org-startup-folded 'show2levels)
-
+    (setq org-tag-alist '((:startgroup . nil)
+                          ("Work" . ?w) ("Family" . ?f)
+                          ("Personal" . ?p)
+                          (:endgroup . nil)
+                          ("ARCHIVE" . ?a) ("ProjectArchive" . ?x)))
     (setq org-todo-keywords
           '((sequence
              "TODO(t)"  ; A task that needs doing & is ready to do

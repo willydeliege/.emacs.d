@@ -648,26 +648,34 @@ Enter insert mode when capturing things
 
   (defun my/org-roam-refresh-agenda-list ()
     "Set the agenda list.
-    These are the project files, the calendar file and the
-    weekly file"
-    (interactive)
+          These are the project files, the calendar file and the
+          weekly file"
+    (setq org-agenda-files (my/org-roam-list-notes-by-tag "Project"))
+    (add-to-list 'org-agenda-files "~/org/calendar.org")
+    (my/org-roam-add-to-agenda (current-time))
+    (my/org-roam-add-to-agenda (time-subtract (current-time) (days-to-time 7))))
+
+  (defun my/org-roam-add-to-agenda (my-time)
+    "Add to agenda list the weekly file.
+  MY-TIME is a the in the wanted week"
     (let ((org-roam-dailies-capture-templates
            '(("d" "default" entry "" :target
-              (file+datetree "%<%Y-W%W>.org" 'week))))
+              (file+datetree "%<%Y-W%W>.org" 'week)
+              :immediate-finish t
+              :kill-buffer t)))
           today-file)
       (save-window-excursion
-        (org-roam-dailies--capture (current-time) t)
+        (org-roam-dailies--capture my-time t)
+        (save-buffer)
         (setq today-file (buffer-file-name))
-        (setq org-agenda-files (my/org-roam-list-notes-by-tag "Project"))
-        (add-to-list 'org-agenda-files "~/org/calendar.org")
         (add-to-list 'org-agenda-files today-file))))
 
   ;; Build the agenda list the first time for the session
   (my/org-roam-refresh-agenda-list)
 
   (defun my/org-roam-project-finalize-hook ()
-    "Adds the captured project file to `org-agenda-files' if the
-                                              capture was not aborted."
+    "Adds the captured project file to `org-agenda-files'.
+    if the capture was not aborted."
     ;; Remove the hook since it was added temporarily
     (remove-hook 'org-capture-after-finalize-hook #'my/org-roam-project-finalize-hook)
 

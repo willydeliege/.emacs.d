@@ -2241,6 +2241,14 @@ Setup ANSI colors for the compilation buffer
                   (evil-textobj-tree-sitter-goto-textobj "function.outer" t t))))
 #+end_src
 
+* Utilities
+**  Search the web
+#+begin_src emacs-lisp
+      (use-package keyword-search
+        :bind ("C-c k" . keyword-search)
+    :init
+  (add-to-list 'keyword-search-alist '(wikipedia-fr . "http://fr.wikipedia.org/wiki/%s")))
+#+end_src
 * scratch
 #+begin_src emacs-lisp
   (use-package org-contrib

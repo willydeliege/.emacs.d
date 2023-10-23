@@ -709,10 +709,11 @@ Enter insert mode when capturing things
           ( id-string "id:")
           (org-roam-dailies-capture-templates
            '(("t" "ARCHIVE" plain "**** DONE %(org-link-make-string
-                              (concat id-string id)
-                              (org-roam-node-title (org-roam-node-from-id id)))\n%(org-paste-subtree 5)\n"
+                                    (concat id-string id)
+                                    (org-roam-node-title (org-roam-node-from-id id)))\n%(org-paste-subtree 5)\n"
               :target (file+datetree "%<%Y-W%W>.org" 'week)
-              :immediate-finish t))))
+              :immediate-finish t
+              :kill-buffer t))))
       (org-roam-tag-add '("ARCHIVE"))
       (org-roam-tag-add '("ProjectArchive"))
       (org-roam-tag-remove '("Project"))

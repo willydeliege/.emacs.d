@@ -288,11 +288,15 @@ Update flag when saving files with last__{}modified
                          (add-hook  'before-save-hook  'time-stamp nil t)))
     :hook ((org-mode . (lambda ()
                          (setq prettify-symbols-alist '((":PROPERTIES:" . "⚙️")
-                                                        (":LOGBOOK:" . "📔")
+                                                        (":LOGBOOK:" . "☰")
+                                                        ("DEADLINE:" . "📆")
+                                                        ("CLOCK:" . "⏳")
+                                                        ("SCHEDULED:"  . "🪟") ; It's a window - not a plus sign in a box
                                                         (":END:" . "🔚" ))))))
     :bind (("C-c a" . org-agenda)
            ("C-c l" . org-store-link)
            (:map org-mode-map)
+           ("M-S-<return>" . org-insert-subheading)
            ("C-c $" . org-archive-subtree-default))
     :custom
     (org-return-follows-link t)

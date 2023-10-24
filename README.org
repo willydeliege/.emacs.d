@@ -1472,9 +1472,6 @@ marginalia adds annotations in the mini buffer
     (consult-org-roam-grep-func #'consult-ripgrep)
     ;; Configure a custom narrow key for `consult-buffer'
     (consult-org-roam-buffer-narrow-key ?r)
-    ;; Display org-roam buffers right after non-org-roam buffers
-    ;; in consult-buffer (and not down at the bottom)
-    (consult-org-roam-buffer-after-buffers t)
     :config
     ;; Eventually suppress previewing for certain functions
     (consult-customize

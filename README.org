@@ -639,6 +639,7 @@ Enter insert mode when capturing things
     "Set the agenda list.
           These are the project files, the calendar file and the
           weekly file"
+    (interactive )
     (setq org-agenda-files (my/org-roam-list-notes-by-tag "Project"))
     (add-to-list 'org-agenda-files "~/org/calendar.org")
     (my/org-roam-add-to-agenda (current-time))

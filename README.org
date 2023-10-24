@@ -228,18 +228,6 @@ Use vterm as multiplexer
     :hook (org-mode . org-auto-tangle-mode))
 #+end_src
 
-* Recentf
-#+begin_src emacs-lisp
-  (require 'recentf)
-  (require 'cl-lib)
-  (defun org-is-agenda-file (filename)
-    (member (file-truename filename) org-agenda-files))
-  (cl-pushnew 'org-is-agenda-file recentf-exclude)
-  (add-to-list 'recentf-exclude "~/org/calendar.org")
-  (add-to-list 'recentf-exclude "~/.emacs.d/.cache/treemacs-persist")
-  (recentf-mode 1)
-#+end_src
-
 * Evil mode
 Usage of evil mode as I used to work with vim binding for years
 #+begin_src emacs-lisp
@@ -2248,11 +2236,24 @@ Setup ANSI colors for the compilation buffer
     :init
   (add-to-list 'keyword-search-alist '(wikipedia-fr . "http://fr.wikipedia.org/wiki/%s")))
 #+end_src
+* Recentf
+#+begin_src emacs-lisp
+  (require 'recentf)
+  (require 'cl-lib)
+  (defun org-is-agenda-file (filename)
+    (member (file-truename filename) org-agenda-files))
+  (cl-pushnew 'org-is-agenda-file recentf-exclude)
+  (add-to-list 'recentf-exclude "~/org/calendar.org")
+  (add-to-list 'recentf-exclude "~/.emacs.d/.cache/treemacs-persist")
+  (recentf-mode 1)
+#+end_src
+
 * scratch
 #+begin_src emacs-lisp
   (use-package org-contrib
     :config
     (require 'org-checklist))
+  (org-mode)
 #+end_src
 
 * Footer

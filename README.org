@@ -93,14 +93,13 @@ This will prevent to use package.el
         auto-save-file-name-transforms `((".*" ,(expand-file-name "tmp/auto-saves/" user-emacs-directory) t)))
 
   (setq create-lockfiles nil)
-  (add-to-list 'load-path (expand-file-name "~/.emacs.d/elisp/"))
-  (setq-default word-wrap t)
+  (add-to-list 'load-path (expand-file-name "elisp/" user-emacs-directory))
   (setq use-short-answers t)
   (provide 'early-init)
   (scroll-bar-mode 0)
   (setq-default fill-column 80)
-  (word-wrap)
-  (visual-line-mode)
+  (setq-default word-wrap t)
+  (global-visual-line-mode)
   ;;; early-init.el ends here
 #+end_src
 

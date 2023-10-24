@@ -307,8 +307,6 @@ Update flag when saving files with last__{}modified
                                  (append org-babel-load-languages
                                          '((shell     . t)
                                            (java      . t))))
-    :config
-
     (require 'org-archive)
     (setq org-archive-default-command 'org-archive-to-archive-sibling)
     (setq org-confirm-babel-evaluate nil)

@@ -511,7 +511,7 @@ Enter insert mode when capturing things
     (("<f9>" . my/distraction-free)))
 #+end_src
 
-*** Org modern
+** Org modern
 #+begin_src emacs-lisp
   (use-package org-fancy-priorities
     :after org

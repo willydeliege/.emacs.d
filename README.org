@@ -225,12 +225,12 @@ Use vterm as multiplexer
 * Org mode
 ** Org basics
 *** Time-stamp
-Update flag when saving files with last__{}modified 
+Update flag when saving files with last__{}modified
 #+begin_src emacs-lisp
   (use-package time-stamp
     :init
     (time-stamp-toggle-active 1)
-    (setq time-stamp-start "last_modified:[ 	]+\\\\?[\"<]+"))
+    (setq time-stamp-start "last_modified:[     ]+\\\\?[\"<]+"))
 #+end_src
 
 *** org-mode
@@ -518,7 +518,7 @@ Enter insert mode when capturing things
     :bind-keymap
     ("C-c n d" . org-roam-dailies-map)
     :init
-    (setq org-roam-database-connector 'sqlite-builtin) 
+    (setq org-roam-database-connector 'sqlite-builtin)
     :config
     (require 'org-roam-logseq)
     (add-to-list 'display-buffer-alist '("\\*org-roam.*"
@@ -665,7 +665,7 @@ Enter insert mode when capturing things
     (defun make-archive()
       (when (member "ARCHIVE" (org-get-tags))
         (my/org-roam-archive-project)))
- 
+
     (my/org-roam-refresh-agenda-list)
     (org-roam-db-autosync-mode)
 
@@ -830,8 +830,7 @@ Usage of evil mode as I used to work with vim binding for years
       :hook (git-commit-mode . my/remove-insert-state-exit-save-hook)
       :custom
       (magit-diff-refine-hunk 'all)
-      (magit-define-global-key-bindings 'recommended)
-  )
+      (magit-define-global-key-bindings 'recommended))
 #+end_src
 
 ** Orgit
@@ -1255,7 +1254,7 @@ Supplemental evil-mode keybindings to emacs org-mode
   (use-package evil-org
     :hook (( org-agenda-mode . evil-org-mode)
            (org-mode . evil-org-mode))
-    :config 
+    :config
     (evil-org-set-key-theme '(textobjects insert navigation additional shift todo))
     (require 'evil-org-agenda)
     (evil-org-agenda-set-keys)

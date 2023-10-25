@@ -222,51 +222,6 @@ Use vterm as multiplexer
     (eshell-vterm-mode))
 #+end_src
 
-** Org auto tangle
-#+begin_src emacs-lisp
-  (use-package org-auto-tangle
-    :hook (org-mode . org-auto-tangle-mode))
-#+end_src
-
-* Evil mode
-Usage of evil mode as I used to work with vim binding for years
-#+begin_src emacs-lisp
-  (use-package undo-fu)
-  (use-package undo-fu-session
-    :config
-    (setq undo-fu-session-incompatible-files '("/COMMIT_EDITMSG\\'" "/git-rebase-todo\\'")))
-  (undo-fu-session-global-mode)
-
-  (use-package vundo
-    :bind ([remap undo] . vundo))
-
-  (use-package evil
-    :hook (after-init . evil-mode)
-    :hook (lisp-interaction-mode . my/remove-insert-state-exit-save-hook ) ;; for scratch buffer
-    :init
-    (setq evil-want-integration t) ;; This is optional since it's already set to t by default.
-    ;; (setq evil-want-minibuffer t)
-    (setq evil-want-keybinding nil)
-    (setq evil-undo-system 'undo-fu)
-    :config
-    (defun my/remove-insert-state-exit-save-hook()
-      "Remove save buffer wen leaving insert state."
-      (remove-hook 'evil-insert-state-exit-hook 'save-buffer t ))
-
-    (defun my/add-insert-state-exit-save-hook()
-      "Add save buffer wen leaving insert state."
-      (add-hook 'evil-insert-state-exit-hook 'save-buffer 0 t ))
-    )
-
-  (use-package evil-collection
-    :after evil
-    :custom
-    (evil-collection-calendar-want-org-bindings t)
-    :config
-    (setq forge-add-default-bindings nil)
-    (evil-collection-init))
-#+end_src
-
 * Org mode
 ** Org basics
 *** Time-stamp
@@ -281,9 +236,6 @@ Update flag when saving files with last__{}modified
 *** org-mode
 #+begin_src emacs-lisp
   (use-package org
-    :after  evil
-    :hook ((org-mode prog-mode) . my/add-insert-state-exit-save-hook)
-    :hook (org-src-mode . my/remove-insert-state-exit-save-hook)
     :hook  (org-mode . (lambda ()
                          (add-hook  'before-save-hook  'time-stamp nil t)))
     :hook ((org-mode . (lambda ()
@@ -300,14 +252,27 @@ Update flag when saving files with last__{}modified
            ("C-c $" . org-archive-subtree-default))
     :custom
     (org-return-follows-link t)
+    (org-agenda-skip-scheduled-if-deadline-is-shown t)
+    (org-agenda-skip-deadline-prewarning-if-scheduled t)
+    (org-agenda-skip-timestamp-if-deadline-is-shown t)
+    (org-deadline-warning-days 5)
     :init
+    ;; Agenda styling
+    (require 'org-agenda)
+    (setq org-stuck-projects '("+Project/PROJ" ("NEXT" "WAIT" "MEETING" "HOLD") nil ""))
+    (setq     org-agenda-block-separator ?─
+              org-agenda-time-grid
+              '((daily today require-timed)
+                (800 1000 1200 1400 1600 1800 2000)
+                " ┄┄┄┄┄ " "┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄")
+              org-agenda-current-time-string
+              "⭠ now ─────────────────────────────────────────────────")
     (setq org-startup-indented t)
     (setq org-attach-store-link-p t)
     (org-babel-do-load-languages 'org-babel-load-languages
                                  (append org-babel-load-languages
                                          '((shell     . t)
                                            (java      . t))))
-    (require 'org-archive)
     (setq org-archive-default-command 'org-archive-to-archive-sibling)
     (setq org-confirm-babel-evaluate nil)
     (setq
@@ -356,6 +321,12 @@ Update flag when saving files with last__{}modified
 
 #+end_src
 
+** Org auto tangle
+#+begin_src emacs-lisp
+  (use-package org-auto-tangle
+    :hook (org-mode . org-auto-tangle-mode))
+#+end_src
+
 ** Org capture
 Enter insert mode when capturing things
 #+begin_src emacs-lisp
@@ -367,23 +338,12 @@ Enter insert mode when capturing things
 #+end_src
 
 ** Org-agenda
+*** org-super-agenda
 #+begin_src emacs-lisp
   (use-package org-super-agenda
-    :custom
-    (org-agenda-skip-scheduled-if-deadline-is-shown t)
-    (org-agenda-skip-deadline-prewarning-if-scheduled t)
-    (org-agenda-skip-timestamp-if-deadline-is-shown t)
-    (org-deadline-warning-days 5)
+    :after org
     :config
-    ;; Agenda styling
-    (setq     org-agenda-block-separator ?─
-              org-agenda-time-grid
-              '((daily today require-timed)
-                (800 1000 1200 1400 1600 1800 2000)
-                " ┄┄┄┄┄ " "┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄")
-              org-agenda-current-time-string
-              "⭠ now ─────────────────────────────────────────────────")
-    (setq org-stuck-projects '("+Project/PROJ" ("NEXT" "WAIT" "MEETING" "HOLD") nil ""))
+    (org-super-agenda-mode)
     (setq org-agenda-custom-commands
           '(("z" "My view"
              ((agenda "" ((org-agenda-span 'day)
@@ -431,8 +391,7 @@ Enter insert mode when capturing things
                     (org-agenda-start-day "-7d")
                     (org-agenda-skip-archived-trees nil)
                     (org-agenda-start-with-log-mode 'only)
-                    (org-agenda-log-mode-items '(state closed clock)))))
-    (add-hook 'org-agenda-mode-hook 'org-super-agenda-mode))
+                    (org-agenda-log-mode-items '(state closed clock))))))
 #+end_src
 
 ** Org time block
@@ -534,7 +493,7 @@ Enter insert mode when capturing things
 ** Org roam
 #+begin_src emacs-lisp
   (use-package org-roam
-  :demand t
+    :demand t
     :custom
     (org-roam-directory org-directory)
     (org-roam-completion-everywhere t)
@@ -545,6 +504,7 @@ Enter insert mode when capturing things
      ("C-c n p" . my/org-roam-find-project)
      ("C-c c" . org-roam-capture)
      ("C-c i" . my/open-inbox)
+     ("C-c A" . my/org-roam-refresh-agenda-list)
      ("C-c n j" . org-roam-dailies-capture-today)
      ("C-c n n t" . org-roam-tag-add)
      ("C-c n n T" . org-roam-tag-remove)
@@ -590,125 +550,127 @@ Enter insert mode when capturing things
              :target (file+head "${slug}.org"
                                 "#+title: ${title}\n ,#+created: %u\n")
              :unnarrowed t)))
-    (org-roam-db-autosync-mode))
 
-  (setq org-roam-capture-templates '(("p" "project" plain
-                                      (file "~/org/.templates/project-template.org")
-                                      :target
-                                      (file "%<%Y%m%d%H%M%S>-${slug}.org")
-                                      :unnarrowed t)
-                                     ("P" "project - immediate finish" plain
-                                      (file "~/org/.templates/project-template.org")
-                                      :target
-                                      (file "%<%Y%m%d%H%M%S>-${slug}.org")
-                                      :unnarrowed t
-                                      :immediate-finish t)
-                                     ("i" "inbox" plain "** %?"
-                                      :target (file+olp "Inbox.org" ("Inbox")))
-                                     ("t" "task" plain "** TODO %?"
-                                      :target (file+olp "%<%Y%m%d%H%M%S>-${slug}.org"
-                                                        ("Tasks")))
-                                     ("d" "default" plain "%?" :target
-                                      (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n")
-                                      :unnarrowed t)
-                                     ("D" "default - immediate finish" plain "%?" :target
-                                      (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n")
-                                      :unnarrowed t
-                                      :immediate-finish t)))
-  (defun my/open-inbox ()
-    "Open Inbox.org file."
-    (interactive)
-    (find-file "~/org/Inbox.org"))
-  (defun org-roam-node-insert-immediate (arg &rest args)
-    (interactive "P")
-    (let ((args (push arg args)))
-      (apply #'org-roam-node-insert args)))
-  (defun my/org-roam-filter-by-tag (tag-name)
-    (lambda (node)
-      (member tag-name (org-roam-node-tags node))))
+    (setq org-roam-capture-templates '(("p" "project" plain
+                                        (file "~/org/.templates/project-template.org")
+                                        :target
+                                        (file "%<%Y%m%d%H%M%S>-${slug}.org")
+                                        :unnarrowed t)
+                                       ("P" "project - immediate finish" plain
+                                        (file "~/org/.templates/project-template.org")
+                                        :target
+                                        (file "%<%Y%m%d%H%M%S>-${slug}.org")
+                                        :unnarrowed t
+                                        :immediate-finish t)
+                                       ("i" "inbox" plain "** %?"
+                                        :target (file+olp "Inbox.org" ("Inbox")))
+                                       ("t" "task" plain "** TODO %?"
+                                        :target (file+olp "%<%Y%m%d%H%M%S>-${slug}.org"
+                                                          ("Tasks")))
+                                       ("d" "default" plain "%?" :target
+                                        (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n")
+                                        :unnarrowed t)
+                                       ("D" "default - immediate finish" plain "%?" :target
+                                        (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n")
+                                        :unnarrowed t
+                                        :immediate-finish t)))
+    (defun my/open-inbox ()
+      "Open Inbox.org file."
+      (interactive)
+      (find-file "~/org/Inbox.org"))
+    (defun org-roam-node-insert-immediate (arg &rest args)
+      (interactive "P")
+      (let ((args (push arg args)))
+        (apply #'org-roam-node-insert args)))
+    (defun my/org-roam-filter-by-tag (tag-name)
+      (lambda (node)
+        (member tag-name (org-roam-node-tags node))))
 
-  (defun my/org-roam-list-notes-by-tag (tag-name)
-    (mapcar #'org-roam-node-file
-            (seq-filter
-             (my/org-roam-filter-by-tag tag-name)
-             (org-roam-node-list))))
+    (defun my/org-roam-list-notes-by-tag (tag-name)
+      (mapcar #'org-roam-node-file
+              (seq-filter
+               (my/org-roam-filter-by-tag tag-name)
+               (org-roam-node-list))))
 
-  (defun my/org-roam-refresh-agenda-list ()
-    "Set the agenda list.
+    (defun my/org-roam-refresh-agenda-list ()
+      "Set the agenda list.
           These are the project files, the calendar file and the
           weekly file"
-    (interactive )
-    (setq org-agenda-files (my/org-roam-list-notes-by-tag "Project"))
-    (add-to-list 'org-agenda-files "~/org/calendar.org")
-    (my/org-roam-add-to-agenda (current-time))
-    (my/org-roam-add-to-agenda (time-subtract (current-time) (days-to-time 7))))
+      (interactive )
+      (setq org-agenda-files (my/org-roam-list-notes-by-tag "Project"))
+      (add-to-list 'org-agenda-files (expand-file-name "calendar.org" org-roam-directory))
+      (my/org-roam-add-to-agenda (current-time))
+      (my/org-roam-add-to-agenda (time-subtract (current-time) (days-to-time 7))))
 
-  (defun my/org-roam-add-to-agenda (my-time)
-    "Add to agenda list the weekly file.
+    (defun my/org-roam-add-to-agenda (my-time)
+      "Add to agenda list the weekly file.
   MY-TIME is a the in the wanted week"
-    (let ((org-roam-dailies-capture-templates
-           '(("d" "default" entry "" :target
-              (file+datetree "%<%Y-W%W>.org" 'week)
-              :immediate-finish t
-              :kill-buffer t)))
-          today-file)
-      (save-window-excursion
-        (org-roam-dailies--capture my-time t)
-        (save-buffer)
-        (setq today-file (buffer-file-name))
-        (add-to-list 'org-agenda-files today-file))))
+      (let ((org-roam-dailies-capture-templates
+             '(("d" "default" entry "" :target
+                (file+datetree "%<%Y-W%W>.org" 'week)
+                :immediate-finish t
+                :kill-buffer t)))
+            today-file)
+        (save-window-excursion
+          (org-roam-dailies--capture my-time t)
+          (save-buffer)
+          (setq today-file (buffer-file-name))
+          (add-to-list 'org-agenda-files today-file))))
 
-  ;; Build the agenda list the first time for the session
-  (my/org-roam-refresh-agenda-list)
+    ;; Build the agenda list the first time for the session
 
-  (defun my/org-roam-project-finalize-hook ()
-    "Adds the captured project file to `org-agenda-files'.
+    (defun my/org-roam-project-finalize-hook ()
+      "Adds the captured project file to `org-agenda-files'.
     if the capture was not aborted."
-    ;; Remove the hook since it was added temporarily
-    (remove-hook 'org-capture-after-finalize-hook #'my/org-roam-project-finalize-hook)
+      ;; Remove the hook since it was added temporarily
+      (remove-hook 'org-capture-after-finalize-hook #'my/org-roam-project-finalize-hook)
 
-    ;; Add project file to the agenda list if the capture was confirmed
-    (unless org-note-abort
-      (with-current-buffer (org-capture-get :buffer)
-        (add-to-list 'org-agenda-files (buffer-file-name)))))
+      ;; Add project file to the agenda list if the capture was confirmed
+      (unless org-note-abort
+        (with-current-buffer (org-capture-get :buffer)
+          (add-to-list 'org-agenda-files (buffer-file-name)))))
 
-  (defun my/org-roam-find-project ()
-    (interactive)
-    ;; Add the project file to the agenda after capture is finished
-    (add-hook 'org-capture-after-finalize-hook #'my/org-roam-project-finalize-hook)
+    (defun my/org-roam-find-project ()
+      (interactive)
+      ;; Add the project file to the agenda after capture is finished
+      (add-hook 'org-capture-after-finalize-hook #'my/org-roam-project-finalize-hook)
 
-    ;; Select a project file to open, creating it if necessary
-    (org-roam-node-find
-     nil
-     nil
-     (my/org-roam-filter-by-tag "Project")
-     nil))
+      ;; Select a project file to open, creating it if necessary
+      (org-roam-node-find
+       nil
+       nil
+       (my/org-roam-filter-by-tag "Project")
+       nil))
 
-  (defun my/org-roam-archive-project ()
-    (interactive)
-    ;; (org-store-link nil)
-    (defvar id nil)
-    (defvar id-string nil)
-    (org-copy-subtree)
-    (let (( id (org-entry-get 1 "ID"))
-          ( id-string "id:")
-          (org-roam-dailies-capture-templates
-           '(("t" "ARCHIVE" plain "**** DONE %(org-link-make-string
+    (defun my/org-roam-archive-project ()
+      (interactive)
+      ;; (org-store-link nil)
+      (defvar id nil)
+      (defvar id-string nil)
+      (org-copy-subtree)
+      (let (( id (org-entry-get 1 "ID"))
+            ( id-string "id:")
+            (org-roam-dailies-capture-templates
+             '(("t" "ARCHIVE" plain "**** DONE %(org-link-make-string
                                     (concat id-string id)
                                     (org-roam-node-title (org-roam-node-from-id id)))\n%(org-paste-subtree 5)\n"
-              :target (file+datetree "%<%Y-W%W>.org" 'week)
-              :immediate-finish t
-              :kill-buffer t))))
-      (org-roam-tag-add '("ARCHIVE"))
-      (org-roam-tag-add '("ProjectArchive"))
-      (org-roam-tag-remove '("Project"))
-      (save-window-excursion
-        (org-roam-dailies--capture (current-time) nil))))
-  (defun make-archive()
-    (when (member "ARCHIVE" (org-get-tags))
-      (my/org-roam-archive-project)))
-  (add-hook 'org-after-tags-change-hook
-            'make-archive)
+                :target (file+datetree "%<%Y-W%W>.org" 'week)
+                :immediate-finish t
+                :kill-buffer t))))
+        (org-roam-tag-add '("ARCHIVE"))
+        (org-roam-tag-add '("ProjectArchive"))
+        (org-roam-tag-remove '("Project"))
+        (save-window-excursion
+          (org-roam-dailies--capture (current-time) nil))))
+    (defun make-archive()
+      (when (member "ARCHIVE" (org-get-tags))
+        (my/org-roam-archive-project)))
+ 
+    (my/org-roam-refresh-agenda-list)
+    (org-roam-db-autosync-mode)
+
+    (add-hook 'org-after-tags-change-hook
+              'make-archive))
 #+end_src
 
 ** Org roam modified time
@@ -817,6 +779,47 @@ Enter insert mode when capturing things
     (add-to-list 'org-capture-templates
                  '("p" "password" entry (file "~/org/password.org.gpg")
                    "* %^{Title}\n  %^{URL}p %^{USERNAME}p %^{PASSWORD}p")))
+#+end_src
+
+* Evil mode
+Usage of evil mode as I used to work with vim binding for years
+#+begin_src emacs-lisp
+  (use-package undo-fu)
+  (use-package undo-fu-session
+    :config
+    (setq undo-fu-session-incompatible-files '("/COMMIT_EDITMSG\\'" "/git-rebase-todo\\'")))
+  (undo-fu-session-global-mode)
+
+  (use-package vundo
+    :bind ([remap undo] . vundo))
+
+  (use-package evil
+    :hook ((org-mode prog-mode) . my/add-insert-state-exit-save-hook)
+    :hook (org-src-mode . my/remove-insert-state-exit-save-hook)
+    :hook (after-init . evil-mode)
+    :hook (lisp-interaction-mode . my/remove-insert-state-exit-save-hook ) ;; for scratch buffer
+    :init
+    (setq evil-want-integration t) ;; This is optional since it's already set to t by default.
+    ;; (setq evil-want-minibuffer t)
+    (setq evil-want-keybinding nil)
+    (setq evil-undo-system 'undo-fu)
+    :config
+    (defun my/remove-insert-state-exit-save-hook()
+      "Remove save buffer wen leaving insert state."
+      (remove-hook 'evil-insert-state-exit-hook 'save-buffer t ))
+
+    (defun my/add-insert-state-exit-save-hook()
+      "Add save buffer wen leaving insert state."
+      (add-hook 'evil-insert-state-exit-hook 'save-buffer 0 t ))
+    )
+
+  (use-package evil-collection
+    :after evil
+    :custom
+    (evil-collection-calendar-want-org-bindings t)
+    :config
+    (setq forge-add-default-bindings nil)
+    (evil-collection-init))
 #+end_src
 
 * Version control
@@ -2235,10 +2238,6 @@ Setup ANSI colors for the compilation buffer
 #+begin_src emacs-lisp
   (require 'recentf)
   (require 'cl-lib)
-  (defun org-is-agenda-file (filename)
-    (member (file-truename filename) org-agenda-files))
-  (cl-pushnew 'org-is-agenda-file recentf-exclude)
-  (add-to-list 'recentf-exclude "~/org/calendar.org")
   (add-to-list 'recentf-exclude "~/.emacs.d/.cache/treemacs-persist")
   (recentf-mode 1)
 #+end_src
@@ -2248,7 +2247,11 @@ Setup ANSI colors for the compilation buffer
   (use-package org-contrib
     :config
     (require 'org-checklist))
-  (org-mode)
+  (setq initial-buffer-choice (lambda () ;; startup routine
+                                (progn
+                                  (org-agenda nil "z")
+                                  (get-buffer "*Org Agenda*")))
+
 #+end_src
 
 * Footer

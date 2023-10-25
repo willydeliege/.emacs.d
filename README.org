@@ -2250,7 +2250,7 @@ Setup ANSI colors for the compilation buffer
   (setq initial-buffer-choice (lambda () ;; startup routine
                                 (progn
                                   (org-agenda nil "z")
-                                  (get-buffer "*Org Agenda*")))
+                                  (get-buffer "*Org Agenda*"))))
 
 #+end_src
 

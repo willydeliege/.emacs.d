@@ -245,8 +245,7 @@ Update flag when saving files with last__{}modified
                                                         ("CLOCK:" . "⏳")
                                                         ("SCHEDULED:"  . "🪟") ; It's a window - not a plus sign in a box
                                                         (":END:" . "🔚" ))))))
-    :bind (("C-c a" . org-agenda)
-           ("C-c l" . org-store-link)
+    :bind (("C-c l" . org-store-link)
            (:map org-mode-map)
            ("M-S-<return>" . org-insert-subheading)
            ("C-c $" . org-archive-subtree-default))
@@ -499,12 +498,8 @@ Enter insert mode when capturing things
     (org-roam-completion-everywhere t)
     :bind
     (("C-c n l" . org-roam-buffer-toggle)
-     ("C-c n i" . org-roam-node-insert)
-     ("C-c n I" . org-roam-node-insert-immediate)
-     ("C-c n p" . my/org-roam-find-project)
      ("C-c c" . org-roam-capture)
      ("C-c i" . my/open-inbox)
-     ("C-c A" . my/org-roam-refresh-agenda-list)
      ("C-c n j" . org-roam-dailies-capture-today)
      ("C-c n n t" . org-roam-tag-add)
      ("C-c n n T" . org-roam-tag-remove)
@@ -520,7 +515,6 @@ Enter insert mode when capturing things
     :init
     (setq org-roam-database-connector 'sqlite-builtin)
     :config
-    (require 'org-roam-logseq)
     (add-to-list 'display-buffer-alist '("\\*org-roam.*"
                                          (display-buffer-in-side-window)
                                          (side . right)
@@ -578,82 +572,26 @@ Enter insert mode when capturing things
       "Open Inbox.org file."
       (interactive)
       (find-file "~/org/Inbox.org"))
-    (defun org-roam-node-insert-immediate (arg &rest args)
-      (interactive "P")
-      (let ((args (push arg args)))
-        (apply #'org-roam-node-insert args)))
-    (defun my/org-roam-filter-by-tag (tag-name)
-      (lambda (node)
-        (member tag-name (org-roam-node-tags node))))
 
-    (defun my/org-roam-list-notes-by-tag (tag-name)
-      (mapcar #'org-roam-node-file
-              (seq-filter
-               (my/org-roam-filter-by-tag tag-name)
-               (org-roam-node-list))))
-
-    (defun my/org-roam-refresh-agenda-list ()
-      "Set the agenda list.
-          These are the project files, the calendar file and the
-          weekly file"
-      (interactive )
-      (setq org-agenda-files (my/org-roam-list-notes-by-tag "Project"))
-      (add-to-list 'org-agenda-files (expand-file-name "calendar.org" org-roam-directory))
-      (my/org-roam-add-to-agenda (current-time))
-      (my/org-roam-add-to-agenda (time-subtract (current-time) (days-to-time 7))))
-
-    (defun my/org-roam-add-to-agenda (my-time)
-      "Add to agenda list the weekly file.
-  MY-TIME is a the in the wanted week"
-      (let ((org-roam-dailies-capture-templates
-             '(("d" "default" entry "" :target
-                (file+datetree "%<%Y-W%W>.org" 'week)
-                :immediate-finish t
-                :kill-buffer t)))
-            today-file)
-        (save-window-excursion
-          (org-roam-dailies--capture my-time t)
-          (save-buffer)
-          (setq today-file (buffer-file-name))
-          (add-to-list 'org-agenda-files today-file))))
-
-    ;; Build the agenda list the first time for the session
-
-    (defun my/org-roam-project-finalize-hook ()
-      "Adds the captured project file to `org-agenda-files'.
-    if the capture was not aborted."
-      ;; Remove the hook since it was added temporarily
-      (remove-hook 'org-capture-after-finalize-hook #'my/org-roam-project-finalize-hook)
-
-      ;; Add project file to the agenda list if the capture was confirmed
-      (unless org-note-abort
-        (with-current-buffer (org-capture-get :buffer)
-          (add-to-list 'org-agenda-files (buffer-file-name)))))
-
-    (defun my/org-roam-find-project ()
-      (interactive)
-      ;; Add the project file to the agenda after capture is finished
-      (add-hook 'org-capture-after-finalize-hook #'my/org-roam-project-finalize-hook)
-
-      ;; Select a project file to open, creating it if necessary
-      (org-roam-node-find
-       nil
-       nil
-       (my/org-roam-filter-by-tag "Project")
-       nil))
-
-  (use-package archive-project :straight nil)
-    (defun make-archive()
-      (when (member "ARCHIVE" (org-get-tags))
-        (my/org-roam-archive-project)))
-
-    (my/org-roam-refresh-agenda-list)
-    (org-roam-db-autosync-mode)
-
-    (add-hook 'org-after-tags-change-hook
-              'make-archive))
+    (org-roam-db-autosync-mode))
 #+end_src
-
+****  Org roam projects
+#+begin_src emacs-lisp
+  (use-package org-roam-project
+    :after org-roam
+    :demand t 
+    :straight nil
+    :bind (("C-c a" . my/org-agenda)
+           ("C-c n i" . org-roam-node-insert-immediate)
+           ("C-c n p" . org-roam-project-find-project))
+    :init
+    (defun my/org-agenda ()
+      (interactive)
+      (unless  org-agenda-files (org-roam-project-refresh-agenda-list))
+      (org-agenda))
+    (add-hook 'org-after-tags-change-hook
+              'org-roam-project-make-archive))
+#+end_src
 ** Org roam modified time
 #+begin_src emacs-lisp
   (use-package org-roam-timestamps
@@ -1918,7 +1856,7 @@ marginalia adds annotations in the mini buffer
                  '("m" "Email Workflow"))
     (add-to-list 'org-capture-templates
                  '("mc" "Communication" entry
-                   (file+headline my/org-roam-node-find-project "Communication")
+                   (file+headline org-roam-project-node-find-project "Communication")
                    "* REPLY Communication from %:fromname on %a"
                    :immediate-finish t))
     (add-to-list 'org-capture-templates
@@ -1930,13 +1868,13 @@ marginalia adds annotations in the mini buffer
     ;; template to capture events
     (add-to-list 'org-capture-templates
                  '("#" "used by gnus-icalendar-org" entry
-                   (file+headline my/org-roam-node-find-project
+                   (file+headline org-roam-project-node-find-project
                                   "Dates")
                    "%i")) ;; don't immdeiate-finsh want to be able to set a todo
     (require 'org-roam)
-    (defun my/org-roam-node-find-project ()
+    (defun org-roam-project-node-find-project ()
       "Get path for node"
-      (org-roam-node-file (org-roam-node-read nil (my/org-roam-filter-by-tag "Project"))))
+      (org-roam-node-file (org-roam-node-read nil (org-roam-project-filter-by-tag "Project"))))
 
     (setq mu4e-refile-folder "/[Gmail].All Mail")
     (defun my/capture-mail-follow-up (msg)
@@ -2246,10 +2184,12 @@ Setup ANSI colors for the compilation buffer
   (use-package org-contrib
     :config
     (require 'org-checklist))
-  (setq initial-buffer-choice (lambda () ;; startup routine
-                                (progn
-                                  (org-agenda nil "z")
-                                  (get-buffer "*Org Agenda*"))))
+  ;; (add-hook 'server-after-make-frame-hook 'org-roam-project-refresh-agenda-list)
+  ;; (unless (server-running-p)  (org-roam-project-refresh-agenda-list))
+  ;; (setq initial-buffer-choice (lambda () ;; startup routine
+  ;;                               (progn
+  ;;                                 (org-agenda nil "z")
+  ;;                                 (get-buffer "*Org Agenda*"))))
 
 #+end_src
 

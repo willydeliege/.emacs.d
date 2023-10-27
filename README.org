@@ -2054,7 +2054,9 @@ marginalia adds annotations in the mini buffer
 ** Error checking
 #+begin_src emacs-lisp
   (use-package flycheck
-    :hook (prog-mode . flycheck-mode))
+    :hook (prog-mode . flycheck-mode)
+    :custom
+    (flycheck-emacs-lisp-load-path 'inherit))
 
 #+end_src
 

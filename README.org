@@ -642,26 +642,7 @@ Enter insert mode when capturing things
        (my/org-roam-filter-by-tag "Project")
        nil))
 
-    (defun my/org-roam-archive-project ()
-      (interactive)
-      ;; (org-store-link nil)
-      (defvar id nil)
-      (defvar id-string nil)
-      (org-copy-subtree)
-      (let (( id (org-entry-get 1 "ID"))
-            ( id-string "id:")
-            (org-roam-dailies-capture-templates
-             '(("t" "ARCHIVE" plain "**** DONE %(org-link-make-string
-                                    (concat id-string id)
-                                    (org-roam-node-title (org-roam-node-from-id id)))\n%(org-paste-subtree 5)\n"
-                :target (file+datetree "%<%Y-W%W>.org" 'week)
-                :immediate-finish t
-                :kill-buffer t))))
-        (org-roam-tag-add '("ARCHIVE"))
-        (org-roam-tag-add '("ProjectArchive"))
-        (org-roam-tag-remove '("Project"))
-        (save-window-excursion
-          (org-roam-dailies--capture (current-time) nil))))
+  (use-package archive-project :straight nil)
     (defun make-archive()
       (when (member "ARCHIVE" (org-get-tags))
         (my/org-roam-archive-project)))

@@ -1471,6 +1471,25 @@ marginalia adds annotations in the mini buffer
   (use-package consult-flycheck)
 #+end_src
 
+*** HL-TODO
+
+#+begin_src emacs-lisp
+  (use-package hl-todo
+    :init
+    (global-hl-todo-mode))
+
+  (use-package flycheck-hl-todo
+    :defer 5 ; Need to be initialized after the rest of checkers
+    :straight (:host github :repo "alvarogonzalezsotillo/flycheck-hl-todo")
+    :config
+    (flycheck-hl-todo-setup))
+  (use-package consult-todo
+    :bind ("M-s t" . consult-todo))
+
+  ;; FIXME See how to configure
+  (use-package magit-todos
+    :hook (magit-status-mode . magit-todos-mode))
+#+end_src
 *** Consult dir
 #+begin_src emacs-lisp
   (use-package consult-dir

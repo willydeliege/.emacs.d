@@ -246,6 +246,7 @@ Update flag when saving files with last__{}modified
                                                         ("SCHEDULED:"  . "🪟") ; It's a window - not a plus sign in a box
                                                         (":END:" . "🔚" ))))))
     :bind (("C-c l" . org-store-link)
+           ("C-c c" . org-capture)
            ("C-c a" . my-org-agenda)
            (:map org-mode-map)
            ("M-S-<return>" . org-insert-subheading)

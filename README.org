@@ -341,6 +341,33 @@ Update flag when saving files with last__{}modified
 
 #+end_src
 
+*** org-journal
+# TODO integrate agenda
+#+begin_src emacs-lisp
+  (use-package org-journal
+    :after org
+    :demand t
+    :bind (("C-c j j" . org-journal-new-entry)
+           :map org-journal-mode-map
+           ("C-x C-s" . org-journal-save-entry-and-exit))
+    :custom
+    (org-journal-file-type 'weekly)
+    ;; TODO integration with `my-agenda'
+    (org-journal-enable-agenda-integration nil)
+    :init
+    ;; Change default prefix key; needs to be set before loading org-journal
+    (setq org-journal-prefix-key "C-c j ")
+    (defun org-journal-save-entry-and-exit()
+      "Simple convenience function.
+    Saves the buffer of the current day's entry and kills the window
+    Similar to org-capture like behavior"
+      (interactive)
+      (save-buffer)
+      (kill-buffer-and-window))
+    :config
+    (setq org-journal-dir "~/notes/journal/"
+          org-journal-date-format "%A, %d %B %Y"))
+#+end_src
 ** Org auto tangle
 #+begin_src emacs-lisp
   (use-package org-auto-tangle
@@ -650,7 +677,7 @@ Usage of evil mode as I used to work with vim binding for years
            ("C-c C-d C-R" . denote-dired-rename-marked-files-using-front-matter))
     :init
     (defun my/find-project-files()
-  "Open dired and select the projects files."
+      "Open dired and select the projects files."
       (interactive)
       (dired "~/notes/*==project*"))
     :config

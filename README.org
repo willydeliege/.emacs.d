@@ -262,7 +262,7 @@ Update flag when saving files with last__{}modified
     (defun my-org-agenda ()
       (interactive)
       (if (not org-agenda-files)
-        (setq org-agenda-files (directory-files org-directory nil ".*==project.*")))
+          (setq org-agenda-files (directory-files org-directory nil ".*==project.*")))
       (org-agenda))
     ;; Agenda styling
     (require 'org-agenda)
@@ -296,7 +296,19 @@ Update flag when saving files with last__{}modified
      org-hide-emphasis-markers t
      org-pretty-entities t
      org-ellipsis "…")
-
+    (defun capture-filename ()
+      (interactive)
+      (let ((fpath (read-file-name "Project file name: "
+                                   "~/notes/*==project*"
+                                   nil nil nil)))
+        (find-file fpath)
+        (goto-char (org-find-exact-headline-in-buffer "Tasks"))))
+    (require 'org-capture)
+    (add-to-list 'org-capture-templates
+                 '("t" "New task" entry
+                   (function capture-filename)
+                   "* TODO %?\n  %i\n  %a")
+                 :jump-to-captured t)
     (setq org-refile-targets '((org-agenda-files :maxlevel . 1)))
     (setq org-outline-path-complete-in-steps nil)         ; Refile in a single go
     (setq org-startup-folded 'show2levels)
@@ -608,6 +620,7 @@ Usage of evil mode as I used to work with vim binding for years
 ** Denote from le grec
 #+begin_src emacs-lisp
   (use-package denote
+     :after org
     :config
     ;; Remember to check the doc strings of those variables.
     (setq denote-directory org-directory)
@@ -626,7 +639,7 @@ Usage of evil mode as I used to work with vim binding for years
     ;; Read this manual for how to specify `denote-templates'.  We do not
     ;; include an example here to avoid potential confusion.
 
-   (setq denote-templates
+    (setq denote-templates
           '((project .  "* Objective/Goals\n* Brainstorming\n* PROJ Tasks\n** TODO initial task\n* Communication\n* Dates\n* Notes\n* Reference material\n")))
 
     (setq denote-date-format nil) ; read doc string
@@ -692,16 +705,7 @@ Usage of evil mode as I used to work with vim binding for years
       (define-key map (kbd "C-c C-d C-k") #'denote-dired-rename-marked-files-with-keywords)
       (define-key map (kbd "C-c C-d C-R") #'denote-dired-rename-marked-files-using-front-matter))
 
-    (with-eval-after-load 'org-capture
-      (setq denote-org-capture-specifiers "%l\n%i\n%?")
-      (add-to-list 'org-capture-templates
-                   '("n" "New note (with denote.el)" plain
-                     (file denote-last-path)
-                     #'denote-org-capture
-                     :no-save t
-                     :immediate-finish nil
-                     :kill-buffer t
-                     :jump-to-captured t)))
+    (setq denote-org-capture-specifiers "%l\n%i\n%?")
 
     ;; Also check the commands `denote-link-after-creating',
     ;; `denote-link-or-create'.  You may want to bind them to keys as well.

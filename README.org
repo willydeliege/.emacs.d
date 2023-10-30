@@ -1156,6 +1156,10 @@ Supplemental evil-mode keybindings to emacs org-mode
     (evil-define-key 'god global-map [escape] 'evil-god-state-bail))
 #+end_src
 
+** Devil mode
+#+begin_src emacs-lisp
+  (use-package devil)
+#+end_src
 ** Scratch buffer
 #+begin_src emacs-lisp
   (use-package scratch

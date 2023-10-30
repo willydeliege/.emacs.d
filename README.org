@@ -263,7 +263,9 @@ Update flag when saving files with last__{}modified
     (defun my-org-agenda ()
       (interactive)
       (if (not org-agenda-files)
-          (setq org-agenda-files (directory-files org-directory nil ".*==project.*")))
+          (progn
+            (setq org-agenda-files (directory-files org-directory nil ".*==project.*"))
+            (add-to-list 'org-agenda-files "~/notes/Journal.org")))
       (org-agenda))
     ;; Agenda styling
     (require 'org-agenda)
@@ -306,10 +308,17 @@ Update flag when saving files with last__{}modified
         (goto-char (org-find-exact-headline-in-buffer "Tasks"))))
     (require 'org-capture)
     (add-to-list 'org-capture-templates
-                 '("t" "New task" entry
+                 '("t" "New [t]ask" entry
                    (function capture-filename)
                    "* TODO %?\n  %i\n  %a")
                  :jump-to-captured t)
+    (require 'org-datetree)
+    (add-to-list 'org-capture-templates
+                 '("j" "[j]ournal entry" entry 
+                   (file+olp+datetree "~/notes/Journal.org") 
+                   "* %?" :tree-type year)) 
+
+    (setq org-datetree-add-timestamp 'active)
     (setq org-refile-targets '((org-agenda-files :maxlevel . 1)))
     (setq org-outline-path-complete-in-steps nil)         ; Refile in a single go
     (setq org-startup-folded 'show2levels)
@@ -341,33 +350,6 @@ Update flag when saving files with last__{}modified
 
 #+end_src
 
-*** org-journal
-# TODO integrate agenda
-#+begin_src emacs-lisp
-  (use-package org-journal
-    :after org
-    :demand t
-    :bind (("C-c j j" . org-journal-new-entry)
-           :map org-journal-mode-map
-           ("C-x C-s" . org-journal-save-entry-and-exit))
-    :custom
-    (org-journal-file-type 'weekly)
-    ;; TODO integration with `my-agenda'
-    (org-journal-enable-agenda-integration nil)
-    :init
-    ;; Change default prefix key; needs to be set before loading org-journal
-    (setq org-journal-prefix-key "C-c j ")
-    (defun org-journal-save-entry-and-exit()
-      "Simple convenience function.
-    Saves the buffer of the current day's entry and kills the window
-    Similar to org-capture like behavior"
-      (interactive)
-      (save-buffer)
-      (kill-buffer-and-window))
-    :config
-    (setq org-journal-dir "~/notes/journal/"
-          org-journal-date-format "%A, %d %B %Y"))
-#+end_src
 ** Org auto tangle
 #+begin_src emacs-lisp
   (use-package org-auto-tangle

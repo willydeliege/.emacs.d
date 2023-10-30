@@ -346,8 +346,15 @@ Update flag when saving files with last__{}modified
             (sequence
              "REPLY(r)"
              "|"
-             "REPLIED(R)")
-            )))
+             "REPLIED(R)")))
+    (setq org-todo-keyword-faces
+          (quote (("TODO" :foreground "red" :weight bold)
+                  ("NEXT" :foreground "blue" :weight bold)
+                  ("WAITING" :foreground "orange" :weight bold)
+                  ("DONE" :foreground "forest green" :weight bold)
+                  ("HOLD" :foreground "magenta" :weight bold)
+                  ("CANCELLED" :foreground "forest green" :weight bold)
+                  ("MEETING" :foreground "forest green" :weight bold)))))
 
 #+end_src
 
@@ -809,7 +816,7 @@ Used to play with forges like GitHub or gitlab
           modus-themes-variable-pitch-ui nil
           modus-themes-italic-constructs t
           modus-themes-bold-constructs nil
-          modus-themes-org-blocks 'gray-background
+          modus-themes-org-blocks 'tinted-background
           modus-themes-completions '((t . (extrabold)))
           modus-themes-prompts '(extrabold)
           modus-themes-headings

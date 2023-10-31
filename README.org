@@ -261,12 +261,15 @@ Update flag when saving files with last__{}modified
     :init
     (require 'org-agenda)
     (setq org-directory "~/notes/")
+    (defvar journal-file "~/notes/20231030T084806--journal.org")
+    (defun build-agenda ()
+      (interactive)
+      (setq org-agenda-files (directory-files org-directory nil ".*==project.*"))
+      (add-to-list 'org-agenda-files journal-file))
     (defun my-org-agenda ()
       (interactive)
       (if (not org-agenda-files)
-          (progn
-            (setq org-agenda-files (directory-files org-directory nil ".*==project.*"))
-            (add-to-list 'org-agenda-files "~/notes/Journal.org")))
+          (build-agenda))
       (org-agenda))
     ;; Agenda styling
     (require 'org-agenda)
@@ -315,10 +318,36 @@ Update flag when saving files with last__{}modified
                  :jump-to-captured t)
     (require 'org-datetree)
     (add-to-list 'org-capture-templates
-                 '("j" "[j]ournal entry" entry 
-                   (file+olp+datetree "~/notes/Journal.org") 
-                   "* %?" :tree-type year)) 
+                 '("j" "[j]ournal entry" entry
+                   (file+olp+datetree journal-file)
+                   "* %?" :tree-type year))
 
+    (defun my/archive-project ()
+      (interactive)
+      (defvar id nil)
+      (defvar source-filename (buffer-file-name))
+      (org-copy-subtree)
+      (let (( id (org-entry-get 1 "ID"))
+            ( id-string "id:")
+            (org-capture-teplates
+             '(("t" "ARCHIVE" plain "**** DONE %(denote-link
+  source-filename )\n%(org-paste-subtree 5)\n"
+                :target (file+datetree "%<%Y-W%W>.org" 'week)
+                :immediate-finish t
+                :kill-buffer t))
+             ))
+        ;; (org-roam-tag-add '("ARCHIVE"))
+        (org-todo 'left)
+        (denote-keywords-add '("ARCHIVE")) 
+        (denote-keywords-remove '("project")) 
+        ;; (org-roam-tag-remove '("project"))
+        (save-window-excursion
+          (org-roam-dailies--capture (current-time) nil))))
+    (defun make-archive()
+      (when (member "ARCHIVE" (org-get-tags))
+        (my/archive-project)))
+    (add-hook 'org-after-tags-change-hook
+              'make-archive)
     (setq org-datetree-add-timestamp 'active)
     (setq org-refile-targets '((org-agenda-files :maxlevel . 1)))
     (setq org-outline-path-complete-in-steps nil)         ; Refile in a single go

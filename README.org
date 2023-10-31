@@ -868,7 +868,7 @@ Used to play with forges like GitHub or gitlab
             (bg-mode-line-active bg-lavender)
             (border-mode-line-active magenta-cooler)
             (border-mode-line-inactive border)
-            (bg-hl-line bg-dim)
+            ;; (bg-hl-line bg-dim)
             (bg-line-number-active bg-hl-line)
             (bg-line-number-inactive unspecified)
             (fg-line-number-active fg-main)

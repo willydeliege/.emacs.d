@@ -1114,10 +1114,11 @@ Emacs package that displays available keybindings in popup
 When you can't remember all keybindings
 #+begin_src emacs-lisp
   (use-package which-key
+    :straight (which-key :type git :host github :repo "wesnel/emacs-which-key" :branch "wesnel/add-devil-support")
     :after evil
     :init
     (which-key-setup-side-window-bottom)
-    (which-key-enable-god-mode-support)
+    (which-key-enable-devil-support)
     ;; avoid which-key to be truncated
     (setq which-key-allow-imprecise-window-fit nil)
     :hook (after-init . which-key-mode)
@@ -1184,18 +1185,13 @@ Supplemental evil-mode keybindings to emacs org-mode
 
 #+end_src
 
-** God mode
-#+begin_src emacs-lisp
-  (use-package god-mode)
-  (use-package evil-god-state
-    :config
-    (evil-define-key 'normal global-map " " 'evil-execute-in-god-state)
-    (evil-define-key 'god global-map [escape] 'evil-god-state-bail))
-#+end_src
-
 ** Devil mode
 #+begin_src emacs-lisp
-  (use-package devil)
+  (use-package devil
+    :after evil
+    :init (global-devil-mode)
+    :config
+    (evil-global-set-key 'normal "," 'devil))
 #+end_src
 ** Scratch buffer
 #+begin_src emacs-lisp

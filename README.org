@@ -2113,6 +2113,23 @@ Setup ANSI colors for the compilation buffer
                   (evil-textobj-tree-sitter-goto-textobj "function.outer" t t))))
 #+end_src
 
+** Paredit
+#+begin_src emacs-lisp
+  (use-package paredit
+    :demand t
+    :commands (paredit-mode)
+    :hook (emacs-lisp-mode       . enable-paredit-mode)
+    :hook (lisp-mode             . enable-paredit-mode)
+    :hook (lisp-interaction-mode . enable-paredit-mode)
+    :hook (scheme-mode           . enable-paredit-mode))
+#+End_src
+
+** Evil paredit
+#+begin_src emacs-lisp
+  (use-package evil-cleverparens
+    :demand t
+    :hook)
+#+end_src
 * Utilities
 **  Search the web
 #+begin_src emacs-lisp

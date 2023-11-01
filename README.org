@@ -259,8 +259,8 @@ Update flag when saving files with last__{}modified
     (org-agenda-skip-timestamp-if-deadline-is-shown t)
     (org-deadline-warning-days 5)
     :init
-    (require 'org-agenda)
     (setq org-directory "~/notes/")
+    (require 'org-agenda)
     (defvar journal-file "~/notes/20231030T084806--journal.org")
     (defun build-agenda ()
       (interactive)
@@ -272,7 +272,6 @@ Update flag when saving files with last__{}modified
           (build-agenda))
       (org-agenda))
     ;; Agenda styling
-    (require 'org-agenda)
     (setq org-stuck-projects '("+Project/PROJ" ("NEXT" "WAIT" "MEETING" "HOLD") nil ""))
     (setq     org-agenda-block-separator ?─
               org-agenda-time-grid
@@ -303,6 +302,14 @@ Update flag when saving files with last__{}modified
      org-hide-emphasis-markers t
      org-pretty-entities t
      org-ellipsis "…")
+    (require 'org-protocol)
+    (setq org-capture-templates `(
+                                  ("p" "Protocol" entry (file+headline ,(concat org-directory "notes.org") "Inbox")
+                                   "* %^{Title}\nSource: %u, %c\n #+BEGIN_QUOTE\n%i\n#+END_QUOTE\n\n\n%?")
+                                  ("L" "Protocol Link" entry (file+headline ,(concat org-directory "notes.org") "Inbox")
+                                   "* %? [[%:link][%:description]] \nCaptured On: %U")
+                                  )
+          )
     (defun capture-filename ()
       (interactive)
       (let ((fpath (read-file-name "Project file name: "
@@ -314,13 +321,17 @@ Update flag when saving files with last__{}modified
     (add-to-list 'org-capture-templates
                  '("t" "New [t]ask" entry
                    (function capture-filename)
-                   "* TODO %?\n  %i\n  %a")
-                 :jump-to-captured t)
+                   "* TODO %?\n  %i\n  %a"
+                   :jump-to-captured t
+                   )
+                 )
     (require 'org-datetree)
     (add-to-list 'org-capture-templates
                  '("j" "[j]ournal entry" entry
                    (file+olp+datetree journal-file)
-                   "* %?" :tree-type year))
+                   "* %?" :tree-type year
+                   )
+                 )
 
     (defun my/archive-project ()
       (interactive)

@@ -678,6 +678,7 @@ Usage of evil mode as I used to work with vim binding for years
 #+begin_src emacs-lisp
   (use-package dired-subtree)
 #+end_src
+
 * Denote
 ** Denote Protesilaos Stavrou
 #+begin_src emacs-lisp
@@ -2120,6 +2121,7 @@ Setup ANSI colors for the compilation buffer
     :init
   (add-to-list 'keyword-search-alist '(wikipedia-fr . "http://fr.wikipedia.org/wiki/%s")))
 #+end_src
+
 * Recentf
 #+begin_src emacs-lisp
   (require 'recentf)

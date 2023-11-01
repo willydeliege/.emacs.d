@@ -303,14 +303,14 @@ Update flag when saving files with last__{}modified
      org-pretty-entities t
      org-ellipsis "…")
     (require 'org-protocol)
-    (setq org-capture-templates `(
-                                  ("p" "Protocol" entry (file+headline ,(concat org-directory "notes.org") "Inbox")
-                                   "* %^{Title}\nSource: %u, %c\n #+BEGIN_QUOTE\n%i\n#+END_QUOTE\n\n\n%?")
-                                  ("L" "Protocol Link" entry (file+headline ,(concat org-directory "notes.org") "Inbox")
-                                   "* %? [[%:link][%:description]] \nCaptured On: %U")
-                                  )
-          )
+    (setq org-capture-templates `( ("p" "Protocol" entry
+                                    (file+headline ,(concat org-directory "notes.org") "Inbox")
+                                    "* %^{Title}\n Source:  %u, %:annotation \n#+BEGIN_QUOTE\n%i\n#+END_QUOTE\n\n\n%?")
+                                   ("L" "Protocol Link" entry
+                                    (file+headline ,(concat org-directory "notes.org") "Inbox")
+                                    "* %? [[%:link][%:description]] \n Captured On: %U")))
     (defun capture-filename ()
+
       (interactive)
       (let ((fpath (read-file-name "Project file name: "
                                    "~/notes/*==project*"
@@ -674,39 +674,12 @@ Usage of evil mode as I used to work with vim binding for years
 
 #+end_src
 
-** Dired rainbow
-#+begin_src emacs-lisp
-  (use-package dired-rainbow
-    :config
-    (progn
-      (dired-rainbow-define-chmod directory "#6cb2eb" "d.*")
-      (dired-rainbow-define html "#eb5286" ("css" "less" "sass" "scss" "htm" "html" "jhtm" "mht" "eml" "mustache" "xhtml"))
-      (dired-rainbow-define xml "#f2d024" ("xml" "xsd" "xsl" "xslt" "wsdl" "bib" "json" "msg" "pgn" "rss" "yaml" "yml" "rdata"))
-      (dired-rainbow-define document "#9561e2" ("docm" "doc" "docx" "odb" "odt" "pdb" "pdf" "ps" "rtf" "djvu" "epub" "odp" "ppt" "pptx"))
-      (dired-rainbow-define markdown "#ffed4a" ("org" "etx" "info" "markdown" "md" "mkd" "nfo" "pod" "rst" "tex" "textfile" "txt"))
-      (dired-rainbow-define database "#6574cd" ("xlsx" "xls" "csv" "accdb" "db" "mdb" "sqlite" "nc"))
-      (dired-rainbow-define media "#de751f" ("mp3" "mp4" "MP3" "MP4" "avi" "mpeg" "mpg" "flv" "ogg" "mov" "mid" "midi" "wav" "aiff" "flac"))
-      (dired-rainbow-define image "#f66d9b" ("tiff" "tif" "cdr" "gif" "ico" "jpeg" "jpg" "png" "psd" "eps" "svg"))
-      (dired-rainbow-define log "#c17d11" ("log"))
-      (dired-rainbow-define shell "#f6993f" ("awk" "bash" "bat" "sed" "sh" "zsh" "vim"))
-      (dired-rainbow-define interpreted "#38c172" ("py" "ipynb" "rb" "pl" "t" "msql" "mysql" "pgsql" "sql" "r" "clj" "cljs" "scala" "js"))
-      (dired-rainbow-define compiled "#4dc0b5" ("asm" "cl" "lisp" "el" "c" "h" "c++" "h++" "hpp" "hxx" "m" "cc" "cs" "cp" "cpp" "go" "f" "for" "ftn" "f90" "f95" "f03" "f08" "s" "rs" "hi" "hs" "pyc" ".java"))
-      (dired-rainbow-define executable "#8cc4ff" ("exe" "msi"))
-      (dired-rainbow-define compressed "#51d88a" ("7z" "zip" "bz2" "tgz" "txz" "gz" "xz" "z" "Z" "jar" "war" "ear" "rar" "sar" "xpi" "apk" "xz" "tar"))
-      (dired-rainbow-define packaged "#faad63" ("deb" "rpm" "apk" "jad" "jar" "cab" "pak" "pk3" "vdf" "vpk" "bsp"))
-      (dired-rainbow-define encrypted "#ffed4a" ("gpg" "pgp" "asc" "bfe" "enc" "signature" "sig" "p12" "pem"))
-      (dired-rainbow-define fonts "#6cb2eb" ("afm" "fon" "fnt" "pfb" "pfm" "ttf" "otf"))
-      (dired-rainbow-define partition "#e3342f" ("dmg" "iso" "bin" "nrg" "qcow" "toast" "vcd" "vmdk" "bak"))
-      (dired-rainbow-define vc "#0074d9" ("git" "gitignore" "gitattributes" "gitmodules"))
-      (dired-rainbow-define-chmod executable-unix "#38c172" "-.*x.*")
-      ))
-#+end_src
 ** Dired subtree
 #+begin_src emacs-lisp
   (use-package dired-subtree)
 #+end_src
 * Denote
-** Denote from le grec
+** Denote Protesilaos Stavrou
 #+begin_src emacs-lisp
   (use-package denote
     :after org
@@ -874,20 +847,24 @@ Used to play with forges like GitHub or gitlab
 #+end_src
 
 * UI
-** Theme
+**
+Theme
 *** modus themes
 #+begin_src emacs-lisp
   (use-package modus-themes
+    :after org
     :demand t
     :bind   ("<f5>" . modus-themes-toggle)
     :config
+    (setq org-fontify-whole-block-delimiter-line t
+          org-fontify-quote-and-verse-blocks t)
     (setq modus-themes-custom-auto-reload nil
           modus-themes-to-toggle '(modus-operandi modus-vivendi)
           modus-themes-mixed-fonts t
           modus-themes-variable-pitch-ui nil
           modus-themes-italic-constructs t
           modus-themes-bold-constructs nil
-          modus-themes-org-blocks 'tinted-background
+          modus-themes-org-blocks 'gray-background
           modus-themes-completions '((t . (extrabold)))
           modus-themes-prompts '(extrabold)
           modus-themes-headings

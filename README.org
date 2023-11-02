@@ -679,6 +679,12 @@ Usage of evil mode as I used to work with vim binding for years
   (use-package dired-subtree)
 #+end_src
 
+** Dired imenu
+#+begin_src emacs-lisp
+  (use-package dired-imenu
+    :demand t
+    :after dired)
+#+end_src
 * Denote
 ** Denote Protesilaos Stavrou
 #+begin_src emacs-lisp

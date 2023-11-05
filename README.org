@@ -104,6 +104,10 @@ This will prevent to use package.el
   ;;; early-init.el ends here
 #+end_src
 
+* Bookmarks
+#+begin_src emacs-lisp
+  (use-package bookmark+)
+#+end_src
 * Defaults
 #+begin_src emacs-lisp
   ;; Save the last place edited in files
@@ -539,6 +543,7 @@ Enter insert mode when capturing things
 
 ** Org modern
 #+begin_src emacs-lisp
+  
   (use-package org-fancy-priorities
     :after org
     :hook

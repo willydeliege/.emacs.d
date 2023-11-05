@@ -99,6 +99,8 @@ This will prevent to use package.el
   (setq-default word-wrap t)
   (global-visual-line-mode)
   (global-hl-line-mode)
+  (electric-pair-mode)
+  (electric-indent-mode)
   ;;; early-init.el ends here
 #+end_src
 
@@ -721,13 +723,13 @@ Used to play with forges like GitHub or gitlab
     :hook ((magit-pre-refresh . diff-hl-magit-pre-refresh)
            (magit-post-refresh . diff-hl-magit-post-refresh)
            (dired-mode . diff-hl-dired-mode))
-    :custom-face
-    (diff-hl-insert ((((background light))
-                      (:background "blue"))
-                     (default
-                      (:background "light blue"))))
-    (diff-hl-change ((t (:background "dark orange"))))
-    (diff-hl-delete ((t (:background "red"))))
+    ;; :custom-face
+    ;; (diff-hl-insert ((((background light))
+    ;;                   (:background "blue"))
+    ;;                  (default
+    ;;                   (:background "light blue"))))
+    ;; (diff-hl-change ((t (:background "dark orange"))))
+    ;; (diff-hl-delete ((t (:background "red"))))
     :custom
     (diff-hl-draw-borders nil)
     (diff-hl-show-hunk-inline-popup-smart-lines nil)
@@ -888,7 +890,7 @@ Used to play with forges like GitHub or gitlab
 * UI
 **
 Theme
-*** modus themes
+*** COMMENT modus themes
 #+begin_src emacs-lisp
   (use-package modus-themes
     :after org
@@ -940,7 +942,13 @@ Theme
     )
 
 #+end_src
-
+*** Ef theme
+#+begin_src emacs-lisp
+  (use-package ef-themes
+        :bind   ("<f5>" . ef-themes-toggle)
+        :config
+        (setq ef-themes-to-toggle '(ef-light ef-dark)))
+#+end_src
 *** Theme changer
 Change light ti dark theme according to the sunset/sunrise
 #+begin_src emacs-lisp
@@ -949,7 +957,7 @@ Change light ti dark theme according to the sunset/sunrise
     (setq ;; calendar-location-name "Saint-Nicolas, BE"
           calendar-latitude 50.628
           calendar-longitude 5.516)
-    (change-theme 'modus-operandi 'modus-vivendi))
+    (change-theme 'ef-light 'ef-dark))
 #+end_src
 
 ** Icons
@@ -1185,23 +1193,21 @@ When you can't remember all keybindings
 #+end_src
 
 ** Parens
-*** Surround
-This package emulates surround.vim by Tim Pope. The functionality is wrapped into a minor mode.
-This package uses Evil as its vi layer.
 #+begin_src emacs-lisp
-  (use-package evil-surround
-    :config
-    (global-evil-surround-mode 1))
-  (use-package paredit
-    :config
-    (add-to-list 'evil-surround-operator-alist
-                 '(evil-paredit-change . change))
-    (add-to-list 'evil-surround-operator-alist
-                 '(evil-paredit-delete . delete)))
-  (use-package evil-paredit
-    :hook (emacs-lisp-mode . evil-paredit-mode))
+  ;; (electric-pair-mode 1)
+  ;; mooved to early init.el
 #+end_src
-
+#+begin_src emacs-lisp
+  (use-package paredit)
+  (use-package evil-cleverparens
+    :hook (emacs-lisp-mode . evil-cleverparens-mode)
+    :hook (lisp-interaction-mode . evil-cleverparens-mode)
+    :init
+  ;; this is a connebt
+    (require 'evil-cleverparens-text-objects)
+    (setq evil-cleverparens-use-s-and-S nil)
+    (setq evil-move-beyond-eol t))
+#+end_src
 ** Jump
 avy is a GNU Emacs package for jumping to visible text using a char-based decision tree
 #+begin_src emacs-lisp

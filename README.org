@@ -259,7 +259,7 @@ Update flag when saving files with last__{}modified
     :init
     (setq org-directory "~/org/")
     (require 'org-agenda)
-    (defvar journal-file "~/org/20231030T084806--journal.org")
+    (defvar journal-file "journal.org")
     (defun build-agenda ()
       (interactive)
       (setq org-agenda-files (directory-files org-directory nil ".*==project.*"))
@@ -327,7 +327,7 @@ Update flag when saving files with last__{}modified
     (add-to-list 'org-capture-templates
                  '("j" "[j]ournal entry" entry
                    (file+olp+datetree journal-file)
-                   "* %c" :tree-type year))
+                   "* %? " :tree-type year))
 
     (defun my/archive-project ()
       (let (
@@ -1830,7 +1830,11 @@ marginalia adds annotations in the mini buffer
     :straight (mu :type git :host github :repo "djcb/mu" ;; :branch "release/1.10"
                   )
     :demand t
-    :bind (("C-x m" . mu4e))
+    :bind (("C-x m" . mu4e)
+           :map mu4e-headers-mode-map
+           ("C-c c" . mu4e-org-store-and-capture)
+           :map mu4e-view-mode-map
+           ("C-c c" . mu4e-org-store-and-capture))
     :custom
     (mu4e-attachment-dir "~/Downloads/")
     (mu4e-bookmarks
@@ -1890,12 +1894,15 @@ marginalia adds annotations in the mini buffer
 
     (add-to-list 'org-capture-templates
                  '("m" "Email Workflow"))
+    (add-to-list 'org-capture-templates
+                 '("mt" "Capture to task" entry
+                   (function capture-filename)
+                   "* REPLY to %:fromname in %a ")) ;; don't immdeiate-finsh want to be able to set a todo
     ;; template to capture events
-    ;; (add-to-list 'org-capture-templates
-    ;;              '("#" "used by gnus-icalendar-org" entry
-    ;;                (file+headline org-roam-project-node-find-project
-    ;;                               "Dates")
-    ;;                "%i")) ;; don't immdeiate-finsh want to be able to set a todo
+    (add-to-list 'org-capture-templates
+                 '("#" "used by gnus-icalendar-org" entry
+                   (function capture-filename)
+                   "%i")) ;; don't immdeiate-finsh want to be able to set a todo
 
     (setq mu4e-refile-folder "/[Gmail].All Mail")
 

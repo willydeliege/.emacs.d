@@ -544,7 +544,9 @@ Enter insert mode when capturing things
 
 ** Org modern
 #+begin_src emacs-lisp
-  
+  (use-package org-modern
+    :hook (org-agenda-finalize . org-modern-agenda)
+    :hook (org-mode . org-modern-mode))
   (use-package org-fancy-priorities
     :after org
     :hook

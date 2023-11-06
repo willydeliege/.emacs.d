@@ -547,7 +547,22 @@ Enter insert mode when capturing things
 #+begin_src emacs-lisp
   (use-package org-modern
     :hook (org-agenda-finalize . org-modern-agenda)
-    :hook (org-mode . org-modern-mode))
+    :hook (org-mode . org-modern-mode)
+    :init
+    (setq org-modern-table nil)
+    (setq org-modern-list nil)
+    (setq org-modern-star nil)
+    (setq org-modern-priority nil)
+    (setq org-modern-label-border 1))
+  (use-package org-modern-indent
+    :straight (org-modern-indent :type git :host github :repo "jdtsmith/org-modern-indent")
+    :config ; add late to hook
+    (add-hook 'org-mode-hook #'org-modern-indent-mode 90))
+  (use-package valign
+    :hook (org-mode . valign-mode))
+  (use-package org-pretty-table
+    :straight (:host github :repo "Fuco1/org-pretty-table")
+    :hook (org-mode . org-pretty-table-mode))
   (use-package org-fancy-priorities
     :after org
     :hook

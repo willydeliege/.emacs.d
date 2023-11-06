@@ -2,6 +2,7 @@
 #+PROPERTY: header-args :tangle init.el :results none
 #+OPTIONS: toc:2 num:nil
 #+auto_tangle: t
+
 * Emacs configuration
 After spending lot of time with doom Emacs, willing to switch to a more native emacs config while keeping evil mode
 * Header
@@ -75,7 +76,7 @@ This will prevent to use package.el
   (add-to-list 'default-frame-alist '(fullscreen . maximized))
   (add-to-list 'default-frame-alist '(menu-bar-lines . 0))
   (add-to-list 'default-frame-alist '(tool-bar-lines . 0))
-  (add-to-list 'default-frame-alist '(font . "JetBrains Mono-12"))
+  (add-to-list 'default-frame-alist '(font . "FiraCode Nerd Font-12"))
   (setq warning-minimum-level :error)
   ;;disable splash screen and startup message
   (setq inhibit-startup-message t)

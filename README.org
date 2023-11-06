@@ -9,18 +9,7 @@ After spending lot of time with doom Emacs, willing to switch to a more native e
 Header for the config init.el file
 #+begin_src emacs-lisp
   ;;; init.el --- Willydeliege's Emacs configuration -*- lexical-binding: t -*-
-
-  ;; Copyright (C) 2023 Frédéric Willem
-
-  ;; Author: Frédéric Willem <frederic.willem@gmail.com>
-  ;; Keywords: internal
-
-  ;;; Commentary:
-  ;; A fully fledged, reproducible Emacs configuration
-
-  ;;; Code:
 #+end_src
-
 * Package manager
 Using [[https://github.com/radian-software/straight.el#getting-started][straight]] as package manager
 #+begin_src emacs-lisp
@@ -67,9 +56,7 @@ and use straight by default
 This will prevent to use package.el
 #+begin_src emacs-lisp :tangle early-init.el
   ;;; early-init.el --- Emacs early init file
-  ;;; Commentary:
-  ;; Code to run before init.el is loaded.
-  ;;; Code:output-dir
+ ;;; Code:output-dir
   ;; Disable package.el
   (setq package-enable-at-startup nil)
   ;; start emacs window maximized
@@ -102,7 +89,6 @@ This will prevent to use package.el
   (global-hl-line-mode)
   (electric-pair-mode)
   (electric-indent-mode)
-  ;;; early-init.el ends here
 #+end_src
 
 * Bookmarks
@@ -2225,13 +2211,4 @@ Setup ANSI colors for the compilation buffer
     (persistent-scratch-autosave-mode)
     :bind
     (("C-c s" . scratch-buffer)))
-#+end_src
-
-* Footer
-#+begin_src emacs-lisp
-  (provide 'init)
-  ;; Local Variables:
-  ;; byte-compile-warnings: (not free-vars)
-  ;; End:
-  ;;; init.el ends here (emacs-lisp-checkdoc)
 #+end_src

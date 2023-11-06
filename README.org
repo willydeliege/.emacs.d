@@ -262,6 +262,7 @@ Update flag when saving files with last__{}modified
     (org-agenda-skip-deadline-prewarning-if-scheduled t)
     (org-agenda-skip-timestamp-if-deadline-is-shown t)
     (org-deadline-warning-days 5)
+    (org-enforce-todo-dependencies t)
     :init
     (setq org-directory "~/org/")
     (require 'org-agenda)

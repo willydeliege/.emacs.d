@@ -1,0 +1,11 @@
+(["*scratch*" "#+title: Scratch Buffer
+#+startup: showall 
+
+* Thoughts
+For random thoughts.
+Bisporol
+burinex
+;; Local Variables:
+;; eval: (persistent-scratch-mode 1)
+;; End:
+" (1 . 1) org-mode nil nil])

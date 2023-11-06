@@ -2180,7 +2180,7 @@ Setup ANSI colors for the compilation buffer
 #+end_src
 
 * Utilities
-**  Search the web
+** Search the web
 #+begin_src emacs-lisp
       (use-package keyword-search
         :bind ("C-c k" . keyword-search)

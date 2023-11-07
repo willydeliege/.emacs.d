@@ -697,7 +697,9 @@ Usage of evil mode as I used to work with vim binding for years
     :demand t
     :bind (:map dired-mode-map
            (")" . dired-git-info-mode))
-    :after dired)
+    :after dired
+    :init
+    (evil-define-key 'normal dired-mode-map ")" 'dired-git-info-mode))
 #+end_src
 * Version control
 ** Magit

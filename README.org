@@ -1063,7 +1063,11 @@ Change light ti dark theme according to the sunset/sunrise
     (shackle-mode 1))
 
 #+end_src
+#+begin_src emacs-lisp
+  (use-package transpose-frame
+    :bind ("C-x R" . transpose-frame))
 
+#+end_src
 * Editing
 ** Sudo edit
 #+begin_src emacs-lisp

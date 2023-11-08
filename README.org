@@ -889,6 +889,7 @@ Used to play with forges like GitHub or gitlab
   (use-package denote-menu
      :bind ("C-c d" . list-denotes)
      :init
+     (require 'denote-org-dblock)
      (setq denote-menu-show-file-signature t)
      (defun my/denote-menu-filter-project-oonly ()
        (interactive)

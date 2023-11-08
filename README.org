@@ -905,8 +905,7 @@ Used to play with forges like GitHub or gitlab
 #+end_src
 
 * UI
-**
-Theme
+** Theme
 *** COMMENT modus themes
 #+begin_src emacs-lisp
   (use-package modus-themes
@@ -962,7 +961,7 @@ Theme
 *** Ef theme
 #+begin_src emacs-lisp
   (use-package ef-themes
-        :bind   ("<f5>" . ef-themes-toggle)
+        :bind   ("<f6>" . ef-themes-toggle)
         :config
         (setq ef-themes-to-toggle '(ef-light ef-dark)))
 #+end_src
@@ -1020,46 +1019,49 @@ Change light ti dark theme according to the sunset/sunrise
 #+end_src
 
 #+begin_src emacs-lisp
-  ;; (use-package popper
-  ;;   :after perspective
-  ;;   :bind (("C-`"   . popper-toggle-latest)
-  ;;          ("C-~"   . popper-cycle)
-  ;;          ("C-M-`" . popper-toggle-type))
-  ;;   :config
-  ;;   (setq popper-group-function #'popper-group-by-perspective) ; group by perspective
-  ;;   :init
-  ;;   (setq popper-reference-buffers
-  ;;         '("\\*Messages\\*"
-  ;;           "Output\\*$"
-  ;;           "\\*Async Shell Command\\*"
-  ;;           "*Occur*"
-  ;;           help-mode
-  ;;           helpful-mode
-  ;;           compilation-mode))
-  ;;   (popper-mode +1)
-  ;;   (popper-echo-mode +1))                ; For echo area hints
-  ;; (use-package shackle
-  ;;   :init
-  ;;   (setq shackle-default-alignment 'below
-  ;;         shackle-default-size 0.4
-  ;;         shackle-rules '((help-mode           :align below :select t)
-  ;;                         (helpful-mode        :align below)
-  ;;                         (compilation-mode    :select t   :size 0.25)
-  ;;                         ("*compilation*"     :select nil :size 0.25)
-  ;;                         ("*ag search*"       :select nil :size 0.25)
-  ;;                         ("*Flycheck errors*" :select nil :size 0.25)
-  ;;                         ("*Warnings*"        :select nil :size 0.25)
-  ;;                         ("*Error*"           :select nil :size 0.25)
-  ;;                         ("*Org Links*"       :select nil :size 0.1)
-  ;;                         (magit-status-mode                :align bottom :size 0.5  :inhibit-window-quit t)
-  ;;                         (magit-log-mode                   :same t                  :inhibit-window-quit t)
-  ;;                         (magit-commit-mode                :ignore t)
-  ;;                         (magit-diff-mode     :select nil  :align left   :size 0.5)
-  ;;                         (git-commit-mode                  :same t)
-  ;;                         (vc-annotate-mode                 :same t)
-  ;;                         ))
-  ;;   :config
-  ;;   (shackle-mode 1))
+  (use-package shackle
+    :init
+    (setq shackle-default-alignment 'below
+          shackle-default-size 0.4
+          shackle-rules '(
+                          ("\\`\\*help.*?\\*\\'" :regexp t :align t :close-on-realign t :size 0.33 :select t)
+                          ('helpful-mode :align t :close-on-realign t :size 0.33 :select t)
+                          ("\\`\\*Flycheck.*?\\*\\'" :regexp t :align t :close-on-realign t :size 12 :select nil)
+                          ("\\`\\*Shell Command Output.*?\\*\\'" :regexp t :align t :close-on-realign t :size 12 :select nil)
+                          ("\\`\\*Async Shell Command.*?\\*\\'" :regexp t :align t :close-on-realign t :size 12 :select nil)
+                          ("\\`\\*Directory.*?\\*\\'" :regexp t :align t :close-on-realign t :size 12 :select t)
+                          ("\\`\\*vc-change-log.*?\\*\\'" :regexp t :align t :close-on-realign t :size 0.33 :select nil)
+
+                          ("\\`\\*HTTP Response.*?\\*\\'" :regexp t :align t :close-on-realign t :size 20 :select nil)
+                          ("\\*Agenda Commands\\*" :regexp t   :align t :close-on-realign t :size 20 :select t)
+
+                          ("\\`\\*xref.*?\\*\\'" :regexp t :align t :close-on-realign t :size 15 :select t)
+
+                          ;; TODO make this working with shells modes
+                          ('ansi-term-mode :align t :close-on-realign t :size 0.4 :select t)
+                          ('occur-mode :align right :close-on-realign t :size 0.4 :select t)
+                          ('grep-mode   :align left :close-on-realign t :size 0.5 :select t)
+  ;; TODO have a look to https://github.com/jixiuf/vterm-toggle
+                          ("\\*vterm.*?\\*" :regexp t  :align t :close-on-realign t :size 0.4 :select t)
+                          ('shell-mode :align t :close-on-realign t :size 0.4 :select t)
+                          ('eshell-mode :align left :close-on-realign t :size 0.4 :select t)
+
+                          ('magit-status-mode   :align t :select t :size 0.33 :only t)
+                          ('magit-popup-mode :align t :select t :size 0.33 :close-on-realign t)
+                          ('magit-diff-mode   :select t :align left :size 0.5 :only t)
+                          ('magit-log-mode   :select t :align t :size 0.4 :only t)
+                          ('magit-revision-mode   :select t :align t :size 0.5 :close-on-realign t)
+
+                          ;; lsp
+                          ("\\`\\*lsp-help.*?\\*\\'" :regexp t :align t :close-on-realign t :size 10 :select t)
+
+                          ('completion-list-mode :align t :close-on-realign t :size 0.33 :select t)
+                          ('compilation-mode :align t :close-on-realign t :size 0.33 :select t)
+                          ("*Warnings*" :align t :close-on-realign t :size 0.33 :select nil)
+                          ("*Messages*" :align t :close-on-realign t :size 0.33 :select nil)))
+    :config
+    (shackle-mode 1))
+
 #+end_src
 
 * Editing

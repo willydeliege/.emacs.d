@@ -1048,7 +1048,7 @@ Change light ti dark theme according to the sunset/sunrise
 
                           ('magit-status-mode   :align t :select t :size 0.33 :only t)
                           ('magit-popup-mode :align t :select t :size 0.33 :close-on-realign t)
-                          ('magit-diff-mode   :select t :align left :size 0.5 :only t)
+                          ('magit-diff-mode   :select nil :align left :size 0.5 :only t)
                           ('magit-log-mode   :select t :align t :size 0.4 :only t)
                           ('magit-revision-mode   :select t :align t :size 0.5 :close-on-realign t)
 

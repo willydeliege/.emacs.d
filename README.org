@@ -694,10 +694,9 @@ Usage of evil mode as I used to work with vim binding for years
 ** Dired git
 #+begin_src emacs-lisp
   (use-package dired-git-info
-    :demand t
     :bind (:map dired-mode-map
            (")" . dired-git-info-mode))
-    :after dired
+    :after (dired evil)
     :init
     (evil-define-key 'normal dired-mode-map ")" 'dired-git-info-mode))
 #+end_src

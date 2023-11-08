@@ -1603,7 +1603,7 @@ marginalia adds annotations in the mini buffer
                              "|sudo:root@"
                              (file-remote-p file 'host) ":" (file-remote-p file 'localname))
                    (concat "/sudo:root@localhost:" file))))
-    (define-key embark-file-map (kbd "S") 'my/sudo-find-file)
+    (define-key embark-file-map (kbd "7") 'my/sudo-find-file)
 
     (advice-add #'embark-completing-read-prompter
                 :around #'embark-hide-which-key-indicator))

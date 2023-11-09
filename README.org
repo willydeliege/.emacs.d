@@ -1091,12 +1091,12 @@ Change light ti dark theme according to the sunset/sunrise
     :bind
     (:map global-map
           ("M-0"       . treemacs-select-window)
-          ("C-x t 1"   . treemacs-delete-other-windows)
-          ("C-x t t"   . treemacs)
-          ("C-x t d"   . treemacs-select-directory)
-          ("C-x t B"   . treemacs-bookmark)
-          ("C-x t C-t" . treemacs-find-file)
-          ("C-x t M-t" . treemacs-find-tag))
+          ("C-x T 1"   . treemacs-delete-other-windows)
+          ("C-x T t"   . treemacs)
+          ("C-x T d"   . treemacs-select-directory)
+          ("C-x T B"   . treemacs-bookmark)
+          ("C-x T C-t" . treemacs-find-file)
+          ("C-x T M-t" . treemacs-find-tag))
     :config
     (progn
       (setq treemacs-collapse-dirs                   (if treemacs-python-executable 3 0)
@@ -1123,7 +1123,7 @@ Change light ti dark theme according to the sunset/sunrise
             treemacs-move-forward-on-expand          nil
             treemacs-no-png-images                   nil
             treemacs-no-delete-other-windows         t
-            treemacs-project-follow-cleanup          nil
+            treemacs-project-follow-cleanup          t
             treemacs-persist-file                    (expand-file-name ".cache/treemacs-persist" user-emacs-directory)
             treemacs-position                        'left
             treemacs-read-string-input               'from-child-frame
@@ -1133,7 +1133,8 @@ Change light ti dark theme according to the sunset/sunrise
             treemacs-recenter-after-project-jump     'always
             treemacs-recenter-after-project-expand   'on-distance
             treemacs-litter-directories              '("/node_modules" "/.venv" "/.cask")
-            treemacs-project-follow-into-home        nil
+            treemacs-project-follow-into-home        t
+            treemacs-project-follow-mode             t
             treemacs-show-cursor                     nil
             treemacs-show-hidden-files               t
             treemacs-silent-filewatch                nil
@@ -1173,7 +1174,7 @@ Change light ti dark theme according to the sunset/sunrise
 
   ;; FIXME permission denied when running the script
 
-(use-package treemacs-mu4e
+  (use-package treemacs-mu4e
     :after (treemacs mu4e)
     :straight nil
     :config
@@ -1182,17 +1183,16 @@ Change light ti dark theme according to the sunset/sunrise
   (use-package treemacs-evil
     :after (treemacs evil))
 
-  (use-package treemacs-projectile
-    :after (treemacs projectile))
+  ;; (use-package treemacs-projectile
+  ;;     :after (treemacs projectile))
 
   (use-package treemacs-magit
     :after (treemacs magit))
 
-  (use-package treemacs-perspective
-    :after (treemacs perspective) ;; or perspective vs. persp-mode
-    :config
-    (persp-mode)
-    (treemacs-set-scope-type 'Perspectives))
+  ;; (use-package treemacs-perspective
+  ;;   :after (treemacs perspective) ;; or perspective vs. persp-mode
+  ;;   :config
+  ;;   (persp-mode)
 
   (use-package treemacs-nerd-icons
     :after treemacs
@@ -1454,15 +1454,10 @@ marginalia adds annotations in the mini buffer
     (define-key consult-narrow-map (vconcat consult-narrow-key "?") #'consult-narrow-help)
 
     ;; By default `consult-project-function' uses `project-root' from project.el.
-      ;;;;  projectile.el (projectile-project-root)
-    (autoload 'projectile-project-root "projectile")
-    (setq consult-project-function (lambda (_) (projectile-project-root)))
-      ;;;; 5. No project support
-    ;; (setq consult-project-function nil)
     )
 #+end_src
 
-*** Consult projectile
+*** COMMENT Consult projectile
 #+begin_src emacs-lisp
   (use-package consult-projectile
     :demand t
@@ -1816,7 +1811,7 @@ marginalia adds annotations in the mini buffer
 #+end_src
 
 * Projects
-** Projectile
+** COMMENT Projectile
 #+begin_src emacs-lisp
   (use-package projectile
     :init
@@ -1828,8 +1823,36 @@ marginalia adds annotations in the mini buffer
     :bind (:map projectile-mode-map
                 ("C-x p" . projectile-command-map)))
 #+end_src
+** Tab bar mode
+#+begin_src emacs-lisp
+  (use-package tab-bar
+    :straight nil
+    ;; :hook (after-init . tab-bar-mode)
+    :init
+      (setq tab-bar-new-tab-choice "*scratch*"))
+#+end_src
+** Tabspaces
+#+begin_src emacs-lisp
+  (use-package tabspaces
+    ;; use this next line only if you also use straight, otherwise ignore it. 
+    :straight (:type git :host github :repo "mclear-tools/tabspaces")
+    :hook (after-init . tabspaces-mode) ;; use this only if you want the minor-mode loaded at startup. 
+    :commands (tabspaces-switch-or-create-workspace
+               tabspaces-open-or-create-project-and-workspace)
+    :custom
+    (tabspaces-use-filtered-buffers-as-default t)
+    (tabspaces-default-tab "Default")
+    (tabspaces-remove-to-default t)
+    (tabspaces-include-buffers '("*scratch*"))
+    (tabspaces-initialize-project-with-todo t)
+    (tabspaces-todo-file-name "project-todo.org")
+    (tabspaces-keymap-prefix "C-c w")
+    ;; sessions
+    (tabspaces-session t)
+    (tabspaces-session-auto-restore t))
 
-** Perspective
+#+end_src
+** COMMENT Perspective
 #+begin_src emacs-lisp
   (use-package perspective
     :hook ((kill-emacs . persp-state-save))
@@ -1846,7 +1869,7 @@ marginalia adds annotations in the mini buffer
     (persp-mode))
 #+end_src
 
-*** Perspective wit tabs
+*** COMMENT Perspective wit tabs
 #+begin_src emacs-lisp
   (use-package perspective-tabs
     :after (perspective)
@@ -1854,7 +1877,7 @@ marginalia adds annotations in the mini buffer
     :init
     (perspective-tabs-mode +1))
 #+end_src
-** Persp project
+** COMMENT Persp project
 #+begin_src emacs-lisp
   (use-package persp-projectile)
 #+end_src

@@ -49,3 +49,4 @@ image-dired/
 /tutorial/
 /*.sqlite
 /org-roam-db.bak
+/tabsession.el

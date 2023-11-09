@@ -1009,12 +1009,15 @@ Change light ti dark theme according to the sunset/sunrise
 *** Doom-modeline
 #+begin_src emacs-lisp
   (use-package doom-modeline
-    :hook (after-init . doom-modeline-mode))
+    :hook (after-init . doom-modeline-mode)
+    :init
+    (setq doom-modeline-buffer-file-name-style 'buffer-neme))
 #+end_src
 
 ** Windows
 #+begin_src emacs-lisp
   (use-package ace-window
+    :after treemacs
     :bind ("M-o" . ace-window))
 #+end_src
 

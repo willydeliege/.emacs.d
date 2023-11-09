@@ -1183,16 +1183,8 @@ Change light ti dark theme according to the sunset/sunrise
   (use-package treemacs-evil
     :after (treemacs evil))
 
-  ;; (use-package treemacs-projectile
-  ;;     :after (treemacs projectile))
-
   (use-package treemacs-magit
     :after (treemacs magit))
-
-  ;; (use-package treemacs-perspective
-  ;;   :after (treemacs perspective) ;; or perspective vs. persp-mode
-  ;;   :config
-  ;;   (persp-mode)
 
   (use-package treemacs-nerd-icons
     :after treemacs
@@ -1457,21 +1449,6 @@ marginalia adds annotations in the mini buffer
     )
 #+end_src
 
-*** COMMENT Consult projectile
-#+begin_src emacs-lisp
-  (use-package consult-projectile
-    :demand t
-    :straight (consult-projectile :type git :host gitlab :repo "OlMon/consult-projectile" :branch "master")
-    :bind (:map projectile-command-map
-                ("p" . consult-projectile))
-    :config
-    (add-to-list 'consult-projectile-sources
-                 'consult-projectile--source-projectile-recentf)
-    (add-to-list 'consult-projectile-sources
-                 'consult-projectile--source-projectile-dir)
-    (setq consult-projectile-use-projectile-switch-project t))
-#+end_src
-
 *** Consult flycheck
 #+begin_src emacs-lisp
   (use-package consult-flycheck)
@@ -1502,9 +1479,7 @@ marginalia adds annotations in the mini buffer
     :bind (("C-x C-d" . consult-dir)
            :map vertico-map
            ("C-x d" . consult-dir)
-           ("C-x j" . consult-dir-jump-file))
-    :config
-    (setq consult-dir-project-list-function #'consult-dir-projectile-dirs))
+           ("C-x j" . consult-dir-jump-file)))
 #+end_src
 
 ** Embark
@@ -1811,18 +1786,6 @@ marginalia adds annotations in the mini buffer
 #+end_src
 
 * Projects
-** COMMENT Projectile
-#+begin_src emacs-lisp
-  (use-package projectile
-    :init
-    (projectile-mode +1)
-    (def-projectile-commander-method ?g
-                                     "Search in project."
-                                     (consult-grep))
-    (setq projectile-switch-project-action 'projectile-commander)
-    :bind (:map projectile-mode-map
-                ("C-x p" . projectile-command-map)))
-#+end_src
 ** Tab bar mode
 #+begin_src emacs-lisp
   (use-package tab-bar
@@ -1852,36 +1815,6 @@ marginalia adds annotations in the mini buffer
     (tabspaces-session-auto-restore t))
 
 #+end_src
-** COMMENT Perspective
-#+begin_src emacs-lisp
-  (use-package perspective
-    :hook ((kill-emacs . persp-state-save))
-    :bind
-    (("C-x K" . persp-kill-buffer*)
-     ("C-x C-b" . persp-list-buffers))        ; or use a nicer switcher, see below
-    :custom
-    (persp-mode-prefix-key (kbd "C-c w")) ; pick your own prefix key here
-    :config
-    (setq persp-state-default-file "~/.emacs.d/persist")
-    ;; (consult-customize consult--source-buffer :hidden t :default nil)
-    (add-to-list 'consult-buffer-sources persp-consult-source)
-    :init
-    (persp-mode))
-#+end_src
-
-*** COMMENT Perspective wit tabs
-#+begin_src emacs-lisp
-  (use-package perspective-tabs
-    :after (perspective)
-    :straight (:host sourcehut :repo "woozong/perspective-tabs")
-    :init
-    (perspective-tabs-mode +1))
-#+end_src
-** COMMENT Persp project
-#+begin_src emacs-lisp
-  (use-package persp-projectile)
-#+end_src
-
 * Mails
 ** Mu4e
 #+begin_src emacs-lisp

@@ -1021,12 +1021,17 @@ Change light ti dark theme according to the sunset/sunrise
     :init
     (setq doom-modeline-buffer-file-name-style 'buffer-neme))
 #+end_src
-
+*** COMMENT Test
+#+begin_src emacs-lisp
+  (use-package powerline
+    :init
+    (powerline-default-theme))
+#+end_src
 ** Windows
 #+begin_src emacs-lisp
   (use-package ace-window
     :after treemacs
-    :bind ("M-o" . ace-window))
+    :bind ("C-x o" . ace-window))
 #+end_src
 
 #+begin_src emacs-lisp

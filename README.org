@@ -1806,27 +1806,28 @@ marginalia adds annotations in the mini buffer
     ;; :hook (after-init . tab-bar-mode)
     :init
       (setq tab-bar-new-tab-choice "*scratch*"))
-#+end_src
-** Tabspaces
-#+begin_src emacs-lisp
-  (use-package tabspaces
-    ;; use this next line only if you also use straight, otherwise ignore it. 
-    :straight (:type git :host github :repo "mclear-tools/tabspaces")
-    :hook (after-init . tabspaces-mode) ;; use this only if you want the minor-mode loaded at startup. 
-    :commands (tabspaces-switch-or-create-workspace
-               tabspaces-open-or-create-project-and-workspace)
-    :custom
-    (tabspaces-use-filtered-buffers-as-default t)
-    (tabspaces-default-tab "Default")
-    (tabspaces-remove-to-default t)
-    (tabspaces-include-buffers '("*scratch*"))
-    (tabspaces-initialize-project-with-todo t)
-    (tabspaces-todo-file-name "project-todo.org")
-    (tabspaces-keymap-prefix "C-c w")
-    ;; sessions
-    (tabspaces-session t)
-    (tabspaces-session-auto-restore t))
 
+  (use-package tab-bar-groups
+  :ensure
+  :demand
+  :config
+  (tab-bar-groups-activate)
+  (setq tab-bar-groups-colors '("OrangeRed2" "medium purple" ))
+  :bind (:map tab-prefix-map
+              ("g0" . tab-bar-groups-close-group-tabs)
+              ("g2" . tab-bar-groups-new-tab)
+              ("ga" . tab-bar-groups-change-tab-group)
+              ("gg" . tab-bar-groups-regroup-tabs)
+              ("gd" . tab-bar-groups-duplicate-tab)
+              ("gk" . tab-bar-groups-eject-tab)
+              ("gr" . tab-bar-groups-rename-group)))
+#+end_src
+** project-tab group
+#+begin_src emacs-lisp
+  (use-package project-tab-groups
+    :ensure
+    :config
+    (project-tab-groups-mode 1))
 #+end_src
 * Mails
 ** Mu4e

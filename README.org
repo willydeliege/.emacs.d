@@ -161,6 +161,13 @@ Better help buffer
     (global-set-key (kbd "C-h x") #'helpful-command))
 #+end_src
 
+*** Help package
+#+begin_src emacs-lisp
+  (use-package help
+    :straight nil
+    :bind (:map help-map
+                ("W" . woman)))
+#+end_src
 ** Terminals
 *** Vterm
 #+begin_src emacs-lisp

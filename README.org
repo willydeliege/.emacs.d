@@ -1810,24 +1810,23 @@ marginalia adds annotations in the mini buffer
 #+begin_src emacs-lisp
   (use-package tab-bar
     :straight nil
-    ;; :hook (after-init . tab-bar-mode)
     :init
-      (setq tab-bar-new-tab-choice "*scratch*"))
+    (setq tab-bar-new-tab-choice "*scratch*"))
 
   (use-package tab-bar-groups
-  :ensure
-  :demand
-  :config
-  (tab-bar-groups-activate)
-  (setq tab-bar-groups-colors '("OrangeRed2" "medium purple" ))
-  :bind (:map tab-prefix-map
-              ("g0" . tab-bar-groups-close-group-tabs)
-              ("g2" . tab-bar-groups-new-tab)
-              ("ga" . tab-bar-groups-change-tab-group)
-              ("gg" . tab-bar-groups-regroup-tabs)
-              ("gd" . tab-bar-groups-duplicate-tab)
-              ("gk" . tab-bar-groups-eject-tab)
-              ("gr" . tab-bar-groups-rename-group)))
+    :init
+    (setq tab-bar-groups-colors '("gray50" ))
+    :demand
+    :config
+    (tab-bar-groups-activate)
+    :bind (:map tab-prefix-map
+                ("g0" . tab-bar-groups-close-group-tabs)
+                ("g2" . tab-bar-groups-new-tab)
+                ("ga" . tab-bar-groups-change-tab-group)
+                ("gg" . tab-bar-groups-regroup-tabs)
+                ("gd" . tab-bar-groups-duplicate-tab)
+                ("gk" . tab-bar-groups-eject-tab)
+                ("gr" . tab-bar-groups-rename-group)))
 #+end_src
 ** project-tab group
 #+begin_src emacs-lisp
@@ -1836,6 +1835,7 @@ marginalia adds annotations in the mini buffer
     :config
     (project-tab-groups-mode 1))
 #+end_src
+
 * Mails
 ** Mu4e
 #+begin_src emacs-lisp

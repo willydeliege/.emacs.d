@@ -345,58 +345,61 @@ Update flag when saving files with last__{}modified
 
     (defun my/archive-project ()
       (let (
-            (org-capture-templates 
-             '(("d" "journal" entry
+            (org-enforce-todo-dependencies nil)
+            (org-capture-templates
+             '(("j" "journal" entry
                 (file+olp+datetree journal-file)
-                "* %?\n* %(org-paste-subtree)" :tree-type year))))
+                "* %a\n%(org-paste-subtree)" :immediate-finish t :tree-type year))))
         (symbol-value 'org-capture-templates)
         (org-copy-subtree)
-        (org-todo 'left)
-        (denote-keywords-add '("archive"))
+        (org-map-entries (lambda ()
+                           (org-todo 'done)) nil 'tree)
+        (denote-keywords-add '("ARCHIVE"))
         (denote-keywords-remove) 
         (denote-rename-file-using-front-matter (buffer-file-name))
-          (org-capture))) 
-        (defun make-archive()
-          (when (member "ARCHIVE" (org-get-tags))
-            (my/archive-project)))
-        (add-hook 'org-after-tags-change-hook
-                  'make-archive)
-        (setq org-datetree-add-timestamp 'active)
-        (setq org-refile-targets '((org-agenda-files :maxlevel . 3)))
-        (setq org-outline-path-complete-in-steps nil)         ; Refile in a single go
-        (setq org-startup-folded 'show2levels)
-        (setq org-tag-alist '((:startgroup . nil)
-                              ("work" . ?w) ("family" . ?f)
-                              ("personal" . ?p)
-                              (:endgroup . nil)
-                              ("ARCHIVE" . ?a)))
-        (setq org-todo-keywords
-              '((sequence
-                 "TODO(t)"  ; A task that needs doing & is ready to do
-                 "NEXT(n)"  ; The nex task in to perform in the project
-                 "MEETING"  ; Meeting
-                 "WAIT(w@)"  ; Something external is holding up this task
-                 "HOLD(h@)"  ; This task is paused/on hold because of me
-                 "IDEA(i)"  ; An unconfirmed and unapproved task or notion
-                 "|"
-                 "CANCELLED(c)"
-                 "DONE(d)")  ; Task successfully completed
-                (sequence
-                 "PROJ(p)"  ; A project, which usually contains other tasks
-                 "|"
-                 "KILL(k)")
-                (sequence
-                 "REPLY(r)"
-                 "|"
-                 "REPLIED(R)")))
-        (setq org-todo-keyword-faces
-              (quote (("TODO" :foreground "red" :weight bold)
-                      ("NEXT" :foreground "blue" :weight bold)
-                      ("WAITING" :foreground "orange" :weight bold)
-                      ("DONE" :foreground "forest green" :weight bold)
-                      ("HOLD" :foreground "magenta" :weight bold)
-                      ("CANCELLED" :foreground "forest green" :weight bold)
-                      ("MEETING" :foreground "forest green" :weight bold)))))
+        (org-capture nil "j"))) 
+    (defun make-archive()
+      (when (and (member "ARCHIVE" (org-get-tags))
+                 (member "Tasks" (org-heading-components)))
+        (my/archive-project)))
+    (add-hook 'org-after-tags-change-hook
+              'make-archive)
+    (setq org-datetree-add-timestamp 'active)
+    (setq org-refile-targets '((org-agenda-files :maxlevel . 3)))
+    (setq org-outline-path-complete-in-steps nil)         ; Refile in a single go
+    (setq org-startup-folded 'show2levels)
+    (setq org-tag-alist '((:startgroup . nil)
+                          ("work" . ?w) ("family" . ?f)
+                          ("personal" . ?p)
+                          (:endgroup . nil)
+                          ("ARCHIVE" . ?a)))
+    (setq org-todo-keywords
+          '((sequence
+             "TODO(t)"  ; A task that needs doing & is ready to do
+             "NEXT(n)"  ; The nex task in to perform in the project
+             "MEETING"  ; Meeting
+             "WAIT(w@)"  ; Something external is holding up this task
+             "HOLD(h@)"  ; This task is paused/on hold because of me
+             "IDEA(i)"  ; An unconfirmed and unapproved task or notion
+             "|"
+             "CANCELLED(c)"
+             "DONE(d)")  ; Task successfully completed
+            (sequence
+             "PROJ(p)"  ; A project, which usually contains other tasks
+             "|"
+             "KILL(k)")
+            (sequence
+             "REPLY(r)"
+             "|"
+             "REPLIED(R)")))
+    (setq org-todo-keyword-faces
+          (quote (("TODO" :foreground "red" :weight bold)
+                  ("NEXT" :foreground "blue" :weight bold)
+                  ("WAITING" :foreground "orange" :weight bold)
+                  ("DONE" :foreground "forest green" :weight bold)
+                  ("HOLD" :foreground "magenta" :weight bold)
+                  ("CANCELLED" :foreground "forest green" :weight bold)
+                  ("MEETING" :foreground "forest green" :weight bold)))))
 
 #+end_src
 
@@ -921,15 +924,12 @@ Used to play with forges like GitHub or gitlab
 
 * UI
 ** Theme
-*** COMMENT modus themes
+*** modus themes
 #+begin_src emacs-lisp
   (use-package modus-themes
     :after org
     :demand t
-    :bind   ("<f5>" . modus-themes-toggle)
     :config
-    (setq org-fontify-whole-block-delimiter-line t
-          org-fontify-quote-and-verse-blocks t)
     (setq modus-themes-custom-auto-reload nil
           modus-themes-to-toggle '(modus-operandi modus-vivendi)
           modus-themes-mixed-fonts t

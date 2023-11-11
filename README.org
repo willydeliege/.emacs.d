@@ -349,11 +349,10 @@ Update flag when saving files with last__{}modified
             (org-capture-templates
              '(("j" "journal" entry
                 (file+olp+datetree journal-file)
-                "* %a\n%(org-paste-subtree)" :immediate-finish t :tree-type year))))
-        (symbol-value 'org-capture-templates)
-        (org-copy-subtree)
+                "* DONE %a\nCLOSED: %U\n%(org-paste-subtree 1)" :immediate-finish t :tree-type year))))
         (org-map-entries (lambda ()
                            (org-todo 'done)) nil 'tree)
+        (org-copy-subtree)
         (denote-keywords-add '("ARCHIVE"))
         (denote-keywords-remove) 
         (denote-rename-file-using-front-matter (buffer-file-name))
@@ -1358,7 +1357,6 @@ marginalia adds annotations in the mini buffer
 
 ** Consult
 #+begin_src emacs-lisp
-
   ;; Consult users will also want the embark-consult package.
   (use-package embark-consult
     :hook
@@ -1371,25 +1369,25 @@ marginalia adds annotations in the mini buffer
            ;; ("C-c m" . consult-man)
            ([remap Info-search] . consult-info)
            ;; C-x bindings in `ctl-x-map'
-           ("C-x M-:" . consult-complex-command)     ;; orig. repeat-complex-command
-           ("C-x b" . consult-buffer)                ;; orig. switch-to-buffer
-           ("C-x C-r" . consult-recent-file)        ;; orig. recent-files-read-only
+           ("C-x M-:" . consult-complex-command) ;; orig. repeat-complex-command
+           ("C-x b" . consult-buffer)	       ;; orig. switch-to-buffer
+           ("C-x C-r" . consult-recent-file)     ;; orig. recent-files-read-only
            ("C-x 4 b" . consult-buffer-other-window) ;; orig. switch-to-buffer-other-window
-           ("C-x 5 b" . consult-buffer-other-frame)  ;; orig. switch-to-buffer-other-frame
-           ("C-x r b" . consult-bookmark)            ;; orig. bookmark-jump
-           ("C-x p b" . consult-project-buffer)      ;; orig. project-switch-to-buffer
+           ("C-x 5 b" . consult-buffer-other-frame) ;; orig. switch-to-buffer-other-frame
+           ("C-x r b" . consult-bookmark)		  ;; orig. bookmark-jump
+           ("C-x p b" . consult-project-buffer) ;; orig. project-switch-to-buffer
            ;; Custom M-# bindings for fast register access
            ("M-#" . consult-register-load)
-           ("M-'" . consult-register-store)          ;; orig. abbrev-prefix-mark (unrelated)
+           ("M-'" . consult-register-store) ;; orig. abbrev-prefix-mark (unrelated)
            ("C-M-#" . consult-register)
            ;; Other custom bindings
-           ("M-y" . consult-yank-pop)                ;; orig. yank-pop
+           ("M-y" . consult-yank-pop) ;; orig. yank-pop
            ;; M-g bindings in `goto-map'
            ("M-g e" . consult-compile-error)
-           ("M-g f" . consult-flycheck)               ;; Alternative: consult-flycheck
-           ("M-g g" . consult-goto-line)             ;; orig. goto-line
-           ("M-g M-g" . consult-goto-line)           ;; orig. goto-line
-           ("M-g o" . consult-outline)               ;; Alternative: consult-org-heading
+           ("M-g f" . consult-flycheck)	 ;; Alternative: consult-flycheck
+           ("M-g g" . consult-goto-line)	 ;; orig. goto-line
+           ("M-g M-g" . consult-goto-line) ;; orig. goto-line
+           ("M-g o" . consult-outline)	 ;; Alternative: consult-org-heading
            ("M-g m" . consult-mark)
            ("M-g k" . consult-global-mark)
            ("M-g i" . consult-imenu)
@@ -1407,14 +1405,14 @@ marginalia adds annotations in the mini buffer
            ;; Isearch integration
            ("M-s e" . consult-isearch-history)
            :map isearch-mode-map
-           ("M-e" . consult-isearch-history)         ;; orig. isearch-edit-string
-           ("M-s e" . consult-isearch-history)       ;; orig. isearch-edit-string
-           ("M-s l" . consult-line)                  ;; needed by consult-line to detect isearch
-           ("M-s L" . consult-line-multi)            ;; needed by consult-line to detect isearch
+           ("M-e" . consult-isearch-history)   ;; orig. isearch-edit-string
+           ("M-s e" . consult-isearch-history) ;; orig. isearch-edit-string
+           ("M-s l" . consult-line) ;; needed by consult-line to detect isearch
+           ("M-s L" . consult-line-multi)	;; needed by consult-line to detect isearch
            ;; Minibuffer history
            :map minibuffer-local-map
-           ("M-s" . consult-history)                 ;; orig. next-matching-history-element
-           ("M-r" . consult-history))                ;; orig. previous-matching-history-element
+           ("M-s" . consult-history)  ;; orig. next-matching-history-element
+           ("M-r" . consult-history)) ;; orig. previous-matching-history-element
 
     ;; Enable automatic preview at point in the *Completions* buffer. This is
     ;; relevant when you use the default completion UI.
@@ -1460,13 +1458,16 @@ marginalia adds annotations in the mini buffer
     ;; Optionally configure the narrowing key.
     ;; Both < and C-+ work reasonably well.
     (setq consult-narrow-key "<") ;; "C-+"
-
     ;; Optionally make narrowing help available in the minibuffer.
     ;; You may want to use `embark-prefix-help-command' or which-key instead.
+    (consult-customize consult--source-buffer :hidden t :default nil)
+    (consult-customize consult--source-project-buffer :narrow ?p)
+    (consult-customize consult--source-project-recent-file :narrow ?b)
     (define-key consult-narrow-map (vconcat consult-narrow-key "?") #'consult-narrow-help)
-
-    ;; By default `consult-project-function' uses `project-root' from project.el.
-    )
+    (delete 'consult--source-project-buffer-hidden consult-buffer-sources)
+    (delete 'consult--source-project-recent-file-hidden consult-buffer-sources)
+    (add-to-list 'consult-buffer-sources 'consult--source-project-recent-file)
+    (add-to-list 'consult-buffer-sources 'consult--source-project-buffer))
 #+end_src
 
 *** Consult flycheck
@@ -1806,6 +1807,33 @@ marginalia adds annotations in the mini buffer
 #+end_src
 
 * Projects
+** Destop
+#+begin_src emacs-lisp
+  (use-package desktop
+    :straight nil
+    :custom
+    (desktop-save 1)
+    :init
+    (defun rgr/restore-desktop()
+      (when (fboundp 'alert)
+        (alert (message (format "loading desktop from %s" desktop-path))))
+      ;;I include the run-with-timer despite being able to get this to work without as it's a timing
+      ;;issue and a little delay does no one any harm
+      (run-at-time "1" nil (lambda()
+                             (desktop-read)
+                             (desktop-save-mode 1))))
+    (add-hook 'emacs-startup-hook
+              (lambda()
+                (if (daemonp)
+                    (add-hook 'server-after-make-frame-hook 'rgr/restore-desktop)
+                  (rgr/restore-desktop))))
+
+  :config
+  (setq desktop-restore-frames t)
+  (setq desktop-restore-in-current-display t)
+  (setq desktop-restore-forces-onscreen nil))
+#+end_src
+
 ** Tab bar mode
 #+begin_src emacs-lisp
   (use-package tab-bar
@@ -1819,6 +1847,8 @@ marginalia adds annotations in the mini buffer
     :demand
     :config
     (tab-bar-groups-activate)
+    (with-eval-after-load 'project-mode-line-tag
+      (tab-bar-groups-activate-for-project-mode-line-tag))
     :bind (:map tab-prefix-map
                 ("g0" . tab-bar-groups-close-group-tabs)
                 ("g2" . tab-bar-groups-new-tab)
@@ -1828,12 +1858,20 @@ marginalia adds annotations in the mini buffer
                 ("gk" . tab-bar-groups-eject-tab)
                 ("gr" . tab-bar-groups-rename-group)))
 #+end_src
+
 ** project-tab group
 #+begin_src emacs-lisp
   (use-package project-tab-groups
     :ensure
     :config
     (project-tab-groups-mode 1))
+#+end_src
+
+** project mode line
+#+begin_src emacs-lisp
+  (use-package project-mode-line-tag
+    :config
+    (project-mode-line-tag-mode 1))
 #+end_src
 
 * Mails

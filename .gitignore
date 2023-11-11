@@ -50,3 +50,5 @@ image-dired/
 /*.sqlite
 /org-roam-db.bak
 /tabsession.el
+*.desktop
+/*.lock

@@ -1460,14 +1460,7 @@ marginalia adds annotations in the mini buffer
     (setq consult-narrow-key "<") ;; "C-+"
     ;; Optionally make narrowing help available in the minibuffer.
     ;; You may want to use `embark-prefix-help-command' or which-key instead.
-    (consult-customize consult--source-buffer :hidden t :default nil)
-    (consult-customize consult--source-project-buffer :narrow ?p)
-    (consult-customize consult--source-project-recent-file :narrow ?b)
-    (define-key consult-narrow-map (vconcat consult-narrow-key "?") #'consult-narrow-help)
-    (delete 'consult--source-project-buffer-hidden consult-buffer-sources)
-    (delete 'consult--source-project-recent-file-hidden consult-buffer-sources)
-    (add-to-list 'consult-buffer-sources 'consult--source-project-recent-file)
-    (add-to-list 'consult-buffer-sources 'consult--source-project-buffer))
+    (consult-customize consult--source-buffer :hidden t :default nil))
 #+end_src
 
 *** Consult flycheck
@@ -1807,73 +1800,38 @@ marginalia adds annotations in the mini buffer
 #+end_src
 
 * Projects
-** Destop
+** Perspective
 #+begin_src emacs-lisp
-  (use-package desktop
-    :straight nil
+  (use-package perspective
     :custom
-    (desktop-save 1)
+    (persp-mode-prefix-key (kbd "C-c w"))  ; pick your own prefix key here
     :init
-    (defun rgr/restore-desktop()
-      (when (fboundp 'alert)
-        (alert (message (format "loading desktop from %s" desktop-path))))
-      ;;I include the run-with-timer despite being able to get this to work without as it's a timing
-      ;;issue and a little delay does no one any harm
-      (run-at-time "1" nil (lambda()
-                             (desktop-read)
-                             (desktop-save-mode 1))))
-    (add-hook 'emacs-startup-hook
-              (lambda()
-                (if (daemonp)
-                    (add-hook 'server-after-make-frame-hook 'rgr/restore-desktop)
-                  (rgr/restore-desktop))))
-
-  :config
-  (setq desktop-restore-frames t)
-  (setq desktop-restore-in-current-display t)
-  (setq desktop-restore-forces-onscreen nil))
+    (persp-mode)
+    :config
+    (add-to-list 'consult-buffer-sources persp-consult-source))
 #+end_src
-
-** Tab bar mode
+** Perspective tabs
 #+begin_src emacs-lisp
-  (use-package tab-bar
-    :straight nil
+  (use-package perspective-tabs
+    :after (perspective)
+    :straight (:host sourcehut :repo "woozong/perspective-tabs")
     :init
-    (setq tab-bar-new-tab-choice "*scratch*"))
-
-  (use-package tab-bar-groups
-    :init
-    (setq tab-bar-groups-colors '("gray50" ))
-    :demand
-    :config
-    (tab-bar-groups-activate)
-    (with-eval-after-load 'project-mode-line-tag
-      (tab-bar-groups-activate-for-project-mode-line-tag))
-    :bind (:map tab-prefix-map
-                ("g0" . tab-bar-groups-close-group-tabs)
-                ("g2" . tab-bar-groups-new-tab)
-                ("ga" . tab-bar-groups-change-tab-group)
-                ("gg" . tab-bar-groups-regroup-tabs)
-                ("gd" . tab-bar-groups-duplicate-tab)
-                ("gk" . tab-bar-groups-eject-tab)
-                ("gr" . tab-bar-groups-rename-group)))
+    (perspective-tabs-mode +1))
 #+end_src
 
-** project-tab group
+** Perspectives project bridge
 #+begin_src emacs-lisp
-  (use-package project-tab-groups
-    :ensure
-    :config
-    (project-tab-groups-mode 1))
+  (use-package perspective-project-bridge
+    :hook
+    (perspective-project-bridge-mode
+     .
+     (lambda ()
+       (if perspective-project-bridge-mode
+           (perspective-project-bridge-find-perspectives-for-all-buffers)
+         (perspective-project-bridge-kill-perspectives))))
+    :hook
+    (after-init . perspective-project-bridge-mode))
 #+end_src
-
-** project mode line
-#+begin_src emacs-lisp
-  (use-package project-mode-line-tag
-    :config
-    (project-mode-line-tag-mode 1))
-#+end_src
-
 * Mails
 ** Mu4e
 #+begin_src emacs-lisp

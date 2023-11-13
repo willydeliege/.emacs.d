@@ -1433,11 +1433,10 @@ marginalia adds annotations in the mini buffer
 #+end_src
 
 *** HL-TODO
-
 #+begin_src emacs-lisp
   (use-package hl-todo
-    :init
-    (global-hl-todo-mode))
+    :hook ((text-mode prog-mode) . hl-todo-mode)
+    :hook (after-init . global-hl-todo-mode))
 
   (use-package flycheck-hl-todo
     :defer 5 ; Need to be initialized after the rest of checkers

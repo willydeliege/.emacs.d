@@ -2149,10 +2149,11 @@ Setup ANSI colors for the compilation buffer
 
 * Recentf
 #+begin_src emacs-lisp
-  (require 'recentf)
-  (require 'cl-lib)
-  (add-to-list 'recentf-exclude "~/.emacs.d/.cache/treemacs-persist")
-  (recentf-mode 1)
+  (use-package recentf
+    :straight nil
+    :hook (emacs-startup .  recentf-mode)
+    :config
+    (add-to-list 'recentf-exclude "~/.emacs.d/.cache/treemacs-persist"))
 #+end_src
 
 * scratch

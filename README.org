@@ -1422,7 +1422,9 @@ marginalia adds annotations in the mini buffer
     ;; You may want to use `embark-prefix-help-command' or which-key instead.
     (defun bookmark-files-only()
       (bookmark-all-names (bmkp-file-alist-only)))
-    (consult-customize consult--source-bookmark :items #')
+    (consult-customize consult--source-bookmark
+                       :items (lambda ()
+                                (bookmark-all-names (bmkp-file-alist-only))))
     (consult-customize consult--source-buffer :hidden t :default nil))
 #+end_src
 

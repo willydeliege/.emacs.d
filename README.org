@@ -92,8 +92,7 @@ This will prevent to use package.el
   (global-set-key (kbd "C-M-r") 'isearch-backward)
 
   (global-hl-line-mode)
-  (electric-pair-mode)
-  (electric-indent-mode)
+  (setq shell-command-switch "-ic")
 #+end_src
 
 * Bookmarks
@@ -402,6 +401,12 @@ Update flag when saving files with last__{}modified
 
 #+end_src
 
+*** Org contrib
+#+begin_src emacs-lisp
+  (use-package org-contrib
+    :init
+    (require 'org-checklist))
+#+end_src
 ** Org auto tangle
 #+begin_src emacs-lisp
   (use-package org-auto-tangle

@@ -1151,8 +1151,6 @@ Change light to dark theme according to the sunset/sunrise
 
       (treemacs-hide-gitignored-files-mode nil)))
 
-  ;; FIXME permission denied when running the script
-
   (use-package treemacs-mu4e
     :after (treemacs mu4e)
     :straight nil

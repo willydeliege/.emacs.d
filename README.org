@@ -433,17 +433,17 @@ Update flag when saving files with last__{}modified
 
 #+end_src
 
-# *** Org contrib
-# #+begin_src emacs-lisp
-#   (use-package org-contrib
-#     :init
-#     (require 'org-checklist))
-# #+end_src
-# ** Org auto tangle
-# #+begin_src emacs-lisp
-#   (use-package org-auto-tangle
-#     :hook (org-mode . org-auto-tangle-mode))
-# #+end_src
+*** Org  contrib
+#+begin_src emacs-lisp
+  (use-package org-contrib
+    :init
+    (require 'org-checklist))
+#+end_src
+** Org auto tangle
+#+begin_src emacs-lisp
+  (use-package org-auto-tangle
+    :hook (org-mode . org-auto-tangle-mode))
+#+end_src
 
 ** Org capture
 Enter insert mode when capturing things
@@ -512,81 +512,80 @@ Enter insert mode when capturing things
                     (org-agenda-log-mode-items '(state closed clock))))))
 #+end_src
 
-# ** Org time block
-# #+begin_src emacs-lisp
-#   (use-package org-timeblock
-#     :hook ((org-timeblock-mode org-timeblock-list-mode) . my/org-timeblock-evil-map)
-#     :elpaca (org-timeblock :type git
-#                              :host github
-#                              :repo "ichernyshovvv/org-timeblock")
-#     :custom
-#     (org-timeblock-inbox-file "/home/willefi2/org/calendar.org")
-#     :init
-#     (defun my/org-timeblock-evil-map ()
-#       "Set the keybindings for 'org-timeblock' to be compatible with evil mode"
-#       (evil-define-key 'normal org-timeblock-mode-map
-#         "+" 'org-timeblock-new-task
-#         "j" 'org-timeblock-forward-block
-#         "l" 'org-timeblock-forward-column
-#         "h" 'org-timeblock-backward-column
-#         "k" 'org-timeblock-backward-block
-#         (kbd "C-<down>") 'org-timeblock-day-later
-#         (kbd "C-<up>") 'org-timeblock-day-earlier
-#         (kbd "RET") 'org-timeblock-goto
-#         (kbd "TAB") 'org-timeblock-goto-other-window
-#         "d" 'org-timeblock-set-duration
-#         "r" 'org-timeblock-redraw-buffers
-#         "gd" 'org-timeblock-jump-to-day
-#         "s" 'org-timeblock-schedule
-#         "t" 'org-timeblock-toggle-timeblock-list
-#         "v" 'org-timeblock-switch-scaling
-#         "V" 'org-timeblock-switch-view)
-#       (evil-define-key 'normal org-timeblock-list-mode-map
-#         "+" 'org-timeblock-new-task
-#         "j" 'org-timeblock-list-next-line
-#         "k" 'org-timeblock-list-previous-line
-#         (kbd "C-<down>") 'org-timeblock-day-later
-#         (kbd "C-<up>") 'org-timeblock-day-earlier
-#         (kbd "C-s") 'org-timeblock-list-save
-#         (kbd "M-<down>") 'org-timeblock-list-drag-line-forward
-#         (kbd "M-<up>") 'org-timeblock-list-drag-line-backward
-#         (kbd "RET") 'org-timeblock-list-goto
-#         (kbd "TAB") 'org-timeblock-list-goto-other-window
-#         "S" 'org-timeblock-list-toggle-sort-function
-#         "d" 'org-timeblock-list-set-duration
-#         "r" 'org-timeblock-redraw-buffers
-#         "gd" 'org-timeblock-jump-to-day
-#         "q" 'org-timeblock-quit
-#         "s" 'org-timeblock-list-schedule
-#         "t" 'org-timeblock-list-toggle-timeblock
-#         "v" 'org-timeblock-switch-scaling
-#         "V" 'org-timeblock-switch-view)))
-# #+end_src
+** Org time block
+#+begin_src emacs-lisp
+  (use-package org-timeblock
+    :hook ((org-timeblock-mode org-timeblock-list-mode) . my/org-timeblock-evil-map)
+    :elpaca (org-timeblock :host github
+                             :repo "ichernyshovvv/org-timeblock")
+    :custom
+    (org-timeblock-inbox-file "/home/willefi2/org/calendar.org")
+    :init
+    (defun my/org-timeblock-evil-map ()
+      "Set the keybindings for 'org-timeblock' to be compatible with evil mode"
+      (evil-define-key 'normal org-timeblock-mode-map
+        "+" 'org-timeblock-new-task
+        "j" 'org-timeblock-forward-block
+        "l" 'org-timeblock-forward-column
+        "h" 'org-timeblock-backward-column
+        "k" 'org-timeblock-backward-block
+        (kbd "C-<down>") 'org-timeblock-day-later
+        (kbd "C-<up>") 'org-timeblock-day-earlier
+        (kbd "RET") 'org-timeblock-goto
+        (kbd "TAB") 'org-timeblock-goto-other-window
+        "d" 'org-timeblock-set-duration
+        "r" 'org-timeblock-redraw-buffers
+        "gd" 'org-timeblock-jump-to-day
+        "s" 'org-timeblock-schedule
+        "t" 'org-timeblock-toggle-timeblock-list
+        "v" 'org-timeblock-switch-scaling
+        "V" 'org-timeblock-switch-view)
+      (evil-define-key 'normal org-timeblock-list-mode-map
+        "+" 'org-timeblock-new-task
+        "j" 'org-timeblock-list-next-line
+        "k" 'org-timeblock-list-previous-line
+        (kbd "C-<down>") 'org-timeblock-day-later
+        (kbd "C-<up>") 'org-timeblock-day-earlier
+        (kbd "C-s") 'org-timeblock-list-save
+        (kbd "M-<down>") 'org-timeblock-list-drag-line-forward
+        (kbd "M-<up>") 'org-timeblock-list-drag-line-backward
+        (kbd "RET") 'org-timeblock-list-goto
+        (kbd "TAB") 'org-timeblock-list-goto-other-window
+        "S" 'org-timeblock-list-toggle-sort-function
+        "d" 'org-timeblock-list-set-duration
+        "r" 'org-timeblock-redraw-buffers
+        "gd" 'org-timeblock-jump-to-day
+        "q" 'org-timeblock-quit
+        "s" 'org-timeblock-list-schedule
+        "t" 'org-timeblock-list-toggle-timeblock
+        "v" 'org-timeblock-switch-scaling
+        "V" 'org-timeblock-switch-view)))
+#+end_src
 
-# ** Olivetti
-#   Distraction-free writing
-# #+begin_src emacs-lisp
-#   (use-package olivetti
-#     :config
-#     (defun my/distraction-free ()
-#       "Distraction-free writing environment using Olivetti package."
-#       (interactive)
-#       (if (equal olivetti-mode nil)
-#           (progn
-#             (window-configuration-to-register 1)
-#             (delete-other-windows)
-#             (text-scale-set 2)
-#             (setq display-line-numbers nil)
-#             (olivetti-mode t))
-#         (progn
-#           (if (eq (length (window-list)) 1)
-#               (jump-to-register 1))
-#           (setq display-line-numbers 'relative)
-#           (olivetti-mode 0)
-#           (text-scale-set 0))))
-#     :bind
-#     (("<f9>" . my/distraction-free)))
-# #+end_src
+** Olivetti
+  Distraction-free writing
+#+begin_src emacs-lisp
+  (use-package olivetti
+    :config
+    (defun my/distraction-free ()
+      "Distraction-free writing environment using Olivetti package."
+      (interactive)
+      (if (equal olivetti-mode nil)
+          (progn
+            (window-configuration-to-register 1)
+            (delete-other-windows)
+            (text-scale-set 2)
+            (setq display-line-numbers nil)
+            (olivetti-mode t))
+        (progn
+          (if (eq (length (window-list)) 1)
+              (jump-to-register 1))
+          (setq display-line-numbers 'relative)
+          (olivetti-mode 0)
+          (text-scale-set 0))))
+    :bind
+    (("<f9>" . my/distraction-free)))
+#+end_src
 
 ** Org modern
 #+begin_src emacs-lisp
@@ -625,60 +624,61 @@ Enter insert mode when capturing things
     (org-mode . org-rainbow-tags-mode))
 #+end_src
 
-# ** Org notifications
-# #+begin_src emacs-lisp
-#   (use-package org-alert
-#     :hook (after-init . org-alert-enable)
-#     :init
-#     (setq alert-default-style 'libnotify))
-# #+end_src
+** Org notifications
+#+begin_src emacs-lisp
+  (use-package org-alert
+    :hook (after-init . org-alert-enable)
+    :init
+    (setq alert-default-style 'libnotify))
+#+end_src
 
-# ** Org clip link
-# #+begin_src emacs-lisp
-#   (use-package org-cliplink
-#     :after org
-#     :bind ("C-c L" . org-cliplink))
-# #+end_src
+** Org clip link
+#+begin_src emacs-lisp
+  (use-package org-cliplink
+    :after org
+    :bind ("C-c L" . org-cliplink))
+#+end_src
 
-# ** Org download
-# #+begin_src emacs-lisp
-#   (use-package org-download)
-# #+end_src
+** Org download
+#+begin_src emacs-lisp
+  (use-package org-download)
+#+end_src
 
-# ** Org ql
-# #+begin_src emacs-lisp
-#   (use-package org-ql
-#     :demand t)
-# #+end_src
+** Org ql
+#+begin_src emacs-lisp
+  (use-package org-ql
+    :demand t)
+#+end_src
 
-# ** Org crypt
-# #+begin_src emacs-lisp
-#   (use-package org-crypt
-#     :elpaca nil
-#     :config
-#     (require 'org-crypt)
-#     (org-crypt-use-before-save-magic)
-#     (setq org-tags-exclude-from-inheritance '("crypt"))
-#     (setq org-crypt-key "frederic.willem@gmail.com"))
-# #+end_src
+** Org crypt
+#+begin_src emacs-lisp
+  (use-package org-crypt
+    :elpaca nil
+    :config
+    (require 'org-crypt)
+    (org-crypt-use-before-save-magic)
+    (setq org-tags-exclude-from-inheritance '("crypt"))
+    (setq org-crypt-key "frederic.willem@gmail.com"))
+#+end_src
 
-# ** Org passwords
-# #+begin_src emacs-lisp
-#   (use-package org-passwords
-#     :bind (("C-c q" . org-passwords)
-#            :map org-passwords-mode-map
-#            ("C-c u" . org-passwords-copy-username)
-#            ("C-c s" . org-passwords-copy-password)
-#            ("C-c o" . org-passwords-open-url))
-#     :custom
-#     (org-passwords-file "~/org/password.org.gpg")
-#     :config
-#     (setq enable-recursive-minibuffers t)
-#     (setq org-passwords-random-words-dictionary "/etc/dictionaries-common/words")
-#     (add-to-list 'org-capture-templates
-#                  '("p" "password" entry (file "~/org/password.org.gpg")
-#                    "* %^{Title}\n  %^{URL}p %^{USERNAME}p %^{PASSWORD}p")))
-# #+end_src
+** Org passwords
+#+begin_src emacs-lisp
+  (use-package org-passwords
+    :elpaca `(org-passwords :type git :repo "https://bitbucket.org/alfaromurillo/org-passwords.el.git" :files (:defaults))
+    :bind (("C-c q" . org-passwords)
+           :map org-passwords-mode-map
+           ("C-c u" . org-passwords-copy-username)
+           ("C-c s" . org-passwords-copy-password)
+           ("C-c o" . org-passwords-open-url))
+    :custom
+    (org-passwords-file "~/org/password.org.gpg")
+    :config
+    (setq enable-recursive-minibuffers t)
+    (setq org-passwords-random-words-dictionary "/etc/dictionaries-common/words")
+    (add-to-list 'org-capture-templates
+                 '("p" "password" entry (file "~/org/password.org.gpg")
+                   "* %^{Title}\n  %^{URL}p %^{USERNAME}p %^{PASSWORD}p")))
+#+end_src
 
 * Evil mode
 Usage of evil mode as I used to work with vim binding for years

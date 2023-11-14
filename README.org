@@ -170,98 +170,99 @@ This will prevent to use package.el
 #     (load custom-file))
 # #+end_src
 
-# ** Help
-# Better help buffer
-# #+begin_src emacs-lisp
-#   (use-package helpful
-#     :init
-#     (setq helpful--view-literal t)
-#     :config
-#     ;; Note that the built-in `describe-function' includes both functions
-#     ;; and macros. `helpful-function' is functions only, so we provide
-#     ;; `helpful-callable' as a drop-in replacement.
-#     (global-set-key (kbd "C-h f") #'helpful-callable)
-#     ;; Lookup the current symbol at point. C-c C-d is a common keybinding
-#     ;; for this in lisp modes but C-c C-. is convenient for org-mode as well.
-#     (global-set-key (kbd "C-c C-.") #'helpful-at-point)
-#     (global-set-key (kbd "C-h v") #'helpful-variable)
-#     (global-set-key (kbd "C-h k") #'helpful-key)
-#     (global-set-key (kbd "C-h x") #'helpful-command))
-# #+end_src
+** Help
+Better help buffer
+#+begin_src emacs-lisp
+  (use-package helpful
+    :init
+    (setq helpful--view-literal t)
+    :config
+    ;; Note that the built-in `describe-function' includes both functions
+    ;; and macros. `helpful-function' is functions only, so we provide
+    ;; `helpful-callable' as a drop-in replacement.
+    (global-set-key (kbd "C-h f") #'helpful-callable)
+    ;; Lookup the current symbol at point. C-c C-d is a common keybinding
+    ;; for this in lisp modes but C-c C-. is convenient for org-mode as well.
+    (global-set-key (kbd "C-c C-.") #'helpful-at-point)
+    (global-set-key (kbd "C-h v") #'helpful-variable)
+    (global-set-key (kbd "C-h k") #'helpful-key)
+    (global-set-key (kbd "C-h x") #'helpful-command))
+#+end_src
 
-# *** Help package
-# #+begin_src emacs-lisp
-#   (use-package help
-#     :straight nil
-#     :bind (:map help-map
-#                 ("W" . woman)))
-# #+end_src
-# ** Terminals
-# *** Vterm
-# #+begin_src emacs-lisp
-#   (use-package vterm)
-# #+end_src
-# *** Vterm toggle
-# #+begin_src emacs-lisp
-#   (use-package vterm-toggle
-#     :bind (("C-c t t" . vterm-toggle)
-#            ("C-c t V" . vterm-toggle-cd)))
-# #+end_src
-# *** Multi vterm
-# Use vterm as multiplexer
-# #+begin_src emacs-lisp
-#   (use-package multi-vterm
-#     :hook (vterm-mode . evil-insert-state)
-#     :hook (vterm-mode . my/remove-insert-state-exit-save-hook)
-#     :bind ( ("C-c t m" . multi-vterm)
-#             :map vterm-mode-map
-#             ("C-c t r" . multi-vterm-rename-buffer)
-#             ("C-c t n" . multi-vterm-next)
-#             ("C-c t p" . multi-vterm-prev))
-#     :config
-#     (define-key vterm-mode-map [return]                      #'vterm-send-return)
+*** Help package
+#+begin_src emacs-lisp
+  (use-package help
+    :elpaca nil
+    :bind (:map help-map
+                ("W" . woman)))
+#+end_src
+** Terminals
+*** Vterm
+#+begin_src emacs-lisp
+  (use-package vterm)
+#+end_src
+*** Vterm toggle
+#+begin_src emacs-lisp
+  (use-package vterm-toggle
+    :bind (("C-c t t" . vterm-toggle)
+           ("C-c t V" . vterm-toggle-cd)))
+#+end_src
+*** Multi vterm
+Use vterm as multiplexer
+#+begin_src emacs-lisp
+  (use-package multi-vterm
+    :hook (vterm-mode . evil-insert-state)
+    :hook (vterm-mode . my/remove-insert-state-exit-save-hook)
+    :bind ( ("C-c t m" . multi-vterm)
+            :map vterm-mode-map
+            ("C-c t r" . multi-vterm-rename-buffer)
+            ("C-c t n" . multi-vterm-next)
+            ("C-c t p" . multi-vterm-prev))
+    :config
+    (define-key vterm-mode-map [return]                      #'vterm-send-return)
 
-#     (setq vterm-keymap-exceptions nil)
-#     (evil-define-key 'insert vterm-mode-map (kbd "C-e")      #'vterm--self-insert)
-#     (evil-define-key 'insert vterm-mode-map (kbd "C-f")      #'vterm--self-insert)
-#     (evil-define-key 'insert vterm-mode-map (kbd "C-a")      #'vterm--self-insert)
-#     (evil-define-key 'insert vterm-mode-map (kbd "C-v")      #'vterm--self-insert)
-#     (evil-define-key 'insert vterm-mode-map (kbd "C-b")      #'vterm--self-insert)
-#     (evil-define-key 'insert vterm-mode-map (kbd "C-w")      #'vterm--self-insert)
-#     (evil-define-key 'insert vterm-mode-map (kbd "C-u")      #'vterm--self-insert)
-#     (evil-define-key 'insert vterm-mode-map (kbd "C-d")      #'vterm--self-insert)
-#     (evil-define-key 'insert vterm-mode-map (kbd "C-n")      #'vterm--self-insert)
-#     (evil-define-key 'insert vterm-mode-map (kbd "C-m")      #'vterm--self-insert)
-#     (evil-define-key 'insert vterm-mode-map (kbd "C-p")      #'vterm--self-insert)
-#     (evil-define-key 'insert vterm-mode-map (kbd "C-j")      #'vterm--self-insert)
-#     (evil-define-key 'insert vterm-mode-map (kbd "C-k")      #'vterm--self-insert)
-#     (evil-define-key 'insert vterm-mode-map (kbd "C-r")      #'vterm--self-insert)
-#     (evil-define-key 'insert vterm-mode-map (kbd "C-t")      #'vterm--self-insert)
-#     (evil-define-key 'insert vterm-mode-map (kbd "C-g")      #'vterm--self-insert)
-#     (evil-define-key 'insert vterm-mode-map (kbd "C-SPC")    #'vterm--self-insert)
-#     (evil-define-key 'normal vterm-mode-map (kbd "C-d")      #'vterm--self-insert)
-#     (evil-define-key 'normal vterm-mode-map (kbd ",c")       #'multi-vterm)
-#     (evil-define-key 'normal vterm-mode-map (kbd ",n")       #'multi-vterm-next)
-#     (evil-define-key 'normal vterm-mode-map (kbd ",p")       #'multi-vterm-prev)
-#     (evil-define-key 'normal vterm-mode-map (kbd "i")        #'evil-insert-resume)
-#     (evil-define-key 'normal vterm-mode-map (kbd "o")        #'evil-insert-resume)
-#     (evil-define-key 'normal vterm-mode-map (kbd "<return>") #'evil-insert-resume))
-# #+end_src
+    (setq vterm-keymap-exceptions nil)
+    (evil-define-key 'insert vterm-mode-map (kbd "C-e")      #'vterm--self-insert)
+    (evil-define-key 'insert vterm-mode-map (kbd "C-f")      #'vterm--self-insert)
+    (evil-define-key 'insert vterm-mode-map (kbd "C-a")      #'vterm--self-insert)
+    (evil-define-key 'insert vterm-mode-map (kbd "C-v")      #'vterm--self-insert)
+    (evil-define-key 'insert vterm-mode-map (kbd "C-b")      #'vterm--self-insert)
+    (evil-define-key 'insert vterm-mode-map (kbd "C-w")      #'vterm--self-insert)
+    (evil-define-key 'insert vterm-mode-map (kbd "C-u")      #'vterm--self-insert)
+    (evil-define-key 'insert vterm-mode-map (kbd "C-d")      #'vterm--self-insert)
+    (evil-define-key 'insert vterm-mode-map (kbd "C-n")      #'vterm--self-insert)
+    (evil-define-key 'insert vterm-mode-map (kbd "C-m")      #'vterm--self-insert)
+    (evil-define-key 'insert vterm-mode-map (kbd "C-p")      #'vterm--self-insert)
+    (evil-define-key 'insert vterm-mode-map (kbd "C-j")      #'vterm--self-insert)
+    (evil-define-key 'insert vterm-mode-map (kbd "C-k")      #'vterm--self-insert)
+    (evil-define-key 'insert vterm-mode-map (kbd "C-r")      #'vterm--self-insert)
+    (evil-define-key 'insert vterm-mode-map (kbd "C-t")      #'vterm--self-insert)
+    (evil-define-key 'insert vterm-mode-map (kbd "C-g")      #'vterm--self-insert)
+    (evil-define-key 'insert vterm-mode-map (kbd "C-SPC")    #'vterm--self-insert)
+    (evil-define-key 'normal vterm-mode-map (kbd "C-d")      #'vterm--self-insert)
+    (evil-define-key 'normal vterm-mode-map (kbd ",c")       #'multi-vterm)
+    (evil-define-key 'normal vterm-mode-map (kbd ",n")       #'multi-vterm-next)
+    (evil-define-key 'normal vterm-mode-map (kbd ",p")       #'multi-vterm-prev)
+    (evil-define-key 'normal vterm-mode-map (kbd "i")        #'evil-insert-resume)
+    (evil-define-key 'normal vterm-mode-map (kbd "o")        #'evil-insert-resume)
+    (evil-define-key 'normal vterm-mode-map (kbd "<return>") #'evil-insert-resume))
+#+end_src
 
-# *** Eshell
-# #+begin_src emacs-lisp
-#   (use-package eshell
-#     :bind ("C-c t e" . eshell))
-#   (use-package eshell-vterm
-#     :demand t
-#     :after eshell
-#     :config
-#     (eshell-vterm-mode))
-# #+end_src
+*** Eshell
+#+begin_src emacs-lisp
+  (use-package eshell
+    :elpaca nil
+    :bind ("C-c t e" . eshell))
+  (use-package eshell-vterm
+    :demand t
+    :after eshell
+    :config
+    (eshell-vterm-mode))
+#+end_src
 
-# *** Emacs shell
-# #+begin_src emacs-lisp
-# #+end_src
+*** Emacs shell
+#+begin_src emacs-lisp
+#+end_src
 # * Org mode
 # ** Org basics
 # *** Time-stamp
@@ -958,248 +959,243 @@ Used to play with forges like GitHub or gitlab
         user-mail-address "frederic.willem@gmail.com")
 #+end_src
 
-# * UI
-# ** Theme
-# *** modus themes
-# #+begin_src emacs-lisp
-#   (use-package modus-themes
-#     :bind   ("<f6>" . modus-themes-toggle)
-#     :demand t
-#     :config
-#     (setq modus-themes-to-toggle '(modus-operandi modus-vivendi))
-#     ;; (load-theme 'modus-vivendi :no-confirm)
-#     )
+* UI
+** Theme
+*** modus themes
+#+begin_src emacs-lisp
+  (use-package modus-themes
+    :bind   ("<f6>" . modus-themes-toggle)
+    :demand t
+    :config
+    (setq modus-themes-to-toggle '(modus-operandi modus-vivendi))
+    ;; (load-theme 'modus-vivendi :no-confirm)
+    )
 
-# #+end_src
-# *** Theme changer
-# Change light to dark theme according to the sunset/sunrise
-# #+begin_src emacs-lisp
-#   (use-package theme-changer
-#     :config
-#     (setq ;; calendar-location-name "Saint-Nicolas, BE"
-#           calendar-latitude 50.628
-#           calendar-longitude 5.516)
-#     (change-theme 'modus-operandi 'modus-vivendi))
-# #+end_src
+#+end_src
+*** Theme changer
+Change light to dark theme according to the sunset/sunrise
+#+begin_src emacs-lisp
+  (use-package theme-changer
+    :config
+    (setq ;; calendar-location-name "Saint-Nicolas, BE"
+          calendar-latitude 50.628
+          calendar-longitude 5.516)
+    (change-theme 'modus-operandi 'modus-vivendi))
+#+end_src
 
-# ** Icons
-# *** Nerd Icons
-# #+begin_src emacs-lisp
-#   (use-package nerd-icons
-#     ;; :custom
-#     ;; The Nerd Font you want to use in GUI
-#     ;; "Symbols Nerd Font Mono" is the default and is recommended
-#     ;; but you can use any other Nerd Font if you want
-#     ;; (nerd-icons-font-family "Symbols Nerd Font Mono")
-#     )
-# #+end_src
+** Icons
+*** Nerd Icons
+#+begin_src emacs-lisp
+  (use-package nerd-icons
+    ;; :custom
+    ;; The Nerd Font you want to use in GUI
+    ;; "Symbols Nerd Font Mono" is the default and is recommended
+    ;; but you can use any other Nerd Font if you want
+    ;; (nerd-icons-font-family "Symbols Nerd Font Mono")
+    )
+#+end_src
 
-# *** Nerd icons completion
-# #+begin_src emacs-lisp
-#   (use-package nerd-icons-completion
-#     :after marginalia
-#     :config
-#     (nerd-icons-completion-mode)
-#     (add-hook 'marginalia-mode-hook #'nerd-icons-completion-marginalia-setup))
+*** Nerd icons completion
+#+begin_src emacs-lisp
+  (use-package nerd-icons-completion
+    :after marginalia
+    :config
+    (nerd-icons-completion-mode)
+    (add-hook 'marginalia-mode-hook #'nerd-icons-completion-marginalia-setup))
 
-# #+end_src
+#+end_src
 
-# *** Nerd icons for dired
-# #+begin_src emacs-lisp
-#   (use-package nerd-icons-dired
-#     :hook
-#     (dired-mode . nerd-icons-dired-mode))
-# #+end_src
+*** Nerd icons for dired
+#+begin_src emacs-lisp
+  (use-package nerd-icons-dired
+    :hook
+    (dired-mode . nerd-icons-dired-mode))
+#+end_src
 
-# ** Modeline
-# *** Doom-modeline
-# #+begin_src emacs-lisp
-#   (use-package doom-modeline
-#     :hook (after-init . doom-modeline-mode)
-#     :init
-#     (setq doom-modeline-buffer-file-name-style 'buffer-neme))
-# #+end_src
-# *** COMMENT Test
-# #+begin_src emacs-lisp
-#   (use-package powerline
-#     :init
-#     (powerline-default-theme))
-# #+end_src
-# ** Windows
-# #+begin_src emacs-lisp
-#   (use-package ace-window
-#     :after treemacs
-#     :bind ("C-x o" . ace-window))
-# #+end_src
+** Modeline
+*** Doom-modeline
+#+begin_src emacs-lisp
+  (use-package doom-modeline
+    :hook (after-init . doom-modeline-mode)
+    :init
+    (setq doom-modeline-buffer-file-name-style 'buffer-neme)
+    (doom-modeline-mode))
+#+end_src
+** Windows
+#+begin_src emacs-lisp
+  (use-package ace-window
+    :after treemacs
+    :bind ("C-x o" . ace-window))
+#+end_src
 
-# #+begin_src emacs-lisp
-#   (use-package shackle
-#     :init
-#     (setq shackle-default-alignment 'below
-#           shackle-default-size 0.4
-#           shackle-rules '(
-#                           ("\\`\\*help.*?\\*\\'" :regexp t :align t :close-on-realign t :size 0.33 :select t)
-#                           ('helpful-mode :align t :close-on-realign t :size 0.33 :select t)
-#                           ("\\`\\*Flycheck.*?\\*\\'" :regexp t :align t :close-on-realign t :size 12 :select nil)
-#                           ("\\`\\*Shell Command Output.*?\\*\\'" :regexp t :align t :close-on-realign t :size 12 :select nil)
-#                           ("\\`\\*Async Shell Command.*?\\*\\'" :regexp t :align t :close-on-realign t :size 12 :select nil)
-#                           ("\\`\\*Directory.*?\\*\\'" :regexp t :align t :close-on-realign t :size 12 :select t)
-#                           ("\\`\\*vc-change-log.*?\\*\\'" :regexp t :align t :close-on-realign t :size 0.33 :select nil)
+#+begin_src emacs-lisp
+  (use-package shackle
+    :init
+    (setq shackle-default-alignment 'below
+          shackle-default-size 0.4
+          shackle-rules '(
+                          ("\\`\\*help.*?\\*\\'" :regexp t :align t :close-on-realign t :size 0.33 :select t)
+                          ('helpful-mode :align t :close-on-realign t :size 0.33 :select t)
+                          ("\\`\\*Flycheck.*?\\*\\'" :regexp t :align t :close-on-realign t :size 12 :select nil)
+                          ("\\`\\*Shell Command Output.*?\\*\\'" :regexp t :align t :close-on-realign t :size 12 :select nil)
+                          ("\\`\\*Async Shell Command.*?\\*\\'" :regexp t :align t :close-on-realign t :size 12 :select nil)
+                          ("\\`\\*Directory.*?\\*\\'" :regexp t :align t :close-on-realign t :size 12 :select t)
+                          ("\\`\\*vc-change-log.*?\\*\\'" :regexp t :align t :close-on-realign t :size 0.33 :select nil)
 
-#                           ("\\`\\*HTTP Response.*?\\*\\'" :regexp t :align t :close-on-realign t :size 20 :select nil)
-#                           ("\\*Agenda Commands\\*" :regexp t   :align t :close-on-realign t :size 20 :select t)
+                          ("\\`\\*HTTP Response.*?\\*\\'" :regexp t :align t :close-on-realign t :size 20 :select nil)
+                          ("\\*Agenda Commands\\*" :regexp t   :align t :close-on-realign t :size 20 :select t)
 
-#                           ("\\`\\*xref.*?\\*\\'" :regexp t :align t :close-on-realign t :size 15 :select t)
+                          ("\\`\\*xref.*?\\*\\'" :regexp t :align t :close-on-realign t :size 15 :select t)
 
-#                           ;; TODO make this working with shells modes
-#                           ('ansi-term-mode :align t :close-on-realign t :size 0.4 :select t)
-#                           ('occur-mode :align right :close-on-realign t :size 0.4 :select t)
-#                           ('grep-mode   :align left :close-on-realign t :size 0.5 :select t)
-#   ;; TODO have a look to https://github.com/jixiuf/vterm-toggle
-#                           ("\\*vterm.*?\\*" :regexp t  :align t :close-on-realign t :size 0.4 :select t)
-#                           ('shell-mode :align t :close-on-realign t :size 0.4 :select t)
-#                           ('eshell-mode :align left :close-on-realign t :size 0.4 :select t)
+                          ;; TODO make this working with shells modes
+                          ('ansi-term-mode :align t :close-on-realign t :size 0.4 :select t)
+                          ('occur-mode :align right :close-on-realign t :size 0.4 :select t)
+                          ('grep-mode   :align left :close-on-realign t :size 0.5 :select t)
+  ;; TODO have a look to https://github.com/jixiuf/vterm-toggle
+                          ("\\*vterm.*?\\*" :regexp t  :align t :close-on-realign t :size 0.4 :select t)
+                          ('shell-mode :align t :close-on-realign t :size 0.4 :select t)
+                          ('eshell-mode :align left :close-on-realign t :size 0.4 :select t)
 
-#                           ('magit-status-mode   :align t :select t :size 0.33 :only t)
-#                           ('magit-popup-mode :align t :select t :size 0.33 :close-on-realign t)
-#                           ('magit-diff-mode   :select nil :align left :size 0.5 :only t)
-#                           ('magit-log-mode   :select t :align t :size 0.4 :only t)
-#                           ('magit-revision-mode   :select t :align t :size 0.5 :close-on-realign t)
+                          ('magit-status-mode   :align t :select t :size 0.33 :only t)
+                          ('magit-popup-mode :align t :select t :size 0.33 :close-on-realign t)
+                          ('magit-diff-mode   :select nil :align left :size 0.5 :only t)
+                          ('magit-log-mode   :select t :align t :size 0.4 :only t)
+                          ('magit-revision-mode   :select t :align t :size 0.5 :close-on-realign t)
 
-#                           ;; lsp
-#                           ("\\`\\*lsp-help.*?\\*\\'" :regexp t :align t :close-on-realign t :size 10 :select t)
+                          ;; lsp
+                          ("\\`\\*lsp-help.*?\\*\\'" :regexp t :align t :close-on-realign t :size 10 :select t)
 
-#                           ('completion-list-mode :align t :close-on-realign t :size 0.33 :select t)
-#                           ('compilation-mode :align t :close-on-realign t :size 0.33 :select t)
-#                           ("*Warnings*" :align t :close-on-realign t :size 0.33 :select nil)
-#                           ("*Messages*" :align t :close-on-realign t :size 0.33 :select nil)))
-#     :config
-#     (shackle-mode 1))
+                          ('completion-list-mode :align t :close-on-realign t :size 0.33 :select t)
+                          ('compilation-mode :align t :close-on-realign t :size 0.33 :select t)
+                          ("*Warnings*" :align t :close-on-realign t :size 0.33 :select nil)
+                          ("*Messages*" :align t :close-on-realign t :size 0.33 :select nil)))
+    :config
+    (shackle-mode 1))
 
-# #+end_src
-# #+begin_src emacs-lisp
-#   (use-package transpose-frame
-#     :bind ("C-x R" . transpose-frame))
+#+end_src
+#+begin_src emacs-lisp
+  (use-package transpose-frame
+    :bind ("C-x R" . transpose-frame))
 
-# #+end_src
-# * Editing
-# ** Sudo edit
-# #+begin_src emacs-lisp
-#   (use-package sudo-edit
-#     :demand t)
-# #+end_src
+#+end_src
+* Editing
+** Sudo edit
+#+begin_src emacs-lisp
+  (use-package sudo-edit
+    :demand t)
+#+end_src
 
-# ** Treemacs
-# #+begin_src emacs-lisp
-#   (use-package treemacs
-#     :elpaca (treemacs
-#                :type git
-#                :files (:defaults "icons" "src/elisp/treemacs*.el" "src/scripts/*.py"  "src/extra/*" "treemacs-pkg.el")
-#                :host github
-#                ;; cpv   src/scripts ../../build/treemacs/src/
-#                :repo "Alexander-Miller/treemacs")
-#     :defer t
-#     :bind
-#     (:map global-map
-#           ("M-0"       . treemacs-select-window)
-#           ("C-x T 1"   . treemacs-delete-other-windows)
-#           ("C-x T t"   . treemacs)
-#           ("C-x T d"   . treemacs-select-directory)
-#           ("C-x T B"   . treemacs-bookmark)
-#           ("C-x T C-t" . treemacs-find-file)
-#           ("C-x T M-t" . treemacs-find-tag))
-#     :config
-#     (progn
-#       (setq treemacs-collapse-dirs                   (if treemacs-python-executable 3 0)
-#             treemacs-deferred-git-apply-delay        0.5
-#             treemacs-directory-name-transformer      #'identity
-#             treemacs-display-in-side-window          t
-#             treemacs-eldoc-display                   'simple
-#             treemacs-file-event-delay                2000
-#             treemacs-file-extension-regex            treemacs-last-period-regex-value
-#             treemacs-file-follow-delay               0.2
-#             treemacs-file-name-transformer           #'identity
-#             treemacs-follow-after-init               t
-#             treemacs-expand-after-init               t
-#             treemacs-find-workspace-method           'find-for-file-or-pick-first
-#             treemacs-git-command-pipe                ""
-#             treemacs-goto-tag-strategy               'refetch-index
-#             treemacs-header-scroll-indicators        '(nil . "^^^^^^")
-#             treemacs-hide-dot-git-directory          t
-#             treemacs-indentation                     2
-#             treemacs-indentation-string              " "
-#             treemacs-is-never-other-window           nil
-#             treemacs-max-git-entries                 5000
-#             treemacs-missing-project-action          'ask
-#             treemacs-move-forward-on-expand          nil
-#             treemacs-no-png-images                   nil
-#             treemacs-no-delete-other-windows         t
-#             treemacs-project-follow-cleanup          t
-#             treemacs-persist-file                    (expand-file-name ".cache/treemacs-persist" user-emacs-directory)
-#             treemacs-position                        'left
-#             treemacs-read-string-input               'from-child-frame
-#             treemacs-recenter-distance               0.1
-#             treemacs-recenter-after-file-follow      nil
-#             treemacs-recenter-after-tag-follow       nil
-#             treemacs-recenter-after-project-jump     'always
-#             treemacs-recenter-after-project-expand   'on-distance
-#             treemacs-litter-directories              '("/node_modules" "/.venv" "/.cask")
-#             treemacs-project-follow-into-home        t
-#             treemacs-project-follow-mode             t
-#             treemacs-show-cursor                     nil
-#             treemacs-show-hidden-files               t
-#             treemacs-silent-filewatch                nil
-#             treemacs-silent-refresh                  nil
-#             treemacs-sorting                         'alphabetic-asc
-#             treemacs-select-when-already-in-treemacs 'move-back
-#             treemacs-space-between-root-nodes        t
-#             treemacs-tag-follow-cleanup              t
-#             treemacs-tag-follow-delay                1.5
-#             treemacs-text-scale                      nil
-#             treemacs-user-mode-line-format           nil
-#             treemacs-user-header-line-format         nil
-#             treemacs-wide-toggle-width               70
-#             treemacs-width                           35
-#             treemacs-width-increment                 1
-#             treemacs-width-is-initially-locked       t
-#             treemacs-workspace-switch-cleanup        nil)
+** Treemacs
+#+begin_src emacs-lisp
+  (use-package treemacs
+    :elpaca (treemacs
+               :type git
+               :files (:defaults "icons" "src/elisp/treemacs*.el" "src/scripts/*.py"  "src/extra/*" "treemacs-pkg.el")
+               :host github
+               ;; cpv   src/scripts ../../build/treemacs/src/
+               :repo "Alexander-Miller/treemacs")
+    :defer t
+    :bind
+    (:map global-map
+          ("M-0"       . treemacs-select-window)
+          ("C-x T 1"   . treemacs-delete-other-windows)
+          ("C-x T t"   . treemacs)
+          ("C-x T d"   . treemacs-select-directory)
+          ("C-x T B"   . treemacs-bookmark)
+          ("C-x T C-t" . treemacs-find-file)
+          ("C-x T M-t" . treemacs-find-tag))
+    :config
+    (progn
+      (setq treemacs-collapse-dirs                   (if treemacs-python-executable 3 0)
+            treemacs-deferred-git-apply-delay        0.5
+            treemacs-directory-name-transformer      #'identity
+            treemacs-display-in-side-window          t
+            treemacs-eldoc-display                   'simple
+            treemacs-file-event-delay                2000
+            treemacs-file-extension-regex            treemacs-last-period-regex-value
+            treemacs-file-follow-delay               0.2
+            treemacs-file-name-transformer           #'identity
+            treemacs-follow-after-init               t
+            treemacs-expand-after-init               t
+            treemacs-find-workspace-method           'find-for-file-or-pick-first
+            treemacs-git-command-pipe                ""
+            treemacs-goto-tag-strategy               'refetch-index
+            treemacs-header-scroll-indicators        '(nil . "^^^^^^")
+            treemacs-hide-dot-git-directory          t
+            treemacs-indentation                     2
+            treemacs-indentation-string              " "
+            treemacs-is-never-other-window           nil
+            treemacs-max-git-entries                 5000
+            treemacs-missing-project-action          'ask
+            treemacs-move-forward-on-expand          nil
+            treemacs-no-png-images                   nil
+            treemacs-no-delete-other-windows         t
+            treemacs-project-follow-cleanup          t
+            treemacs-persist-file                    (expand-file-name ".cache/treemacs-persist" user-emacs-directory)
+            treemacs-position                        'left
+            treemacs-read-string-input               'from-child-frame
+            treemacs-recenter-distance               0.1
+            treemacs-recenter-after-file-follow      nil
+            treemacs-recenter-after-tag-follow       nil
+            treemacs-recenter-after-project-jump     'always
+            treemacs-recenter-after-project-expand   'on-distance
+            treemacs-litter-directories              '("/node_modules" "/.venv" "/.cask")
+            treemacs-project-follow-into-home        t
+            treemacs-project-follow-mode             t
+            treemacs-show-cursor                     nil
+            treemacs-show-hidden-files               t
+            treemacs-silent-filewatch                nil
+            treemacs-silent-refresh                  nil
+            treemacs-sorting                         'alphabetic-asc
+            treemacs-select-when-already-in-treemacs 'move-back
+            treemacs-space-between-root-nodes        t
+            treemacs-tag-follow-cleanup              t
+            treemacs-tag-follow-delay                1.5
+            treemacs-text-scale                      nil
+            treemacs-user-mode-line-format           nil
+            treemacs-user-header-line-format         nil
+            treemacs-wide-toggle-width               70
+            treemacs-width                           35
+            treemacs-width-increment                 1
+            treemacs-width-is-initially-locked       t
+            treemacs-workspace-switch-cleanup        nil)
 
-#       ;; The default width and height of the icons is 22 pixels. If you are
-#       ;; using a Hi-DPI display, uncomment this to double the icon size.
-#       ;;(treemacs-resize-icons 44)
+      ;; The default width and height of the icons is 22 pixels. If you are
+      ;; using a Hi-DPI display, uncomment this to double the icon size.
+      ;;(treemacs-resize-icons 44)
 
-#       (treemacs-follow-mode t)
-#       (treemacs-filewatch-mode t)
-#       (treemacs-fringe-indicator-mode 'always)
-#       (when treemacs-python-executable
-#         (treemacs-git-commit-diff-mode t))
+      (treemacs-follow-mode t)
+      (treemacs-filewatch-mode t)
+      (treemacs-fringe-indicator-mode 'always)
+      (when treemacs-python-executable
+        (treemacs-git-commit-diff-mode t))
 
-#       (pcase (cons (not (null (executable-find "git")))
-#                    (not (null treemacs-python-executable)))
-#         (`(t . t)
-#          (treemacs-git-mode 'deferred))
-#         (`(t . _)
-#          (treemacs-git-mode 'simple)))
+      (pcase (cons (not (null (executable-find "git")))
+                   (not (null treemacs-python-executable)))
+        (`(t . t)
+         (treemacs-git-mode 'deferred))
+        (`(t . _)
+         (treemacs-git-mode 'simple)))
 
-#       (treemacs-hide-gitignored-files-mode nil)))
+      (treemacs-hide-gitignored-files-mode nil)))
 
-#   (use-package treemacs-mu4e
-#     :after (treemacs mu4e)
-#     :elpaca nil
-#     :config
-#     (setq treemacs-mu4e--count-script "/home/willefi2/.emacs.d/straight/repos/treemacs/src/scripts/treemacs-count-mail.py"))
+  (use-package treemacs-mu4e
+    :after (treemacs mu4e)
+    :elpaca nil
+    :config
+    (setq treemacs-mu4e--count-script "/home/willefi2/.emacs.d/straight/repos/treemacs/src/scripts/treemacs-count-mail.py"))
 
-#   (use-package treemacs-evil
-#     :after (treemacs evil))
+  (use-package treemacs-evil
+    :after (treemacs evil))
 
-#   (use-package treemacs-magit
-#     :after (treemacs magit))
+  (use-package treemacs-magit
+    :after (treemacs magit))
 
-#   (use-package treemacs-nerd-icons
-#     :after treemacs
-#     :config
-#     (treemacs-load-theme "nerd-icons"))
-# #+end_src
+  (use-package treemacs-nerd-icons
+    :after treemacs
+    :config
+    (treemacs-load-theme "nerd-icons"))
+#+end_src
 
 ** Which-key
 Emacs package that displays available keybindings in popup
@@ -1214,39 +1210,38 @@ When you can't remember all keybindings
     (which-key-mode)
     ;; avoid which-key to be truncated
     (setq which-key-allow-imprecise-window-fit nil)
-    :hook (after-init . which-key-mode)
     :custom
     (which-key-paging-prefixes '("C-c" "C-x" "C-w"))
     (which-key-allow-evil-operators t)
     (which-key-use-C-h-commands nil)
     (which-key-idle-delay 0.2))
-
 #+end_src
 
-# ** Parens
+** Parens
 
-# #+begin_src emacs-lisp
-#   (use-package electric-pair
-#     :elpaca nil
-#     :hook (after-init . electric-pair-mode))
-# #+end_src
-# #+begin_src emacs-lisp
-#   (use-package lispy
-#     :hook ((emacs-lisp-mode lisp-interaction-mode) . lispy-mode))
-#   (use-package lispyville
-#     :hook ((emacs-lisp-mode lisp-interaction-mode) . lispyville-mode)
-#     :config
-#     (lispyville-set-key-theme '(operators c-w additional)))
-# #+end_src
-# ** Jump
-# avy is a GNU Emacs package for jumping to visible text using a char-based decision tree
-# #+begin_src emacs-lisp
-#   (use-package avy
-#     :after evil
-#     :demand t
-#     :config
-#     (evil-global-set-key 'normal "f" 'evil-avy-goto-char))
-# #+end_src
+#+begin_src emacs-lisp
+  (use-package elec-pair
+    :elpaca nil
+    :init
+    (electric-pair-mode))
+#+end_src
+#+begin_src emacs-lisp
+  (use-package lispy
+    :hook ((emacs-lisp-mode lisp-interaction-mode) . lispy-mode))
+  (use-package lispyville
+    :hook ((emacs-lisp-mode lisp-interaction-mode) . lispyville-mode)
+    :config
+    (lispyville-set-key-theme '(operators c-w additional)))
+#+end_src
+** Jump
+avy is a GNU Emacs package for jumping to visible text using a char-based decision tree
+#+begin_src emacs-lisp
+  (use-package avy
+    :after evil
+    :demand t
+    :config
+    (evil-global-set-key 'normal "f" 'evil-avy-goto-char))
+#+end_src
 
 ** Evil commentary
 Comment stuff out. A port of vim-commentary
@@ -1792,39 +1787,39 @@ marginalia adds annotations in the mini buffer
   (use-package java-snippets)
 #+end_src
 
-# * Projects
-# ** Perspective
-# #+begin_src emacs-lisp
-#   (use-package perspective
-#     :custom
-#     (persp-mode-prefix-key (kbd "C-c w"))  ; pick your own prefix key here
-#     :init
-#     (persp-mode)
-#     :config
-#     (add-to-list 'consult-buffer-sources persp-consult-source))
-# #+end_src
-# ** Perspective tabs
-# #+begin_src emacs-lisp
-#   (use-package perspective-tabs
-#     :after (perspective)
-#     :elpaca (:host sourcehut :repo "woozong/perspective-tabs")
-#     :init
-#     (perspective-tabs-mode +1))
-# #+end_src
+* Projects
+** Perspective
+#+begin_src emacs-lisp
+  (use-package perspective
+    :custom
+    (persp-mode-prefix-key (kbd "C-c w"))  ; pick your own prefix key here
+    :init
+    (persp-mode)
+    :config
+    (add-to-list 'consult-buffer-sources persp-consult-source))
+#+end_src
+** Perspective tabs
+#+begin_src emacs-lisp
+  (use-package perspective-tabs
+    :after (perspective)
+    :elpaca (:host sourcehut :repo "woozong/perspective-tabs")
+    :init
+    (perspective-tabs-mode +1))
+#+end_src
 
-# ** Perspectives project bridge
-# #+begin_src emacs-lisp
-#   (use-package perspective-project-bridge
-#     :hook
-#     (perspective-project-bridge-mode
-#      .
-#      (lambda ()
-#        (if perspective-project-bridge-mode
-#            (perspective-project-bridge-find-perspectives-for-all-buffers)
-#          (perspective-project-bridge-kill-perspectives))))
-#     :hook
-#     (after-init . perspective-project-bridge-mode))
-# #+end_src
+** Perspectives project bridge
+#+begin_src emacs-lisp
+  (use-package perspective-project-bridge
+    :hook
+    (perspective-project-bridge-mode
+     .
+     (lambda ()
+       (if perspective-project-bridge-mode
+           (perspective-project-bridge-find-perspectives-for-all-buffers)
+         (perspective-project-bridge-kill-perspectives))))
+    :init
+    (perspective-project-bridge-mode))
+#+end_src
 # * Mails
 # ** Mu4e
 # #+begin_src emacs-lisp

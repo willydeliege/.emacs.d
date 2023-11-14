@@ -696,7 +696,6 @@ Usage of evil mode as I used to work with vim binding for years
     :after undo-fu
     :hook ((org-mode prog-mode) . my/add-insert-state-exit-save-hook)
     :hook (org-src-mode . my/remove-insert-state-exit-save-hook)
-    :hook (after-init . evil-mode)
     :hook (lisp-interaction-mode . my/remove-insert-state-exit-save-hook ) ;; for scratch buffer
     :init
     (setq evil-want-integration t) ;; This is optional since it's already set to t by default.
@@ -1016,7 +1015,6 @@ Change light to dark theme according to the sunset/sunrise
 *** Doom-modeline
 #+begin_src emacs-lisp
   (use-package doom-modeline
-    :hook (after-init . doom-modeline-mode)
     :init
     (setq doom-modeline-buffer-file-name-style 'buffer-neme)
     (doom-modeline-mode))
@@ -1820,367 +1818,363 @@ marginalia adds annotations in the mini buffer
     :init
     (perspective-project-bridge-mode))
 #+end_src
-# * Mails
-# ** Mu4e
-# #+begin_src emacs-lisp
-#   (use-package mu4e
-#     :unless my/using-android
-#     :elpaca (mu :type git :host github :repo "djcb/mu" ;; :branch "release/1.10"
-#                   )
-#     :demand t
-#     :bind (("C-x m" . mu4e)
-#            :map mu4e-headers-mode-map
-#            ("C-c c" . mu4e-org-store-and-capture)
-#            :map mu4e-view-mode-map
-#            ("C-c c" . mu4e-org-store-and-capture))
-#     :custom
-#     (mu4e-attachment-dir "~/Downloads/")
-#     (mu4e-bookmarks
-#      '(( :name  "Unread messages"
-#          :query "maildir:/INBOX AND flag:unread AND NOT flag:trashed"
-#          :key ?u)
-#        ( :name "Important messages"
-#          :query "prio:high AND NOT flag:trashed AND NOT maildir:\"/[Gmail]/Sent mail\""
-#          :key ?i)
-#        ( :name "Today's messages"
-#          :query "maildir:/INBOX AND date:today..now"
-#          :key ?t)
-#        ( :name "Last 7 days"
-#          :query "date:7d..now"
-#          :hide-unread t
-#          :key ?w)))
-#     (mu4e-headers-fields '((:human-date . 12)
-#                            (:flags . 6)
-#                            (:from . 30)
-#                            (:subject)))
+* Mails
+** Mu4e
+#+begin_src emacs-lisp
+  (use-package mu4e
+    :unless my/using-android
+    :elpaca (mu  :host github :repo "djcb/mu"  :branch "release/1.10"
+                  )
+    :demand t
+    :bind (("C-x m" . mu4e)
+           :map mu4e-headers-mode-map
+           ("C-c c" . mu4e-org-store-and-capture)
+           :map mu4e-view-mode-map
+           ("C-c c" . mu4e-org-store-and-capture))
+    :custom
+    (mu4e-attachment-dir "~/Downloads/")
+    (mu4e-bookmarks
+     '(( :name  "Unread messages"
+         :query "maildir:/INBOX AND flag:unread AND NOT flag:trashed"
+         :key ?u)
+       ( :name "Important messages"
+         :query "prio:high AND NOT flag:trashed AND NOT maildir:\"/[Gmail]/Sent mail\""
+         :key ?i)
+       ( :name "Today's messages"
+         :query "maildir:/INBOX AND date:today..now"
+         :key ?t)
+       ( :name "Last 7 days"
+         :query "date:7d..now"
+         :hide-unread t
+         :key ?w)))
+    (mu4e-headers-fields '((:human-date . 12)
+                           (:flags . 6)
+                           (:from . 30)
+                           (:subject)))
 
-#     :config
-#     (evil-define-key 'normal mu4e-headers-mode-map "T" 'mu4e-headers-mark-thread )
-#     (require 'mu4e-icalendar)
-#     (mu4e-icalendar-setup)
-#     (setq gnus-icalendar-org-capture-file "~/org/Inbox.org")
-#     (setq gnus-icalendar-org-capture-headline '("Calendar"))
-#     (gnus-icalendar-org-setup)
-#     (setq mail-user-agent 'mu4e-user-agent)
-#     (setq mu4e-confirm-quit nil)
-#     (setq mu4e-get-mail-command "offlineimap")
-#     (setq mu4e-completing-read-function 'completing-read)
-#     ;; (setq mu4e-change-filenames-when-moving t)
-#     (setq sendmail-program (executable-find "msmtp")
-#           send-mail-function #'smtpmail-send-it
-#           message-sendmail-f-is-evil t
-#           message-sendmail-extra-arguments '("--read-envelope-from")
-#           message-send-mail-function #'message-send-mail-with-sendmail)
-#     ;; don[t show buffer after sending
-#     (setq message-kill-buffer-on-exit t)
-#     (setq org-export-show-temporary-export-buffer nil)
-#     ;; set a more visible mu4e view (with dark-mode enabled)
-#     ;; (setq shr-color-visible-luminance-min 0)
-#     ;; fancy markers
-#     (use-package mu4e-marker-icons
-#       :init (mu4e-marker-icons-mode 1))
-#     (setq mu4e-update-interval 60)
-#     (setq mu4e-drafts-folder "/[Gmail].Drafts")
-#     (setq mu4e-sent-folder   "/[Gmail].Sent Mail")
-#     (setq mu4e-trash-folder  "/[Gmail].Trash")
-#     (setq mu4e-maildir-shortcuts
-#           '( ( :maildir "/INBOX" :key ?i)
-#              ( :maildir "/[Gmail].All Mail"  :key ?a)
-#              ( :maildir "/[Gmail].Sent Mail"  :key ?S)
-#              ( :maildir "/[Gmail].Trash" :key ?t)
-#              ( :maildir "/[Gmail].Starred" :key ?s)))
+    :config
+    (evil-define-key 'normal mu4e-headers-mode-map "T" 'mu4e-headers-mark-thread )
+    (require 'mu4e-icalendar)
+    (mu4e-icalendar-setup)
+    (setq gnus-icalendar-org-capture-file "~/org/Inbox.org")
+    (setq gnus-icalendar-org-capture-headline '("Calendar"))
+    (gnus-icalendar-org-setup)
+    (setq mail-user-agent 'mu4e-user-agent)
+    (setq mu4e-confirm-quit nil)
+    (setq mu4e-get-mail-command "offlineimap")
+    (setq mu4e-completing-read-function 'completing-read)
+    ;; (setq mu4e-change-filenames-when-moving t)
+    (setq sendmail-program (executable-find "msmtp")
+          send-mail-function #'smtpmail-send-it
+          message-sendmail-f-is-evil t
+          message-sendmail-extra-arguments '("--read-envelope-from")
+          message-send-mail-function #'message-send-mail-with-sendmail)
+    ;; don[t show buffer after sending
+    (setq message-kill-buffer-on-exit t)
+    (setq org-export-show-temporary-export-buffer nil)
+    ;; set a more visible mu4e view (with dark-mode enabled)
+    ;; (setq shr-color-visible-luminance-min 0)
+    ;; fancy markers
+    (use-package mu4e-marker-icons
+      :init (mu4e-marker-icons-mode 1))
+    (setq mu4e-update-interval 60)
+    (setq mu4e-drafts-folder "/[Gmail].Drafts")
+    (setq mu4e-sent-folder   "/[Gmail].Sent Mail")
+    (setq mu4e-trash-folder  "/[Gmail].Trash")
+    (setq mu4e-maildir-shortcuts
+          '( ( :maildir "/INBOX" :key ?i)
+             ( :maildir "/[Gmail].All Mail"  :key ?a)
+             ( :maildir "/[Gmail].Sent Mail"  :key ?S)
+             ( :maildir "/[Gmail].Trash" :key ?t)
+             ( :maildir "/[Gmail].Starred" :key ?s)))
 
-#     (add-to-list 'org-capture-templates
-#                  '("m" "Email Workflow"))
-#     (add-to-list 'org-capture-templates
-#                  '("mt" "Capture to task" entry
-#                    (function capture-filename)
-#                    "* REPLY to %:fromname in %a ")) ;; don't immdeiate-finsh want to be able to set a todo
-#     ;; template to capture events
-#     (add-to-list 'org-capture-templates
-#                  '("#" "used by gnus-icalendar-org" entry
-#                    (function capture-filename)
-#                    "%i")) ;; don't immdeiate-finsh want to be able to set a todo
+    (add-to-list 'org-capture-templates
+                 '("m" "Email Workflow"))
+    (add-to-list 'org-capture-templates
+                 '("mt" "Capture to task" entry
+                   (function capture-filename)
+                   "* REPLY to %:fromname in %a ")) ;; don't immdeiate-finsh want to be able to set a todo
+    ;; template to capture events
+    (add-to-list 'org-capture-templates
+                 '("#" "used by gnus-icalendar-org" entry
+                   (function capture-filename)
+                   "%i")) ;; don't immdeiate-finsh want to be able to set a todo
 
-#     (setq mu4e-refile-folder "/[Gmail].All Mail")
+    (setq mu4e-refile-folder "/[Gmail].All Mail")
 
-#     (setq mu4e-org-contacts-file "/home/willefi2/org/contacts.org")
-#     (add-to-list 'mu4e-headers-actions
-#                  '("org-contact-add" . mu4e-action-add-org-contact) t)
-#     (add-to-list 'mu4e-view-actions
-#                  '("org-contact-add" . mu4e-action-add-org-contact) t))
-# #+end_src
-# *** Mu4e contrib
-# #+begin_src emacs-lisp
-#   (use-package mu4e-contrib
-#     :elpaca nil)
-# #+end_src
+    (setq mu4e-org-contacts-file "/home/willefi2/org/contacts.org")
+    (add-to-list 'mu4e-headers-actions
+                 '("org-contact-add" . mu4e-action-add-org-contact) t)
+    (add-to-list 'mu4e-view-actions
+                 '("org-contact-add" . mu4e-action-add-org-contact) t))
+#+end_src
+*** Mu4e contrib
+#+begin_src emacs-lisp
+  (use-package mu4e-contrib
+    :elpaca nil)
+#+end_src
 
-# ** Org message
-# #+begin_src emacs-lisp
-#   (use-package org-msg
-#     :hook (org-msg-edit-mode . my/remove-insert-state-exit-save-hook)
-#     :demand t
-#     :after mu4e
-#     :bind (:map org-msg-edit-mode-map
-#                 ("C-c C-i" . message-goto-importance))
-#     :config
-#     (defun message-goto-importance ()
-#       "Move point to the Importance header."
-#       (interactive nil message-mode)
-#       (push-mark)
-#       (message-position-on-field "Importance" "Subject"))
-#     (setq org-msg-options "html-postamble:nil H:5 num:nil ^:{} toc:nil author:nil email:nil \\n:t"
-#           org-msg-startup "hidestars indent inlineimages"
-#           org-msg-greeting-fmt "\nHi%s,\n\n"
-#           org-msg-recipient-names '(("frederic.willem@gmail.com" . "Frédéric"))
-#           org-msg-greeting-name-limit 3
-#           org-msg-default-alternatives '((new		. (text html))
-#                                          (reply-to-html	. (text html))
-#                                          (reply-to-text	. (text)))
-#           org-msg-convert-citation t )
-#     (setq org-msg-signature "\n\nRegards,\nFrédéric\n\n--\n\n*Frédéric Willem*\n/Tel: +32 456 64 00 02/\n")
-#     (org-msg-mode))
+** Org message
+#+begin_src emacs-lisp
+  (use-package org-msg
+    :hook (org-msg-edit-mode . my/remove-insert-state-exit-save-hook)
+    :demand t
+    :after mu4e
+    :bind (:map org-msg-edit-mode-map
+                ("C-c C-i" . message-goto-importance))
+    :config
+    (defun message-goto-importance ()
+      "Move point to the Importance header."
+      (interactive nil message-mode)
+      (push-mark)
+      (message-position-on-field "Importance" "Subject"))
+    (setq org-msg-options "html-postamble:nil H:5 num:nil ^:{} toc:nil author:nil email:nil \\n:t"
+          org-msg-startup "hidestars indent inlineimages"
+          org-msg-greeting-fmt "\nHi%s,\n\n"
+          org-msg-recipient-names '(("frederic.willem@gmail.com" . "Frédéric"))
+          org-msg-greeting-name-limit 3
+          org-msg-default-alternatives '((new		. (text html))
+                                         (reply-to-html	. (text html))
+                                         (reply-to-text	. (text)))
+          org-msg-convert-citation t )
+    (setq org-msg-signature "\n\nRegards,\nFrédéric\n\n--\n\n*Frédéric Willem*\n/Tel: +32 456 64 00 02/\n")
+    (org-msg-mode))
 
-# #+end_src
+#+end_src
 
-# ** org contacts
-# #+begin_src emacs-lisp
-#   (use-package org-contacts
-#     :demand t
-#     :after org-msg
-#     :hook (org-msg-edit-mode . org-contacts-setup-completion-at-point)
-#     :custom
-#     (org-contacts-files '("~/org/contacts.org"))
-#     :config
-#     (add-to-list 'org-capture-templates
-#                  '("c" "Contacts" entry (file "~/org/contacts.org")
-#                    "* %(org-contacts-template-name)
-#   :PROPERTIES:
-#   :EMAIL: %(org-contacts-template-email)
-#   :PHONE:
-#   :ALIAS:
-#   :NICKNAME:
-#   :IGNORE:
-#   :ICON:
-#   :NOTE:
-#   :ADDRESS:
-#   :BIRTHDAY:
-#   :END:")))
-# #+end_src
+** org contacts
+#+begin_src emacs-lisp
+  (use-package org-contacts
+    :demand t
+    :after org-msg
+    :hook (org-msg-edit-mode . org-contacts-setup-completion-at-point)
+    :custom
+    (org-contacts-files '("~/org/contacts.org"))
+    :config
+    (add-to-list 'org-capture-templates
+                 '("c" "Contacts" entry (file "~/org/contacts.org")
+                   "* %(org-contacts-template-name)
+  :PROPERTIES:
+  :EMAIL: %(org-contacts-template-email)
+  :PHONE:
+  :ALIAS:
+  :NICKNAME:
+  :IGNORE:
+  :ICON:
+  :NOTE:
+  :ADDRESS:
+  :BIRTHDAY:
+  :END:")))
+#+end_src
 
-# ** PDF Tools
-# #+begin_src emacs-lisp
-#   (use-package pdf-tools
-#     :init
-#     (pdf-loader-install))
-# #+end_src
+** PDF Tools
+#+begin_src emacs-lisp
+  (use-package pdf-tools
+    :init
+    (pdf-loader-install))
+#+end_src
 
-# * Calendars
-# ** Calendar
-# #+begin_src emacs-lisp
-#   (use-package  password-store)
-# #+end_src
+* Calendars
+** Calendar
+#+begin_src emacs-lisp
+  (use-package  password-store)
+#+end_src
 
-# #+begin_src emacs-lisp
-#   (use-package calfw)
+#+begin_src emacs-lisp
+  (use-package calfw)
 
-#   (use-package calfw-org
-#     :bind ("C-c C" . cfw:open-org-calendar))
-# #+end_src
+  (use-package calfw-org
+    :bind ("C-c C" . cfw:open-org-calendar))
+#+end_src
 
-# ** Holidays calendar
-# #+begin_src emacs-lisp
-#   (require 'calendar)
-#   (setq calendar-week-start-day 1)
-#   (require 'holidays)
-#   (setq calendar-christian-all-holidays-flag t)
-#   (setq calendar-holidays '((holiday-fixed 1 1 "New Year's Day")
-#                             (holiday-fixed 2 2 "Groundhog Day")
-#                             (holiday-fixed 2 14 "Valentine's Day")
-#                             (holiday-fixed 3 17 "St. Patrick's Day")
-#                             (holiday-fixed 4 1 "April Fools' Day")
-#                             (holiday-float 5 0 2 "Mother's Day")
-#                             (holiday-float 6 0 3 "Father's Day")
-#                             (holiday-fixed 7 21 "Belgium National Day")
-#                             (holiday-fixed 10 31 "Halloween")
-#                             (holiday-fixed 11 11 "Veteran's Day")
-#                             (holiday-float 11 4 4 "Thanksgiving")
-#                             (holiday-easter-etc)
-#                             (holiday-fixed 12 25 "Christmas")
-#                             (if calendar-christian-all-holidays-flag
-#                                 (append
-#                                  (holiday-fixed 1 6 "Epiphany")
-#                                  (holiday-julian 12 25 "Christmas (Julian calendar)")
-#                                  (holiday-greek-orthodox-easter)
-#                                  (holiday-fixed 8 15 "Assumption")
-#                                  (holiday-advent 0 "Advent")))
-#                             (solar-equinoxes-solstices)
-#                             (holiday-sexp calendar-daylight-savings-starts
-#                                           (format "Daylight Saving Time Begins %s"
-#                                                   (solar-time-string
-#                                                    (/ calendar-daylight-savings-starts-time
-#                                                       (float 60))
-#                                                    calendar-standard-time-zone-name)))
-#                             (holiday-sexp calendar-daylight-savings-ends
-#                                           (format "Daylight Saving Time Ends %s"
-#                                                   (solar-time-string
-#                                                    (/ calendar-daylight-savings-ends-time
+** Holidays calendar
+#+begin_src emacs-lisp
+  (require 'calendar)
+  (setq calendar-week-start-day 1)
+  (require 'holidays)
+  (setq calendar-christian-all-holidays-flag t)
+  (setq calendar-holidays '((holiday-fixed 1 1 "New Year's Day")
+                            (holiday-fixed 2 2 "Groundhog Day")
+                            (holiday-fixed 2 14 "Valentine's Day")
+                            (holiday-fixed 3 17 "St. Patrick's Day")
+                            (holiday-fixed 4 1 "April Fools' Day")
+                            (holiday-float 5 0 2 "Mother's Day")
+                            (holiday-float 6 0 3 "Father's Day")
+                            (holiday-fixed 7 21 "Belgium National Day")
+                            (holiday-fixed 10 31 "Halloween")
+                            (holiday-fixed 11 11 "Veteran's Day")
+                            (holiday-float 11 4 4 "Thanksgiving")
+                            (holiday-easter-etc)
+                            (holiday-fixed 12 25 "Christmas")
+                            (if calendar-christian-all-holidays-flag
+                                (append
+                                 (holiday-fixed 1 6 "Epiphany")
+                                 (holiday-julian 12 25 "Christmas (Julian calendar)")
+                                 (holiday-greek-orthodox-easter)
+                                 (holiday-fixed 8 15 "Assumption")
+                                 (holiday-advent 0 "Advent")))
+                            (solar-equinoxes-solstices)
+                            (holiday-sexp calendar-daylight-savings-starts
+                                          (format "Daylight Saving Time Begins %s"
+                                                  (solar-time-string
+                                                   (/ calendar-daylight-savings-starts-time
+                                                      (float 60))
+                                                   calendar-standard-time-zone-name)))
+                            (holiday-sexp calendar-daylight-savings-ends
+                                          (format "Daylight Saving Time Ends %s"
+                                                  (solar-time-string
+                                                   (/ calendar-daylight-savings-ends-time
 
-#                                                       (float 60))
-#                                                    calendar-daylight-time-zone-name)))))
-# #+end_src
+                                                      (float 60))
+                                                   calendar-daylight-time-zone-name)))))
+#+end_src
 
-# ** Org-gcal
-# #+begin_src emacs-lisp
-#   (use-package org-gcal
-#     :bind (:map org-mode-map
-#                 ("C-c G" . org-gcal-post-at-point))
-#     :init
-#     (setq org-gcal-notify-p nil)
-#     (require 'plstore)
-#     (add-to-list 'plstore-encrypt-to "E7446C9175DAAA79")
-#     (setq client-secret (password-store-get 'calendar))
-#     (setq org-gcal-client-id "140991280434-1736v7des240n016cqe46cuof13ggvbc.apps.googleusercontent.com"
-#           org-gcal-client-secret client-secret
-#           org-gcal-fetch-file-alist '(("frederic.willem@gmail.com" .  "~/org/calendar.org"))))
-# #+end_src
+** Org-gcal
+#+begin_src emacs-lisp
+  (use-package org-gcal
+    :bind (:map org-mode-map
+                ("C-c G" . org-gcal-post-at-point))
+    :init
+    (setq org-gcal-notify-p nil)
+    (require 'plstore)
+    (add-to-list 'plstore-encrypt-to "E7446C9175DAAA79")
+    (setq client-secret (password-store-get 'calendar))
+    (setq org-gcal-client-id "140991280434-1736v7des240n016cqe46cuof13ggvbc.apps.googleusercontent.com"
+          org-gcal-client-secret client-secret
+          org-gcal-fetch-file-alist '(("frederic.willem@gmail.com" .  "~/org/calendar.org"))))
+#+end_src
 
-# * Programming
-# ** Error checking
-# #+begin_src emacs-lisp
-#   (use-package flycheck
-#     :hook (prog-mode . flycheck-mode)
-#     :custom
-#     (flycheck-emacs-lisp-load-path 'inherit))
+* Programming
+** Error checking
+#+begin_src emacs-lisp
+  (use-package flycheck
+    :hook (prog-mode . flycheck-mode)
+    :custom
+    (flycheck-emacs-lisp-load-path 'inherit))
 
-# #+end_src
+#+end_src
 
-# ** Compilation mode
-# Setup ANSI colors for the compilation buffer
-# #+begin_src emacs-lisp
-#   (use-package xterm-color
-#     :config
-#     (setq compilation-environment '("TERM=xterm-256color"))
+** Compilation mode
+Setup ANSI colors for the compilation buffer
+#+begin_src emacs-lisp
+  (use-package xterm-color
+    :config
+    (setq compilation-environment '("TERM=xterm-256color"))
 
-#     (defun my/advice-compilation-filter (f proc string)
-#       (funcall f proc (xterm-color-filter string)))
+    (defun my/advice-compilation-filter (f proc string)
+      (funcall f proc (xterm-color-filter string)))
 
-#     (advice-add 'compilation-filter :around #'my/advice-compilation-filter) )
-# #+end_src
+    (advice-add 'compilation-filter :around #'my/advice-compilation-filter) )
+#+end_src
 
-# ** Java + Lsp
-# #+begin_src emacs-lisp
-#   (use-package lsp-mode
-#     :custom
-#     (lsp-completion-provider :none) ;; we use Corfu!
-#     :init
-#     ;; set prefix for lsp-command-keymap (few alternatives - "C-l", "C-c l")
-#     (setq lsp-keymap-prefix "C-c l")
-#     (defun my/lsp-mode-setup-completion ()
-#       (setf (alist-get 'styles (alist-get 'lsp-capf completion-category-defaults))
-#             '(orderless))) ;; Configure orderless
-#     :hook (((java-mode java-ts-mode) . lsp)
-#            (lsp-mode . lsp-enable-which-key-integration)
-#            (lsp-completion-mode . my/lsp-mode-setup-completion))
-#     :commands lsp)
+** Java + Lsp
+#+begin_src emacs-lisp
+  (use-package lsp-mode
+    :custom
+    (lsp-completion-provider :none) ;; we use Corfu!
+    :init
+    ;; set prefix for lsp-command-keymap (few alternatives - "C-l", "C-c l")
+    (setq lsp-keymap-prefix "C-c l")
+    (defun my/lsp-mode-setup-completion ()
+      (setf (alist-get 'styles (alist-get 'lsp-capf completion-category-defaults))
+	    '(orderless))) ;; Configure orderless
+    :hook (((java-mode java-ts-mode) . lsp)
+	   (lsp-mode . lsp-enable-which-key-integration)
+	   (lsp-completion-mode . my/lsp-mode-setup-completion))
+    :commands lsp)
 
-#   (use-package lsp-java )
-#   ;; optionally
-#   (use-package lsp-ui :commands lsp-ui-mode)
-#   (use-package lsp-treemacs :commands lsp-treemacs-errors-list)
+  (use-package lsp-java )
+  ;; optionally
+  (use-package lsp-ui :commands lsp-ui-mode)
+  (use-package lsp-treemacs :commands lsp-treemacs-errors-list)
 
-#   ;; optionally if you want to use debugger
-#   (use-package dap-mode)
-#   (use-package dap-java :elpaca nil)
+  ;; optionally if you want to use debugger
+  (use-package dap-mode)
+  ;; (use-package dap-java :elpaca nil)
 
-# #+end_src
+#+end_src
 
-# ** Tree-sitter
-# *** Automatic use of tree-sitter
-# #+begin_src emacs-lisp
-#   (use-package treesit-auto
-#     :demand t
-#     :config
-#     (setq treesit-auto-install 'prompt)
-#     (setq my-java-tsauto-config
-#           (make-treesit-auto-recipe
-#            :lang 'java
-#            :ts-mode 'java-ts-mode
-#            :remap '(java-mode)
-#            :url "https://github.com/tree-sitter/tree-sitter-java"
-#            :revision "master"
-#            :source-dir "src"))
+** Tree-sitter
+*** Automatic use of tree-sitter
+#+begin_src emacs-lisp
+  (use-package treesit-auto
+    :demand t
+    :config
+    (setq treesit-auto-install 'prompt)
+    (setq my-java-tsauto-config
+          (make-treesit-auto-recipe
+           :lang 'java
+           :ts-mode 'java-ts-mode
+           :remap '(java-mode)
+           :url "https://github.com/tree-sitter/tree-sitter-java"
+           :revision "master"
+           :source-dir "src"))
 
-#     (add-to-list 'treesit-auto-recipe-list my-java-tsauto-config)
-#     (global-treesit-auto-mode))
-# #+end_src
+    (add-to-list 'treesit-auto-recipe-list my-java-tsauto-config)
+    (global-treesit-auto-mode))
+#+end_src
 
-# *** Evil wit treesit
-# #+begin_src emacs-lisp
-#   (use-package evil-textobj-tree-sitter
-#     :elpaca (evil-textobj-tree-sitter :type git
-#                                         :host github
-#                                         :repo "meain/evil-textobj-tree-sitter"
-#                                         :files (:defaults "queries" "treesit-queries"))
-#     :config
-#     ;; bind `function.outer`(entire function block) to `f` for use in things like `vaf`, `yaf`
-#     (define-key evil-outer-text-objects-map "f" (evil-textobj-tree-sitter-get-textobj "function.outer"))
-#     ;; bind `function.inner`(function block without name and args) to `f` for use in things like `vif`, `yif`
-#     (define-key evil-inner-text-objects-map "f" (evil-textobj-tree-sitter-get-textobj "function.inner"))
+*** Evil wit treesit
+#+begin_src emacs-lisp
+  (use-package evil-textobj-tree-sitter
+    :elpaca (evil-textobj-tree-sitter :type git
+                                        :host github
+                                        :repo "meain/evil-textobj-tree-sitter"
+                                        :files (:defaults "queries" "treesit-queries"))
+    :config
+    ;; bind `function.outer`(entire function block) to `f` for use in things like `vaf`, `yaf`
+    (define-key evil-outer-text-objects-map "f" (evil-textobj-tree-sitter-get-textobj "function.outer"))
+    ;; bind `function.inner`(function block without name and args) to `f` for use in things like `vif`, `yif`
+    (define-key evil-inner-text-objects-map "f" (evil-textobj-tree-sitter-get-textobj "function.inner"))
 
-#     ;; You can also bind multiple items and we will match the first one we can find
-#     (define-key evil-outer-text-objects-map "a" (evil-textobj-tree-sitter-get-textobj ("conditional.outer" "loop.outer")))
+    ;; You can also bind multiple items and we will match the first one we can find
+    (define-key evil-outer-text-objects-map "a" (evil-textobj-tree-sitter-get-textobj ("conditional.outer" "loop.outer")))
 
-#     ;; Goto start of next function
-#     (define-key evil-normal-state-map
-#                 (kbd "]f")
-#                 (lambda ()
-#                   (interactive)
-#                   (evil-textobj-tree-sitter-goto-textobj "function.outer")))
+    ;; Goto start of next function
+    (define-key evil-normal-state-map
+                (kbd "]f")
+                (lambda ()
+                  (interactive)
+                  (evil-textobj-tree-sitter-goto-textobj "function.outer")))
 
-#     ;; Goto start of previous function
-#     (define-key evil-normal-state-map
-#                 (kbd "[f")
-#                 (lambda ()
-#                   (interactive)
-#                   (evil-textobj-tree-sitter-goto-textobj "function.outer" t)))
+    ;; Goto start of previous function
+    (define-key evil-normal-state-map
+                (kbd "[f")
+                (lambda ()
+                  (interactive)
+                  (evil-textobj-tree-sitter-goto-textobj "function.outer" t)))
 
-#     ;; Goto end of next function
-#     (define-key evil-normal-state-map
-#                 (kbd "]F")
-#                 (lambda ()
-#                   (interactive)
-#                   (evil-textobj-tree-sitter-goto-textobj "function.outer" nil t)))
+    ;; Goto end of next function
+    (define-key evil-normal-state-map
+                (kbd "]F")
+                (lambda ()
+                  (interactive)
+                  (evil-textobj-tree-sitter-goto-textobj "function.outer" nil t)))
 
-#     ;; Goto end of previous function
-#     (define-key evil-normal-state-map
-#                 (kbd "[F")
-#                 (lambda ()
-#                   (interactive)
-#                   (evil-textobj-tree-sitter-goto-textobj "function.outer" t t))))
-# #+end_src
+    ;; Goto end of previous function
+    (define-key evil-normal-state-map
+                (kbd "[F")
+                (lambda ()
+                  (interactive)
+                  (evil-textobj-tree-sitter-goto-textobj "function.outer" t t))))
+#+end_src
 
-# * Utilities
-# ** Search the web
-# #+begin_src emacs-lisp
-#       (use-package keyword-search
-#         :bind ("C-c k" . keyword-search)
-#     :init
-#   (add-to-list 'keyword-search-alist '(wikipedia-fr . "http://fr.wikipedia.org/wiki/%s")))
-# #+end_src
+* Utilities
+** Search the web
+#+begin_src emacs-lisp
+      (use-package keyword-search
+        :bind ("C-c k" . keyword-search)
+    :init
+  (add-to-list 'keyword-search-alist '(wikipedia-fr . "http://fr.wikipedia.org/wiki/%s")))
+#+end_src
 
-# * Recentf
-# #+begin_src emacs-lisp
-#   (use-package recentf
-#     :elpaca nil
-#     :hook (emacs-startup .  recentf-mode)
-#     :config
-#     (add-to-list 'recentf-exclude "~/.emacs.d/.cache/treemacs-persist"))
-# #+end_src
+* Recentf
+#+begin_src emacs-lisp
+  (use-package recentf
+    :elpaca nil
+    :hook (emacs-startup .  recentf-mode)
+    :config
+    (add-to-list 'recentf-exclude "~/.emacs.d/.cache/treemacs-persist"))
+#+end_src
 
-# * scratch
-# #+begin_src emacs-lisp
-#   (use-package scratch
-#                :bind ("C-c s" . scratch))
-# #+end_src
+#+end_src

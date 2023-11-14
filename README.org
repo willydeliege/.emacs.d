@@ -1923,7 +1923,7 @@ marginalia adds annotations in the mini buffer
     :init
     (perspective-project-bridge-mode))
 #+end_src
-* Mails
+* Mail
 ** Mu4e
 #+begin_src emacs-lisp
   (use-package mu4e

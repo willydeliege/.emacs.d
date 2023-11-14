@@ -2310,6 +2310,9 @@ Setup ANSI colors for the compilation buffer
     (backup-directory-alist `((".*" . ,(expand-file-name
                                         (concat user-emacs-directory "backups"))))
                             "Keep backups in their own directory")
+
+    (unless (file-exists-p (concat user-emacs-directory "autosaves/"))
+      (make-directory (concat user-emacs-directory "autosaves/")))
     (auto-save-file-name-transforms `((".*" ,(concat user-emacs-directory "autosaves/") t)))
     (delete-old-versions t)
     (kept-new-versions 10)

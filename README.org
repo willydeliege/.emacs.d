@@ -23,7 +23,7 @@ Emacs 27.0 introduced an early-init file. It allows customization before package
 
 #+begin_src emacs-lisp :lexical t
   (setq native-comp-async-report-warnings-errors nil)
-  (setq warning-minimum-level :error)
+  ;; (setq warning-minimum-level :error)
 #+end_src
 *** Debugging
 Running this form will launch the debugger after loading a package.
@@ -204,7 +204,7 @@ We will use use-package
 #+begin_src emacs-lisp
   ;; org latest version finally works but has to be launched before elpa-use-package because this package calls org
   ;; and then have a problem of org version mismatch
-  (elpaca org)
+  (elpaca (org :tag "release_9.6.12"))
   ;; Install use-package support
   (elpaca elpaca-use-package
     ;; Enable :elpaca use-package keyword.
@@ -218,25 +218,25 @@ We will use use-package
 * Org mode
 ** Org basics
 *** org-mode
-**** TODO move the org configuration to the (elpaca org) call above to avoid duplication warning
+**** use elpaca nil 'cause we use the org version loaded in [[*USE-PACKAGE][USE-PACKAGE]]
 #+begin_src emacs-lisp
   (use-package org
     :elpaca nil
     :hook  (org-mode . (lambda ()
-  		       (add-hook  'before-save-hook  'time-stamp nil t)))
+                         (add-hook  'before-save-hook  'time-stamp nil t)))
     :hook ((org-mode . (lambda ()
-  		       (setq prettify-symbols-alist '((":PROPERTIES:" . "⚙️")
-  						      (":LOGBOOK:" . "☰")
-  						      ("DEADLINE:" . "📆")
-  						      ("CLOCK:" . "⏳")
-  						      ("SCHEDULED:"  . "🪟") ; It's a window - not a plus sign in a box
-  						      (":END:" . "🔚" ))))))
+                         (setq prettify-symbols-alist '((":PROPERTIES:" . "⚙️")
+                                                        (":LOGBOOK:" . "☰")
+                                                        ("DEADLINE:" . "📆")
+                                                        ("CLOCK:" . "⏳")
+                                                        ("SCHEDULED:"  . "🪟") ; It's a window - not a plus sign in a box
+                                                        (":END:" . "🔚" ))))))
     :bind (("C-c l" . org-store-link)
-  	 ("C-c c" . org-capture)
-  	 ("C-c a" . my-org-agenda)
-  	 (:map org-mode-map)
-  	 ("M-S-<return>" . org-insert-subheading)
-  	 ("C-c $" . org-archive-subtree-default))
+           ("C-c c" . org-capture)
+           ("C-c a" . my-org-agenda)
+           (:map org-mode-map)
+           ("M-S-<return>" . org-insert-subheading)
+           ("C-c $" . org-archive-subtree-default))
     :custom
     (org-return-follows-link t)
     (org-agenda-skip-scheduled-if-deadline-is-shown t)
@@ -254,23 +254,23 @@ We will use use-package
     (defun my-org-agenda ()
       (interactive)
       (if (not org-agenda-files)
-  	(build-agenda))
+          (build-agenda))
       (org-agenda))
     ;; Agenda styling
     (setq org-stuck-projects '("+Project/PROJ" ("NEXT" "WAIT" "MEETING" "HOLD") nil ""))
     (setq     org-agenda-block-separator ?─
-  	    org-agenda-time-grid
-  	    '((daily today require-timed)
-  	      (800 1000 1200 1400 1600 1800 2000)
-  	      " ┄┄┄┄┄ " "┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄")
-  	    org-agenda-current-time-string
-  	    "⭠ now ─────────────────────────────────────────────────")
+              org-agenda-time-grid
+              '((daily today require-timed)
+                (800 1000 1200 1400 1600 1800 2000)
+                " ┄┄┄┄┄ " "┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄")
+              org-agenda-current-time-string
+              "⭠ now ─────────────────────────────────────────────────")
     (setq org-startup-indented t)
     (setq org-attach-store-link-p t)
     (org-babel-do-load-languages 'org-babel-load-languages
-  			       (append org-babel-load-languages
-  				       '((shell     . t)
-  					 (java      . t))))
+                                 (append org-babel-load-languages
+                                         '((shell     . t)
+                                           (java      . t))))
     (setq org-archive-default-command 'org-archive-to-archive-sibling)
     (setq org-confirm-babel-evaluate nil)
     (setq

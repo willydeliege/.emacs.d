@@ -5,82 +5,6 @@
 
 * Emacs configuration
 After spending lot of time with doom Emacs, willing to switch to a more native emacs config while keeping evil mode
-* Header
-Header for the config init.el file
-#+begin_src emacs-lisp
-  ;;; init.el --- Willydeliege's Emacs configuration -*- lexical-binding: t -*-
-#+end_src
-* Package manager
-Using elpaca as package manager
-#+begin_src emacs-lisp
-(defvar elpaca-installer-version 0.6)
-(defvar elpaca-directory (expand-file-name "elpaca/" user-emacs-directory))
-(defvar elpaca-builds-directory (expand-file-name "builds/" elpaca-directory))
-(defvar elpaca-repos-directory (expand-file-name "repos/" elpaca-directory))
-(defvar elpaca-order '(elpaca :repo "https://github.com/progfolio/elpaca.git"
-                              :ref nil
-                              :files (:defaults "elpaca-test.el" (:exclude "extensions"))
-                              :build (:not elpaca--activate-package)))
-(let* ((repo  (expand-file-name "elpaca/" elpaca-repos-directory))
-       (build (expand-file-name "elpaca/" elpaca-builds-directory))
-       (order (cdr elpaca-order))
-       (default-directory repo))
-  (add-to-list 'load-path (if (file-exists-p build) build repo))
-  (unless (file-exists-p repo)
-    (make-directory repo t)
-    (when (< emacs-major-version 28) (require 'subr-x))
-    (condition-case-unless-debug err
-        (if-let ((buffer (pop-to-buffer-same-window "*elpaca-bootstrap*"))
-                 ((zerop (call-process "git" nil buffer t "clone"
-                                       (plist-get order :repo) repo)))
-                 ((zerop (call-process "git" nil buffer t "checkout"
-                                       (or (plist-get order :ref) "--"))))
-                 (emacs (concat invocation-directory invocation-name))
-                 ((zerop (call-process emacs nil buffer nil "-Q" "-L" "." "--batch"
-                                       "--eval" "(byte-recompile-directory \".\" 0 'force)")))
-                 ((require 'elpaca))
-                 ((elpaca-generate-autoloads "elpaca" repo)))
-            (progn (message "%s" (buffer-string)) (kill-buffer buffer))
-          (error "%s" (with-current-buffer buffer (buffer-string))))
-      ((error) (warn "%s" err) (delete-directory repo 'recursive))))
-  (unless (require 'elpaca-autoloads nil t)
-    (require 'elpaca)
-    (elpaca-generate-autoloads "elpaca" repo)
-    (load "./elpaca-autoloads")))
-(add-hook 'after-init-hook #'elpaca-process-queues)
-(elpaca `(,@elpaca-order))
-#+end_src
-
-** USE-PACKAGE
-We will use use-package
-#+begin_src emacs-lisp
-  ;; Install use-package support
-  (elpaca elpaca-use-package
-    ;; Enable :elpaca use-package keyword.
-    (elpaca-use-package-mode)
-    ;; Assume :elpaca t unless otherwise specified.
-    (setq elpaca-use-package-by-default t))
-
-  ;; Block until current queue processed.
-  (elpaca-wait)
-
-  ;;When installing a package which modifies a form used at the top-level
-  ;;(e.g. a package which adds a use-package key word),
-  ;;use `elpaca-wait' to block until that package has been installed/configured.
-  ;;For example:
-  ;;(use-package general :demand t)
-  ;;(elpaca-wait)
-
-
-  ;;Turns off elpaca-use-package-mode current declaration
-  ;;Note this will cause the declaration to be interpreted immediately (not deferred).
-  ;;Useful for configuring built-in emacs features.
-  (use-package emacs :elpaca nil :config (setq ring-bell-function #'ignore))
-
-  ;; Don't install anything. Defer execution of BODY
-  ;; (elpaca nil (message "deferred"))
-#+end_src
-
 * Using straight properly with initiating in early-init.el
 ** early-init
 :PROPERTIES:
@@ -98,7 +22,8 @@ Emacs 27.0 introduced an early-init file. It allows customization before package
 #+end_src
 
 #+begin_src emacs-lisp :lexical t
-(setq native-comp-async-report-warnings-errors nil)
+  (setq native-comp-async-report-warnings-errors nil)
+  (setq warning-minimum-level :error)
 #+end_src
 *** Debugging
 Running this form will launch the debugger after loading a package.
@@ -196,8 +121,8 @@ Fonts larger than the system default can cause frame resizing, which adds to sta
 
 Set default and backup fonts
 #+begin_src emacs-lisp :lexical t
-(push '(font . "Source Code Pro") default-frame-alist)
-(set-face-font 'default "Source Code Pro")
+(push '(font . "FiraCode") default-frame-alist)
+(set-face-font 'default "FiraCode")
 (set-face-font 'variable-pitch "DejaVu Sans")
 (copy-face 'default 'fixed-pitch)
 #+end_src
@@ -228,10 +153,489 @@ Silence the bell function
 ;;; early-init.el ends here
 #+end_src
 
-* Bookmarks
+* Header
+Header for the config init.el file
 #+begin_src emacs-lisp
-  (use-package bookmark+ :elpaca `(bookmark+ :type git :host github :repo "emacsmirror/bookmark-plus" :files (:defaults)))
+  ;;; init.el --- Willydeliege's Emacs configuration -*- lexical-binding: t -*-
 #+end_src
+* Package manager
+Using elpaca as package manager
+#+begin_src emacs-lisp
+(defvar elpaca-installer-version 0.6)
+(defvar elpaca-directory (expand-file-name "elpaca/" user-emacs-directory))
+(defvar elpaca-builds-directory (expand-file-name "builds/" elpaca-directory))
+(defvar elpaca-repos-directory (expand-file-name "repos/" elpaca-directory))
+(defvar elpaca-order '(elpaca :repo "https://github.com/progfolio/elpaca.git"
+                              :ref nil
+                              :files (:defaults "elpaca-test.el" (:exclude "extensions"))
+                              :build (:not elpaca--activate-package)))
+(let* ((repo  (expand-file-name "elpaca/" elpaca-repos-directory))
+       (build (expand-file-name "elpaca/" elpaca-builds-directory))
+       (order (cdr elpaca-order))
+       (default-directory repo))
+  (add-to-list 'load-path (if (file-exists-p build) build repo))
+  (unless (file-exists-p repo)
+    (make-directory repo t)
+    (when (< emacs-major-version 28) (require 'subr-x))
+    (condition-case-unless-debug err
+        (if-let ((buffer (pop-to-buffer-same-window "*elpaca-bootstrap*"))
+                 ((zerop (call-process "git" nil buffer t "clone"
+                                       (plist-get order :repo) repo)))
+                 ((zerop (call-process "git" nil buffer t "checkout"
+                                       (or (plist-get order :ref) "--"))))
+                 (emacs (concat invocation-directory invocation-name))
+                 ((zerop (call-process emacs nil buffer nil "-Q" "-L" "." "--batch"
+                                       "--eval" "(byte-recompile-directory \".\" 0 'force)")))
+                 ((require 'elpaca))
+                 ((elpaca-generate-autoloads "elpaca" repo)))
+            (progn (message "%s" (buffer-string)) (kill-buffer buffer))
+          (error "%s" (with-current-buffer buffer (buffer-string))))
+      ((error) (warn "%s" err) (delete-directory repo 'recursive))))
+  (unless (require 'elpaca-autoloads nil t)
+    (require 'elpaca)
+    (elpaca-generate-autoloads "elpaca" repo)
+    (load "./elpaca-autoloads")))
+(add-hook 'after-init-hook #'elpaca-process-queues)
+(elpaca `(,@elpaca-order))
+#+end_src
+
+** USE-PACKAGE
+We will use use-package
+#+begin_src emacs-lisp
+  ;; org latest version finally works but has to be launched before elpa-use-package because this package calls org
+  ;; and then have a problem of org version mismatch
+  (elpaca org)
+  ;; Install use-package support
+  (elpaca elpaca-use-package
+    ;; Enable :elpaca use-package keyword.
+    (elpaca-use-package-mode)
+    ;; Assume :elpaca t unless otherwise specified.
+    (setq elpaca-use-package-by-default t))
+  ;; Block until current queue processed.
+  (elpaca-wait)
+#+end_src
+
+* Org mode
+** Org basics
+*** org-mode
+**** TODO move the org configuration to the (elpaca org) call above to avoid duplication warning
+#+begin_src emacs-lisp
+  (use-package org
+    :elpaca nil
+    :hook  (org-mode . (lambda ()
+  		       (add-hook  'before-save-hook  'time-stamp nil t)))
+    :hook ((org-mode . (lambda ()
+  		       (setq prettify-symbols-alist '((":PROPERTIES:" . "⚙️")
+  						      (":LOGBOOK:" . "☰")
+  						      ("DEADLINE:" . "📆")
+  						      ("CLOCK:" . "⏳")
+  						      ("SCHEDULED:"  . "🪟") ; It's a window - not a plus sign in a box
+  						      (":END:" . "🔚" ))))))
+    :bind (("C-c l" . org-store-link)
+  	 ("C-c c" . org-capture)
+  	 ("C-c a" . my-org-agenda)
+  	 (:map org-mode-map)
+  	 ("M-S-<return>" . org-insert-subheading)
+  	 ("C-c $" . org-archive-subtree-default))
+    :custom
+    (org-return-follows-link t)
+    (org-agenda-skip-scheduled-if-deadline-is-shown t)
+    (org-agenda-skip-deadline-prewarning-if-scheduled t)
+    (org-agenda-skip-timestamp-if-deadline-is-shown t)
+    (org-deadline-warning-days 5)
+    (org-enforce-todo-dependencies t)
+    :init
+    (setq org-directory "~/org/")
+    (defvar journal-file "journal.org")
+    (defun build-agenda ()
+      (interactive)
+      (setq org-agenda-files (directory-files org-directory nil ".*==project.*"))
+      (add-to-list 'org-agenda-files journal-file))
+    (defun my-org-agenda ()
+      (interactive)
+      (if (not org-agenda-files)
+  	(build-agenda))
+      (org-agenda))
+    ;; Agenda styling
+    (setq org-stuck-projects '("+Project/PROJ" ("NEXT" "WAIT" "MEETING" "HOLD") nil ""))
+    (setq     org-agenda-block-separator ?─
+  	    org-agenda-time-grid
+  	    '((daily today require-timed)
+  	      (800 1000 1200 1400 1600 1800 2000)
+  	      " ┄┄┄┄┄ " "┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄")
+  	    org-agenda-current-time-string
+  	    "⭠ now ─────────────────────────────────────────────────")
+    (setq org-startup-indented t)
+    (setq org-attach-store-link-p t)
+    (org-babel-do-load-languages 'org-babel-load-languages
+  			       (append org-babel-load-languages
+  				       '((shell     . t)
+  					 (java      . t))))
+    (setq org-archive-default-command 'org-archive-to-archive-sibling)
+    (setq org-confirm-babel-evaluate nil)
+    (setq
+     ;; Edit settings
+     org-log-done 'time
+     org-log-into-drawer t
+     org-auto-align-tags nil
+     org-tags-column 0
+     org-fold-catch-invisible-edits 'show-and-error
+     org-special-ctrl-a/e t
+     org-insert-heading-respect-content t
+
+     ;; Org styling, hide markup etc.
+     org-hide-emphasis-markers t
+     org-pretty-entities t
+     org-ellipsis "…")
+    (setq org-capture-templates `( ("p" "Protocol" entry
+                                    (file+headline ,(concat org-directory "notes.org") "Inbox")
+                                    "* %^{Title}\n Source:  %u, %:annotation \n#+BEGIN_QUOTE\n%i\n#+END_QUOTE\n\n\n%?")
+                                   ("L" "Protocol Link" entry
+                                    (file+headline ,(concat org-directory "notes.org") "Inbox")
+                                    "* %? [[%:link][%:description]] \n Captured On: %U")))
+    (defun capture-filename ()
+
+      (interactive)
+      (let ((fpath (read-file-name "Project file name: "
+                                   "~/org/*==project*"
+                                   nil nil nil)))
+        (find-file fpath)
+        (goto-char (org-find-exact-headline-in-buffer "Tasks"))))
+    (add-to-list 'org-capture-templates
+                 '("t" "New [t]ask" entry
+                   (function capture-filename)
+                   "* TODO %?\n  %i\n  %a"
+                   :jump-to-captured t
+                   )
+                 )
+    (add-to-list 'org-capture-templates
+                 '("j" "[j]ournal entry" entry
+                   (file+olp+datetree journal-file)
+                   "* %? " :tree-type year))
+
+    (defun my/archive-project ()
+      (let (
+            (org-enforce-todo-dependencies nil)
+            (org-capture-templates
+             '(("j" "journal" entry
+                (file+olp+datetree journal-file)
+                "* DONE %a\nCLOSED: %U\n%(org-paste-subtree 1)" :immediate-finish t :tree-type year))))
+        (org-map-entries (lambda ()
+                           (org-todo 'done)) nil 'tree)
+        (org-copy-subtree)
+        (denote-keywords-add '("ARCHIVE"))
+        (denote-keywords-remove) 
+        (denote-rename-file-using-front-matter (buffer-file-name))
+        (org-capture nil "j"))) 
+    (defun make-archive()
+      (when (and (member "ARCHIVE" (org-get-tags))
+                 (member "Tasks" (org-heading-components)))
+        (my/archive-project)))
+    (add-hook 'org-after-tags-change-hook
+              'make-archive)
+    (setq org-datetree-add-timestamp 'active)
+    (setq org-refile-targets '((org-agenda-files :maxlevel . 3)))
+    (setq org-outline-path-complete-in-steps nil)         ; Refile in a single go
+    (setq org-startup-folded 'show2levels)
+    (setq org-tag-alist '((:startgroup . nil)
+                          ("work" . ?w) ("family" . ?f)
+                          ("personal" . ?p)
+                          (:endgroup . nil)
+                          ("ARCHIVE" . ?a)))
+    (setq org-todo-keywords
+          '((sequence
+             "TODO(t)"  ; A task that needs doing & is ready to do
+             "NEXT(n)"  ; The nex task in to perform in the project
+             "MEETING"  ; Meeting
+             "WAIT(w@)"  ; Something external is holding up this task
+             "HOLD(h@)"  ; This task is paused/on hold because of me
+             "IDEA(i)"  ; An unconfirmed and unapproved task or notion
+             "|"
+             "CANCELLED(c)"
+             "DONE(d)")  ; Task successfully completed
+            (sequence
+             "PROJ(p)"  ; A project, which usually contains other tasks
+             "|"
+             "KILL(k)")
+            (sequence
+             "REPLY(r)"
+             "|"
+             "REPLIED(R)")))
+    (setq org-todo-keyword-faces
+          (quote (("TODO" :foreground "red" :weight bold)
+                  ("NEXT" :foreground "blue" :weight bold)
+                  ("WAITING" :foreground "orange" :weight bold)
+                  ("DONE" :foreground "forest green" :weight bold)
+                  ("HOLD" :foreground "magenta" :weight bold)
+                  ("CANCELLED" :foreground "forest green" :weight bold)
+                  ("MEETING" :foreground "forest green" :weight bold)))))
+#+end_src
+
+*** Org  contrib
+#+begin_src emacs-lisp
+  (use-package org-contrib
+    :after org
+    :init
+    (require 'org-checklist))
+#+end_src
+*** Time-stamp
+Update flag when saving files with last__{}modified
+#+begin_src emacs-lisp
+  (use-package time-stamp
+    :elpaca nil
+    :init
+    (time-stamp-toggle-active 1)
+    (setq time-stamp-start "last_modified:[     ]+\\\\?[\"<]+"))
+#+end_src
+
+** Org auto tangle
+#+begin_src emacs-lisp
+  (use-package org-auto-tangle
+    :after org
+    :hook (org-mode . org-auto-tangle-mode))
+#+end_src
+
+** Org capture
+Enter insert mode when capturing things
+#+begin_src emacs-lisp
+  (use-package org-capture
+    :elpaca nil
+    :hook
+    ((org-capture-mode . evil-insert-state)
+     (org-capture-mode . my/remove-insert-state-exit-save-hook )))
+#+end_src
+
+** Org-agenda
+*** org-super-agenda
+#+begin_src emacs-lisp
+  (use-package org-super-agenda
+    :after org
+    :config
+    (org-super-agenda-mode)
+    (setq org-agenda-custom-commands
+          '(("z" "My view"
+             ((agenda "" ((org-agenda-span 'day)
+                          (org-agenda-start-day nil)
+                          (org-super-agenda-groups
+                           '((:name "Today"
+                                    :time-grid t
+                                    :date today
+                                    :deadline today
+                                    :scheduled today
+                                    :order 1)
+                             (:discard (:anything))))))
+              (alltodo "" ((org-agenda-overriding-header "")
+                           (org-super-agenda-groups
+                            '(;; Each group has an implicit boolean OR operator between its selectors.
+                              (:name "Important"
+                                     :priority "A"
+                                     :face (:foreground "firebrick1"))
+                              (:name "Passed deadline"
+                                     :and (:deadline past :todo ("TODO" "WAIT" "HOLD" "NEXT"))
+                                     :face (:foreground "#7f1b19"))
+                              (:scheduled past)
+                              (:scheduled future)
+                              (:priority<= "B"
+                                           ;; Show this section after "Today" and "Important", because
+                                           ;; their order is unspecified, defaulting to 0. Sections
+                                           ;; are displayed lowest-number-first.
+                                           :order 1)
+                              (:name "Meeting"
+                                     :todo "MEETING"
+                                     :order 7)
+                              (:name "Next"
+                                     :todo "NEXT"
+                                     :order 8)
+                              (:name "Waiting"
+                                     :todo "WAIT"
+                                     :order 9)
+                              (:name "On hold"
+                                     :todo "HOLD"
+                                     :order 10)
+                              (:discard (:todo "PROJ"))))))))))
+    (add-to-list 'org-agenda-custom-commands
+                 '("w" "Weekly review" agenda ""
+                   ((org-agenda-span 8)
+                    (org-agenda-start-day "-7d")
+                    (org-agenda-skip-archived-trees nil)
+                    (org-agenda-start-with-log-mode 'only)
+                    (org-agenda-log-mode-items '(state closed clock))))))
+#+end_src
+
+** Org time block
+#+begin_src emacs-lisp
+  (use-package org-timeblock
+    :after org
+    :hook ((org-timeblock-mode org-timeblock-list-mode) . my/org-timeblock-evil-map)
+    :elpaca (org-timeblock :host github
+			     :repo "ichernyshovvv/org-timeblock")
+    :custom
+    (org-timeblock-inbox-file "/home/willefi2/org/calendar.org")
+    :init
+    (defun my/org-timeblock-evil-map ()
+      "Set the keybindings for 'org-timeblock' to be compatible with evil mode"
+      (evil-define-key 'normal org-timeblock-mode-map
+	"+" 'org-timeblock-new-task
+	"j" 'org-timeblock-forward-block
+	"l" 'org-timeblock-forward-column
+	"h" 'org-timeblock-backward-column
+	"k" 'org-timeblock-backward-block
+	(kbd "C-<down>") 'org-timeblock-day-later
+	(kbd "C-<up>") 'org-timeblock-day-earlier
+	(kbd "RET") 'org-timeblock-goto
+	(kbd "TAB") 'org-timeblock-goto-other-window
+	"d" 'org-timeblock-set-duration
+	"r" 'org-timeblock-redraw-buffers
+	"gd" 'org-timeblock-jump-to-day
+	"s" 'org-timeblock-schedule
+	"t" 'org-timeblock-toggle-timeblock-list
+	"v" 'org-timeblock-switch-scaling
+	"V" 'org-timeblock-switch-view)
+      (evil-define-key 'normal org-timeblock-list-mode-map
+	"+" 'org-timeblock-new-task
+	"j" 'org-timeblock-list-next-line
+	"k" 'org-timeblock-list-previous-line
+	(kbd "C-<down>") 'org-timeblock-day-later
+	(kbd "C-<up>") 'org-timeblock-day-earlier
+	(kbd "C-s") 'org-timeblock-list-save
+	(kbd "M-<down>") 'org-timeblock-list-drag-line-forward
+	(kbd "M-<up>") 'org-timeblock-list-drag-line-backward
+	(kbd "RET") 'org-timeblock-list-goto
+	(kbd "TAB") 'org-timeblock-list-goto-other-window
+	"S" 'org-timeblock-list-toggle-sort-function
+	"d" 'org-timeblock-list-set-duration
+	"r" 'org-timeblock-redraw-buffers
+	"gd" 'org-timeblock-jump-to-day
+	"q" 'org-timeblock-quit
+	"s" 'org-timeblock-list-schedule
+	"t" 'org-timeblock-list-toggle-timeblock
+	"v" 'org-timeblock-switch-scaling
+	"V" 'org-timeblock-switch-view)))
+#+end_src
+
+** Olivetti
+  Distraction-free writing
+#+begin_src emacs-lisp
+  (use-package olivetti
+    :config
+    (defun my/distraction-free ()
+      "Distraction-free writing environment using Olivetti package."
+      (interactive)
+      (if (equal olivetti-mode nil)
+          (progn
+            (window-configuration-to-register 1)
+            (delete-other-windows)
+            (text-scale-set 2)
+            (setq display-line-numbers nil)
+            (olivetti-mode t))
+        (progn
+          (if (eq (length (window-list)) 1)
+              (jump-to-register 1))
+          (setq display-line-numbers 'relative)
+          (olivetti-mode 0)
+          (text-scale-set 0))))
+    :bind
+    (("<f9>" . my/distraction-free)))
+#+end_src
+
+** Org modern
+#+begin_src emacs-lisp
+  (use-package org-modern
+    :after org
+    :hook (org-agenda-finalize . org-modern-agenda)
+    :hook (org-mode . org-modern-mode)
+    :init
+    (setq org-modern-table nil)
+    (setq org-modern-list nil)
+    (setq org-modern-star nil)
+    (setq org-modern-priority nil)
+    (setq org-modern-label-border 1))
+  (use-package org-modern-indent
+    :after org
+    :elpaca (org-modern-indent :type git :host github :repo "jdtsmith/org-modern-indent")
+    :config ; add late to hook
+    (add-hook 'org-mode-hook #'org-modern-indent-mode 90))
+  (use-package valign
+    :hook (org-mode . valign-mode))
+  (use-package org-pretty-table
+    :elpaca (:host github :repo "Fuco1/org-pretty-table")
+    :hook (org-mode . org-pretty-table-mode))
+  (use-package org-fancy-priorities
+    :after org
+    :hook
+    (org-mode . org-fancy-priorities-mode))
+  (use-package org-superstar
+    :after org
+    :hook (org-mode . org-superstar-mode))
+  (use-package org-rainbow-tags
+    :custom
+    (org-rainbow-tags-hash-start-index 10)
+    (org-rainbow-tags-extra-face-attributes
+     ;; Default is '(:weight 'bold)
+     '(:inverse-video t :box t :weight 'bold))
+    :hook
+    (org-mode . org-rainbow-tags-mode))
+#+end_src
+
+** Org notifications
+#+begin_src emacs-lisp
+  (use-package org-alert
+    :after org
+    :hook (after-init . org-alert-enable)
+    :init
+    (setq alert-default-style 'libnotify))
+#+end_src
+
+** Org clip link
+#+begin_src emacs-lisp
+  (use-package org-cliplink
+    :after org
+    :bind ("C-c L" . org-cliplink))
+#+end_src
+
+** Org download
+#+begin_src emacs-lisp
+  (use-package org-download :after org)
+#+end_src
+
+** Org ql
+#+begin_src emacs-lisp
+  (use-package org-ql
+    :after org
+    :demand t)
+#+end_src
+
+** Org crypt
+#+begin_src emacs-lisp
+  (use-package org-crypt
+    :elpaca nil
+    :config
+    (require 'org-crypt)
+    (org-crypt-use-before-save-magic)
+    (setq org-tags-exclude-from-inheritance '("crypt"))
+    (setq org-crypt-key "frederic.willem@gmail.com"))
+#+end_src
+
+** Org passwords
+#+begin_src emacs-lisp
+  (use-package org-passwords
+    :after org
+    :elpaca `(org-passwords :type git :repo "https://bitbucket.org/alfaromurillo/org-passwords.el.git" :files (:defaults))
+    :bind (("C-c q" . org-passwords)
+	   :map org-passwords-mode-map
+	   ("C-c u" . org-passwords-copy-username)
+	   ("C-c s" . org-passwords-copy-password)
+	   ("C-c o" . org-passwords-open-url))
+    :custom
+    (org-passwords-file "~/org/password.org.gpg")
+    :config
+    (setq enable-recursive-minibuffers t)
+    (setq org-passwords-random-words-dictionary "/etc/dictionaries-common/words")
+    (add-to-list 'org-capture-templates
+		 '("p" "password" entry (file "~/org/password.org.gpg")
+		   "* %^{Title}\n  %^{URL}p %^{USERNAME}p %^{PASSWORD}p")))
+#+end_src
+
 * Defaults
 #+begin_src emacs-lisp
   ;; Save the last place edited in files
@@ -367,423 +771,10 @@ Use vterm as multiplexer
 *** Emacs shell
 #+begin_src emacs-lisp
 #+end_src
-* Org mode
-** Org basics
-*** Time-stamp
-Update flag when saving files with last__{}modified
+* Bookmarks
 #+begin_src emacs-lisp
-  (use-package time-stamp
-    :elpaca nil
-    :init
-    (time-stamp-toggle-active 1)
-    (setq time-stamp-start "last_modified:[     ]+\\\\?[\"<]+"))
+  (use-package bookmark+ :after org :elpaca `(bookmark+ :type git :host github :repo "emacsmirror/bookmark-plus" :files (:defaults)))
 #+end_src
-
-*** org-mode
-#+begin_src emacs-lisp
-  (use-package org
-    :elpaca nil
-    :hook  (org-mode . (lambda ()
-			 (add-hook  'before-save-hook  'time-stamp nil t)))
-    :hook ((org-mode . (lambda ()
-			 (setq prettify-symbols-alist '((":PROPERTIES:" . "⚙️")
-							(":LOGBOOK:" . "☰")
-							("DEADLINE:" . "📆")
-							("CLOCK:" . "⏳")
-							("SCHEDULED:"  . "🪟") ; It's a window - not a plus sign in a box
-							(":END:" . "🔚" ))))))
-    :bind (("C-c l" . org-store-link)
-	   ("C-c c" . org-capture)
-	   ("C-c a" . my-org-agenda)
-	   (:map org-mode-map)
-	   ("M-S-<return>" . org-insert-subheading)
-	   ("C-c $" . org-archive-subtree-default))
-    :custom
-    (org-return-follows-link t)
-    (org-agenda-skip-scheduled-if-deadline-is-shown t)
-    (org-agenda-skip-deadline-prewarning-if-scheduled t)
-    (org-agenda-skip-timestamp-if-deadline-is-shown t)
-    (org-deadline-warning-days 5)
-    (org-enforce-todo-dependencies t)
-    :init
-    (setq org-directory "~/org/")
-    (require 'org-agenda)
-    (defvar journal-file "journal.org")
-    (defun build-agenda ()
-      (interactive)
-      (setq org-agenda-files (directory-files org-directory nil ".*==project.*"))
-      (add-to-list 'org-agenda-files journal-file))
-    (defun my-org-agenda ()
-      (interactive)
-      (if (not org-agenda-files)
-	  (build-agenda))
-      (org-agenda))
-    ;; Agenda styling
-    (setq org-stuck-projects '("+Project/PROJ" ("NEXT" "WAIT" "MEETING" "HOLD") nil ""))
-    (setq     org-agenda-block-separator ?─
-	      org-agenda-time-grid
-	      '((daily today require-timed)
-		(800 1000 1200 1400 1600 1800 2000)
-		" ┄┄┄┄┄ " "┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄")
-	      org-agenda-current-time-string
-	      "⭠ now ─────────────────────────────────────────────────")
-    (setq org-startup-indented t)
-    (setq org-attach-store-link-p t)
-    (org-babel-do-load-languages 'org-babel-load-languages
-				 (append org-babel-load-languages
-					 '((shell     . t)
-					   (java      . t))))
-    (setq org-archive-default-command 'org-archive-to-archive-sibling)
-    (setq org-confirm-babel-evaluate nil)
-    (setq
-     ;; Edit settings
-     org-log-done 'time
-     org-log-into-drawer t
-     org-auto-align-tags nil
-     org-tags-column 0
-     org-fold-catch-invisible-edits 'show-and-error
-     org-special-ctrl-a/e t
-     org-insert-heading-respect-content t
-
-     ;; Org styling, hide markup etc.
-     org-hide-emphasis-markers t
-     org-pretty-entities t
-     org-ellipsis "…")
-    (require 'org-protocol)
-    (setq org-capture-templates `( ("p" "Protocol" entry
-				    (file+headline ,(concat org-directory "notes.org") "Inbox")
-				    "* %^{Title}\n Source:  %u, %:annotation \n#+BEGIN_QUOTE\n%i\n#+END_QUOTE\n\n\n%?")
-				   ("L" "Protocol Link" entry
-				    (file+headline ,(concat org-directory "notes.org") "Inbox")
-				    "* %? [[%:link][%:description]] \n Captured On: %U")))
-    (defun capture-filename ()
-
-      (interactive)
-      (let ((fpath (read-file-name "Project file name: "
-				   "~/org/*==project*"
-				   nil nil nil)))
-	(find-file fpath)
-	(goto-char (org-find-exact-headline-in-buffer "Tasks"))))
-    (require 'org-capture)
-    (add-to-list 'org-capture-templates
-		 '("t" "New [t]ask" entry
-		   (function capture-filename)
-		   "* TODO %?\n  %i\n  %a"
-		   :jump-to-captured t
-		   )
-		 )
-    (require 'org-datetree)
-    (add-to-list 'org-capture-templates
-		 '("j" "[j]ournal entry" entry
-		   (file+olp+datetree journal-file)
-		   "* %? " :tree-type year))
-
-    (defun my/archive-project ()
-      (let (
-	    (org-enforce-todo-dependencies nil)
-	    (org-capture-templates
-	     '(("j" "journal" entry
-		(file+olp+datetree journal-file)
-		"* DONE %a\nCLOSED: %U\n%(org-paste-subtree 1)" :immediate-finish t :tree-type year))))
-	(org-map-entries (lambda ()
-			   (org-todo 'done)) nil 'tree)
-	(org-copy-subtree)
-	(denote-keywords-add '("ARCHIVE"))
-	(denote-keywords-remove) 
-	(denote-rename-file-using-front-matter (buffer-file-name))
-	(org-capture nil "j"))) 
-    (defun make-archive()
-      (when (and (member "ARCHIVE" (org-get-tags))
-		 (member "Tasks" (org-heading-components)))
-	(my/archive-project)))
-    (add-hook 'org-after-tags-change-hook
-	      'make-archive)
-    (setq org-datetree-add-timestamp 'active)
-    (setq org-refile-targets '((org-agenda-files :maxlevel . 3)))
-    (setq org-outline-path-complete-in-steps nil)         ; Refile in a single go
-    (setq org-startup-folded 'show2levels)
-    (setq org-tag-alist '((:startgroup . nil)
-			  ("work" . ?w) ("family" . ?f)
-			  ("personal" . ?p)
-			  (:endgroup . nil)
-			  ("ARCHIVE" . ?a)))
-    (setq org-todo-keywords
-	  '((sequence
-	     "TODO(t)"  ; A task that needs doing & is ready to do
-	     "NEXT(n)"  ; The nex task in to perform in the project
-	     "MEETING"  ; Meeting
-	     "WAIT(w@)"  ; Something external is holding up this task
-	     "HOLD(h@)"  ; This task is paused/on hold because of me
-	     "IDEA(i)"  ; An unconfirmed and unapproved task or notion
-	     "|"
-	     "CANCELLED(c)"
-	     "DONE(d)")  ; Task successfully completed
-	    (sequence
-	     "PROJ(p)"  ; A project, which usually contains other tasks
-	     "|"
-	     "KILL(k)")
-	    (sequence
-	     "REPLY(r)"
-	     "|"
-	     "REPLIED(R)")))
-    (setq org-todo-keyword-faces
-	  (quote (("TODO" :foreground "red" :weight bold)
-		  ("NEXT" :foreground "blue" :weight bold)
-		  ("WAITING" :foreground "orange" :weight bold)
-		  ("DONE" :foreground "forest green" :weight bold)
-		  ("HOLD" :foreground "magenta" :weight bold)
-		  ("CANCELLED" :foreground "forest green" :weight bold)
-		  ("MEETING" :foreground "forest green" :weight bold)))))
-
-#+end_src
-
-*** Org  contrib
-#+begin_src emacs-lisp
-  (use-package org-contrib
-    :init
-    (require 'org-checklist))
-#+end_src
-** Org auto tangle
-#+begin_src emacs-lisp
-  (use-package org-auto-tangle
-    :hook (org-mode . org-auto-tangle-mode))
-#+end_src
-
-** Org capture
-Enter insert mode when capturing things
-#+begin_src emacs-lisp
-  (use-package org-capture
-    :elpaca nil
-    :hook
-    ((org-capture-mode . evil-insert-state)
-     (org-capture-mode . my/remove-insert-state-exit-save-hook )))
-#+end_src
-
-** Org-agenda
-*** org-super-agenda
-#+begin_src emacs-lisp
-  (use-package org-super-agenda
-    :after org
-    :config
-    (org-super-agenda-mode)
-    (setq org-agenda-custom-commands
-          '(("z" "My view"
-             ((agenda "" ((org-agenda-span 'day)
-                          (org-agenda-start-day nil)
-                          (org-super-agenda-groups
-                           '((:name "Today"
-                                    :time-grid t
-                                    :date today
-                                    :deadline today
-                                    :scheduled today
-                                    :order 1)
-                             (:discard (:anything))))))
-              (alltodo "" ((org-agenda-overriding-header "")
-                           (org-super-agenda-groups
-                            '(;; Each group has an implicit boolean OR operator between its selectors.
-                              (:name "Important"
-                                     :priority "A"
-                                     :face (:foreground "firebrick1"))
-                              (:name "Passed deadline"
-                                     :and (:deadline past :todo ("TODO" "WAIT" "HOLD" "NEXT"))
-                                     :face (:foreground "#7f1b19"))
-                              (:scheduled past)
-                              (:scheduled future)
-                              (:priority<= "B"
-                                           ;; Show this section after "Today" and "Important", because
-                                           ;; their order is unspecified, defaulting to 0. Sections
-                                           ;; are displayed lowest-number-first.
-                                           :order 1)
-                              (:name "Meeting"
-                                     :todo "MEETING"
-                                     :order 7)
-                              (:name "Next"
-                                     :todo "NEXT"
-                                     :order 8)
-                              (:name "Waiting"
-                                     :todo "WAIT"
-                                     :order 9)
-                              (:name "On hold"
-                                     :todo "HOLD"
-                                     :order 10)
-                              (:discard (:todo "PROJ"))))))))))
-    (add-to-list 'org-agenda-custom-commands
-                 '("w" "Weekly review" agenda ""
-                   ((org-agenda-span 8)
-                    (org-agenda-start-day "-7d")
-                    (org-agenda-skip-archived-trees nil)
-                    (org-agenda-start-with-log-mode 'only)
-                    (org-agenda-log-mode-items '(state closed clock))))))
-#+end_src
-
-** Org time block
-#+begin_src emacs-lisp
-  (use-package org-timeblock
-    :hook ((org-timeblock-mode org-timeblock-list-mode) . my/org-timeblock-evil-map)
-    :elpaca (org-timeblock :host github
-                             :repo "ichernyshovvv/org-timeblock")
-    :custom
-    (org-timeblock-inbox-file "/home/willefi2/org/calendar.org")
-    :init
-    (defun my/org-timeblock-evil-map ()
-      "Set the keybindings for 'org-timeblock' to be compatible with evil mode"
-      (evil-define-key 'normal org-timeblock-mode-map
-        "+" 'org-timeblock-new-task
-        "j" 'org-timeblock-forward-block
-        "l" 'org-timeblock-forward-column
-        "h" 'org-timeblock-backward-column
-        "k" 'org-timeblock-backward-block
-        (kbd "C-<down>") 'org-timeblock-day-later
-        (kbd "C-<up>") 'org-timeblock-day-earlier
-        (kbd "RET") 'org-timeblock-goto
-        (kbd "TAB") 'org-timeblock-goto-other-window
-        "d" 'org-timeblock-set-duration
-        "r" 'org-timeblock-redraw-buffers
-        "gd" 'org-timeblock-jump-to-day
-        "s" 'org-timeblock-schedule
-        "t" 'org-timeblock-toggle-timeblock-list
-        "v" 'org-timeblock-switch-scaling
-        "V" 'org-timeblock-switch-view)
-      (evil-define-key 'normal org-timeblock-list-mode-map
-        "+" 'org-timeblock-new-task
-        "j" 'org-timeblock-list-next-line
-        "k" 'org-timeblock-list-previous-line
-        (kbd "C-<down>") 'org-timeblock-day-later
-        (kbd "C-<up>") 'org-timeblock-day-earlier
-        (kbd "C-s") 'org-timeblock-list-save
-        (kbd "M-<down>") 'org-timeblock-list-drag-line-forward
-        (kbd "M-<up>") 'org-timeblock-list-drag-line-backward
-        (kbd "RET") 'org-timeblock-list-goto
-        (kbd "TAB") 'org-timeblock-list-goto-other-window
-        "S" 'org-timeblock-list-toggle-sort-function
-        "d" 'org-timeblock-list-set-duration
-        "r" 'org-timeblock-redraw-buffers
-        "gd" 'org-timeblock-jump-to-day
-        "q" 'org-timeblock-quit
-        "s" 'org-timeblock-list-schedule
-        "t" 'org-timeblock-list-toggle-timeblock
-        "v" 'org-timeblock-switch-scaling
-        "V" 'org-timeblock-switch-view)))
-#+end_src
-
-** Olivetti
-  Distraction-free writing
-#+begin_src emacs-lisp
-  (use-package olivetti
-    :config
-    (defun my/distraction-free ()
-      "Distraction-free writing environment using Olivetti package."
-      (interactive)
-      (if (equal olivetti-mode nil)
-          (progn
-            (window-configuration-to-register 1)
-            (delete-other-windows)
-            (text-scale-set 2)
-            (setq display-line-numbers nil)
-            (olivetti-mode t))
-        (progn
-          (if (eq (length (window-list)) 1)
-              (jump-to-register 1))
-          (setq display-line-numbers 'relative)
-          (olivetti-mode 0)
-          (text-scale-set 0))))
-    :bind
-    (("<f9>" . my/distraction-free)))
-#+end_src
-
-** Org modern
-#+begin_src emacs-lisp
-  (use-package org-modern
-    :hook (org-agenda-finalize . org-modern-agenda)
-    :hook (org-mode . org-modern-mode)
-    :init
-    (setq org-modern-table nil)
-    (setq org-modern-list nil)
-    (setq org-modern-star nil)
-    (setq org-modern-priority nil)
-    (setq org-modern-label-border 1))
-  (use-package org-modern-indent
-    :elpaca (org-modern-indent :type git :host github :repo "jdtsmith/org-modern-indent")
-    :config ; add late to hook
-    (add-hook 'org-mode-hook #'org-modern-indent-mode 90))
-  (use-package valign
-    :hook (org-mode . valign-mode))
-  (use-package org-pretty-table
-    :elpaca (:host github :repo "Fuco1/org-pretty-table")
-    :hook (org-mode . org-pretty-table-mode))
-  (use-package org-fancy-priorities
-    :after org
-    :hook
-    (org-mode . org-fancy-priorities-mode))
-  (use-package org-superstar
-    :after org
-    :hook (org-mode . org-superstar-mode))
-  (use-package org-rainbow-tags
-    :custom
-    (org-rainbow-tags-hash-start-index 10)
-    (org-rainbow-tags-extra-face-attributes
-     ;; Default is '(:weight 'bold)
-     '(:inverse-video t :box t :weight 'bold))
-    :hook
-    (org-mode . org-rainbow-tags-mode))
-#+end_src
-
-** Org notifications
-#+begin_src emacs-lisp
-  (use-package org-alert
-    :hook (after-init . org-alert-enable)
-    :init
-    (setq alert-default-style 'libnotify))
-#+end_src
-
-** Org clip link
-#+begin_src emacs-lisp
-  (use-package org-cliplink
-    :after org
-    :bind ("C-c L" . org-cliplink))
-#+end_src
-
-** Org download
-#+begin_src emacs-lisp
-  (use-package org-download)
-#+end_src
-
-** Org ql
-#+begin_src emacs-lisp
-  (use-package org-ql
-    :demand t)
-#+end_src
-
-** Org crypt
-#+begin_src emacs-lisp
-  (use-package org-crypt
-    :elpaca nil
-    :config
-    (require 'org-crypt)
-    (org-crypt-use-before-save-magic)
-    (setq org-tags-exclude-from-inheritance '("crypt"))
-    (setq org-crypt-key "frederic.willem@gmail.com"))
-#+end_src
-
-** Org passwords
-#+begin_src emacs-lisp
-  (use-package org-passwords
-    :elpaca `(org-passwords :type git :repo "https://bitbucket.org/alfaromurillo/org-passwords.el.git" :files (:defaults))
-    :bind (("C-c q" . org-passwords)
-           :map org-passwords-mode-map
-           ("C-c u" . org-passwords-copy-username)
-           ("C-c s" . org-passwords-copy-password)
-           ("C-c o" . org-passwords-open-url))
-    :custom
-    (org-passwords-file "~/org/password.org.gpg")
-    :config
-    (setq enable-recursive-minibuffers t)
-    (setq org-passwords-random-words-dictionary "/etc/dictionaries-common/words")
-    (add-to-list 'org-capture-templates
-                 '("p" "password" entry (file "~/org/password.org.gpg")
-                   "* %^{Title}\n  %^{URL}p %^{USERNAME}p %^{PASSWORD}p")))
-#+end_src
-
 * Evil mode
 Usage of evil mode as I used to work with vim binding for years
 #+begin_src emacs-lisp
@@ -872,7 +863,7 @@ Usage of evil mode as I used to work with vim binding for years
 
 ** Orgit
 #+begin_src emacs-lisp
-  (use-package orgit)
+  (use-package orgit :after org)
 #+end_src
 
 ** Forge
@@ -885,7 +876,7 @@ Used to play with forges like GitHub or gitlab
 ** Orgit for forge
 #+begin_src emacs-lisp
   (use-package orgit-forge
-    :after forge)
+    :after (org forge))
 #+end_src
 
 ** Diff-hl
@@ -1046,6 +1037,7 @@ Used to play with forges like GitHub or gitlab
 ** Denote menu
 #+begin_src emacs-lisp
   (use-package denote-menu
+    :after org
      :bind ("C-c d" . list-denotes)
      :init
      (require 'denote-org-dblock)
@@ -1927,35 +1919,36 @@ marginalia adds annotations in the mini buffer
 ** Mu4e
 #+begin_src emacs-lisp
   (use-package mu4e
+    :after org
     :unless my/using-android
     :elpaca (mu  :host github :repo "djcb/mu"  :branch "release/1.10"
-                  )
+		  )
     :demand t
     :bind (("C-x m" . mu4e)
-           :map mu4e-headers-mode-map
-           ("C-c c" . mu4e-org-store-and-capture)
-           :map mu4e-view-mode-map
-           ("C-c c" . mu4e-org-store-and-capture))
+	   :map mu4e-headers-mode-map
+	   ("C-c c" . mu4e-org-store-and-capture)
+	   :map mu4e-view-mode-map
+	   ("C-c c" . mu4e-org-store-and-capture))
     :custom
     (mu4e-attachment-dir "~/Downloads/")
     (mu4e-bookmarks
      '(( :name  "Unread messages"
-         :query "maildir:/INBOX AND flag:unread AND NOT flag:trashed"
-         :key ?u)
+	 :query "maildir:/INBOX AND flag:unread AND NOT flag:trashed"
+	 :key ?u)
        ( :name "Important messages"
-         :query "prio:high AND NOT flag:trashed AND NOT maildir:\"/[Gmail]/Sent mail\""
-         :key ?i)
+	 :query "prio:high AND NOT flag:trashed AND NOT maildir:\"/[Gmail]/Sent mail\""
+	 :key ?i)
        ( :name "Today's messages"
-         :query "maildir:/INBOX AND date:today..now"
-         :key ?t)
+	 :query "maildir:/INBOX AND date:today..now"
+	 :key ?t)
        ( :name "Last 7 days"
-         :query "date:7d..now"
-         :hide-unread t
-         :key ?w)))
+	 :query "date:7d..now"
+	 :hide-unread t
+	 :key ?w)))
     (mu4e-headers-fields '((:human-date . 12)
-                           (:flags . 6)
-                           (:from . 30)
-                           (:subject)))
+			   (:flags . 6)
+			   (:from . 30)
+			   (:subject)))
 
     :config
     (evil-define-key 'normal mu4e-headers-mode-map "T" 'mu4e-headers-mark-thread )
@@ -1970,10 +1963,10 @@ marginalia adds annotations in the mini buffer
     (setq mu4e-completing-read-function 'completing-read)
     ;; (setq mu4e-change-filenames-when-moving t)
     (setq sendmail-program (executable-find "msmtp")
-          send-mail-function #'smtpmail-send-it
-          message-sendmail-f-is-evil t
-          message-sendmail-extra-arguments '("--read-envelope-from")
-          message-send-mail-function #'message-send-mail-with-sendmail)
+	  send-mail-function #'smtpmail-send-it
+	  message-sendmail-f-is-evil t
+	  message-sendmail-extra-arguments '("--read-envelope-from")
+	  message-send-mail-function #'message-send-mail-with-sendmail)
     ;; don[t show buffer after sending
     (setq message-kill-buffer-on-exit t)
     (setq org-export-show-temporary-export-buffer nil)
@@ -1984,32 +1977,32 @@ marginalia adds annotations in the mini buffer
     (setq mu4e-sent-folder   "/[Gmail].Sent Mail")
     (setq mu4e-trash-folder  "/[Gmail].Trash")
     (setq mu4e-maildir-shortcuts
-          '( ( :maildir "/INBOX" :key ?i)
-             ( :maildir "/[Gmail].All Mail"  :key ?a)
-             ( :maildir "/[Gmail].Sent Mail"  :key ?S)
-             ( :maildir "/[Gmail].Trash" :key ?t)
-             ( :maildir "/[Gmail].Starred" :key ?s)))
+	  '( ( :maildir "/INBOX" :key ?i)
+	     ( :maildir "/[Gmail].All Mail"  :key ?a)
+	     ( :maildir "/[Gmail].Sent Mail"  :key ?S)
+	     ( :maildir "/[Gmail].Trash" :key ?t)
+	     ( :maildir "/[Gmail].Starred" :key ?s)))
 
     (add-to-list 'org-capture-templates
-                 '("m" "Email Workflow"))
+		 '("m" "Email Workflow"))
     (add-to-list 'org-capture-templates
-                 '("mt" "Capture to task" entry
-                   (function capture-filename)
-                   "* REPLY to %:fromname in %a ")) ;; don't immdeiate-finsh want to be able to set a todo
+		 '("mt" "Capture to task" entry
+		   (function capture-filename)
+		   "* REPLY to %:fromname in %a ")) ;; don't immdeiate-finsh want to be able to set a todo
     ;; template to capture events
     (add-to-list 'org-capture-templates
-                 '("#" "used by gnus-icalendar-org" entry
-                   (function capture-filename)
-                   "%i")) ;; don't immdeiate-finsh want to be able to set a todo
+		 '("#" "used by gnus-icalendar-org" entry
+		   (function capture-filename)
+		   "%i")) ;; don't immdeiate-finsh want to be able to set a todo
 
     (setq mu4e-refile-folder "/[Gmail].All Mail")
 
     (setq mu4e-org-contacts-file "/home/willefi2/org/contacts.org")
     (add-to-list 'mu4e-headers-actions
-                 '("org-contact-add" . mu4e-action-add-org-contact) t)
+		 '("org-contact-add" . mu4e-action-add-org-contact) t)
     (add-to-list 'mu4e-view-actions
-                 '("org-contact-add" . mu4e-action-add-org-contact) t))
-                 
+		 '("org-contact-add" . mu4e-action-add-org-contact) t))
+
     ;; fancy markers
     (use-package mu4e-marker-icons
       :init (mu4e-marker-icons-mode 1))
@@ -2017,6 +2010,7 @@ marginalia adds annotations in the mini buffer
 *** Mu4e contrib
 #+begin_src emacs-lisp
   (use-package mu4e-contrib
+    :after mu4e
     :elpaca nil)
 #+end_src
 
@@ -2050,27 +2044,6 @@ marginalia adds annotations in the mini buffer
 
 ** org contacts
 #+begin_src emacs-lisp
-  (use-package org-contacts
-    :demand t
-    :after org-msg
-    :hook (org-msg-edit-mode . org-contacts-setup-completion-at-point)
-    :custom
-    (org-contacts-files '("~/org/contacts.org"))
-    :config
-    (add-to-list 'org-capture-templates
-                 '("c" "Contacts" entry (file "~/org/contacts.org")
-                   "* %(org-contacts-template-name)
-  :PROPERTIES:
-  :EMAIL: %(org-contacts-template-email)
-  :PHONE:
-  :ALIAS:
-  :NICKNAME:
-  :IGNORE:
-  :ICON:
-  :NOTE:
-  :ADDRESS:
-  :BIRTHDAY:
-  :END:")))
 #+end_src
 
 ** PDF Tools

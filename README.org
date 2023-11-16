@@ -219,7 +219,9 @@ We will use use-package
 *** org-mode
 Add org-mode to load-path (run this script by "C-c C-c")
 #+begin_src shell :tangle no
-  git clone https://git.savannah.gnu.org/git/emacs/org-mode.git  ~/.emacs.d/lisp/org-mode 
+  # After having clones this repo 
+  git submodule init
+  git subodules update
   cd ~/.emacs.d/lisp/org-mode/ 
   # git checkout release_9.6.12 # or wathever the version you want to use
   make autoloads

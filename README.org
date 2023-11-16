@@ -204,7 +204,6 @@ We will use use-package
 #+begin_src emacs-lisp
   ;; org latest version finally works but has to be launched before elpa-use-package because this package calls org
   ;; and then have a problem of org version mismatch
-  (elpaca (org :tag "release_9.6.12"))
   ;; Install use-package support
   (elpaca elpaca-use-package
     ;; Enable :elpaca use-package keyword.
@@ -218,7 +217,14 @@ We will use use-package
 * Org mode
 ** Org basics
 *** org-mode
-**** use elpaca nil 'cause we use the org version loaded in [[*USE-PACKAGE][USE-PACKAGE]]
+Add org-mode to load-path (run this script by "C-c C-c")
+#+begin_src shell :tangle no
+  git clone https://git.savannah.gnu.org/git/emacs/org-mode.git  ~/.emacs.d/lisp/org-mode 
+  cd ~/.emacs.d/lisp/org-mode/ 
+  # git checkout release_9.6.12 # or wathever the version you want to use
+  make autoloads
+  sudo make install
+#+end_src
 #+begin_src emacs-lisp
   (use-package org
     :elpaca nil
@@ -561,9 +567,35 @@ Enter insert mode when capturing things
     :elpaca (:host github :repo "Fuco1/org-pretty-table")
     :hook (org-mode . org-pretty-table-mode))
   (use-package org-fancy-priorities
-    :after org
-    :hook
-    (org-mode . org-fancy-priorities-mode))
+    :commands (org-fancy-priorities-mode)
+    :hook (org-mode . org-fancy-priorities-mode)
+    :diminish ""
+    :config
+    ;;"Eisenhower Matrix of Importance and Urgency"
+    (defvar +org-fancy-priorities-eisenhower-matrix
+      "↑ |-----------+-----------|
+    I |   Eisenhower Matrix   |
+    M |-----------+-----------|
+    P |           |           |
+    O | Schedule  | Immediate |
+    R |           |           |
+    T |-----------+-----------|
+    A |           |           |
+    N | Eliminate | Delegate  |
+    C |           |           |
+    E |-----------+-----------|
+              URGENCY →"
+      "Eisenhower Matrix help text.")
+    (setq org-fancy-priorities-list
+          (mapcar
+           (lambda (cell) (format (car cell)
+                             (propertize
+                              (cdr cell)
+                              'help-echo +org-fancy-priorities-eisenhower-matrix)))
+           '(("I∧U (%s)" . "I")
+             ("I¬U  (%s)" . "S")
+             ("¬IU  (%s)" . "D")
+             ("¬I¬U (%s)" . "E")))))
   (use-package org-superstar
     :after org
     :hook (org-mode . org-superstar-mode))
@@ -1278,7 +1310,7 @@ Change light to dark theme according to the sunset/sunrise
     :after (treemacs mu4e)
     :elpaca nil
     :config
-    (setq treemacs-mu4e--count-script "/home/willefi2/.emacs.d/straight/repos/treemacs/src/scripts/treemacs-count-mail.py"))
+    (setq treemacs-mu4e--count-script "/home/willefi2/.emacs.d/elpaca/repos/treemacs/src/scripts/treemacs-count-mail.py"))
 
   (use-package treemacs-evil
     :after (treemacs evil))

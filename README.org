@@ -202,6 +202,9 @@ Using elpaca as package manager
 ** USE-PACKAGE
 We will use use-package
 #+begin_src emacs-lisp
+  ;; need org to be loaded
+  (add-to-list 'load-path "~/.emacs.d/lisp/org-mode/lisp/")
+
   ;; org latest version finally works but has to be launched before elpa-use-package because this package calls org
   ;; and then have a problem of org version mismatch
   ;; Install use-package support

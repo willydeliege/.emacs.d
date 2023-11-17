@@ -1367,12 +1367,12 @@ When you can't remember all keybindings
     (electric-pair-mode))
 #+end_src
 #+begin_src emacs-lisp
-  (use-package lispy
-    :hook ((emacs-lisp-mode lisp-interaction-mode) . lispy-mode))
-  (use-package lispyville
-    :hook ((emacs-lisp-mode lisp-interaction-mode) . lispyville-mode)
-    :config
-    (lispyville-set-key-theme '(operators c-w additional)))
+  ;; (use-package lispy
+  ;;   :hook ((emacs-lisp-mode lisp-interaction-mode) . lispy-mode))
+  ;; (use-package lispyville
+  ;;   :hook ((emacs-lisp-mode lisp-interaction-mode) . lispyville-mode)
+  ;;   :config
+  ;;   (lispyville-set-key-theme '(operators c-w additional)))
 #+end_src
 ** Jump
 avy is a GNU Emacs package for jumping to visible text using a char-based decision tree

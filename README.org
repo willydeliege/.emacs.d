@@ -1213,6 +1213,13 @@ Change light to dark theme according to the sunset/sunrise
 
 #+end_src
 * Editing
+** Global keybinding
+#+begin_src emacs-lisp
+  (use-package emacs
+    :elpaca nil
+    :config
+    (global-set-key  (kbd "C-x C") 'save-buffers-kill-emacs))
+#+end_src
 ** Sudo edit
 #+begin_src emacs-lisp
   (use-package sudo-edit

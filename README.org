@@ -848,14 +848,19 @@ Usage of evil mode as I used to work with vim binding for years
       (unless (equal (buffer-name) "*scratch*")
         (add-hook 'evil-insert-state-exit-hook 'save-buffer 0 t )))
     (evil-mode)) 
-
+#+end_src
+** Evil collection
+#+begin_src emacs-lisp
   (use-package evil-collection
     :after evil
+    :hook (evil-collection-setup . (lambda (&rest a)
+                                     (evil-define-key 'normal elpaca-ui-mode-map (kbd "U") 'elpaca-ui-mark-merge)))
     :custom
     (evil-collection-calendar-want-org-bindings t)
-    :config
+    :init
     (setq forge-add-default-bindings nil)
-    (evil-collection-init))
+    (evil-collection-init)
+    (run-hook-with-args 'evil-collection-setup-hook))
 #+end_src
 
 * Dired

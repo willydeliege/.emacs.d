@@ -1353,14 +1353,15 @@ When you can't remember all keybindings
     :after evil
     :init
     (which-key-setup-side-window-bottom)
+    (setq which-key-allow-imprecise-window-fit nil)
     (which-key-enable-devil-support)
     (which-key-mode)
     ;; avoid which-key to be truncated
-    (setq which-key-allow-imprecise-window-fit nil)
     :custom
     (which-key-paging-prefixes '("C-c" "C-x" "C-w"))
     (which-key-allow-evil-operators t)
-    (which-key-use-C-h-commands nil)
+    (which-key-show-operator-state-maps t)
+    ;; (which-key-use-C-h-commands nil)
     (which-key-idle-delay 0.2))
 #+end_src
 
@@ -1650,7 +1651,7 @@ marginalia adds annotations in the mini buffer
     ;; Show the Embark target at point via Eldoc.  You may adjust the Eldoc
     ;; strategy, if you want to see the documentation from multiple providers.
     (add-hook 'eldoc-documentation-functions #'embark-eldoc-first-target)
-    (setq eldoc-documentation-strategy #'eldoc-documentation-compose-eagerly)
+    ;; (setq eldoc-documentation-strategy #'eldoc-documentation-compose-eagerly)
 
     :config
     ;; Hide the mode line of the Embark live/completions buffers

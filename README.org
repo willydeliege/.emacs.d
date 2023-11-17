@@ -379,7 +379,9 @@ Add org-mode to load-path (run this script by "C-c C-c")
                   ("DONE" :foreground "forest green" :weight bold)
                   ("HOLD" :foreground "magenta" :weight bold)
                   ("CANCELLED" :foreground "forest green" :weight bold)
-                  ("MEETING" :foreground "forest green" :weight bold)))))
+                  ("MEETING" :foreground "forest green" :weight bold))))
+    ;; make org-protocol available
+    (require 'org-protocol))
 #+end_src
 
 *** Org  contrib

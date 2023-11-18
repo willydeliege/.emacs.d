@@ -1005,6 +1005,7 @@ Used to play with forges like GitHub or gitlab
     (setq denote-file-type nil) ; Org is the default, set others here
     (setq denote-excluded-directories-regexp nil)
     (setq denote-excluded-keywords-regexp nil)
+    (setq denote-prompts '(title keywords template signature))
 
     ;; Pick dates, where relevant, with Org's advanced interface:
     (setq denote-date-prompt-use-org-read-date t)

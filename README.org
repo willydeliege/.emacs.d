@@ -1229,6 +1229,7 @@ Change light to dark theme according to the sunset/sunrise
   (use-package emacs
     :elpaca nil
     :config
+    (setq shell-command-switch "-ic")
     (global-set-key  (kbd "C-x C") 'save-buffers-kill-emacs))
 #+end_src
 ** Sudo edit

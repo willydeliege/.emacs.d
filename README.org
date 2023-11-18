@@ -873,6 +873,10 @@ Usage of evil mode as I used to work with vim binding for years
     (setq dired-listing-switches "-Al -h -v --group-directories-first"))
 
 #+end_src
+** Dired sudo
+#+begin_src emacs-lisp
+(use-package dired-toggle-sudo)
+#+end_src
 
 ** Dired subtree
 #+begin_src emacs-lisp

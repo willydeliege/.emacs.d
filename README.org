@@ -1014,7 +1014,8 @@ Used to play with forges like GitHub or gitlab
     ;; include an example here to avoid potential confusion.
 
     (setq denote-templates
-          '((project .  "* Objective/Goals\n* Brainstorming\n* PROJ Tasks\n** TODO initial task\n* Communication\n* Dates\n* Notes\n* Reference material\n")))
+         '((empty . "")
+            (project .  "* Objective/Goals\n* Brainstorming\n* PROJ Tasks\n** TODO initial task\n* Communication\n* Dates\n* Notes\n* Reference material\n")))
 
     (setq denote-date-format nil) ; read doc string
     (defun my-denote-org-extract-subtree (&optional silo)

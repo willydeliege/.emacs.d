@@ -895,6 +895,11 @@ Usage of evil mode as I used to work with vim binding for years
     :init
     (evil-define-key 'normal dired-mode-map ")" 'dired-git-info-mode))
 #+end_src
+
+** Fd-dired
+#+begin_src emacs-lisp
+  (use-package fd-dired)
+#+end_src
 * Version control
 ** Magit
 #+begin_src emacs-lisp

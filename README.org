@@ -902,8 +902,24 @@ Usage of evil mode as I used to work with vim binding for years
 
 ** Fd-dired
 #+begin_src emacs-lisp
-  (use-package fd-dired)
+  (use-package fd-dired
+    :config
+    (defun fd-name-dired-vcs (dir pattern)
+      (interactive
+       "DFd-name (directory): \nsFd-name (filename regexp): ")
+      (let ((fd-dired-pre-fd-args
+             (concat " --no-ignore-vcs " fd-dired-pre-fd-args)))
+        (fd-dired dir (shell-quote-argument pattern))))
+    (defun fd-grep-dired-vcs (dir regexp)
+      (interactive "DFd-grep (directory): \nsFd-grep (rg regexp): ")
+      (let ((fd-dired-pre-fd-args
+             (concat " --no-ignore-vcs " fd-dired-pre-fd-args)))
+        (fd-dired dir (concat "--exec " fd-grep-dired-program
+                              " " fd-grep-dired-pre-grep-args " "
+                              (shell-quote-argument regexp)
+                              " -0 -ls ")))))
 #+end_src
+
 * Version control
 ** Magit
 #+begin_src emacs-lisp

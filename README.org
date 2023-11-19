@@ -1996,40 +1996,61 @@ marginalia adds annotations in the mini buffer
     :init
     (perspective-project-bridge-mode))
 #+end_src
+
+** Buffers
+#+begin_src emacs-lisp
+  (use-package ibuffer-project
+    :bind ("C-x C-b" . ibuffer)
+    :hook (ibuffer-mode . my/ibuffer-projects)
+    :init
+     (defun my/ibuffer-projects ()
+       (setq ibuffer-filter-groups (ibuffer-project-generate-filter-groups))
+       (unless (eq ibuffer-sorting-mode 'project-file-relative)
+         (ibuffer-do-sort-by-project-file-relative))))
+#+end_src
 * Mail
 ** Mu4e
 #+begin_src emacs-lisp
   (use-package mu4e
     :after org
     :unless my/using-android
-    :elpaca (mu  :host github :repo "djcb/mu"  :branch "release/1.10"
-		  )
+    :elpaca (mu  :host github :repo "djcb/mu"  :branch "release/1.10")
     :demand t
     :bind (("C-x m" . mu4e)
-	   :map mu4e-headers-mode-map
-	   ("C-c c" . mu4e-org-store-and-capture)
-	   :map mu4e-view-mode-map
-	   ("C-c c" . mu4e-org-store-and-capture))
+           :map mu4e-headers-mode-map
+           ("C-c c" . mu4e-org-store-and-capture)
+           :map mu4e-view-mode-map
+           ("C-c c" . mu4e-org-store-and-capture))
     :custom
     (mu4e-attachment-dir "~/Downloads/")
+    (mu4e-maildir-shortcuts
+          '( ( :maildir "/INBOX" :key ?i)
+             ( :maildir "/[Gmail].All Mail"  :key ?a)
+             ( :maildir "/[Gmail].Sent Mail"  :key ?S)
+             ( :maildir "/[Gmail].Trash" :key ?t)
+             ( :maildir "/[Gmail].Starred" :key ?s)))
+
     (mu4e-bookmarks
      '(( :name  "Unread messages"
-	 :query "maildir:/INBOX AND flag:unread AND NOT flag:trashed"
-	 :key ?u)
+         :query "maildir:/INBOX AND flag:unread AND NOT flag:trashed"
+         :key ?u)
+       ( :name  "All Unread messages"
+         :query "flag:unread"
+         :key ?U)
        ( :name "Important messages"
-	 :query "prio:high AND NOT flag:trashed AND NOT maildir:\"/[Gmail]/Sent mail\""
-	 :key ?i)
+         :query "prio:high AND NOT flag:trashed AND NOT maildir:\"/[Gmail]/Sent mail\""
+         :key ?i)
        ( :name "Today's messages"
-	 :query "maildir:/INBOX AND date:today..now"
-	 :key ?t)
+         :query "maildir:/INBOX AND date:today..now"
+         :key ?t)
        ( :name "Last 7 days"
-	 :query "date:7d..now"
-	 :hide-unread t
-	 :key ?w)))
+         :query "date:7d..now"
+         :hide-unread t
+         :key ?w)))
     (mu4e-headers-fields '((:human-date . 12)
-			   (:flags . 6)
-			   (:from . 30)
-			   (:subject)))
+                           (:flags . 6)
+                           (:from . 30)
+                           (:subject)))
 
     :config
     (evil-define-key 'normal mu4e-headers-mode-map "T" 'mu4e-headers-mark-thread )
@@ -2044,10 +2065,10 @@ marginalia adds annotations in the mini buffer
     (setq mu4e-completing-read-function 'completing-read)
     ;; (setq mu4e-change-filenames-when-moving t)
     (setq sendmail-program (executable-find "msmtp")
-	  send-mail-function #'smtpmail-send-it
-	  message-sendmail-f-is-evil t
-	  message-sendmail-extra-arguments '("--read-envelope-from")
-	  message-send-mail-function #'message-send-mail-with-sendmail)
+          send-mail-function #'smtpmail-send-it
+          message-sendmail-f-is-evil t
+          message-sendmail-extra-arguments '("--read-envelope-from")
+          message-send-mail-function #'message-send-mail-with-sendmail)
     ;; don[t show buffer after sending
     (setq message-kill-buffer-on-exit t)
     (setq org-export-show-temporary-export-buffer nil)
@@ -2057,42 +2078,38 @@ marginalia adds annotations in the mini buffer
     (setq mu4e-drafts-folder "/[Gmail].Drafts")
     (setq mu4e-sent-folder   "/[Gmail].Sent Mail")
     (setq mu4e-trash-folder  "/[Gmail].Trash")
-    (setq mu4e-maildir-shortcuts
-	  '( ( :maildir "/INBOX" :key ?i)
-	     ( :maildir "/[Gmail].All Mail"  :key ?a)
-	     ( :maildir "/[Gmail].Sent Mail"  :key ?S)
-	     ( :maildir "/[Gmail].Trash" :key ?t)
-	     ( :maildir "/[Gmail].Starred" :key ?s)))
-
     (add-to-list 'org-capture-templates
-		 '("m" "Email Workflow"))
+                 '("m" "Email Workflow"))
     (add-to-list 'org-capture-templates
-		 '("mt" "Capture to task" entry
-		   (function capture-filename)
-		   "* REPLY to %:fromname in %a ")) ;; don't immdeiate-finsh want to be able to set a todo
+                 '("mt" "Capture to task" entry
+                   (function capture-filename)
+                   "* REPLY to %:fromname in %a ")) ;; don't immdeiate-finsh want to be able to set a todo
     ;; template to capture events
     (add-to-list 'org-capture-templates
-		 '("#" "used by gnus-icalendar-org" entry
-		   (function capture-filename)
-		   "%i")) ;; don't immdeiate-finsh want to be able to set a todo
+                 '("#" "used by gnus-icalendar-org" entry
+                   (function capture-filename)
+                   "%i")) ;; don't immdeiate-finsh want to be able to set a todo
 
     (setq mu4e-refile-folder "/[Gmail].All Mail")
 
     (setq mu4e-org-contacts-file "/home/willefi2/org/contacts.org")
     (add-to-list 'mu4e-headers-actions
-		 '("org-contact-add" . mu4e-action-add-org-contact) t)
+                 '("org-contact-add" . mu4e-action-add-org-contact) t)
     (add-to-list 'mu4e-view-actions
-		 '("org-contact-add" . mu4e-action-add-org-contact) t))
-
-    ;; fancy markers
-    (use-package mu4e-marker-icons
-      :init (mu4e-marker-icons-mode 1))
+                 '("org-contact-add" . mu4e-action-add-org-contact) t))
 #+end_src
 *** Mu4e contrib
 #+begin_src emacs-lisp
   (use-package mu4e-contrib
     :after mu4e
     :elpaca nil)
+#+end_src
+*** mu markers
+  fancy markers
+#+begin_src emacs-lisp
+  (use-package mu4e-marker-icons
+    :after mu4e
+    :init (mu4e-marker-icons-mode 1))
 #+end_src
 
 ** Org message

@@ -1015,22 +1015,22 @@ Used to play with forges like GitHub or gitlab
     ;; include an example here to avoid potential confusion.
 
     (setq denote-templates
-         '((empty . "")
-            (project .  "* Objective/Goals\n* Brainstorming\n* PROJ Tasks\n** TODO initial task\n* Communication\n* Dates\n* Notes\n* Reference material\n")))
+          '((empty . "")
+            (project .  "#+category: TO_FILL\n\n\n* Objective/Goals\n* Brainstorming\n* PROJ Tasks\n** TODO initial task\n* Communication\n* Dates\n* Notes\n* Reference material\n")))
 
     (setq denote-date-format nil) ; read doc string
     (defun my-denote-org-extract-subtree (&optional silo)
       "Create new Denote note using current Org subtree.
-  Make the new note use the Org file type, regardless of the value
-  of `denote-file-type'.
+   Make the new note use the Org file type, regardless of the value
+   of `denote-file-type'.
 
-  With an optional SILO argument as a prefix (\\[universal-argument]),
-  ask user to select a SILO from `my-denote-silo-directories'.
+   With an optional SILO argument as a prefix (\\[universal-argument]),
+   ask user to select a SILO from `my-denote-silo-directories'.
 
-  Use the subtree title as the note's title.  If available, use the
-  tags of the heading are used as note keywords.
+   Use the subtree title as the note's title.  If available, use the
+   tags of the heading are used as note keywords.
 
-  Delete the original subtree."
+   Delete the original subtree."
       (interactive
        (list (when current-prefix-arg
                (completing-read "Select a silo: " my-denote-silo-directories nil t))))

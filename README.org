@@ -705,8 +705,7 @@ Update flag when saving files with last__{}modified
        '("'" . repeat)
        '("<escape>" . ignore)))
     (meow-setup)
-    (meow-global-mode 1)
-    )
+    (meow-global-mode 1))
 #+end_src
 
 * Defaults
@@ -1585,18 +1584,7 @@ marginalia adds annotations in the mini buffer
                  '("\\`\\*Embark Collect \\(Live\\|Completions\\)\\*"
                    nil
                    (window-parameters (mode-line-format . none))))
-    (setq embark-indicators
-          '(embark-which-key-indicator
-            embark-highlight-indicator
-            embark-isearch-highlight-indicator))
-
-    (defun embark-hide-which-key-indicator (fn &rest args)
-      "Hide the which-key indicator immediately when using the completing-read prompter."
-      (which-key--hide-popup-ignore-command)
-      (let ((embark-indicators
-             (remq #'embark-which-key-indicator embark-indicators)))
-        (apply fn args)))
-
+    
     (defmacro my/embark-ace-action (fn)
       `(defun ,(intern (concat "my/embark-ace-" (symbol-name fn))) ()
          (interactive)
@@ -2120,7 +2108,7 @@ Setup ANSI colors for the compilation buffer
 
 ** Java + Lsp
 #+begin_src emacs-lisp
-  (use-package lsp-mode
+ (use-package lsp-mode
     :custom
     (lsp-completion-provider :none) ;; we use Corfu!
     :init

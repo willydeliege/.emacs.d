@@ -409,16 +409,6 @@ Update flag when saving files with last__{}modified
     :hook (org-mode . org-auto-tangle-mode))
 #+end_src
 
-** Org capture
-Enter insert mode when capturing things
-#+begin_src emacs-lisp
-  (use-package org-capture
-    :elpaca nil
-    :hook
-    ((org-capture-mode . evil-insert-state)
-     (org-capture-mode . my/remove-insert-state-exit-save-hook )))
-#+end_src
-
 ** Org-agenda
 *** org-super-agenda
 #+begin_src emacs-lisp
@@ -474,57 +464,6 @@ Enter insert mode when capturing things
                     (org-agenda-skip-archived-trees nil)
                     (org-agenda-start-with-log-mode 'only)
                     (org-agenda-log-mode-items '(state closed clock))))))
-#+end_src
-
-** Org time block
-#+begin_src emacs-lisp
-  (use-package org-timeblock
-    :after org
-    :hook ((org-timeblock-mode org-timeblock-list-mode) . my/org-timeblock-evil-map)
-    :elpaca (org-timeblock :host github
-			     :repo "ichernyshovvv/org-timeblock")
-    :custom
-    (org-timeblock-inbox-file "/home/willefi2/org/calendar.org")
-    :init
-    (defun my/org-timeblock-evil-map ()
-      "Set the keybindings for 'org-timeblock' to be compatible with evil mode"
-      (evil-define-key 'normal org-timeblock-mode-map
-	"+" 'org-timeblock-new-task
-	"j" 'org-timeblock-forward-block
-	"l" 'org-timeblock-forward-column
-	"h" 'org-timeblock-backward-column
-	"k" 'org-timeblock-backward-block
-	(kbd "C-<down>") 'org-timeblock-day-later
-	(kbd "C-<up>") 'org-timeblock-day-earlier
-	(kbd "RET") 'org-timeblock-goto
-	(kbd "TAB") 'org-timeblock-goto-other-window
-	"d" 'org-timeblock-set-duration
-	"r" 'org-timeblock-redraw-buffers
-	"gd" 'org-timeblock-jump-to-day
-	"s" 'org-timeblock-schedule
-	"t" 'org-timeblock-toggle-timeblock-list
-	"v" 'org-timeblock-switch-scaling
-	"V" 'org-timeblock-switch-view)
-      (evil-define-key 'normal org-timeblock-list-mode-map
-	"+" 'org-timeblock-new-task
-	"j" 'org-timeblock-list-next-line
-	"k" 'org-timeblock-list-previous-line
-	(kbd "C-<down>") 'org-timeblock-day-later
-	(kbd "C-<up>") 'org-timeblock-day-earlier
-	(kbd "C-s") 'org-timeblock-list-save
-	(kbd "M-<down>") 'org-timeblock-list-drag-line-forward
-	(kbd "M-<up>") 'org-timeblock-list-drag-line-backward
-	(kbd "RET") 'org-timeblock-list-goto
-	(kbd "TAB") 'org-timeblock-list-goto-other-window
-	"S" 'org-timeblock-list-toggle-sort-function
-	"d" 'org-timeblock-list-set-duration
-	"r" 'org-timeblock-redraw-buffers
-	"gd" 'org-timeblock-jump-to-day
-	"q" 'org-timeblock-quit
-	"s" 'org-timeblock-list-schedule
-	"t" 'org-timeblock-list-toggle-timeblock
-	"v" 'org-timeblock-switch-scaling
-	"V" 'org-timeblock-switch-view)))
 #+end_src
 
 ** Olivetti
@@ -676,6 +615,100 @@ Enter insert mode when capturing things
 		   "* %^{Title}\n  %^{URL}p %^{USERNAME}p %^{PASSWORD}p")))
 #+end_src
 
+* meow
+#+begin_src emacs-lisp
+  (use-package meow
+    :config
+    (defun meow-setup ()
+      (setq meow-cheatsheet-layout meow-cheatsheet-layout-qwerty)
+      (meow-motion-overwrite-define-key
+       '("j" . meow-next)
+       '("k" . meow-prev)
+       '("<escape>" . ignore))
+      (meow-leader-define-key
+       ;; SPC j/k will run the original command in MOTION state.
+       '("j" . "H-j")
+       '("k" . "H-k")
+       ;; Use SPC (0-9) for digit arguments.
+       '("1" . meow-digit-argument)
+       '("2" . meow-digit-argument)
+       '("3" . meow-digit-argument)
+       '("4" . meow-digit-argument)
+       '("5" . meow-digit-argument)
+       '("6" . meow-digit-argument)
+       '("7" . meow-digit-argument)
+       '("8" . meow-digit-argument)
+       '("9" . meow-digit-argument)
+       '("0" . meow-digit-argument)
+       '("/" . meow-keypad-describe-key)
+       '("?" . meow-cheatsheet))
+      (meow-normal-define-key
+       '("0" . meow-expand-0)
+       '("9" . meow-expand-9)
+       '("8" . meow-expand-8)
+       '("7" . meow-expand-7)
+       '("6" . meow-expand-6)
+       '("5" . meow-expand-5)
+       '("4" . meow-expand-4)
+       '("3" . meow-expand-3)
+       '("2" . meow-expand-2)
+       '("1" . meow-expand-1)
+       '("-" . negative-argument)
+       '(";" . meow-reverse)
+       '("," . meow-inner-of-thing)
+       '("." . meow-bounds-of-thing)
+       '("[" . meow-beginning-of-thing)
+       '("]" . meow-end-of-thing)
+       '("a" . meow-append)
+       '("A" . meow-open-below)
+       '("b" . meow-back-word)
+       '("B" . meow-back-symbol)
+       '("c" . meow-change)
+       '("d" . meow-delete)
+       '("D" . meow-backward-delete)
+       '("e" . meow-next-word)
+       '("E" . meow-next-symbol)
+       '("f" . meow-find)
+       '("g" . meow-cancel-selection)
+       '("G" . meow-grab)
+       '("h" . meow-left)
+       '("H" . meow-left-expand)
+       '("i" . meow-insert)
+       '("I" . meow-open-above)
+       '("j" . meow-next)
+       '("J" . meow-next-expand)
+       '("k" . meow-prev)
+       '("K" . meow-prev-expand)
+       '("l" . meow-right)
+       '("L" . meow-right-expand)
+       '("m" . meow-join)
+       '("n" . meow-search)
+       '("o" . meow-block)
+       '("O" . meow-to-block)
+       '("p" . meow-yank)
+       '("q" . meow-quit)
+       '("Q" . meow-goto-line)
+       '("r" . meow-replace)
+       '("R" . meow-swap-grab)
+       '("s" . meow-kill)
+       '("t" . meow-till)
+       '("u" . meow-undo)
+       '("U" . meow-undo-in-selection)
+       '("v" . meow-visit)
+       '("w" . meow-mark-word)
+       '("W" . meow-mark-symbol)
+       '("x" . meow-line)
+       '("X" . meow-goto-line)
+       '("y" . meow-save)
+       '("Y" . meow-sync-grab)
+       '("z" . meow-pop-selection)
+       '("'" . repeat)
+       '("<escape>" . ignore)))
+    (meow-setup)
+    (meow-global-mode 1)
+    )
+#+end_src
+
 * Defaults
 #+begin_src emacs-lisp
   ;; Save the last place edited in files
@@ -759,7 +792,6 @@ Better help buffer
 Use vterm as multiplexer
 #+begin_src emacs-lisp
   (use-package multi-vterm
-    :hook (vterm-mode . evil-insert-state)
     :hook (vterm-mode . my/remove-insert-state-exit-save-hook)
     :bind ( ("C-c t m" . multi-vterm)
             :map vterm-mode-map
@@ -769,31 +801,7 @@ Use vterm as multiplexer
     :config
     (define-key vterm-mode-map [return]                      #'vterm-send-return)
 
-    (setq vterm-keymap-exceptions nil)
-    (evil-define-key 'insert vterm-mode-map (kbd "C-e")      #'vterm--self-insert)
-    (evil-define-key 'insert vterm-mode-map (kbd "C-f")      #'vterm--self-insert)
-    (evil-define-key 'insert vterm-mode-map (kbd "C-a")      #'vterm--self-insert)
-    (evil-define-key 'insert vterm-mode-map (kbd "C-v")      #'vterm--self-insert)
-    (evil-define-key 'insert vterm-mode-map (kbd "C-b")      #'vterm--self-insert)
-    (evil-define-key 'insert vterm-mode-map (kbd "C-w")      #'vterm--self-insert)
-    (evil-define-key 'insert vterm-mode-map (kbd "C-u")      #'vterm--self-insert)
-    (evil-define-key 'insert vterm-mode-map (kbd "C-d")      #'vterm--self-insert)
-    (evil-define-key 'insert vterm-mode-map (kbd "C-n")      #'vterm--self-insert)
-    (evil-define-key 'insert vterm-mode-map (kbd "C-m")      #'vterm--self-insert)
-    (evil-define-key 'insert vterm-mode-map (kbd "C-p")      #'vterm--self-insert)
-    (evil-define-key 'insert vterm-mode-map (kbd "C-j")      #'vterm--self-insert)
-    (evil-define-key 'insert vterm-mode-map (kbd "C-k")      #'vterm--self-insert)
-    (evil-define-key 'insert vterm-mode-map (kbd "C-r")      #'vterm--self-insert)
-    (evil-define-key 'insert vterm-mode-map (kbd "C-t")      #'vterm--self-insert)
-    (evil-define-key 'insert vterm-mode-map (kbd "C-g")      #'vterm--self-insert)
-    (evil-define-key 'insert vterm-mode-map (kbd "C-SPC")    #'vterm--self-insert)
-    (evil-define-key 'normal vterm-mode-map (kbd "C-d")      #'vterm--self-insert)
-    (evil-define-key 'normal vterm-mode-map (kbd ",c")       #'multi-vterm)
-    (evil-define-key 'normal vterm-mode-map (kbd ",n")       #'multi-vterm-next)
-    (evil-define-key 'normal vterm-mode-map (kbd ",p")       #'multi-vterm-prev)
-    (evil-define-key 'normal vterm-mode-map (kbd "i")        #'evil-insert-resume)
-    (evil-define-key 'normal vterm-mode-map (kbd "o")        #'evil-insert-resume)
-    (evil-define-key 'normal vterm-mode-map (kbd "<return>") #'evil-insert-resume))
+    (setq vterm-keymap-exceptions nil))
 #+end_src
 
 *** Eshell
@@ -815,54 +823,6 @@ Use vterm as multiplexer
 #+begin_src emacs-lisp
   (use-package bookmark+ :after org :elpaca `(bookmark+ :type git :host github :repo "emacsmirror/bookmark-plus" :files (:defaults)))
 #+end_src
-* Evil mode
-Usage of evil mode as I used to work with vim binding for years
-#+begin_src emacs-lisp
-  (use-package undo-fu)
-  (use-package undo-fu-session
-    :after undu-fu
-    :config
-    (setq undo-fu-session-incompatible-files '("/COMMIT_EDITMSG\\'" "/git-rebase-todo\\'"))
-    (undo-fu-session-global-mode))
-
-  (use-package vundo
-    :bind ([remap undo] . vundo))
-
-  (use-package evil
-    :after undo-fu
-    :hook ((org-mode prog-mode) . my/add-insert-state-exit-save-hook)
-    :hook (org-src-mode . my/remove-insert-state-exit-save-hook)
-    :hook (lisp-interaction-mode . my/remove-insert-state-exit-save-hook ) ;; for scratch buffer
-    :init
-    (setq evil-want-integration t) ;; This is optional since it's already set to t by default.
-    ;; (setq evil-want-minibuffer t)
-    (setq evil-want-keybinding nil)
-    (setq evil-undo-system 'undo-fu)
-    :config
-    (defun my/remove-insert-state-exit-save-hook()
-      "Remove save buffer wen leaving insert state."
-      (remove-hook 'evil-insert-state-exit-hook 'save-buffer t ))
-
-    (defun my/add-insert-state-exit-save-hook()
-      "Add save buffer wen leaving insert state."
-      (unless (equal (buffer-name) "*scratch*")
-        (add-hook 'evil-insert-state-exit-hook 'save-buffer 0 t )))
-    (evil-mode)) 
-#+end_src
-** Evil collection
-#+begin_src emacs-lisp
-  (use-package evil-collection
-    :after evil
-    :hook (evil-collection-setup . (lambda (&rest a)
-                                     (evil-define-key 'normal elpaca-ui-mode-map (kbd "U") 'elpaca-ui-mark-merge)))
-    :custom
-    (evil-collection-calendar-want-org-bindings t)
-    :init
-    (setq forge-add-default-bindings nil)
-    (evil-collection-init)
-    (run-hook-with-args 'evil-collection-setup-hook))
-#+end_src
-
 * Dired
 ** Dired
 #+begin_src emacs-lisp
@@ -895,9 +855,7 @@ Usage of evil mode as I used to work with vim binding for years
   (use-package dired-git-info
     :bind (:map dired-mode-map
            (")" . dired-git-info-mode))
-    :after (dired evil)
-    :init
-    (evil-define-key 'normal dired-mode-map ")" 'dired-git-info-mode))
+    :after (dired))
 #+end_src
 
 ** Fd-dired
@@ -924,8 +882,6 @@ Usage of evil mode as I used to work with vim binding for years
 ** Magit
 #+begin_src emacs-lisp
     (use-package magit
-      :hook (git-commit-mode . evil-insert-state)
-      :hook (git-commit-mode . my/remove-insert-state-exit-save-hook)
       :custom
       (magit-diff-refine-hunk 'all)
       (magit-define-global-key-bindings 'recommended))
@@ -952,10 +908,7 @@ Used to play with forges like GitHub or gitlab
 ** Diff-hl
 #+begin_src emacs-lisp
   (use-package diff-hl
-    :after (magit evil dired)
-    :bind ((:map evil-motion-state-map
-                 ("] h" . diff-hl-next-hunk)
-                 ("[ h" . diff-hl-previous-hunk)))
+    :after (magit dired)
     :hook ((magit-pre-refresh . diff-hl-magit-pre-refresh)
            (magit-post-refresh . diff-hl-magit-post-refresh)
            (dired-mode . diff-hl-dired-mode))
@@ -1381,9 +1334,6 @@ Change light to dark theme according to the sunset/sunrise
     :config
     (setq treemacs-mu4e--count-script "/home/willefi2/.emacs.d/elpaca/repos/treemacs/src/scripts/treemacs-count-mail.py"))
 
-  (use-package treemacs-evil
-    :after (treemacs evil))
-
   (use-package treemacs-magit
     :after (treemacs magit))
 
@@ -1398,17 +1348,13 @@ Emacs package that displays available keybindings in popup
 When you can't remember all keybindings
 #+begin_src emacs-lisp
   (use-package which-key
-    :elpaca (which-key :type git :host github :repo "wesnel/emacs-which-key" :branch "wesnel/add-devil-support")
-    :after evil
     :init
     (which-key-setup-side-window-bottom)
     (setq which-key-allow-imprecise-window-fit nil)
-    (which-key-enable-devil-support)
     (which-key-mode)
     ;; avoid which-key to be truncated
     :custom
-    (which-key-paging-prefixes '("C-c" "C-x" "C-w"))
-    (which-key-allow-evil-operators t)
+    (which-key-paging-prefixes '("C-c" "C-x"))
     (which-key-show-operator-state-maps t)
     ;; (which-key-use-C-h-commands nil)
     (which-key-idle-delay 0.2))
@@ -1434,53 +1380,9 @@ When you can't remember all keybindings
 avy is a GNU Emacs package for jumping to visible text using a char-based decision tree
 #+begin_src emacs-lisp
   (use-package avy
-    :after evil
-    :demand t
-    :config
-    (evil-global-set-key 'normal "f" 'evil-avy-goto-char))
+    :demand t)
 #+end_src
 
-** Evil commentary
-Comment stuff out. A port of vim-commentary
-#+begin_src emacs-lisp
-  (use-package evil-commentary
-    :bind ("M-;" . evil-commentary-line)
-    :init
-    (evil-commentary-mode))
-#+end_src
-
-** evil search
-anzu.el provides a minor mode which displays current match and total matches information in the mode-line in various search modes.
-#+begin_src emacs-lisp
-  (use-package anzu
-    :init
-    (global-anzu-mode +1))
-  (use-package evil-anzu :demand t)
-#+end_src
-
-** evil org mode
-Supplemental evil-mode keybindings to emacs org-mode
-#+begin_src emacs-lisp
-  (use-package evil-org
-    :hook (( org-agenda-mode . evil-org-mode)
-           (org-mode . evil-org-mode))
-    :config
-    (evil-org-set-key-theme '(textobjects insert navigation additional shift todo))
-    (require 'evil-org-agenda)
-    (evil-org-agenda-set-keys)
-    (evil-define-key '(normal) 'evil-org-mode
-      (kbd "RET") 'evil-org-return))
-
-#+end_src
-
-** Devil mode
-#+begin_src emacs-lisp
-  (use-package devil
-    :after evil
-    :init (global-devil-mode)
-    :config
-    (evil-global-set-key 'normal "," 'devil))
-#+end_src
 ** Scratch buffer
 #+begin_src emacs-lisp
   (use-package scratch
@@ -1494,12 +1396,7 @@ Just install Hunspell and Hunspell-fr, Hunspell-en, ...
   (use-package jinx
     :unless my/using-android
     :hook (emacs-startup . global-jinx-mode)
-    :bind (("C-M-$" . jiinx-languages)
-           :map evil-normal-state-map
-           ("z =" . jinx-correct)
-           :map evil-motion-state-map
-           ("[ s" . jinx-previous)
-           ("] s" . jinx-next))
+    :bind ("C-M-$" . jiinx-languages)
     :init
     (setq jinx-languages "fr_FR en_US en_GB"))
 #+end_src
@@ -1689,10 +1586,7 @@ marginalia adds annotations in the mini buffer
     :bind
     (("C-h B" . embark-bindings) ;; alternative for `describe-bindings'
      ("C-." . embark-act)         ;; pick some comfortable binding
-     ("C-;" . embark-dwim)
-     (:map evil-normal-state-map)
-     ("C-." . embark-act)         ;; pick some comfortable binding
-     ("C-;" . embark-dwim))        ;; good alternative: M-.
+     ("C-;" . embark-dwim))
     :init
     ;; Optionally replace the key help with a completing-read interface
     (setq prefix-help-command #'embark-prefix-help-command)
@@ -2074,7 +1968,6 @@ marginalia adds annotations in the mini buffer
                            (:subject)))
 
     :config
-    (evil-define-key 'normal mu4e-headers-mode-map "T" 'mu4e-headers-mark-thread )
     (require 'mu4e-icalendar)
     (mu4e-icalendar-setup)
     (setq gnus-icalendar-org-capture-file "~/org/Inbox.org")
@@ -2310,51 +2203,6 @@ Setup ANSI colors for the compilation buffer
 
     (add-to-list 'treesit-auto-recipe-list my-java-tsauto-config)
     (global-treesit-auto-mode))
-#+end_src
-
-*** Evil wit treesit
-#+begin_src emacs-lisp
-  (use-package evil-textobj-tree-sitter
-    :elpaca (evil-textobj-tree-sitter :type git
-                                        :host github
-                                        :repo "meain/evil-textobj-tree-sitter"
-                                        :files (:defaults "queries" "treesit-queries"))
-    :config
-    ;; bind `function.outer`(entire function block) to `f` for use in things like `vaf`, `yaf`
-    (define-key evil-outer-text-objects-map "f" (evil-textobj-tree-sitter-get-textobj "function.outer"))
-    ;; bind `function.inner`(function block without name and args) to `f` for use in things like `vif`, `yif`
-    (define-key evil-inner-text-objects-map "f" (evil-textobj-tree-sitter-get-textobj "function.inner"))
-
-    ;; You can also bind multiple items and we will match the first one we can find
-    (define-key evil-outer-text-objects-map "a" (evil-textobj-tree-sitter-get-textobj ("conditional.outer" "loop.outer")))
-
-    ;; Goto start of next function
-    (define-key evil-normal-state-map
-                (kbd "]f")
-                (lambda ()
-                  (interactive)
-                  (evil-textobj-tree-sitter-goto-textobj "function.outer")))
-
-    ;; Goto start of previous function
-    (define-key evil-normal-state-map
-                (kbd "[f")
-                (lambda ()
-                  (interactive)
-                  (evil-textobj-tree-sitter-goto-textobj "function.outer" t)))
-
-    ;; Goto end of next function
-    (define-key evil-normal-state-map
-                (kbd "]F")
-                (lambda ()
-                  (interactive)
-                  (evil-textobj-tree-sitter-goto-textobj "function.outer" nil t)))
-
-    ;; Goto end of previous function
-    (define-key evil-normal-state-map
-                (kbd "[F")
-                (lambda ()
-                  (interactive)
-                  (evil-textobj-tree-sitter-goto-textobj "function.outer" t t))))
 #+end_src
 
 * Utilities

@@ -1343,23 +1343,6 @@ Change light to dark theme according to the sunset/sunrise
     (treemacs-load-theme "nerd-icons"))
 #+end_src
 
-** Which-key
-Emacs package that displays available keybindings in popup
-When you can't remember all keybindings
-#+begin_src emacs-lisp
-  (use-package which-key
-    :init
-    (which-key-setup-side-window-bottom)
-    (setq which-key-allow-imprecise-window-fit nil)
-    (which-key-mode)
-    ;; avoid which-key to be truncated
-    :custom
-    (which-key-paging-prefixes '("C-c" "C-x"))
-    (which-key-show-operator-state-maps t)
-    ;; (which-key-use-C-h-commands nil)
-    (which-key-idle-delay 0.2))
-#+end_src
-
 ** Parens
 
 #+begin_src emacs-lisp
@@ -1602,29 +1585,6 @@ marginalia adds annotations in the mini buffer
                  '("\\`\\*Embark Collect \\(Live\\|Completions\\)\\*"
                    nil
                    (window-parameters (mode-line-format . none))))
-    (defun embark-which-key-indicator ()
-      "An embark indicator that displays keymaps using which-key.
-        The which-key help message will show the type and value of the
-        current target followed by an ellipsis if there are further
-        targets."
-      (lambda (&optional keymap targets prefix)
-        (if (null keymap)
-            (which-key--hide-popup-ignore-command)
-          (which-key--show-keymap
-           (if (eq (plist-get (car targets) :type) 'embark-become)
-               "Become"
-             (format "Act on %s '%s'%s"
-                     (plist-get (car targets) :type)
-                     (embark--truncate-target (plist-get (car targets) :target))
-                     (if (cdr targets) "…" "")))
-           (if prefix
-               (pcase (lookup-key keymap prefix 'accept-default)
-                 ((and (pred keymapp) km) km)
-                 (_ (key-binding prefix 'accept-default)))
-             keymap)
-           nil nil t (lambda (binding)
-                       (not (string-suffix-p "-argument" (cdr binding))))))))
-
     (setq embark-indicators
           '(embark-which-key-indicator
             embark-highlight-indicator

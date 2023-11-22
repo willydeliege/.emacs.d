@@ -1810,10 +1810,10 @@ marginalia adds annotations in the mini buffer
 ** Mu4e
 #+begin_src emacs-lisp
   (use-package mu4e
+    :load-path  "/usr/local/share/emacs/site-lisp/mu4e"
+    :elpaca nil
     :after org
     :unless my/using-android
-    :elpaca (mu  :host github :repo "djcb/mu"  :branch "release/1.10")
-    :demand t
     :bind (("C-x m" . mu4e)
            :map mu4e-headers-mode-map
            ("C-c c" . mu4e-org-store-and-capture)
@@ -1822,11 +1822,11 @@ marginalia adds annotations in the mini buffer
     :custom
     (mu4e-attachment-dir "~/Downloads/")
     (mu4e-maildir-shortcuts
-          '( ( :maildir "/INBOX" :key ?i)
-             ( :maildir "/[Gmail].All Mail"  :key ?a)
-             ( :maildir "/[Gmail].Sent Mail"  :key ?S)
-             ( :maildir "/[Gmail].Trash" :key ?t)
-             ( :maildir "/[Gmail].Starred" :key ?s)))
+     '( ( :maildir "/INBOX" :key ?i)
+        ( :maildir "/[Gmail].All Mail"  :key ?a)
+        ( :maildir "/[Gmail].Sent Mail"  :key ?S)
+        ( :maildir "/[Gmail].Trash" :key ?t)
+        ( :maildir "/[Gmail].Starred" :key ?s)))
 
     (mu4e-bookmarks
      '(( :name  "Unread messages"
@@ -1889,7 +1889,7 @@ marginalia adds annotations in the mini buffer
 
     (setq mu4e-refile-folder "/[Gmail].All Mail")
 
-    (setq mu4e-org-contacts-file "/home/willefi2/org/contacts.org")
+    (setq mu4e-org-contacts-file "/home/willefi/org/contacts.org")
     (add-to-list 'mu4e-headers-actions
                  '("org-contact-add" . mu4e-action-add-org-contact) t)
     (add-to-list 'mu4e-view-actions

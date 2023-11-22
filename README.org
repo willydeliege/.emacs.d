@@ -745,7 +745,6 @@ Better help buffer
 Use vterm as multiplexer
 #+begin_src emacs-lisp
   (use-package multi-vterm
-    :hook (vterm-mode . my/remove-insert-state-exit-save-hook)
     :bind ( ("C-c t m" . multi-vterm)
             :map vterm-mode-map
             ("C-c t r" . multi-vterm-rename-buffer)
@@ -1285,7 +1284,7 @@ Change light to dark theme according to the sunset/sunrise
     :after (treemacs mu4e)
     :elpaca nil
     :config
-    (setq treemacs-mu4e--count-script "/home/willefi2/.emacs.d/elpaca/repos/treemacs/src/scripts/treemacs-count-mail.py"))
+    (setq treemacs-mu4e--count-script "/home/willefi/.emacs.d/elpaca/repos/treemacs/src/scripts/treemacs-count-mail.py"))
 
   (use-package treemacs-magit
     :after (treemacs magit))
@@ -1299,18 +1298,11 @@ Change light to dark theme according to the sunset/sunrise
 ** Parens
 
 #+begin_src emacs-lisp
-  (use-package elec-pair
-    :elpaca nil
-    :init
-    (electric-pair-mode))
-#+end_src
-#+begin_src emacs-lisp
-  ;; (use-package lispy
-  ;;   :hook ((emacs-lisp-mode lisp-interaction-mode) . lispy-mode))
-  ;; (use-package lispyville
-  ;;   :hook ((emacs-lisp-mode lisp-interaction-mode) . lispyville-mode)
-  ;;   :config
-  ;;   (lispyville-set-key-theme '(operators c-w additional)))
+(use-package smartparens
+  :hook ((prog-mode text-mode) . smartparens-strict-mode);; add `smartparens-mode` to these hooks
+  :init
+  ;; load default config
+  (require 'smartparens-config))
 #+end_src
 ** Jump
 avy is a GNU Emacs package for jumping to visible text using a char-based decision tree
@@ -1325,7 +1317,6 @@ avy is a GNU Emacs package for jumping to visible text using a char-based decisi
   :bind  ("C-c s" . scratch))
  #+end_src
 
-# * Spelling
 ** Jinx
 Just install Hunspell and Hunspell-fr, Hunspell-en, ...
 #+begin_src emacs-lisp
@@ -1345,8 +1336,6 @@ marginalia adds annotations in the mini buffer
   (use-package vertico
     :elpaca (vertico :files (:defaults "extensions/*.el"))
     :bind (:map vertico-map
-                ("C-j"	.	vertico-next)
-                ("C-k"	.	vertico-previous)
                 ("C-f"	.	vertico-exit)
                 ("?"	.	minibuffer-completion-help)
                 ("M-RET"	.	minibuffer-complete)
@@ -1524,9 +1513,6 @@ marginalia adds annotations in the mini buffer
      ("C-." . embark-act)         ;; pick some comfortable binding
      ("C-;" . embark-dwim))
     :init
-    ;; Optionally replace the key help with a completing-read interface
-    (setq prefix-help-command #'embark-prefix-help-command)
-
     ;; Show the Embark target at point via Eldoc.  You may adjust the Eldoc
     ;; strategy, if you want to see the documentation from multiple providers.
     (add-hook 'eldoc-documentation-functions #'embark-eldoc-first-target)
@@ -1538,7 +1524,7 @@ marginalia adds annotations in the mini buffer
                  '("\\`\\*Embark Collect \\(Live\\|Completions\\)\\*"
                    nil
                    (window-parameters (mode-line-format . none))))
-    
+
     (defmacro my/embark-ace-action (fn)
       `(defun ,(intern (concat "my/embark-ace-" (symbol-name fn))) ()
          (interactive)
@@ -1581,10 +1567,7 @@ marginalia adds annotations in the mini buffer
                              "|sudo:root@"
                              (file-remote-p file 'host) ":" (file-remote-p file 'localname))
                    (concat "/sudo:root@localhost:" file))))
-    (define-key embark-file-map (kbd "7") 'my/sudo-find-file)
-
-    (advice-add #'embark-completing-read-prompter
-                :around #'embark-hide-which-key-indicator))
+    (define-key embark-file-map (kbd "7") 'my/sudo-find-file))
 #+end_src
 
 ** Orderless
@@ -1666,8 +1649,6 @@ marginalia adds annotations in the mini buffer
   (use-package corfu
     :elpaca (corfu :files (:defaults "extensions/*.el"))
     :bind (:map corfu-map
-                ("C-j" . corfu-next)
-                ("C-k" . corfu-previous)
                 ("TAB" . corfu-next)
                 ([tab] . corfu-next)
                 ("S-TAB" . corfu-previous)
@@ -1931,7 +1912,6 @@ marginalia adds annotations in the mini buffer
 ** Org message
 #+begin_src emacs-lisp
   (use-package org-msg
-    :hook (org-msg-edit-mode . my/remove-insert-state-exit-save-hook)
     :demand t
     :after mu4e
     :bind (:map org-msg-edit-mode-map

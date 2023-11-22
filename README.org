@@ -503,62 +503,13 @@ Update flag when saving files with last__{}modified
     :hook (org-agenda-finalize . org-modern-agenda)
     :hook (org-mode . org-modern-mode)
     :init
-    (setq org-modern-table nil)
-    (setq org-modern-list nil)
-    (setq org-modern-star nil)
-    (setq org-modern-priority nil)
     (setq org-modern-label-border 1))
+
   (use-package org-modern-indent
     :after org
     :elpaca (org-modern-indent :type git :host github :repo "jdtsmith/org-modern-indent")
     :config ; add late to hook
     (add-hook 'org-mode-hook #'org-modern-indent-mode 90))
-  (use-package valign
-    :hook (org-mode . valign-mode))
-  (use-package org-pretty-table
-    :elpaca (:host github :repo "Fuco1/org-pretty-table")
-    :hook (org-mode . org-pretty-table-mode))
-  (use-package org-fancy-priorities
-    :commands (org-fancy-priorities-mode)
-    :hook (org-mode . org-fancy-priorities-mode)
-    :diminish ""
-    :config
-    ;;"Eisenhower Matrix of Importance and Urgency"
-    (defvar +org-fancy-priorities-eisenhower-matrix
-      "↑ |-----------+-----------|
-    I |   Eisenhower Matrix   |
-    M |-----------+-----------|
-    P |           |           |
-    O | Schedule  | Immediate |
-    R |           |           |
-    T |-----------+-----------|
-    A |           |           |
-    N | Eliminate | Delegate  |
-    C |           |           |
-    E |-----------+-----------|
-              URGENCY →"
-      "Eisenhower Matrix help text.")
-    (setq org-fancy-priorities-list
-          (mapcar
-           (lambda (cell) (format (car cell)
-                             (propertize
-                              (cdr cell)
-                              'help-echo +org-fancy-priorities-eisenhower-matrix)))
-           '(("I∧U (%s)" . "I")
-             ("I¬U  (%s)" . "S")
-             ("¬IU  (%s)" . "D")
-             ("¬I¬U (%s)" . "E")))))
-  (use-package org-superstar
-    :after org
-    :hook (org-mode . org-superstar-mode))
-  (use-package org-rainbow-tags
-    :custom
-    (org-rainbow-tags-hash-start-index 10)
-    (org-rainbow-tags-extra-face-attributes
-     ;; Default is '(:weight 'bold)
-     '(:inverse-video t :box t :weight 'bold))
-    :hook
-    (org-mode . org-rainbow-tags-mode))
 #+end_src
 
 ** Org notifications

@@ -12,8 +12,8 @@ After spending lot of time with doom Emacs, willing to switch to a more native e
 :END:
 Emacs 27.0 introduced an early-init file. It allows customization before package and UI initialization.
 #+begin_src emacs-lisp :lexical t
-;;; early-init.el --- Emacs pre package.el & GUI configuration -*- lexical-binding: t; -*-
-;;; Code:
+  ;;; early-init.el --- Emacs pre package.el & GUI configuration -*- lexical-binding: t; -*-
+  ;;; Code:
 #+end_src
 
 #+begin_src emacs-lisp :lexical t
@@ -22,8 +22,8 @@ Emacs 27.0 introduced an early-init file. It allows customization before package
 #+end_src
 
 +begin_src emacs-lisp :lexical t
-  (setq native-comp-async-report-warnings-errors nil)
-  ;; (setq warning-minimum-level :error)
+(setq native-comp-async-report-warnings-errors nil)
+;; (setq warning-minimum-level :error)
 #+end_src
 *** Debugging
 Running this form will launch the debugger after loading a package.
@@ -31,33 +31,33 @@ This is useful for finding out when a dependency is requiring a package (perhaps
 Use by tangling this block and launching Emacs with =emacs --debug-init=.
 
 #+begin_src emacs-lisp :var file="" :results silent :tangle no
-(unless (string-empty-p file)
-  (eval-after-load file
-    '(debug)))
+  (unless (string-empty-p file)
+    (eval-after-load file
+      '(debug)))
 #+end_src
 
 Similarly, this variable will hit the debugger when a message matches its regexp.
 #+begin_src emacs-lisp :tangle no
-(setq debug-on-message "")
+  (setq debug-on-message "")
 #+end_src
 
 Adding a variable watcher can be a useful way to track down initialization and mutation of a variable.
 #+begin_src emacs-lisp :tangle no
-(add-variable-watcher 'org-capture-after-finalize-hook
-                      (lambda (symbol newval operation where)
-                        (debug)
-                        (message "%s set to %s" symbol newval)))
+  (add-variable-watcher 'org-capture-after-finalize-hook
+                        (lambda (symbol newval operation where)
+                          (debug)
+                          (message "%s set to %s" symbol newval)))
 #+end_src
 
 #+begin_src emacs-lisp :tangle no
-(setq debug-on-error t)
+  (setq debug-on-error t)
 #+end_src
 
 *** file-name-handler-alist
 Skipping a bunch of regular expression searching in the =file-name-handler-alist= should improve start time.
 #+begin_src emacs-lisp :lexical t
-(defvar default-file-name-handler-alist file-name-handler-alist)
-(setq file-name-handler-alist nil)
+  (defvar default-file-name-handler-alist file-name-handler-alist)
+  (setq file-name-handler-alist nil)
 #+end_src
 
 *** Garbage Collection
@@ -74,61 +74,61 @@ The following is a table shows values from popular Emacs configurations.
 | Spacemacs    |         100000000 |
 
 #+begin_src emacs-lisp :lexical t
-(setq gc-cons-threshold most-positive-fixnum
-      gc-cons-percentage 1)
+  (setq gc-cons-threshold most-positive-fixnum
+        gc-cons-percentage 1)
 
-(defun +gc-after-focus-change ()
-  "Run GC when frame loses focus."
-  (run-with-idle-timer
-   5 nil
-   (lambda () (unless (frame-focus-state) (garbage-collect)))))
+  (defun +gc-after-focus-change ()
+    "Run GC when frame loses focus."
+    (run-with-idle-timer
+     5 nil
+     (lambda () (unless (frame-focus-state) (garbage-collect)))))
 #+end_src
 
 #+begin_src emacs-lisp :lexical t
-(defun +reset-init-values ()
-  (run-with-idle-timer
-   1 nil
-   (lambda ()
-     (setq file-name-handler-alist default-file-name-handler-alist
-           gc-cons-percentage 0.1
-           gc-cons-threshold 100000000)
-     (message "gc-cons-threshold & file-name-handler-alist restored")
-     (when (boundp 'after-focus-change-function)
-       (add-function :after after-focus-change-function #'+gc-after-focus-change)))))
+  (defun +reset-init-values ()
+    (run-with-idle-timer
+     1 nil
+     (lambda ()
+       (setq file-name-handler-alist default-file-name-handler-alist
+             gc-cons-percentage 0.1
+             gc-cons-threshold 100000000)
+       (message "gc-cons-threshold & file-name-handler-alist restored")
+       (when (boundp 'after-focus-change-function)
+         (add-function :after after-focus-change-function #'+gc-after-focus-change)))))
 
-(with-eval-after-load 'elpaca
-  (add-hook 'elpaca-after-init-hook '+reset-init-values))
+  (with-eval-after-load 'elpaca
+    (add-hook 'elpaca-after-init-hook '+reset-init-values))
 #+end_src
 
 *** UI
 Turning off these visual elements before UI initialization should speed up init.
 #+begin_src emacs-lisp :lexical t
-(push '(menu-bar-lines . 0) default-frame-alist)
-(push '(tool-bar-lines . 0) default-frame-alist)
-(push '(vertical-scroll-bars) default-frame-alist)
+  (push '(menu-bar-lines . 0) default-frame-alist)
+  (push '(tool-bar-lines . 0) default-frame-alist)
+  (push '(vertical-scroll-bars) default-frame-alist)
 #+end_src
 
 Prevent instructions on how to close an emacsclient frame.
 #+begin_src emacs-lisp :lexical t
-(setq server-client-instructions nil)
+  (setq server-client-instructions nil)
 #+end_src
 
 Implicitly resizing the Emacs frame adds to init time.
 Fonts larger than the system default can cause frame resizing, which adds to startup time.
 #+begin_src emacs-lisp :lexical t
-(setq frame-inhibit-implied-resize t)
+  (setq frame-inhibit-implied-resize t)
 #+end_src
 
 Set default and backup fonts
 #+begin_src emacs-lisp :lexical t
-(push '(font . "FiraCode") default-frame-alist)
-(set-face-font 'default "FiraCode")
-(set-face-font 'variable-pitch "DejaVu Sans")
-(copy-face 'default 'fixed-pitch)
+  (push '(font . "FiraCode") default-frame-alist)
+  (set-face-font 'default "FiraCode")
+  (set-face-font 'variable-pitch "DejaVu Sans")
+  (copy-face 'default 'fixed-pitch)
 #+end_src
 Ignore X resources.
 #+begin_src emacs-lisp :lexical t
-(advice-add #'x-apply-session-resources :override #'ignore)
+  (advice-add #'x-apply-session-resources :override #'ignore)
 #+end_src
 
 Miscellaneous
@@ -143,19 +143,19 @@ Taken from:
 
 This helps with a bug I was hitting when using =desktop-save-mode='s =desktop-read=.
 #+begin_src emacs-lisp :lexical t
-(setq desktop-restore-forces-onscreen nil)
+  (setq desktop-restore-forces-onscreen nil)
 #+end_src
 
 Silence the bell function
 #+begin_src emacs-lisp :lexical t
-(setq ring-bell-function #'ignore
-      inhibit-startup-screen t)
+  (setq ring-bell-function #'ignore
+        inhibit-startup-screen t)
 #+end_src
 
 *** provide early-init
 #+begin_src emacs-lisp :lexical t
-(provide 'early-init)
-;;; early-init.el ends here
+  (provide 'early-init)
+  ;;; early-init.el ends here
 #+end_src
 
 * Header
@@ -166,42 +166,42 @@ Header for the config init.el file
 * Package manager
 Using elpaca as package manager
 #+begin_src emacs-lisp
-(defvar elpaca-installer-version 0.6)
-(defvar elpaca-directory (expand-file-name "elpaca/" user-emacs-directory))
-(defvar elpaca-builds-directory (expand-file-name "builds/" elpaca-directory))
-(defvar elpaca-repos-directory (expand-file-name "repos/" elpaca-directory))
-(defvar elpaca-order '(elpaca :repo "https://github.com/progfolio/elpaca.git"
-                              :ref nil
-                              :files (:defaults "elpaca-test.el" (:exclude "extensions"))
-                              :build (:not elpaca--activate-package)))
-(let* ((repo  (expand-file-name "elpaca/" elpaca-repos-directory))
-       (build (expand-file-name "elpaca/" elpaca-builds-directory))
-       (order (cdr elpaca-order))
-       (default-directory repo))
-  (add-to-list 'load-path (if (file-exists-p build) build repo))
-  (unless (file-exists-p repo)
-    (make-directory repo t)
-    (when (< emacs-major-version 28) (require 'subr-x))
-    (condition-case-unless-debug err
-        (if-let ((buffer (pop-to-buffer-same-window "*elpaca-bootstrap*"))
-                 ((zerop (call-process "git" nil buffer t "clone"
-                                       (plist-get order :repo) repo)))
-                 ((zerop (call-process "git" nil buffer t "checkout"
-                                       (or (plist-get order :ref) "--"))))
-                 (emacs (concat invocation-directory invocation-name))
-                 ((zerop (call-process emacs nil buffer nil "-Q" "-L" "." "--batch"
-                                       "--eval" "(byte-recompile-directory \".\" 0 'force)")))
-                 ((require 'elpaca))
-                 ((elpaca-generate-autoloads "elpaca" repo)))
-            (progn (message "%s" (buffer-string)) (kill-buffer buffer))
-          (error "%s" (with-current-buffer buffer (buffer-string))))
-      ((error) (warn "%s" err) (delete-directory repo 'recursive))))
-  (unless (require 'elpaca-autoloads nil t)
-    (require 'elpaca)
-    (elpaca-generate-autoloads "elpaca" repo)
-    (load "./elpaca-autoloads")))
-(add-hook 'after-init-hook #'elpaca-process-queues)
-(elpaca `(,@elpaca-order))
+  (defvar elpaca-installer-version 0.6)
+  (defvar elpaca-directory (expand-file-name "elpaca/" user-emacs-directory))
+  (defvar elpaca-builds-directory (expand-file-name "builds/" elpaca-directory))
+  (defvar elpaca-repos-directory (expand-file-name "repos/" elpaca-directory))
+  (defvar elpaca-order '(elpaca :repo "https://github.com/progfolio/elpaca.git"
+                                :ref nil
+                                :files (:defaults "elpaca-test.el" (:exclude "extensions"))
+                                :build (:not elpaca--activate-package)))
+  (let* ((repo  (expand-file-name "elpaca/" elpaca-repos-directory))
+         (build (expand-file-name "elpaca/" elpaca-builds-directory))
+         (order (cdr elpaca-order))
+         (default-directory repo))
+    (add-to-list 'load-path (if (file-exists-p build) build repo))
+    (unless (file-exists-p repo)
+      (make-directory repo t)
+      (when (< emacs-major-version 28) (require 'subr-x))
+      (condition-case-unless-debug err
+          (if-let ((buffer (pop-to-buffer-same-window "*elpaca-bootstrap*"))
+                   ((zerop (call-process "git" nil buffer t "clone"
+                                         (plist-get order :repo) repo)))
+                   ((zerop (call-process "git" nil buffer t "checkout"
+                                         (or (plist-get order :ref) "--"))))
+                   (emacs (concat invocation-directory invocation-name))
+                   ((zerop (call-process emacs nil buffer nil "-Q" "-L" "." "--batch"
+                                         "--eval" "(byte-recompile-directory \".\" 0 'force)")))
+                   ((require 'elpaca))
+                   ((elpaca-generate-autoloads "elpaca" repo)))
+              (progn (message "%s" (buffer-string)) (kill-buffer buffer))
+            (error "%s" (with-current-buffer buffer (buffer-string))))
+        ((error) (warn "%s" err) (delete-directory repo 'recursive))))
+    (unless (require 'elpaca-autoloads nil t)
+      (require 'elpaca)
+      (elpaca-generate-autoloads "elpaca" repo)
+      (load "./elpaca-autoloads")))
+  (add-hook 'after-init-hook #'elpaca-process-queues)
+  (elpaca `(,@elpaca-order))
 #+end_src
 
 ** USE-PACKAGE
@@ -472,7 +472,7 @@ Update flag when saving files with last__{}modified
 #+end_src
 
 ** Olivetti
-  Distraction-free writing
+Distraction-free writing
 #+begin_src emacs-lisp
   (use-package olivetti
     :config
@@ -557,18 +557,18 @@ Update flag when saving files with last__{}modified
     :after org
     :elpaca `(org-passwords :type git :repo "https://bitbucket.org/alfaromurillo/org-passwords.el.git" :files (:defaults))
     :bind (("C-c q" . org-passwords)
-	   :map org-passwords-mode-map
-	   ("C-c u" . org-passwords-copy-username)
-	   ("C-c s" . org-passwords-copy-password)
-	   ("C-c o" . org-passwords-open-url))
+           :map org-passwords-mode-map
+           ("C-c u" . org-passwords-copy-username)
+           ("C-c s" . org-passwords-copy-password)
+           ("C-c o" . org-passwords-open-url))
     :custom
     (org-passwords-file "~/org/password.org.gpg")
     :config
     (setq enable-recursive-minibuffers t)
     (setq org-passwords-random-words-dictionary "/etc/dictionaries-common/words")
     (add-to-list 'org-capture-templates
-		 '("p" "password" entry (file "~/org/password.org.gpg")
-		   "* %^{Title}\n  %^{URL}p %^{USERNAME}p %^{PASSWORD}p")))
+                 '("p" "password" entry (file "~/org/password.org.gpg")
+                   "* %^{Title}\n  %^{URL}p %^{USERNAME}p %^{PASSWORD}p")))
 #+end_src
 
 * meow
@@ -660,7 +660,7 @@ Update flag when saving files with last__{}modified
        '("<escape>" . ignore)))
     (meow-setup)
     (meow-global-mode 1))
- #+end_src
+#+end_src
 
 * Defaults
 #+begin_src emacs-lisp
@@ -684,15 +684,15 @@ Update flag when saving files with last__{}modified
   (setq my/uname (shell-command-to-string "uname -a"))
   (global-prettify-symbols-mode)
   (defun delete-visited-file (buffer-name)
-  "Delete the file visited by the buffer named BUFFER-NAME."
-  (interactive "bDelete file visited by buffer ")
-  (let* ((buffer (get-buffer buffer-name))
-         (filename (buffer-file-name buffer)))
-    (when buffer
-      (when (and filename
-                 (file-exists-p filename))
-        (delete-file filename))
-      (kill-buffer buffer))))
+    "Delete the file visited by the buffer named BUFFER-NAME."
+    (interactive "bDelete file visited by buffer ")
+    (let* ((buffer (get-buffer buffer-name))
+           (filename (buffer-file-name buffer)))
+      (when buffer
+        (when (and filename
+                   (file-exists-p filename))
+          (delete-file filename))
+        (kill-buffer buffer))))
   (keymap-global-set "C-x D" 'delete-visited-file)
   (setq my/using-android (string-match "Android" my/uname))
 #+end_src
@@ -787,7 +787,7 @@ Use vterm as multiplexer
 #+end_src
 ** Dired sudo
 #+begin_src emacs-lisp
-(use-package dired-toggle-sudo)
+  (use-package dired-toggle-sudo)
 #+end_src
 
 ** Dired subtree
@@ -806,7 +806,7 @@ Use vterm as multiplexer
 #+begin_src emacs-lisp
   (use-package dired-git-info
     :bind (:map dired-mode-map
-           (")" . dired-git-info-mode))
+                (")" . dired-git-info-mode))
     :after (dired))
 #+end_src
 
@@ -833,10 +833,10 @@ Use vterm as multiplexer
 * Version control
 ** Magit
 #+begin_src emacs-lisp
-    (use-package magit
-      :custom
-      (magit-diff-refine-hunk 'all)
-      (magit-define-global-key-bindings 'recommended))
+  (use-package magit
+    :custom
+    (magit-diff-refine-hunk 'all)
+    (magit-define-global-key-bindings 'recommended))
 #+end_src
 
 ** Orgit
@@ -1015,14 +1015,14 @@ Used to play with forges like GitHub or gitlab
 #+begin_src emacs-lisp
   (use-package denote-menu
     :after org
-     :bind ("C-c d" . list-denotes)
-     :init
-     (require 'denote-org-dblock)
-     (setq denote-menu-show-file-signature t)
-     (defun my/denote-menu-filter-project-oonly ()
-       (interactive)
-       (setq denote-menu-current-regex "==project")
-       (denote-menu-update-entries)))
+    :bind ("C-c d" . list-denotes)
+    :init
+    (require 'denote-org-dblock)
+    (setq denote-menu-show-file-signature t)
+    (defun my/denote-menu-filter-project-oonly ()
+      (interactive)
+      (setq denote-menu-current-regex "==project")
+      (denote-menu-update-entries)))
 
 #+end_src
 
@@ -1051,8 +1051,8 @@ Change light to dark theme according to the sunset/sunrise
   (use-package theme-changer
     :config
     (setq ;; calendar-location-name "Saint-Nicolas, BE"
-          calendar-latitude 50.628
-          calendar-longitude 5.516)
+     calendar-latitude 50.628
+     calendar-longitude 5.516)
     (change-theme 'modus-operandi 'modus-vivendi))
 #+end_src
 
@@ -1123,7 +1123,7 @@ Change light to dark theme according to the sunset/sunrise
                           ('ansi-term-mode :align t :close-on-realign t :size 0.4 :select t)
                           ('occur-mode :align right :close-on-realign t :size 0.4 :select t)
                           ('grep-mode   :align left :close-on-realign t :size 0.5 :select t)
-  ;; TODO have a look to https://github.com/jixiuf/vterm-toggle
+                          ;; TODO have a look to https://github.com/jixiuf/vterm-toggle
                           ("\\*vterm.*?\\*" :regexp t  :align t :close-on-realign t :size 0.4 :select t)
                           ('shell-mode :align t :close-on-realign t :size 0.4 :select t)
                           ('eshell-mode :align left :close-on-realign t :size 0.4 :select t)
@@ -1190,11 +1190,11 @@ Change light to dark theme according to the sunset/sunrise
 #+begin_src emacs-lisp
   (use-package treemacs
     :elpaca (treemacs
-               :type git
-               :files (:defaults "icons" "src/elisp/treemacs*.el" "src/scripts/*.py"  "src/extra/*" "treemacs-pkg.el")
-               :host github
-               ;; cpv   src/scripts ../../build/treemacs/src/
-               :repo "Alexander-Miller/treemacs")
+             :type git
+             :files (:defaults "icons" "src/elisp/treemacs*.el" "src/scripts/*.py"  "src/extra/*" "treemacs-pkg.el")
+             :host github
+             ;; cpv   src/scripts ../../build/treemacs/src/
+             :repo "Alexander-Miller/treemacs")
     :defer t
     :bind
     (:map global-map
@@ -1298,11 +1298,11 @@ Change light to dark theme according to the sunset/sunrise
 ** Parens
 
 #+begin_src emacs-lisp
-(use-package smartparens
-  :hook ((prog-mode text-mode) . smartparens-strict-mode);; add `smartparens-mode` to these hooks
-  :init
-  ;; load default config
-  (require 'smartparens-config))
+  (use-package smartparens
+    :hook ((prog-mode text-mode) . smartparens-strict-mode);; add `smartparens-mode` to these hooks
+    :init
+    ;; load default config
+    (require 'smartparens-config))
 #+end_src
 ** Jump
 avy is a GNU Emacs package for jumping to visible text using a char-based decision tree
@@ -1314,8 +1314,8 @@ avy is a GNU Emacs package for jumping to visible text using a char-based decisi
 ** Scratch buffer
 #+begin_src emacs-lisp
   (use-package scratch
-  :bind  ("C-c s" . scratch))
- #+end_src
+    :bind  ("C-c s" . scratch))
+#+end_src
 
 ** Jinx
 Just install Hunspell and Hunspell-fr, Hunspell-en, ...
@@ -1346,7 +1346,7 @@ marginalia adds annotations in the mini buffer
     :init
     (vertico-mode))
   (use-package savehist
-  :elpaca nil
+    :elpaca nil
     :init
     (savehist-mode))
 
@@ -1689,8 +1689,8 @@ marginalia adds annotations in the mini buffer
 
   (use-package corfu-terminal
     :elpaca (corfu-terminal
-               :type git
-               :repo "https://codeberg.org/akib/emacs-corfu-terminal.git"))
+             :type git
+             :repo "https://codeberg.org/akib/emacs-corfu-terminal.git"))
   (use-package corfu-quick
     :elpaca nil
     :after corfu
@@ -1701,40 +1701,40 @@ marginalia adds annotations in the mini buffer
 
 ** Cape
 #+begin_src emacs-lisp
-    ;; Add extensions
-    (use-package cape
-      ;; Bind dedicated completion commands
-      ;; Alternative prefix keys: C-c p, M-p, M-+, ...
-      :bind (("M-p p" . completion-at-point) ;; capf
-             ("M-p t" . complete-tag)        ;; etags
-             ("M-p d" . cape-dabbrev)        ;; or dabbrev-completion
-             ("M-p h" . cape-history)
-             ("M-p :" . cape-emoji)
-             ("M-p f" . cape-file)
-             ("M-p k" . cape-keyword)
-             ("M-p s" . cape-symbol)
-             ("M-p a" . cape-abbrev)
-             ("M-p l" . cape-line)
-             ("M-p y" . yasnippet-capf)
-             ("M-p w" . cape-dict)
-             ("M-p ^" . cape-tex)
-             ("M-p &" . cape-sgml)
-             ("M-p r" . cape-rfc1345))
-      ;; Add `completion-at-point-functions', used by `completion-at-point'.
-      ;; NOTE: The order matters!
-      :init
-      (setq completion-at-point-functions
-            (list (cape-capf-super #'cape-dict #'cape-dabbrev #'cape-keyword #'cape-symbol)))
-      (add-to-list 'completion-at-point-functions #'cape-emoji)
-      (add-to-list 'completion-at-point-functions #'cape-file)
-      (add-to-list 'completion-at-point-functions #'cape-elisp-block)
-  )
+  ;; Add extensions
+  (use-package cape
+    ;; Bind dedicated completion commands
+    ;; Alternative prefix keys: C-c p, M-p, M-+, ...
+    :bind (("M-p p" . completion-at-point) ;; capf
+           ("M-p t" . complete-tag)        ;; etags
+           ("M-p d" . cape-dabbrev)        ;; or dabbrev-completion
+           ("M-p h" . cape-history)
+           ("M-p :" . cape-emoji)
+           ("M-p f" . cape-file)
+           ("M-p k" . cape-keyword)
+           ("M-p s" . cape-symbol)
+           ("M-p a" . cape-abbrev)
+           ("M-p l" . cape-line)
+           ("M-p y" . yasnippet-capf)
+           ("M-p w" . cape-dict)
+           ("M-p ^" . cape-tex)
+           ("M-p &" . cape-sgml)
+           ("M-p r" . cape-rfc1345))
+    ;; Add `completion-at-point-functions', used by `completion-at-point'.
+    ;; NOTE: The order matters!
+    :init
+    (setq completion-at-point-functions
+          (list (cape-capf-super #'cape-dict #'cape-dabbrev #'cape-keyword #'cape-symbol)))
+    (add-to-list 'completion-at-point-functions #'cape-emoji)
+    (add-to-list 'completion-at-point-functions #'cape-file)
+    (add-to-list 'completion-at-point-functions #'cape-elisp-block)
+    )
 
-    (use-package yasnippet-capf
-      :after cape
-      :init
+  (use-package yasnippet-capf
+    :after cape
+    :init
 
-      (add-to-list 'completion-at-point-functions #'yasnippet-capf))
+    (add-to-list 'completion-at-point-functions #'yasnippet-capf))
 #+end_src
 
 ** Icons
@@ -1801,10 +1801,10 @@ marginalia adds annotations in the mini buffer
     :bind ("C-x C-b" . ibuffer)
     :hook (ibuffer-mode . my/ibuffer-projects)
     :init
-     (defun my/ibuffer-projects ()
-       (setq ibuffer-filter-groups (ibuffer-project-generate-filter-groups))
-       (unless (eq ibuffer-sorting-mode 'project-file-relative)
-         (ibuffer-do-sort-by-project-file-relative))))
+    (defun my/ibuffer-projects ()
+      (setq ibuffer-filter-groups (ibuffer-project-generate-filter-groups))
+      (unless (eq ibuffer-sorting-mode 'project-file-relative)
+        (ibuffer-do-sort-by-project-file-relative))))
 #+end_src
 * Mail
 ** Mu4e
@@ -1902,7 +1902,7 @@ marginalia adds annotations in the mini buffer
     :elpaca nil)
 #+end_src
 *** mu markers
-  fancy markers
+fancy markers
 #+begin_src emacs-lisp
   (use-package mu4e-marker-icons
     :after mu4e
@@ -2042,7 +2042,7 @@ Setup ANSI colors for the compilation buffer
 
 ** Java + Lsp
 #+begin_src emacs-lisp
- (use-package lsp-mode
+  (use-package lsp-mode
     :custom
     (lsp-completion-provider :none) ;; we use Corfu!
     :init
@@ -2050,10 +2050,10 @@ Setup ANSI colors for the compilation buffer
     (setq lsp-keymap-prefix "C-c l")
     (defun my/lsp-mode-setup-completion ()
       (setf (alist-get 'styles (alist-get 'lsp-capf completion-category-defaults))
-	    '(orderless))) ;; Configure orderless
+            '(orderless))) ;; Configure orderless
     :hook (((java-mode java-ts-mode) . lsp)
-	   (lsp-mode . lsp-enable-which-key-integration)
-	   (lsp-completion-mode . my/lsp-mode-setup-completion))
+           (lsp-mode . lsp-enable-which-key-integration)
+           (lsp-completion-mode . my/lsp-mode-setup-completion))
     :commands lsp)
 
   (use-package lsp-java )
@@ -2197,10 +2197,10 @@ Setup ANSI colors for the compilation buffer
 * Utilities
 ** Search the web
 #+begin_src emacs-lisp
-      (use-package keyword-search
-        :bind ("C-c k" . keyword-search)
+  (use-package keyword-search
+    :bind ("C-c k" . keyword-search)
     :init
-  (add-to-list 'keyword-search-alist '(wikipedia-fr . "http://fr.wikipedia.org/wiki/%s")))
+    (add-to-list 'keyword-search-alist '(wikipedia-fr . "http://fr.wikipedia.org/wiki/%s")))
 #+end_src
 
 * Recentf
@@ -2252,7 +2252,7 @@ Setup ANSI colors for the compilation buffer
 Put this at the end of the init file
 See:[[https://github.com/progfolio/elpaca/issues/81][progfolio/elpaca#81 {Feature}: Better support for custom.el]] 
 #+begin_src emacs-lisp :lexical t
-;; see https://github.com/progfolio/elpaca/issues/81
+  ;; see https://github.com/progfolio/elpaca/issues/81
   (setq custom-file (expand-file-name "customs.el" user-emacs-directory))
   (add-hook 'elpaca-after-init-hook (lambda () (load custom-file 'noerror)))
 #+end_src

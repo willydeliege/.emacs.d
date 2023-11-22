@@ -131,6 +131,11 @@ Ignore X resources.
 (advice-add #'x-apply-session-resources :override #'ignore)
 #+end_src
 
+Miscellaneous
+#+begin_src emacs-lisp
+  (add-to-list 'default-frame-alist '(fullscreen . maximized))
+  (setq shell-command-switch "-ic")
+#+end_src
 
 Taken from:
 

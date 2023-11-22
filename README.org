@@ -581,11 +581,13 @@ Update flag when saving files with last__{}modified
        ;; Use e to move up, n to move down.
        ;; Since special modes usually use n to move down, we only overwrite e here.
        '("e" . meow-prev)
+       '("n" . meow-next)
        '("<escape>" . ignore))
       (meow-leader-define-key
        '("?" . meow-cheatsheet)
        ;; To execute the originally e in MOTION state, use SPC e.
        '("e" . "H-e")
+       '("n" . "H-n")
        '("1" . meow-digit-argument)
        '("2" . meow-digit-argument)
        '("3" . meow-digit-argument)
@@ -886,24 +888,24 @@ Used to play with forges like GitHub or gitlab
     :after org
     :elpaca (:host sourcehut :repo "protesilaos/denote")
     :hook (dired-mode . denote-dired-mode)
-    :bind (("C-c n n" . denote)
-           ("C-c n c" . denote-region) ; "contents" mnemonic
-           ("C-c n N" . denote-type)
-           ("C-c n d" . denote-date)
-           ("C-c n z" . denote-signature) ; "zettelkasten" mnemonic
-           ("C-c n s" . denote-subdirectory)
-           ("C-c n t" . denote-template)
-           ("C-c n r" . denote-rename-file)
-           ("C-c n R" . denote-rename-file-using-front-matter)
-           ("C-c n p" . my/find-project-files)
+    :bind (("C-c N n" . denote)
+           ("C-c N c" . denote-region) ; "contents" mnemonic
+           ("C-c N N" . denote-type)
+           ("C-c N d" . denote-date)
+           ("C-c N z" . denote-signature) ; "zettelkasten" mnemonic
+           ("C-c N s" . denote-subdirectory)
+           ("C-c N t" . denote-template)
+           ("C-c N r" . denote-rename-file)
+           ("C-c N R" . denote-rename-file-using-front-matter)
+           ("C-c N p" . my/find-project-files)
            :map org-mode-map
-           ("C-c n i" . denote-link) ; "insert" mnemonic
-           ("C-c n I" . denote-add-links)
-           ("C-c n b" . denote-backlinks)
-           ("C-c n k a" . denote-keywords-add)
-           ("C-c n k r" . denote-keywords-remove)
-           ("C-c n f f" . denote-find-link)
-           ("C-c n f b" . denote-find-backlink)
+           ("C-c N i" . denote-link) ; "insert" mnemonic
+           ("C-c N I" . denote-add-links)
+           ("C-c N b" . denote-backlinks)
+           ("C-c N k a" . denote-keywords-add)
+           ("C-c N k r" . denote-keywords-remove)
+           ("C-c N f f" . denote-find-link)
+           ("C-c N f b" . denote-find-backlink)
 
            ;; Key bindings specifically for Dired.
            :map dired-mode-map

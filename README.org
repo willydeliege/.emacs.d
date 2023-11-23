@@ -1296,13 +1296,12 @@ Change light to dark theme according to the sunset/sunrise
 #+end_src
 
 ** Parens
-
 #+begin_src emacs-lisp
   (use-package smartparens
-    :hook ((prog-mode text-mode) . smartparens-strict-mode);; add `smartparens-mode` to these hooks
-    :init
-    ;; load default config
-    (require 'smartparens-config))
+    :config
+    (require 'smartparens-config)
+    (smartparens-global-strict-mode 1)
+    (sp-use-smartparens-bindings))
 #+end_src
 ** Jump
 avy is a GNU Emacs package for jumping to visible text using a char-based decision tree

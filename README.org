@@ -238,15 +238,7 @@ Add org-mode to load-path (run this script by "C-c C-c")
 #+begin_src emacs-lisp
   (use-package org
     :elpaca nil
-    :hook  (org-mode . (lambda ()
-                         (add-hook  'before-save-hook  'time-stamp nil t)))
-    :hook ((org-mode . (lambda ()
-                         (setq prettify-symbols-alist '((":PROPERTIES:" . "⚙️")
-                                                        (":LOGBOOK:" . "☰")
-                                                        ("DEADLINE:" . "📆")
-                                                        ("CLOCK:" . "⏳")
-                                                        ("SCHEDULED:"  . "🪟") ; It's a window - not a plus sign in a box
-                                                        (":END:" . "🔚" ))))))
+    :hook (org-mode . my/prettify)
     :bind (("C-c l" . org-store-link)
            ("C-c c" . org-capture)
            ("C-c a" . org-agenda)
@@ -261,13 +253,20 @@ Add org-mode to load-path (run this script by "C-c C-c")
     (org-deadline-warning-days 5)
     (org-enforce-todo-dependencies t)
     :init
+    (defun my/prettify ()
+                         (setq prettify-symbols-alist '((":PROPERTIES:" . "⚙️")
+                                                        (":LOGBOOK:" . "☰")
+                                                        ("DEADLINE:" . "📆")
+                                                        ("CLOCK:" . "⏳")
+                                                        ("SCHEDULED:"  . "🪟") ; It's a window - not a plus sign in a box
+                                                        (":END:" . "🔚" ))))
     (setq org-directory "~/org/")
     (defvar journal-file "journal.org")
     (defun build-agenda ()
       (interactive)
       (setq org-agenda-files (directory-files org-directory nil ".*==project.*"))
       (add-to-list 'org-agenda-files journal-file))
-    (build-agenda)
+    (add-function :before after-focus-change-function 'build-agenda)
     (defun my-org-agenda ()
       (interactive)
       (if (not org-agenda-files)
@@ -496,14 +495,17 @@ Distraction-free writing
     (("<f9>" . my/distraction-free)))
 #+end_src
 
-** Org modern
+** ORg modern
 #+begin_src emacs-lisp
   (use-package org-modern
     :after org
-    :hook (org-agenda-finalize . org-modern-agenda)
-    :hook (org-mode . org-modern-mode)
+    ;; :hook (org-agenda-finalize . org-modern-agenda)
+    :config ; add late to hook
+    (add-hook 'org-mode-hook #'org-modern-mode)
     :init
-    (setq org-modern-label-border 1))
+    (setq org-modern-table nil)
+    (setq line-spacing 0.4)
+    (setq org-modern-label-border 'auto))
 
   (use-package org-modern-indent
     :after org

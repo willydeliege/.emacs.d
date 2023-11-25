@@ -1160,25 +1160,27 @@ Change light to dark theme according to the sunset/sunrise
     :bind ("C-x R" . transpose-frame))
 
 #+end_src
-
-** Dashboard 
+** Dashboard
 #+begin_src emacs-lisp
+  ;; use-package with Elpaca:
   (use-package dashboard
     :elpaca t
-    :after org-agenda
     :init
+    (setq dashboard-projects-backend 'project-el)
     (setq dashboard-items '((recents  . 5)
                             (bookmarks . 5)
                             (projects . 5)
-                            (agenda . 5)
-                            (registers . 5)))
-    (setq dashboard-display-icons-p t) ;; display icons on both GUI and terminal
-    (setq dashboard-icon-type 'nerd-icons) ;; use `nerd-icons' package
-    (setq dashboard-projects-backend 'project-el)
+                            (agenda . 5)))
     :config
+    (setq dashboard-icon-type 'nerd-icons)
+    (setq dashboard-set-file-icons t)
     (setq initial-buffer-choice (lambda () (get-buffer-create "*dashboard*")))
     (add-hook 'elpaca-after-init-hook #'dashboard-insert-startupify-lists)
     (add-hook 'elpaca-after-init-hook #'dashboard-initialize)
+    (add-hook 'server-after-make-frame-hook
+              (lambda ()
+                (when (eq (buffer-local-value 'major-mode (current-buffer)) 'dashboard-mode)
+                  (dashboard-refresh-buffer))))
     (dashboard-setup-startup-hook))
 #+end_src
 * Editing

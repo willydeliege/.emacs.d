@@ -518,7 +518,7 @@ Distraction-free writing
 #+begin_src emacs-lisp
   (use-package org-alert
     :after org
-    :hook (after-init . org-alert-enable)
+    :hook (elpaca-after-init . org-alert-enable)
     :init
     (setq alert-default-style 'libnotify))
 #+end_src
@@ -1491,7 +1491,7 @@ marginalia adds annotations in the mini buffer
 #+begin_src emacs-lisp
   (use-package hl-todo
     :hook ((text-mode prog-mode) . hl-todo-mode)
-    :hook (after-init . global-hl-todo-mode))
+    :hook (elpaca-after-init . global-hl-todo-mode))
 
   (use-package flycheck-hl-todo
     :defer 5 ; Need to be initialized after the rest of checkers

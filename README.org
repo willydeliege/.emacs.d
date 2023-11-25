@@ -578,7 +578,9 @@ Distraction-free writing
   (use-package meow
     :config
     (defun meow-setup ()
-      (setq meow-cheatsheet-layout meow-cheatsheet-layout-colemak)
+      (setq meow-cheatsheet-layout meow-cheatsheet-layout-colemak-dh)
+      (add-to-list 'meow-mode-state-list '(mu4e-view-mode . motion))
+      (add-to-list 'meow-mode-state-list '(vterm-mode . insert))
       (meow-motion-overwrite-define-key
        ;; Use e to move up, n to move down.
        ;; Since special modes usually use n to move down, we only overwrite e here.
@@ -629,16 +631,16 @@ Distraction-free writing
        '("f" . meow-find)
        '("g" . meow-cancel-selection)
        '("G" . meow-grab)
-       '("h" . meow-left)
-       '("H" . meow-left-expand)
+       '("m" . meow-left)
+       '("M" . meow-left-expand)
        '("i" . meow-right)
        '("I" . meow-right-expand)
        '("j" . meow-join)
        '("k" . meow-kill)
        '("l" . meow-line)
        '("L" . meow-goto-line)
-       '("m" . meow-mark-word)
-       '("M" . meow-mark-symbol)
+       '("h" . meow-mark-word)
+       '("H" . meow-mark-symbol)
        '("n" . meow-next)
        '("N" . meow-next-expand)
        '("o" . meow-block)
@@ -662,6 +664,12 @@ Distraction-free writing
        '("<escape>" . ignore)))
     (meow-setup)
     (meow-global-mode 1))
+#+end_src
+* Which-key
+#+begin_src emacs-lisp
+  (use-package which-key
+    :config
+    (which-key-mode))
 #+end_src
 
 * Defaults

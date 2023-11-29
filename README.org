@@ -1116,7 +1116,7 @@ Change light to dark theme according to the sunset/sunrise
 #+begin_src emacs-lisp
   (use-package ace-window
     :after treemacs
-    :bind ("C-x o" . ace-window))
+    :bind ("M-o" . ace-window))
 #+end_src
 
 #+begin_src emacs-lisp

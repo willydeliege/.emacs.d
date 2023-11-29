@@ -134,7 +134,6 @@ Ignore X resources.
 Miscellaneous
 #+begin_src emacs-lisp
   (add-to-list 'default-frame-alist '(fullscreen . maximized))
-  (setq shell-command-switch "-ic")
 #+end_src
 
 Taken from:
@@ -146,7 +145,6 @@ This helps with a bug I was hitting when using =desktop-save-mode='s =desktop-re
   (setq desktop-restore-forces-onscreen nil)
 #+end_src
 
-Silence the bell function
 #+begin_src emacs-lisp :lexical t
   (setq ring-bell-function #'ignore
         inhibit-startup-screen t)
@@ -785,6 +783,13 @@ Use vterm as multiplexer
 *** Emacs shell
 #+begin_src emacs-lisp
 #+end_src
+
+*** Exec path
+#+begin_src emacs-lisp
+  (use-package exec-path-from-shell
+    :init
+    (exec-path-from-shell-initialize))
+#+end_src
 * Bookmarks
 #+begin_src emacs-lisp
   (use-package bookmark+ :after org :elpaca `(bookmark+ :type git :host github :repo "emacsmirror/bookmark-plus" :files (:defaults)))
@@ -1192,8 +1197,9 @@ Change light to dark theme according to the sunset/sunrise
 #+begin_src emacs-lisp
   (use-package emacs
     :elpaca nil
+    :init
+    (setq warning-minimum-level :emergency)
     :config
-    (setq shell-command-switch "-ic")
     (global-set-key  (kbd "C-x C") 'save-buffers-kill-emacs))
 #+end_src
 ** Sudo edit

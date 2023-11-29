@@ -2088,6 +2088,18 @@ Setup ANSI colors for the compilation buffer
 
 #+end_src
 
+** Haskell
+*** haskell-mode
+#+begin_src emacs-lisp
+  (use-package haskell-mode)
+#+end_src
+*** lsp-haskell
+#+begin_src emacs-lisp
+  (use-package lsp-haskell
+    :after haskell-mode
+    :hook ((haskell-mode . lsp)
+           (haskell-literate-mode . lsp)))
+#+end_src
 ** Tree-sitter
 *** Automatic use of tree-sitter
 #+begin_src emacs-lisp

@@ -1670,21 +1670,16 @@ marginalia adds annotations in the mini buffer
 
 ** Corfu
 #+begin_src emacs-lisp
-  ;; test
   (use-package corfu
     :elpaca (corfu :files (:defaults "extensions/*.el"))
     :bind (:map corfu-map
-                ("TAB" . corfu-next)
-                ([tab] . corfu-next)
-                ("S-TAB" . corfu-previous)
-                ([backtab] . corfu-previous)
+                ("C-e" . corfu-previous)
                 ("<escape>" . corfu-quit))
     :custom
-
     ;; Works with `indent-for-tab-command'. Make sure tab doesn't indent when you
     ;; want to perform completion
     (completion-cycle-threshold nil)  ; Always show candidates in menu
-    (corfu-auto t)                  ;;enablw completion with tab
+    (corfu-auto t)
     (corfu-auto-prefix 2)
     (corfu-auto-delay 0.25)
     (corfu-min-width 80)
@@ -1721,7 +1716,7 @@ marginalia adds annotations in the mini buffer
     :after corfu
     :bind (:map corfu-map
                 ("M-q" . corfu-quick-complete)
-                ("C-q" . corfu-quick-package)))
+                ("C-q" . corfu-quick-insert)))
 #+end_src
 
 ** Cape

@@ -580,7 +580,8 @@ Distraction-free writing
   (use-package meow
     :config
     (defun meow-setup ()
-      (setq meow-cheatsheet-layout meow-cheatsheet-layout-colemak-dh)
+      (setq meow-cheatsheet-layout meow-cheatsheet-layout-colemak-dh
+            meow-use-clipboard t)
       (add-to-list 'meow-mode-state-list '(mu4e-view-mode . motion))
       (add-to-list 'meow-mode-state-list '(cfw:calendar-mode . motion))
       (add-to-list 'meow-mode-state-list '(vterm-mode . insert))
@@ -633,16 +634,16 @@ Distraction-free writing
        '("f" . meow-find)
        '("g" . meow-cancel-selection)
        '("G" . meow-grab)
-       '("h" . meow-left)
-       '("H" . meow-left-expand)
+       '("m" . meow-left)
+       '("M" . meow-left-expand)
        '("i" . meow-right)
        '("I" . meow-right-expand)
        '("j" . meow-join)
        '("k" . meow-kill)
        '("l" . meow-line)
        '("L" . meow-goto-line)
-       '("m" . meow-mark-word)
-       '("M" . meow-mark-symbol)
+       '("h" . meow-mark-word)
+       '("H" . meow-mark-symbol)
        '("n" . meow-next)
        '("N" . meow-next-expand)
        '("o" . meow-block)
@@ -1325,6 +1326,12 @@ Change light to dark theme according to the sunset/sunrise
     (smartparens-global-strict-mode 1)
     (sp-use-smartparens-bindings))
 #+end_src
+#+begin_src emacs-lisp
+  (use-package wrap-region
+    ;; select a region and press any of the following keys: ", ', (, {, [.
+    :after smartparens
+    :hook ((prog-mode org-mode) . wrap-region-mode))
+#+end_src
 ** Jump
 avy is a GNU Emacs package for jumping to visible text using a char-based decision tree
 #+begin_src emacs-lisp
@@ -1492,8 +1499,8 @@ marginalia adds annotations in the mini buffer
       (bookmark-all-names (bmkp-file-alist-only)))
     (consult-customize consult--source-bookmark
                        :items (lambda ()
-                                (bookmark-all-names (bmkp-file-alist-only))))
-    (consult-customize consult--source-buffer :hidden t :default nil))
+                                (bookmark-all-names (bmkp-file-alist-only)))))
+    (consult-customize consult--source-buffer :hidden t :default nil)
 #+end_src
 
 *** Consult flycheck

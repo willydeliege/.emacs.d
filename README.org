@@ -225,10 +225,10 @@ We will use use-package
 *** org-mode
 Add org-mode to load-path (run this script by "C-c C-c")
 #+begin_src shell :tangle no
-  # After having clones this repo 
+  # After having clones this repo
   git submodule init
   git subodules update
-  cd ~/.emacs.d/lisp/org-mode/ 
+  cd ~/.emacs.d/lisp/org-mode/
   # git checkout release_9.6.12 # or wathever the version you want to use
   make autoloads
   sudo make install
@@ -342,9 +342,9 @@ Add org-mode to load-path (run this script by "C-c C-c")
                            (org-todo 'done)) nil 'tree)
         (org-copy-subtree)
         (denote-keywords-add '("ARCHIVE"))
-        (denote-keywords-remove) 
+        (denote-keywords-remove)
         (denote-rename-file-using-front-matter (buffer-file-name))
-        (org-capture nil "j"))) 
+        (org-capture nil "j")))
     (defun make-archive()
       (when (and (member "ARCHIVE" (org-get-tags))
                  (member "Tasks" (org-heading-components)))
@@ -1172,7 +1172,6 @@ Change light to dark theme according to the sunset/sunrise
 #+end_src
 ** Dashboard
 #+begin_src emacs-lisp
-  ;; use-package with Elpaca:
   (use-package dashboard
     :elpaca t
     :init
@@ -2259,8 +2258,7 @@ Setup ANSI colors for the compilation buffer
 #+begin_src emacs-lisp
   (use-package files
     :elpaca nil
-    ;;:hook
-    ;;(before-save . delete-trailing-whitespace)
+    :hook (before-save . delete-trailing-whitespace)
     :config
     ;; source: http://steve.yegge.googlepages.com/my-dot-emacs-file
     (defun rename-file-and-buffer (new-name)
@@ -2294,7 +2292,7 @@ Setup ANSI colors for the compilation buffer
 #+end_src
 * Custom.el
 Put this at the end of the init file
-See:[[https://github.com/progfolio/elpaca/issues/81][progfolio/elpaca#81 {Feature}: Better support for custom.el]] 
+See:[[https://github.com/progfolio/elpaca/issues/81][progfolio/elpaca#81 {Feature}: Better support for custom.el]]
 #+begin_src emacs-lisp :lexical t
   ;; see https://github.com/progfolio/elpaca/issues/81
   (setq custom-file (expand-file-name "customs.el" user-emacs-directory))

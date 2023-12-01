@@ -1499,8 +1499,8 @@ marginalia adds annotations in the mini buffer
       (bookmark-all-names (bmkp-file-alist-only)))
     (consult-customize consult--source-bookmark
                        :items (lambda ()
-                                (bookmark-all-names (bmkp-file-alist-only)))))
-    (consult-customize consult--source-buffer :hidden t :default nil)
+                                (bookmark-all-names (bmkp-file-alist-only))))
+    (consult-customize consult--source-buffer :hidden t :default nil))
 #+end_src
 
 *** Consult flycheck

@@ -1360,6 +1360,7 @@ marginalia adds annotations in the mini buffer
                 ("C-f"	.	vertico-exit)
                 ("?"	.	minibuffer-completion-help)
                 ("M-RET"	.	minibuffer-complete)
+                ("C-e"    .       vertico-previous)
                 :map minibuffer-local-map
                 ("C-h"	.	backward-kill-word))
     :custom
@@ -1373,8 +1374,11 @@ marginalia adds annotations in the mini buffer
 
   (use-package marginalia
     :after vertico
-    :custom
-    (marginalia-annotators '(marginalia-annotators-heavy marginalia-annotators-light nil))
+    ;; Bind `marginalia-cycle' locally in the minibuffer.  To make the binding
+    ;; available in the *Completions* buffer, add it to the
+    ;; `completion-list-mode-map'.
+    :bind (:map minibuffer-local-map
+                ("M-A" . marginalia-cycle))
     :init
     (marginalia-mode))
 #+end_src

@@ -1058,9 +1058,9 @@ Used to play with forges like GitHub or gitlab
 #+begin_src emacs-lisp
   (use-package modus-themes
     :bind   ("<f6>" . modus-themes-toggle)
-    :demand t
     :config
-    (setq modus-themes-to-toggle '(modus-operandi modus-vivendi))
+    (setq modus-themes-to-toggle '(modus-operandi-tinted modus-vivendi-tinted)
+          modus-themes-org-blocks 'tinted-background)
     ;; (load-theme 'modus-vivendi :no-confirm)
     )
 
@@ -1070,10 +1070,10 @@ Change light to dark theme according to the sunset/sunrise
 #+begin_src emacs-lisp
   (use-package theme-changer
     :config
-    (setq ;; calendar-location-name "Saint-Nicolas, BE"
+    (setq calendar-location-name "Saint-Nicolas, BE"
      calendar-latitude 50.628
      calendar-longitude 5.516)
-    (change-theme 'modus-operandi 'modus-vivendi))
+    (change-theme 'modus-operandi-tinted 'modus-vivendi-tinted))
 #+end_src
 
 ** Icons

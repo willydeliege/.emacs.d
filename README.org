@@ -582,10 +582,10 @@ Distraction-free writing
     (defun meow-setup ()
       (setq meow-cheatsheet-layout meow-cheatsheet-layout-colemak-dh)
       (add-to-list 'meow-mode-state-list '(mu4e-view-mode . motion))
+      (add-to-list 'meow-mode-state-list '(cfw:calendar-mode . motion))
       (add-to-list 'meow-mode-state-list '(vterm-mode . insert))
       (meow-motion-overwrite-define-key
        ;; Use e to move up, n to move down.
-       ;; Since special modes usually use n to move down, we only overwrite e here.
        '("e" . meow-prev)
        '("n" . meow-next)
        '("<escape>" . ignore))
@@ -1978,7 +1978,12 @@ fancy markers
   (use-package calfw)
 
   (use-package calfw-org
-    :bind ("C-c C" . cfw:open-org-calendar))
+    :bind (("C-c C" . cfw:open-org-calendar)
+           :map cfw:calendar-mode-map
+           ("C-n" . cfw:navi-next-week-command)
+           ("C-e" . cfw:navi-previous-week-command))
+    :init
+    (setq cfw:org-overwrite-default-keybinding t))
 #+end_src
 
 ** Holidays calendar

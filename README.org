@@ -588,13 +588,11 @@ Distraction-free writing
       (meow-motion-overwrite-define-key
        ;; Use e to move up, n to move down.
        '("e" . meow-prev)
-       '("n" . meow-next)
        '("<escape>" . ignore))
       (meow-leader-define-key
        '("?" . meow-cheatsheet)
        ;; To execute the originally e in MOTION state, use SPC e.
        '("e" . "H-e")
-       '("n" . "H-n")
        '("1" . meow-digit-argument)
        '("2" . meow-digit-argument)
        '("3" . meow-digit-argument)
@@ -1173,7 +1171,10 @@ Change light to dark theme according to the sunset/sunrise
 ** Dashboard
 #+begin_src emacs-lisp
   (use-package dashboard
-    :elpaca t
+    :demand t
+    :bind (:map dashboard-mode-map
+                ("n" . dashboard-next-line)
+                ("e" . dashboard-previous-line))
     :init
     (setq dashboard-projects-backend 'project-el)
     (setq dashboard-items '((recents  . 5)
@@ -1844,6 +1845,8 @@ marginalia adds annotations in the mini buffer
            :map mu4e-headers-mode-map
            ("C-c c" . mu4e-org-store-and-capture)
            :map mu4e-view-mode-map
+           ("C-n" . mu4e-view-headers-next)
+           ("C-e" . mu4e-view-headers-prev)
            ("C-c c" . mu4e-org-store-and-capture))
     :custom
     (mu4e-attachment-dir "~/Downloads/")

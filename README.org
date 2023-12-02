@@ -1543,10 +1543,9 @@ marginalia adds annotations in the mini buffer
   (use-package embark
     :demand t ;; needed by eldoc otherwize eldoc error
     :elpaca (embark :files ("embark.el" "embark-org.el" "embark.texi" "embark-pkg.el") :host github :repo "oantolin/embark")
-    :bind
-    (("C-h B" . embark-bindings) ;; alternative for `describe-bindings'
-     ("C-." . embark-act)         ;; pick some comfortable binding
-     ("C-;" . embark-dwim))
+    :bind (("C-h B" . embark-bindings) ;; alternative for `describe-bindings'
+           ("C-." . embark-act)         ;; pick some comfortable binding
+           ("C-;" . embark-dwim))
     :init
     ;; Show the Embark target at point via Eldoc.  You may adjust the Eldoc
     ;; strategy, if you want to see the documentation from multiple providers.
@@ -1554,24 +1553,127 @@ marginalia adds annotations in the mini buffer
     ;; (setq eldoc-documentation-strategy #'eldoc-documentation-compose-eagerly)
 
     :config
+    (defun embark-which-key-indicator ()
+      "An embark indicator that displays keymaps using which-key.
+  The which-key help message will show the type and value of the
+  current target followed by an ellipsis if there are further
+  targets."
+      (lambda (&optional keymap targets prefix)
+        (if (null keymap)
+            (which-key--hide-popup-ignore-command)
+          (which-key--show-keymap
+           (if (eq (plist-get (car targets) :type) 'embark-become)
+               "Become"
+             (format "Act on %s '%s'%s"
+                     (plist-get (car targets) :type)
+                     (embark--truncate-target (plist-get (car targets) :target))
+                     (if (cdr targets) "…" "")))
+           (if prefix
+               (pcase (lookup-key keymap prefix 'accept-default)
+                 ((and (pred keymapp) km) km)
+                 (_ (key-binding prefix 'accept-default)))
+             keymap)
+           nil nil t (lambda (binding)
+                       (not (string-suffix-p "-argument" (cdr binding))))))))
+
+    (setq embark-indicators
+          '(embark-which-key-indicator
+            embark-highlight-indicator
+            embark-isearch-highlight-indicator))
+
+    (defun embark-hide-which-key-indicator (fn &rest args)
+      "Hide the which-key indicator immediately when using the completing-read prompter."
+      (which-key--hide-popup-ignore-command)
+      (let ((embark-indicators
+             (remq #'embark-which-key-indicator embark-indicators)))
+        (apply fn args)))
+
+    (advice-add #'embark-completing-read-prompter
+                :around #'embark-hide-which-key-indicator)
+
+    (defun embark-default-action-in-other-window ()
+      "Run the default embark action in another window."
+      (interactive))
+
+    (cl-defun run-default-action-in-other-window
+        (&rest rest &key run type &allow-other-keys)
+      (let ((default-action (embark--default-action type)))
+        (split-window-below) ; or your preferred way to split
+        (funcall run :action default-action :type type rest)))
+
+    (setf (alist-get 'embark-default-action-in-other-window
+                     embark-around-action-hooks)
+          '(run-default-action-in-other-window))
+
+    (define-key embark-general-map "O" #'embark-default-action-in-other-window) ; or whatever key you prefer
+    (defun embark-target-this-buffer-file ()
+      (cons 'this-buffer-file (or (buffer-file-name) (buffer-name))))
+
+    (add-to-list 'embark-target-finders #'embark-target-this-buffer-file 'append)
+
+
+    (defvar-keymap this-buffer-file-map
+                          :doc "Commands to act on current file or buffer."
+                          :parent embark-general-map
+                          "l" 'load-file
+                          "b" 'byte-compile-file
+                          "S" 'sudo-edit-find-file
+                          "r" 'rename-file-and-buffer
+                          "d" 'diff-buffer-with-file
+                          "=" 'ediff-buffers
+                          "C-=" 'ediff-files
+                          "!" 'shell-command
+                          "&" 'async-shell-command
+                          "x" 'embark-open-externally
+                          "c" 'copy-file
+                          "k" 'kill-buffer
+                          "z" 'bury-buffer
+                          "|" 'embark-shell-command-on-buffer
+                          "g" 'revert-buffer)
+    (add-to-list 'embark-keymap-alist '(this-buffer-file . this-buffer-file-map))
+
+    (defun embark-which-key-indicator ()
+      "An embark indicator that displays keymaps using which-key.
+  The which-key help message will show the type and value of the
+  current target followed by an ellipsis if there are further
+  targets."
+      (lambda (&optional keymap targets prefix)
+        (if (null keymap)
+            (which-key--hide-popup-ignore-command)
+          (which-key--show-keymap
+           (if (eq (plist-get (car targets) :type) 'embark-become)
+               "Become"
+             (format "Act on %s '%s'%s"
+                     (plist-get (car targets) :type)
+                     (embark--truncate-target (plist-get (car targets) :target))
+                     (if (cdr targets) "…" "")))
+           (if prefix
+               (pcase (lookup-key keymap prefix 'accept-default)
+                 ((and (pred keymapp) km) km)
+                 (_ (key-binding prefix 'accept-default)))
+             keymap)
+           nil nil t (lambda (binding)
+                       (not (string-suffix-p "-argument" (cdr binding))))))))
+
+    (setq embark-indicators
+          '(embark-which-key-indicator
+            embark-highlight-indicator
+            embark-isearch-highlight-indicator))
+
+    (defun embark-hide-which-key-indicator (fn &rest args)
+      "Hide the which-key indicator immediately when using the completing-read prompter."
+      (which-key--hide-popup-ignore-command)
+      (let ((embark-indicators
+             (remq #'embark-which-key-indicator embark-indicators)))
+        (apply fn args)))
+
+    (advice-add #'embark-completing-read-prompter
+                :around #'embark-hide-which-key-indicator)
     ;; Hide the mode line of the Embark live/completions buffers
     (add-to-list 'display-buffer-alist
                  '("\\`\\*Embark Collect \\(Live\\|Completions\\)\\*"
                    nil
                    (window-parameters (mode-line-format . none))))
-
-    (defmacro my/embark-ace-action (fn)
-      `(defun ,(intern (concat "my/embark-ace-" (symbol-name fn))) ()
-         (interactive)
-         (with-demoted-errors "%s"
-           (require 'ace-window)
-           (let ((aw-dispatch-always t))
-             (aw-switch-to-window (aw-select nil))
-             (call-interactively (symbol-function ',fn))))))
-
-    (define-key embark-file-map     (kbd "o") (my/embark-ace-action find-file))
-    (define-key embark-buffer-map   (kbd "o") (my/embark-ace-action switch-to-buffer))
-    (define-key embark-bookmark-map (kbd "o") (my/embark-ace-action bookmark-jump))
 
     (defmacro my/embark-split-action (fn split-type)
       `(defun ,(intern (concat "my/embark-"
@@ -1589,20 +1691,7 @@ marginalia adds annotations in the mini buffer
 
     (define-key embark-file-map     (kbd "3") (my/embark-split-action find-file split-window-right))
     (define-key embark-buffer-map   (kbd "3") (my/embark-split-action switch-to-buffer split-window-right))
-    (define-key embark-bookmark-map (kbd "3") (my/embark-split-action bookmark-jump split-window-right))
-    ;; edit file as sudoer
-    (defun my/sudo-find-file (file)
-      "Open FILE as root."
-      (interactive "FOpen file as root: ")
-      (when (file-writable-p file)
-        (user-error "File is user writeable, aborting sudo"))
-      (find-file (if (file-remote-p file)
-                     (concat "/" (file-remote-p file 'method) ":"
-                             (file-remote-p file 'user) "@" (file-remote-p file 'host)
-                             "|sudo:root@"
-                             (file-remote-p file 'host) ":" (file-remote-p file 'localname))
-                   (concat "/sudo:root@localhost:" file))))
-    (define-key embark-file-map (kbd "7") 'my/sudo-find-file))
+    (define-key embark-bookmark-map (kbd "3") (my/embark-split-action bookmark-jump split-window-right)))
 #+end_src
 
 ** Orderless
@@ -1610,7 +1699,6 @@ marginalia adds annotations in the mini buffer
   (use-package orderless
     :demand t
     :config
-
     (defun +orderless--consult-suffix ()
       "Regexp which matches the end of string with Consult tofu support."
       (if (and (boundp 'consult--tofu-char) (boundp 'consult--tofu-range))
@@ -1619,9 +1707,6 @@ marginalia adds annotations in the mini buffer
                   (+ consult--tofu-char consult--tofu-range -1))
         "$"))
 
-    ;; Recognizes the following patterns:
-    ;; * .ext (file extension)
-    ;; * regexp$ (regexp matching at end)
     (defun +orderless-consult-dispatch (word _index _total)
       (cond
        ;; Ensure that $ works with Consult commands, which add disambiguation suffixes
@@ -1637,30 +1722,6 @@ marginalia adds annotations in the mini buffer
     (orderless-define-completion-style +orderless-with-initialism
       (orderless-matching-styles '(orderless-initialism orderless-literal orderless-regexp orderless-flex)))
 
-    ;; You may want to combine the `orderless` style with `substring` and/or `basic`.
-    ;; There are many details to consider, but the following configurations all work well.
-    ;; Personally I (@minad) use option 3 currently. Also note that you may want to configure
-    ;; special styles for special completion categories, e.g., partial-completion for files.
-    ;;
-    ;; 1. (setq completion-styles '(orderless))
-    ;; This configuration results in a very coherent completion experience,
-    ;; since orderless is used always and exclusively. But it may not work
-    ;; in all scenarios. Prefix expansion with TAB is not possible.
-    ;;
-    ;; 2. (setq completion-styles '(substring orderless))
-    ;; By trying substring before orderless, TAB expansion is possible.
-    ;; The downside is that you can observe the switch from substring to orderless
-    ;; during completion, less coherent.
-    ;;
-    ;; 3. (setq completion-styles '(orderless basic))
-    ;; Certain dynamic completion tables (completion-table-dynamic)
-    ;; do not work properly with orderless. One can add basic as a fallback.
-    ;; Basic will only be used when orderless fails, which happens only for
-    ;; these special tables.
-    ;;
-    ;; 4. (setq completion-styles '(substring orderless basic))
-    ;; Combine substring, orderless and basic.
-    ;;
     (setq completion-styles '(orderless basic flex)
           completion-category-defaults nil
           ;;; Enable partial-completion for files.

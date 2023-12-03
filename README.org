@@ -21,9 +21,8 @@ Emacs 27.0 introduced an early-init file. It allows customization before package
   (setq inhibit-default-init nil)
 #+end_src
 
-+begin_src emacs-lisp :lexical t
-(setq native-comp-async-report-warnings-errors nil)
-;; (setq warning-minimum-level :error)
+#+begin_src emacs-lisp :lexical t
+  (setq native-comp-async-report-warnings-errors nil)
 #+end_src
 *** Debugging
 Running this form will launch the debugger after loading a package.
@@ -208,8 +207,6 @@ We will use use-package
   ;; need org to be loaded before elpaca-use-package
   (add-to-list 'load-path "~/.emacs.d/lisp/org-mode/lisp/")
 
-  ;; org latest version finally works but has to be launched before elpa-use-package because this package calls org
-  ;; and then have a problem of org version mismatch
   ;; Install use-package support
   (elpaca elpaca-use-package
     ;; Enable :elpaca use-package keyword.

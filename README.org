@@ -1208,7 +1208,16 @@ Change light to dark theme according to the sunset/sunrise
     :demand t
     :bind (:map embark-file-map ("s" . sudo-edit)))
 #+end_src
-
+** Undoing
+#+begin_src emacs-lisp
+  (use-package undo-tree
+    :custom
+    (undo-tree-visualizer-diff t)
+    (undo-tree-history-directory-alist '(("." . "~/.emacs.d/undo")))
+    (undo-tree-visualizer-timestamps t)
+    :init
+    (global-undo-tree-mode))
+#+end_src
 ** Treemacs
 #+begin_src emacs-lisp
   (use-package treemacs

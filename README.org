@@ -1905,11 +1905,22 @@ marginalia adds annotations in the mini buffer
 ** Mu4e
 #+begin_src emacs-lisp
   (use-package mu4e
-    :load-path  "/usr/local/share/emacs/site-lisp/mu4e"
-    :elpaca nil
+    :demand t
+    :elpaca (mu4e :host github :files ("mu4e/*.el" "build/mu4e/mu4e-meta.el" "build/mu4e/mu4e-config.el" "build/mu4e/mu4e.info") :repo "djcb/mu"
+                  :tag "v1.10.0"
+                  :main "mu4e/mu4e.el"
+                  :pre-build (("./autogen.sh")
+                              ("ninja" "-C" "build")
+                              (make-symbolic-link (expand-file-name "./build/mu/mu")
+                                                  (expand-file-name "~/.local/bin/mu") 'ok-if-exists))
+                  :build (:not elpaca--compile-info)
+                  :post-build (("mu" "init" "--quiet" "--maildir" ,(concat (getenv "HOME") "/Maildir/")
+                                "--my-address=" user-mail-address)
+                               ("mu" "--quiet" "index")))
+    :commands (mu4e mu4e-update-index)
     :after org
     :unless my/using-android
-    :bind (("C-x m" . mu4e)
+    :bind (("<f5>" . mu4e)
            :map mu4e-headers-mode-map
            ("C-c c" . mu4e-org-store-and-capture)
            :map mu4e-view-mode-map
@@ -1986,11 +1997,12 @@ marginalia adds annotations in the mini buffer
 
     (setq mu4e-refile-folder "/[Gmail].All Mail")
 
-    (setq mu4e-org-contacts-file "/home/willefi/org/contacts.org")
+    (setq mu4e-org-contacts-file "/home/frederic/org/contacts.org")
     (add-to-list 'mu4e-headers-actions
                  '("org-contact-add" . mu4e-action-add-org-contact) t)
     (add-to-list 'mu4e-view-actions
-                 '("org-contact-add" . mu4e-action-add-org-contact) t))
+                 '("org-contact-add" . mu4e-action-add-org-contact) t)
+    (mu4e))
 #+end_src
 *** Mu4e contrib
 #+begin_src emacs-lisp
@@ -2035,6 +2047,27 @@ fancy markers
 
 ** org contacts
 #+begin_src emacs-lisp
+  (use-package org-contacts
+    :demand t
+    :after org-msg
+    :hook (org-msg-edit-mode . org-contacts-setup-completion-at-point)
+    :custom
+    (org-contacts-files '("~/org/contacts.org"))
+    :config
+    (add-to-list 'org-capture-templates
+                 '("c" "Contacts" entry (file "~/org/contacts.org")
+                   "* %(org-contacts-template-name)
+  :PROPERTIES:
+  :EMAIL: %(org-contacts-template-email)
+  :PHONE:
+  :ALIAS:
+  :NICKNAME:
+  :IGNORE:
+  :ICON:
+  :NOTE:
+  :ADDRESS:
+  :BIRTHDAY:
+  :END:")))
 #+end_src
 
 ** PDF Tools

@@ -1316,7 +1316,7 @@ Change light to dark theme according to the sunset/sunrise
     :after (treemacs mu4e)
     :elpaca nil
     :config
-    (setq treemacs-mu4e--count-script "/home/willefi/.emacs.d/elpaca/repos/treemacs/src/scripts/treemacs-count-mail.py"))
+    (setq treemacs-mu4e--count-script "/home/frederic/.emacs.d/elpaca/repos/treemacs/src/scripts/treemacs-count-mail.py"))
 
   (use-package treemacs-magit
     :after (treemacs magit))

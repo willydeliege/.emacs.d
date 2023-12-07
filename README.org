@@ -1365,6 +1365,11 @@ Just install Hunspell and Hunspell-fr, Hunspell-en, ...
     (setq jinx-languages "fr_FR en_US en_GB"))
 #+end_src
 
+** Commenter
+#+begin_src emacs-lisp
+  (use-package evil-nerd-commenter
+    :bind ("M-;" . evilnc-comment-or-uncomment-lines))
+#+end_src
 * Completion
 ** Vertico + Marginalia
 vertico.el - VERTical Interactive COmpletion

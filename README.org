@@ -1932,6 +1932,7 @@ marginalia adds annotations in the mini buffer
            ("C-e" . mu4e-view-headers-prev)
            ("C-c c" . mu4e-org-store-and-capture))
     :custom
+    (mu4e-hide-index-messages t)
     (mu4e-attachment-dir "~/Downloads/")
     (mu4e-maildir-shortcuts
      '( ( :maildir "/INBOX" :key ?i)

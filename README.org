@@ -216,7 +216,16 @@ We will use use-package
   ;; Block until current queue processed.
   (elpaca-wait)
 #+end_src
-
+** Global emacs
+#+begin_src emacs-lisp
+  (use-package emacs
+    :elpaca nil
+    :init
+    (setq warning-minimum-level :emergency)
+    :config
+    (setq isearch-lazy-count t)
+    (global-set-key  (kbd "C-x C") 'save-buffers-kill-emacs))
+#+end_src
 * Org mode
 ** Org basics
 *** org-mode
@@ -1191,16 +1200,7 @@ Change light to dark theme according to the sunset/sunrise
     (dashboard-setup-startup-hook))
 #+end_src
 * Editing
-** Global keybinding
-#+begin_src emacs-lisp
-  (use-package emacs
-    :elpaca nil
-    :init
-    (setq warning-minimum-level :emergency)
-    :config
-    (setq isearch-lazy-count t)
-    (global-set-key  (kbd "C-x C") 'save-buffers-kill-emacs))
-#+end_src
+
 ** Sudo edit
 #+begin_src emacs-lisp
   (use-package sudo-edit

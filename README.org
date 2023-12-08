@@ -2196,7 +2196,18 @@ Setup ANSI colors for the compilation buffer
            (lsp-completion-mode . my/lsp-mode-setup-completion))
     :commands lsp)
 
-  (use-package lsp-java )
+  (use-package lsp-java
+    :config
+    (setq lombok-library-path (concat user-emacs-directory "lombok.jar"))
+
+    (unless (file-exists-p lombok-library-path)
+      (url-copy-file "https://projectlombok.org/downloads/lombok.jar" lombok-library-path))
+
+    (setq lsp-java-vmargs '("-XX:+UseParallelGC" "-XX:GCTimeRatio=4" "-XX:AdaptiveSizePolicyWeight=90" "-Dsun.zip.disableMemoryMapping=true" "-Xmx4G" "-Xms100m"))
+
+    (push (concat "-javaagent:"
+                  (expand-file-name lombok-library-path))
+          lsp-java-vmargs))
   ;; optionally
   (use-package lsp-ui :commands lsp-ui-mode)
   (use-package lsp-treemacs :commands lsp-treemacs-errors-list)

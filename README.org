@@ -260,6 +260,15 @@ Add org-mode to load-path (run this script by "C-c C-c")
     (org-agenda-skip-timestamp-if-deadline-is-shown t)
     (org-deadline-warning-days 5)
     (org-enforce-todo-dependencies t)
+    :custom-face
+    (org-agenda-date-weekend-today ((t (:inherit org-agenda-date
+                                           :foreground "#FFD3E8"
+                                           :underline t
+                                           :height 1.2))))
+    (org-agenda-date-today ((t (:inherit org-agenda-date
+                                           :foreground "#FFD3E8"
+                                           :underline t
+                                           :height 1.2))))
     :init
     (defun my/prettify ()
       (setq prettify-symbols-alist '((":PROPERTIES:" . "⚙️")
@@ -430,15 +439,15 @@ Update flag when saving files with last__{}modified
     (org-super-agenda-mode)
     (setq org-agenda-custom-commands
           '(("z" "My view"
-             ((agenda "" ((org-agenda-span 'day)
+             ((agenda "" ((org-agenda-span 'week)
                           (org-agenda-start-day nil)
                           (org-super-agenda-groups
-                           '((:name "Today"
-                                    :time-grid t
-                                    :date today
-                                    :deadline today
-                                    :scheduled today
-                                    :order 1)
+                           '((:name ""
+                              :time-grid t
+                              :date today
+                              :deadline today
+                              :scheduled today
+                              :order 1)
                              (:discard (:anything))))))
               (alltodo "" ((org-agenda-overriding-header "")
                            (org-super-agenda-groups

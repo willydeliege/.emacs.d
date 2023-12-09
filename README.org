@@ -262,13 +262,13 @@ Add org-mode to load-path (run this script by "C-c C-c")
     (org-enforce-todo-dependencies t)
     :custom-face
     (org-agenda-date-weekend-today ((t (:inherit org-agenda-date
-                                           :foreground "#FFD3E8"
-                                           :underline t
-                                           :height 1.2))))
+                                                 ;; :foreground tomato
+                                                 :underline t
+                                                 :height 1.2))))
     (org-agenda-date-today ((t (:inherit org-agenda-date
-                                           :foreground "#FFD3E8"
-                                           :underline t
-                                           :height 1.2))))
+                                         ;; :foreground tomato
+                                         :underline t
+                                         :height 1.2))))
     :init
     (defun my/prettify ()
       (setq prettify-symbols-alist '((":PROPERTIES:" . "⚙️")

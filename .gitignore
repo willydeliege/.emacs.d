@@ -58,3 +58,5 @@ image-dired/
 /customs.el
 /undo/
 *.jar
+/.#diary
+/diary

@@ -693,6 +693,9 @@ Distraction-free writing
 * Which-key
 #+begin_src emacs-lisp
   (use-package which-key
+    :custom
+    (which-key-hide-alt-key-translations nil)
+    (which-key-use-C-h-commands nil)
     :config
     (which-key-mode))
 #+end_src
@@ -1575,6 +1578,7 @@ marginalia adds annotations in the mini buffer
            ("C-." . embark-act)         ;; pick some comfortable binding
            ("C-;" . embark-dwim))
     :init
+    (setq prefix-help-command #'embark-prefix-help-command)
     ;; Show the Embark target at point via Eldoc.  You may adjust the Eldoc
     ;; strategy, if you want to see the documentation from multiple providers.
     ;; (add-hook 'eldoc-documentation-functions #'embark-eldoc-first-target)

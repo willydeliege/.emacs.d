@@ -1944,6 +1944,7 @@ marginalia adds annotations in the mini buffer
     :bind (("<f5>" . mu4e)
            :map mu4e-headers-mode-map
            ("C-c c" . mu4e-org-store-and-capture)
+           ("¡" . mu4e-headers-mark-all-unread-read)
            :map mu4e-view-mode-map
            ("C-n" . mu4e-view-headers-next)
            ("C-e" . mu4e-view-headers-prev)

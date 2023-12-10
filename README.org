@@ -223,8 +223,17 @@ We will use use-package
     :init
     (setq warning-minimum-level :emergency)
     :config
+    (setq-default fill-column 80)
+    (global-display-fill-column-indicator-mode 1)
     (setq isearch-lazy-count t)
     (global-set-key  (kbd "C-x C") 'save-buffers-kill-emacs))
+#+end_src
+** Clean directories
+#+begin_src emacs-lisp
+  (use-package no-littering
+    :demand t
+    :config
+    (no-littering-theme-backups))
 #+end_src
 * Org mode
 ** Org basics
@@ -2383,42 +2392,7 @@ Setup ANSI colors for the compilation buffer
     :config
     (add-to-list 'recentf-exclude "~/.emacs.d/.cache/treemacs-persist"))
 #+end_src
-* Clean directories
-#+begin_src emacs-lisp
-  (use-package files
-    :elpaca nil
-    :hook (before-save . delete-trailing-whitespace)
-    :config
-    ;; source: http://steve.yegge.googlepages.com/my-dot-emacs-file
-    (defun rename-file-and-buffer (new-name)
-      "Renames both current buffer and file it's visiting to NEW-NAME."
-      (interactive "sNew name: ")
-      (let ((name (buffer-name))
-            (filename (buffer-file-name)))
-        (if (not filename)
-            (message "Buffer '%s' is not visiting a file." name)
-          (if (get-buffer new-name)
-              (message "A buffer named '%s' already exists." new-name)
-            (progn
-              (rename-file filename new-name 1)
-              (rename-buffer new-name)
-              (set-visited-file-name new-name)
-              (set-buffer-modified-p nil))))))
-    :custom
-    (require-final-newline t "Automatically add newline at end of file")
-    (backup-by-copying t)
-    (backup-directory-alist `((".*" . ,(expand-file-name
-                                        (concat user-emacs-directory "backups"))))
-                            "Keep backups in their own directory")
 
-    (unless (file-exists-p (concat user-emacs-directory "autosaves/"))
-      (make-directory (concat user-emacs-directory "autosaves/")))
-    (auto-save-file-name-transforms `((".*" ,(concat user-emacs-directory "autosaves/") t)))
-    (delete-old-versions t)
-    (kept-new-versions 10)
-    (kept-old-versions 5)
-    (version-control t))
-#+end_src
 * Custom.el
 Put this at the end of the init file
 See:[[https://github.com/progfolio/elpaca/issues/81][progfolio/elpaca#81 {Feature}: Better support for custom.el]]

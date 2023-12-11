@@ -254,17 +254,17 @@ Add org-mode to load-path (run this script by "C-c C-c")
 #+begin_src emacs-lisp
   (use-package org
     :elpaca nil
-    :hook (org-mode . my/prettify)
+    :hook (org-mode                . my/prettify)
     :hook (server-after-make-frame . (lambda ()
                                        (build-agenda)
                                        (org-agenda nil "z")
                                        (delete-other-windows)))
-    :bind (("C-c l" . org-store-link)
-           ("C-c c" . org-capture)
-           ("C-c a" . org-agenda)
+    :bind (("C-c l"               . org-store-link)
+           ("C-c c"               . org-capture)
+           ("C-c a"               . org-agenda)
            (:map org-mode-map)
-           ("M-S-<return>" . org-insert-subheading)
-           ("C-c $" . org-archive-subtree-default))
+           ("M-S-<return>"        . org-insert-subheading)
+           ("C-c $"               . org-archive-subtree-default))
     :custom
     (org-return-follows-link t)
     (org-agenda-skip-scheduled-if-deadline-is-shown t)
@@ -1936,21 +1936,21 @@ marginalia adds annotations in the mini buffer
     :commands (mu4e mu4e-update-index)
     :after org
     :unless my/using-android
-    :bind (("<f5>" . mu4e)
+    :bind (("<f5>"  . mu4e)
            :map mu4e-headers-mode-map
            ("C-c c" . mu4e-org-store-and-capture)
-           ("¡" . mu4e-headers-mark-all-unread-read)
+           ("¡"     . mu4e-headers-mark-all-unread-read)
            :map mu4e-view-mode-map
-           ("C-n" . mu4e-view-headers-next)
-           ("C-e" . mu4e-view-headers-prev)
+           ("C-n"   . mu4e-view-headers-next)
+           ("C-e"   . mu4e-view-headers-prev)
            ("C-c c" . mu4e-org-store-and-capture))
     :custom
     (mu4e-hide-index-messages t)
     (mu4e-attachment-dir "~/Downloads/")
 
     (mu4e-headers-fields '((:human-date . 12)
-                           (:flags . 6)
-                           (:from . 30)
+                           (:flags      . 6)
+                           (:from       . 30)
                            (:subject)))
 
     :config
@@ -1965,34 +1965,34 @@ marginalia adds annotations in the mini buffer
             (lambda (msg)
               (when msg
                 (string-prefix-p "/frederic" (mu4e-message-field msg :maildir))))
-            :vars '((user-mail-address	.	"frederic.willem@gmail.com")
-                    (user-full-name	.	"Frédéric Willem")
-                    (mu4e-drafts-folder	.	"/frederic/[Gmail].Drafts")
-                    (mu4e-sent-folder	.	"/frederic/[Gmail].Sent Mail")
-                    (mu4e-refile-folder	.	"/frederic/[Gmail].All Mail")
-                    (mu4e-trash-folder	.	"/frederic/[Gmail].Trash")
-                    (mu4e-maildir-shortcuts . (list ( :maildir "/frederic/INBOX" :key ?i)
-                                                    ( :maildir "/frederic/[Gmail].All Mail"  :key ?a)
-                                                    ( :maildir "/frederic/[Gmail].Sent Mail"  :key ?S)
-                                                    ( :maildir "/frederic/[Gmail].Trash" :key ?t)
-                                                    ( :maildir "/frederic/[Gmail].Starred" :key ?s)) )
+            :vars '((user-mail-address                                              . "frederic.willem@gmail.com")
+                    (user-full-name                                                 . "Frédéric Willem")
+                    (mu4e-drafts-folder                                             . "/frederic/[Gmail].Drafts")
+                    (mu4e-sent-folder                                               . "/frederic/[Gmail].Sent Mail")
+                    (mu4e-refile-folder                                             . "/frederic/[Gmail].All Mail")
+                    (mu4e-trash-folder                                              . "/frederic/[Gmail].Trash")
+                    (mu4e-maildir-shortcuts                                         . (list ( :maildir "/frederic/INBOX" :key ?i)
+                                                                                            ( :maildir "/frederic/[Gmail]   .All Mail"  :key ?a)
+                                                                                            ( :maildir "/frederic/[Gmail]   .Sent Mail"  :key ?S)
+                                                                                            ( :maildir "/frederic/[Gmail]   .Trash" :key ?t)
+                                                                                            ( :maildir "/frederic/[Gmail]   .Starred" :key ?s)) )
 
-                    (mu4e-bookmarks . (( :name  "Unread messages"
-                                         :query "maildir:/frederic/INBOX AND flag:unread AND NOT flag:trashed"
-                                         :key ?u)
-                                       ( :name  "All Unread messages"
-                                         :query "maildir:/frederic/* AND flag:unread"
-                                         :key ?U)
-                                       ( :name "Important messages"
-                                         :query "prio:high AND NOT flag:trashed AND NOT maildir:\"/frederic/[Gmail]/Sent mail\""
-                                         :key ?i)
-                                       ( :name "Today's messages"
-                                         :query "maildir:/frederic/* AND date:today..now"
-                                         :key ?t)
-                                       ( :name "Last 7 days"
-                                         :query "maildir:/frederic/* AND date:7d..now"
-                                         :hide-unread t
-                                         :key ?w)))
+                    (mu4e-bookmarks                                                 . (( :name  "Unread messages"
+                                                                                         :query "maildir:/frederic/INBOX AND flag:unread AND NOT flag:trashed"
+                                                                                         :key ?u)
+                                                                                       ( :name  "All Unread messages"
+                                                                                         :query "maildir:/frederic/* AND flag:unread"
+                                                                                         :key ?U)
+                                                                                       ( :name "Important messages"
+                                                                                         :query "prio:high AND NOT flag:trashed AND NOT maildir:\"/frederic/[Gmail]/Sent mail\""
+                                                                                         :key ?i)
+                                                                                       ( :name "Today's messages"
+                                                                                         :query "maildir:/frederic/* AND date:today ..now"
+                                                                                         :key ?t)
+                                                                                       ( :name "Last 7 days"
+                                                                                         :query "maildir:/frederic/* AND date:7d    ..now"
+                                                                                         :hide-unread t
+                                                                                         :key ?w)))
 
                     ))
 

@@ -60,3 +60,4 @@ image-dired/
 *.jar
 /.#diary
 /diary
+/%backup%~

@@ -532,8 +532,8 @@ Distraction-free writing
     :config ; add late to hook
     (add-hook 'org-mode-hook #'org-modern-mode)
     :init
-    (setq org-modern-table nil)
-    (setq line-spacing 0.4)
+    (setq org-modern-statistics nil)
+    (setq line-spacing 0.1)
     (setq org-modern-label-border 'auto))
 
   (use-package org-modern-indent

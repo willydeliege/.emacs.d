@@ -311,7 +311,7 @@ Add org-mode to load-path (run this script by "C-c C-c")
               org-agenda-current-time-string
               "⭠ now ─────────────────────────────────────────────────")
     (setq org-startup-indented t)
-    (setq org-attach-store-link-p t)
+    (setq org-attach-store-link-p 'file)
     (org-babel-do-load-languages 'org-babel-load-languages
                                  (append org-babel-load-languages
                                          '((shell     . t)

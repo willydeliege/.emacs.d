@@ -858,7 +858,7 @@ Use vterm as multiplexer
     :after (dired))
 #+end_src
 
-** Fd-dired
+** fd-dired
 #+begin_src emacs-lisp
   (use-package fd-dired
     :config
@@ -881,6 +881,9 @@ Use vterm as multiplexer
 * Version control
 ** Magit
 #+begin_src emacs-lisp
+  ;; wanted by magit
+  (use-package transient)
+
   (use-package magit
     :custom
     (magit-diff-refine-hunk 'all)
@@ -1971,10 +1974,10 @@ marginalia adds annotations in the mini buffer
                     (mu4e-refile-folder                                             . "/frederic/[Gmail].All Mail")
                     (mu4e-trash-folder                                              . "/frederic/[Gmail].Trash")
                     (mu4e-maildir-shortcuts                                         . (list ( :maildir "/frederic/INBOX" :key ?i)
-                                                                                            ( :maildir "/frederic/[Gmail]   .All Mail"  :key ?a)
-                                                                                            ( :maildir "/frederic/[Gmail]   .Sent Mail"  :key ?S)
-                                                                                            ( :maildir "/frederic/[Gmail]   .Trash" :key ?t)
-                                                                                            ( :maildir "/frederic/[Gmail]   .Starred" :key ?s)) )
+                                                                                            ( :maildir "/frederic/[Gmail].All Mail"  :key ?a)
+                                                                                            ( :maildir "/frederic/[Gmail].Sent Mail"  :key ?S)
+                                                                                            ( :maildir "/frederic/[Gmail].Trash" :key ?t)
+                                                                                            ( :maildir "/frederic/[Gmail].Starred" :key ?s)) )
 
                     (mu4e-bookmarks                                                 . (( :name  "Unread messages"
                                                                                          :query "maildir:/frederic/INBOX AND flag:unread AND NOT flag:trashed"
@@ -1986,14 +1989,12 @@ marginalia adds annotations in the mini buffer
                                                                                          :query "prio:high AND NOT flag:trashed AND NOT maildir:\"/frederic/[Gmail]/Sent mail\""
                                                                                          :key ?i)
                                                                                        ( :name "Today's messages"
-                                                                                         :query "maildir:/frederic/* AND date:today ..now"
+                                                                                         :query "maildir:/frederic/* AND date:today..now"
                                                                                          :key ?t)
                                                                                        ( :name "Last 7 days"
-                                                                                         :query "maildir:/frederic/* AND date:7d    ..now"
+                                                                                         :query "maildir:/frederic/* AND date:7d..now"
                                                                                          :hide-unread t
-                                                                                         :key ?w)))
-
-                    ))
+                                                                                         :key ?w)))))
 
            (make-mu4e-context
             :name "maman"
@@ -2001,11 +2002,11 @@ marginalia adds annotations in the mini buffer
             (lambda (msg)
               (when msg
                 (string-prefix-p "/maman" (mu4e-message-field msg :maildir))))
-            :vars '((user-mail-address		.	"michellelambert1202@gmail.com")
-                    (user-full-name		.	"Michelle Lambert")
-                    (mu4e-refile-folder		.	"/maman/[Gmail].Tous les messages")
-                    (mu4e-trash-folder		.	"/maman/[Gmail].Corbeille")
-                    (mu4e-maildir-shortcuts	.	(list
+            :vars '((user-mail-address	    .	"michellelambert1202@gmail.com")
+                    (user-full-name	    .	"Michelle Lambert")
+                    (mu4e-refile-folder	    .	"/maman/[Gmail].Tous les messages")
+                    (mu4e-trash-folder	    .	"/maman/[Gmail].Corbeille")
+                    (mu4e-maildir-shortcuts .	(list
                                                            ( :maildir "/maman/INBOX" :key ?i)
                                                            ( :maildir "/maman/[Gmail].Tous les messages"  :key ?a)
                                                            ( :maildir "/maman/[Gmail].Messages envoy&AOk-s"  :key ?S)
@@ -2105,7 +2106,7 @@ fancy markers
     :after org-msg
     :hook (org-msg-edit-mode . org-contacts-setup-completion-at-point)
     :custom
-    (org-contacts-files '("~/org/contacts.org"))
+    (org-contacts-files '("~/org/contacts.org" "~/org/contacts-maman.org"))
     :config
     (add-to-list 'org-capture-templates
                  '("c" "Contacts" entry (file "~/org/contacts.org")

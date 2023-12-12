@@ -224,8 +224,7 @@ We will use use-package
 #+end_src
 ** Global emacs
 #+begin_src emacs-lisp
-  (use-package emacs
-    :elpaca nil
+  (use-feature emacs
     :init
     (electric-pair-mode 1)
     (setq warning-minimum-level :emergency)
@@ -434,8 +433,7 @@ Add org-mode to load-path (run this script by "C-c C-c")
 *** Time-stamp
 Update flag when saving files with last__{}modified
 #+begin_src emacs-lisp
-  (use-package time-stamp
-    :elpaca nil
+  (use-feature time-stamp
     :init
     (time-stamp-toggle-active 1)
     (setq time-stamp-start "last_modified:[     ]+\\\\?[\"<]+"))
@@ -579,8 +577,7 @@ Distraction-free writing
 
 ** Org crypt
 #+begin_src emacs-lisp
-  (use-package org-crypt
-    :elpaca nil
+  (use-feature org-crypt
     :config
     (require 'org-crypt)
     (org-crypt-use-before-save-magic)
@@ -772,8 +769,7 @@ Better help buffer
 
 *** Help package
 #+begin_src emacs-lisp
-  (use-package help
-    :elpaca nil
+  (use-feature help
     :bind (:map help-map
                 ("W" . woman)))
 #+end_src
@@ -805,8 +801,7 @@ Use vterm as multiplexer
 
 *** Eshell
 #+begin_src emacs-lisp
-  (use-package eshell
-    :elpaca nil
+  (use-feature eshell
     :bind ("C-c t e" . eshell))
   (use-package eshell-vterm
     :demand t
@@ -832,8 +827,7 @@ Use vterm as multiplexer
 * Dired
 ** Dired
 #+begin_src emacs-lisp
-  (use-package dired
-    :elpaca nil
+  (use-feature dired
     :hook (dired-mode . dired-hide-details-mode)
     :init
     (setq dired-listing-switches "-Al -h -v --group-directories-first"))
@@ -1341,9 +1335,8 @@ Change light to dark theme according to the sunset/sunrise
 
       (treemacs-hide-gitignored-files-mode nil)))
 
-  (use-package treemacs-mu4e
+  (use-feature treemacs-mu4e
     :after (treemacs mu4e)
-    :elpaca nil
     :config
     (setq treemacs-mu4e--count-script "/home/frederic/.emacs.d/elpaca/repos/treemacs/src/scripts/treemacs-count-mail.py"))
 
@@ -1409,8 +1402,7 @@ marginalia adds annotations in the mini buffer
     (vertico-cycle t)
     :init
     (vertico-mode))
-  (use-package savehist
-    :elpaca nil
+  (use-feature savehist
     :init
     (savehist-mode))
 
@@ -1812,8 +1804,7 @@ marginalia adds annotations in the mini buffer
     :elpaca (corfu-terminal
              :type git
              :repo "https://codeberg.org/akib/emacs-corfu-terminal.git"))
-  (use-package corfu-quick
-    :elpaca nil
+  (use-feature corfu-quick
     :after corfu
     :bind (:map corfu-map
                 ("M-q" . corfu-quick-complete)
@@ -2069,9 +2060,8 @@ marginalia adds annotations in the mini buffer
 #+end_src
 *** Mu4e contrib
 #+begin_src emacs-lisp
-  (use-package mu4e-contrib
-    :after mu4e
-    :elpaca nil)
+  (use-feature mu4e-contrib
+    :after mu4e)
 #+end_src
 *** mu markers
 fancy markers

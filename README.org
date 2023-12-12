@@ -504,6 +504,11 @@ Update flag when saving files with last__{}modified
 #+end_src
 
 ** Olivetti
+*** Visual-mode
+#+begin_src emacs-lisp
+  (use-package visual-fill-column)
+#+end_src
+*** olivetti-mode
 Distraction-free writing
 #+begin_src emacs-lisp
   (use-package olivetti
@@ -517,18 +522,20 @@ Distraction-free writing
             (delete-other-windows)
             (text-scale-set 2)
             (setq display-line-numbers nil)
+            (visual-fill-column-mode 1)
             (olivetti-mode t))
         (progn
           (if (eq (length (window-list)) 1)
               (jump-to-register 1))
           (setq display-line-numbers 'relative)
+          (visual-fill-column-mode 0)
           (olivetti-mode 0)
           (text-scale-set 0))))
     :bind
     (("<f9>" . my/distraction-free)))
 #+end_src
 
-** ORg modern
+** Org modern
 #+begin_src emacs-lisp
   (use-package org-modern
     :after org

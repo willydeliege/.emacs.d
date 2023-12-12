@@ -205,8 +205,14 @@ Using elpaca as package manager
 We will use use-package
 #+begin_src emacs-lisp
   ;; need org to be loaded before elpaca-use-package
-  (add-to-list 'load-path "~/.emacs.d/lisp/org-mode/lisp/")
-
+  (elpaca (org :tag "release_9.6.12"))
+  (defmacro use-feature (name &rest args)
+    "Like `use-package' but accounting for asynchronous installation.
+  NAME and ARGS are in `use-package'."
+    (declare (indent defun))
+    `(use-package ,name
+       :elpaca nil
+       ,@args))
   ;; Install use-package support
   (elpaca elpaca-use-package
     ;; Enable :elpaca use-package keyword.
@@ -234,13 +240,14 @@ We will use use-package
     (setq create-lockfiles nil)
 
     (setq-default fill-column 80)
+    (global-visual-line-mode 1)
     (setq isearch-lazy-count t)
     (global-set-key  (kbd "C-x C") 'save-buffers-kill-emacs))
 #+end_src
 
 * Org mode
 ** Org basics
-*** org-mode
+*** Org-mode
 Add org-mode to load-path (run this script by "C-c C-c")
 #+begin_src shell :tangle no
   # After having clones this repo
@@ -252,8 +259,7 @@ Add org-mode to load-path (run this script by "C-c C-c")
   sudo make install
 #+end_src
 #+begin_src emacs-lisp
-  (use-package org
-    :elpaca nil
+  (use-feature org
     :hook (org-mode                . my/prettify)
     :hook (server-after-make-frame . (lambda ()
                                        (build-agenda)

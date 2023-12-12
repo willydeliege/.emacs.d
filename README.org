@@ -1865,12 +1865,14 @@ marginalia adds annotations in the mini buffer
     :init
     (unbind-key "C-c &" yas-minor-mode-map)
     (yas-global-mode 1))
+  (use-package java-snippets)
   (use-package yasnippet-snippets
     :after yasnippet)
   (use-package doom-snippets
     :after yasnippet
     :elpaca (doom-snippets :type git :host github :repo "doomemacs/snippets" :files ("*.el" "*")))
-  (use-package java-snippets)
+  ;; doom snippets override all other snippets dirs
+  (setq yas-snippet-dirs '("/home/frederic/.emacs.d/snippets" "/home/frederic/.emacs.d/elpaca/builds/java-snippets/snippets" yasnippet-snippets-dir doom-snippets-dir))
 #+end_src
 
 * Projects

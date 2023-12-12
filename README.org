@@ -1576,8 +1576,9 @@ marginalia adds annotations in the mini buffer
 #+begin_src emacs-lisp
   (use-package embark
     :bind (("C-h B" . embark-bindings) ;; alternative for `describe-bindings'
-           ("C-." . embark-act)         ;; pick some comfortable binding
-           ("C-;" . embark-dwim))
+           ("C-."   . embark-act)         ;; pick some comfortable binding
+           ("C-c o" . embark-act-on-buffer-file)
+           ("C-;"   . embark-dwim))
     :init
     (setq prefix-help-command #'embark-prefix-help-command)
     ;; Show the Embark target at point via Eldoc.  You may adjust the Eldoc
@@ -1586,9 +1587,9 @@ marginalia adds annotations in the mini buffer
     ;; (setq eldoc-documentation-strategy #'eldoc-documentation-enthusiast)
     (defun embark-which-key-indicator ()
       "An embark indicator that displays keymaps using which-key.
-     The which-key help message will show the type and value of the
-     current target followed by an ellipsis if there are further
-     targets."
+             The which-key help message will show the type and value of the
+             current target followed by an ellipsis if there are further
+             targets."
       (lambda (&optional keymap targets prefix)
         (if (null keymap)
             (which-key--hide-popup-ignore-command)
@@ -1638,11 +1639,25 @@ marginalia adds annotations in the mini buffer
           '(run-default-action-in-other-window))
 
     (define-key embark-general-map "O" #'embark-default-action-in-other-window) ; or whatever key you prefer
+    ;; source: http://steve.yegge.googlepages.com/my-dot-emacs-file
+    (defun rename-file-and-buffer (buffer new-name)
+      "Renames both current buffer and file it's visiting to NEW-NAME."
+      (interactive "sBuffer: \nFRename %s to: ")
+      (let ((name (buffer-name))
+            (filename (buffer-file-name)))
+        (if (not filename)
+            (message "Buffer '%s' is not visiting a file!" name)
+          (if (get-buffer new-name)
+              (message "A buffer named '%s' already exists!" new-name)
+            (progn
+              (rename-file filename new-name 1)
+              (rename-buffer new-name)
+              (set-visited-file-name new-name)
+              (set-buffer-modified-p nil))))))
     (defun embark-target-this-buffer-file ()
       (cons 'this-buffer-file (or (buffer-file-name) (buffer-name))))
 
     (add-to-list 'embark-target-finders #'embark-target-this-buffer-file 'append)
-
 
     (defvar-keymap this-buffer-file-map
       :doc "Commands to act on current file or buffer."
@@ -1664,11 +1679,17 @@ marginalia adds annotations in the mini buffer
       "g" 'revert-buffer)
     (add-to-list 'embark-keymap-alist '(this-buffer-file . this-buffer-file-map))
 
+    (defun embark-act-on-buffer-file (&optional arg)
+      (interactive "P")
+      (let ((embark-target-finders '(embark-target-this-buffer-file)))
+        (embark-act arg)))
+
+
     (defun embark-which-key-indicator ()
       "An embark indicator that displays keymaps using which-key.
-     The which-key help message will show the type and value of the
-     current target followed by an ellipsis if there are further
-     targets."
+             The which-key help message will show the type and value of the
+             current target followed by an ellipsis if there are further
+             targets."
       (lambda (&optional keymap targets prefix)
         (if (null keymap)
             (which-key--hide-popup-ignore-command)

@@ -1226,6 +1226,12 @@ Change light to dark theme according to the sunset/sunrise
     :bind ("C-x R" . transpose-frame))
 
 #+end_src
+#+begin_src emacs-lisp
+  (use-package golden-ratio
+    :init
+    (golden-ratio-mode 1))
+#+end_src
+
 ** Dashboard
 #+begin_src emacs-lisp
   (use-package dashboard

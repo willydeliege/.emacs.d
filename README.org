@@ -1360,10 +1360,24 @@ Change light to dark theme according to the sunset/sunrise
 #+end_src
 
 ** Parens
+*** Wrap-region
 #+begin_src emacs-lisp
   (use-package wrap-region
     ;; select a region and press any of the following keys: ", ', (, {, [.
     :hook ((prog-mode org-mode) . wrap-region-mode))
+#+end_src
+*** Puni
+"punipuni"（ぷにぷに）is a Japanese mimetic word means "soft", "bouncy", or "pillowy".
+
+If you are surrounded by punipuni things, you feel safe and relieved. That's my feeling when using Puni: never need to worry about messing up parentheses anymore.
+
+"Parentheses Universalistic" is another explanation ;)
+
+#+begin_src emacs-lisp
+  (use-package puni
+    :init
+    (puni-global-mode)
+    (add-hook 'term-mode-hook #'puni-disable-puni-mode))
 #+end_src
 ** Jump
 avy is a GNU Emacs package for jumping to visible text using a char-based decision tree

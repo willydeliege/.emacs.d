@@ -1398,7 +1398,9 @@ Just install Hunspell and Hunspell-fr, Hunspell-en, ...
   (use-package jinx
     :unless my/using-android
     :hook (emacs-startup . global-jinx-mode)
-    :bind ("C-M-$" . jinx-languages)
+    :bind (("C-M-$" . jinx-languages)
+           :map meow-normal-state-keymap
+           ("$" . jinx-correct))
     :init
     (setq jinx-languages "fr_FR en_US en_GB"))
 #+end_src

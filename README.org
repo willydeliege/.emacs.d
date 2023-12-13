@@ -783,7 +783,15 @@ Better help buffer
 ** Terminals
 *** Vterm
 #+begin_src emacs-lisp
-  (use-package vterm)
+  ('use-package vterm
+    :hook (vterm-mode . puni-disable-puni-moDe))
+#+end_src
+*** Meow-vterm
+#+begin_src emacs-lisp
+  (use-package meow-vterm
+    :elpaca (meow-vterm :fetcher github :repo "accelbread/meow-vterm")
+    :init
+    (meow-vterm-enable))
 #+end_src
 *** Vterm toggle
 #+begin_src emacs-lisp

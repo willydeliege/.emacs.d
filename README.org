@@ -1091,6 +1091,24 @@ Used to play with forges like GitHub or gitlab
 #+end_src
 
 * UI
+** avy
+#+begin_src emacs-lisp
+  ;; Unbind Pesky Sleep Button and rebind as prefix key
+  (global-unset-key "\C-z")
+  (defalias 'ctl-z-keymap (make-sparse-keymap))
+  (defvar ctl-z-map (symbol-function 'ctl-z-keymap)
+    "Global keymap for characters following C-z.")
+  (define-key global-map "\C-z" 'ctl-z-keymap)
+  ;; Navigation
+  ;; Quickly jump to character(s) with =avy=.
+
+  ;; ;; avy - jump to character
+  (use-package avy
+    :config
+    (global-set-key (kbd "C-z ;") 'avy-goto-char)
+    (global-set-key (kbd "C-z '") 'avy-goto-char-2)
+    (global-set-key (kbd "C-z w") 'avy-goto-word-1))
+#+end_src
 ** Theme
 *** modus themes
 #+begin_src emacs-lisp
@@ -1379,13 +1397,6 @@ If you are surrounded by punipuni things, you feel safe and relieved. That's my 
     (puni-global-mode)
     (add-hook 'term-mode-hook #'puni-disable-puni-mode))
 #+end_src
-** Jump
-avy is a GNU Emacs package for jumping to visible text using a char-based decision tree
-#+begin_src emacs-lisp
-  (use-package avy
-    :demand t)
-#+end_src
-
 ** Scratch buffer
 #+begin_src emacs-lisp
   (use-package scratch
@@ -1410,24 +1421,7 @@ Just install Hunspell and Hunspell-fr, Hunspell-en, ...
   (use-package evil-nerd-commenter
     :bind ("M-;" . evilnc-comment-or-uncomment-lines))
 #+end_src
-** avy
-#+begin_src emacs-lisp
-  ;; Unbind Pesky Sleep Button and rebind as prefix key
-  (global-unset-key "\C-z")
-  (defalias 'ctl-z-keymap (make-sparse-keymap))
-  (defvar ctl-z-map (symbol-function 'ctl-z-keymap)
-    "Global keymap for characters following C-z.")
-  (define-key global-map "\C-z" 'ctl-z-keymap)
-  ;; Navigation
-  ;; Quickly jump to character(s) with =avy=.
 
-  ;; ;; avy - jump to character
-  (use-package avy
-    :config
-    (global-set-key (kbd "C-z ;") 'avy-goto-char)
-    (global-set-key (kbd "C-z '") 'avy-goto-char-2)
-    (global-set-key (kbd "C-z w") 'avy-goto-word-1))
-#+end_src
 * Completion
 ** Vertico + Marginalia
 vertico.el - VERTical Interactive COmpletion

@@ -618,7 +618,8 @@ Distraction-free writing
     :hook (meow-mode . meow-org-note-insert)
     :init
     (defun meow-org-note-insert ()
-      "Enter insert mode in org note buffer."
+      "Enter insert mode in org note buffer.
+  This is needed for minor modes"
       (if
           (or
            (equal

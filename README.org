@@ -721,6 +721,7 @@ Distraction-free writing
 * Which-key
 #+begin_src emacs-lisp
   (use-package which-key
+    :after meow
     :custom
     (which-key-hide-alt-key-translations nil)
     (which-key-use-C-h-commands nil)

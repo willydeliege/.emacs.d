@@ -783,8 +783,8 @@ Better help buffer
 ** Terminals
 *** Vterm
 #+begin_src emacs-lisp
-  ('use-package vterm
-    :hook (vterm-mode . puni-disable-puni-moDe))
+  (use-package vterm
+    :hook (vterm-mode . puni-disable-puni-mode))
 #+end_src
 *** Meow-vterm
 #+begin_src emacs-lisp
@@ -1110,7 +1110,7 @@ Used to play with forges like GitHub or gitlab
   ;; Navigation
   ;; Quickly jump to character(s) with =avy=.
 
-  ;; ;; avy - jump to character
+  ;; avy - jump to character
   (use-package avy
     :config
     (global-set-key (kbd "C-z ;") 'avy-goto-char)

@@ -2013,8 +2013,6 @@ marginalia adds annotations in the mini buffer
            ("C-c c" . mu4e-org-store-and-capture)
            ("¡"     . mu4e-headers-mark-all-unread-read)
            :map mu4e-view-mode-map
-           ("C-n"   . mu4e-view-headers-next)
-           ("C-e"   . mu4e-view-headers-prev)
            ("C-c c" . mu4e-org-store-and-capture))
     :custom
     (mu4e-hide-index-messages t)

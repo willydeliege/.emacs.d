@@ -1514,19 +1514,17 @@ marginalia adds annotations in the mini buffer
            ("M-y" . consult-yank-pop) ;; orig. yank-pop
            ;; M-g bindings in `goto-map'
            ("M-g e" . consult-compile-error)
-           ("M-g f" . consult-flycheck)	 ;; Alternative: consult-flycheck
+           ("M-g f" . consult-flycheck)
            ("M-g g" . consult-goto-line)	 ;; orig. goto-line
-           ("M-g M-g" . consult-goto-line) ;; orig. goto-line
            ("M-g o" . consult-outline)	 ;; Alternative: consult-org-heading
            ("M-g m" . consult-mark)
            ("M-g k" . consult-global-mark)
            ("M-g i" . consult-imenu)
            ("M-g I" . consult-imenu-multi)
            ;; M-s bindings in `search-map'
-           ("M-s d" . consult-find)
-           ("M-s D" . consult-locate)
-           ("M-s g" . consult-grep)
-           ("M-s G" . consult-git-grep)
+           ("M-s d" . consult-fd)
+           ("M-s c" . consult-locate)
+           ("M-s g" . consult-git-grep)
            ("M-s r" . consult-ripgrep)
            ("M-s l" . consult-line)
            ("M-s L" . consult-line-multi)
@@ -1536,7 +1534,6 @@ marginalia adds annotations in the mini buffer
            ("M-s e" . consult-isearch-history)
            :map isearch-mode-map
            ("M-e" . consult-isearch-history)   ;; orig. isearch-edit-string
-           ("M-s e" . consult-isearch-history) ;; orig. isearch-edit-string
            ("M-s l" . consult-line) ;; needed by consult-line to detect isearch
            ("M-s L" . consult-line-multi)	;; needed by consult-line to detect isearch
            ;; Minibuffer history
@@ -1590,6 +1587,8 @@ marginalia adds annotations in the mini buffer
     (setq consult-narrow-key "<") ;; "C-+"
     ;; Optionally make narrowing help available in the minibuffer.
     ;; You may want to use `embark-prefix-help-command' or which-key instead.
+    (define-key consult-narrow-map (vconcat consult-narrow-key "?") #''consult-narrow-help)
+
     (defun bookmark-files-only()
       (bookmark-all-names (bmkp-file-alist-only)))
     (consult-customize consult--source-bookmark
@@ -1636,7 +1635,11 @@ marginalia adds annotations in the mini buffer
     :bind (("C-h B" . embark-bindings) ;; alternative for `describe-bindings'
            ("C-."   . embark-act)         ;; pick some comfortable binding
            ("C-c o" . embark-act-on-buffer-file)
-           ("C-;"   . embark-dwim))
+           ("C-;"   . embark-dwim)
+           :map embark-symbol-map
+           ("h" . helpful-symbol)
+           :map embark-become-help-map
+           ("s" . helpful-symbol))
     :init
     (setq prefix-help-command #'embark-prefix-help-command)
     ;; Show the Embark target at point via Eldoc.  You may adjust the Eldoc

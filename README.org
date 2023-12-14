@@ -615,13 +615,27 @@ Distraction-free writing
 * meow
 #+begin_src emacs-lisp
   (use-package meow
+    :hook (meow-mode . meow-org-note-insert)
+    :init
+    (defun meow-org-note-insert ()
+      "Enter insert mode in org note buffer."
+      (if
+          (or
+           (equal
+            (buffer-name)
+            "*Org Note*")
+           (equal
+            (buffer-name)
+            "COMMIT_EDITMSG"))
+          (meow-insert-mode)))
     :config
     (defun meow-setup ()
       (setq meow-cheatsheet-layout meow-cheatsheet-layout-colemak-dh
             meow-use-clipboard t)
+      (add-to-list 'meow-keypad-start-keys '(?z . ?z))
       (add-to-list 'meow-mode-state-list '(mu4e-view-mode . motion))
       (add-to-list 'meow-mode-state-list '(cfw:calendar-mode . motion))
-      (add-to-list 'meow-mode-state-list '(vterm-mode . insert))
+      (setcdr (assq 'vterm-mode meow-mode-state-list) 'insert)
       (meow-motion-overwrite-define-key
        ;; Use e to move up, n to move down.
        '("e" . meow-prev)

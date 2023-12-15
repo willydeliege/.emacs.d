@@ -1320,9 +1320,11 @@ Change light to dark theme according to the sunset/sunrise
                             (projects . 5)
                             (agenda . 5)))
     :config
+    (setq dashboard-center-content t)
     (setq dashboard-icon-type 'nerd-icons)
     (setq dashboard-set-file-icons t)
-    (setq initial-buffer-choice (lambda () (get-buffer-create "*dashboard*")))
+    (setq initial-buffer-choice (lambda ()
+                                    (get-buffer-create "*dashboard*")))
     (add-hook 'elpaca-after-init-hook #'dashboard-insert-startupify-lists)
     (add-hook 'elpaca-after-init-hook #'dashboard-initialize)
     (add-hook 'server-after-make-frame-hook
@@ -1478,8 +1480,8 @@ If you are surrounded by punipuni things, you feel safe and relieved. That's my 
 
 #+begin_src emacs-lisp
   (use-package puni
-    :init
-    (puni-global-mode)
+    :hook (elpaca-after-init . puni-global-mode)
+    :config
     (add-hook 'term-mode-hook #'puni-disable-puni-mode))
 #+end_src
 

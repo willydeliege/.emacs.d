@@ -1141,7 +1141,9 @@ Used to play with forges like GitHub or gitlab
 #+end_src
 *** ef-themes
 #+begin_src emacs-lisp
-  (use-package ef-themes)
+  (use-package ef-themes
+    :custom
+    (ef-themes-mixed-fonts t))
 #+end_src
 *** Doon-theme
 #+begin_src emacs-lisp

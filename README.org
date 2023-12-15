@@ -1248,8 +1248,12 @@ Change light to dark theme according to the sunset/sunrise
 #+end_src
 #+begin_src emacs-lisp
   (use-package golden-ratio
-    :init
-    (golden-ratio-mode 1))
+    :hook (elpaca-after-init . golden-ratio-mode)
+    :config
+    ;; Refer to issue #57 for the complete code, this is just for ease
+    (add-hook 'buffer-list-update-hook #'golden-ratio)
+    (add-hook 'focus-in-hook           #'golden-ratio)
+    (add-hook 'focus-out-hook          #'golden-ratio))
 #+end_src
 
 ** Dashboard

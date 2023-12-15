@@ -942,13 +942,13 @@ Used to play with forges like GitHub or gitlab
     :hook ((magit-pre-refresh . diff-hl-magit-pre-refresh)
            (magit-post-refresh . diff-hl-magit-post-refresh)
            (dired-mode . diff-hl-dired-mode))
-    ;; :custom-face
-    ;; (diff-hl-insert ((((background light))
-    ;;                   (:background "blue"))
-    ;;                  (default
-    ;;                   (:background "light blue"))))
-    ;; (diff-hl-change ((t (:background "dark orange"))))
-    ;; (diff-hl-delete ((t (:background "red"))))
+    :custom-face
+    (diff-hl-insert ((((background light))
+                      (:background "blue"))
+                     (default
+                      (:background "light blue"))))
+    (diff-hl-change ((t (:background "dark orange"))))
+    (diff-hl-delete ((t (:background "red"))))
     :custom
     (diff-hl-draw-borders nil)
     (diff-hl-show-hunk-inline-popup-smart-lines nil)
@@ -1136,20 +1136,27 @@ Used to play with forges like GitHub or gitlab
     :bind   ("<f6>" . modus-themes-toggle)
     :config
     (setq modus-themes-to-toggle '(modus-operandi-tinted modus-vivendi-tinted)
-          modus-themes-org-blocks 'tinted-background)
-    ;; (load-theme 'modus-vivendi :no-confirm)
-    )
+          modus-themes-org-blocks 'tinted-background))
 
+#+end_src
+*** ef-themes
+#+begin_src emacs-lisp
+  (use-package ef-themes)
+#+end_src
+*** Doon-theme
+#+begin_src emacs-lisp
+  (use-package doom-themes)
 #+end_src
 *** Theme changer
 Change light to dark theme according to the sunset/sunrise
 #+begin_src emacs-lisp
   (use-package theme-changer
+    ;; this is a comment
     :config
     (setq calendar-location-name "Saint-Nicolas, BE"
      calendar-latitude 50.628
      calendar-longitude 5.516)
-    (change-theme 'modus-operandi-tinted 'modus-vivendi-tinted))
+    (change-theme 'ef-duo-light 'doom-dark+))
 #+end_src
 
 ** Icons
@@ -1463,7 +1470,6 @@ marginalia adds annotations in the mini buffer
                 ("C-f"	.	vertico-exit)
                 ("?"	.	minibuffer-completion-help)
                 ("M-RET"	.	minibuffer-complete)
-                ("C-e"    .       vertico-previous)
                 :map minibuffer-local-map
                 ("C-h"	.	backward-kill-word))
     :custom

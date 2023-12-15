@@ -713,13 +713,16 @@ Distraction-free writing
 #+end_src
 * Which-key
 #+begin_src emacs-lisp
-  (use-package which-key
-    :after meow
-    :custom
-    (which-key-hide-alt-key-translations nil)
-    (which-key-use-C-h-commands nil)
-    :config
-    (which-key-mode))
+    (use-package which-key
+      :after meow
+      :custom
+      (which-key-hide-alt-key-translations nil)
+      (which-key-paging-prefixes '("C-x" "C-c" "C-h" "C-x x"))
+      (which-key-paging-key "<f8>")
+      (which-key-side-window-max-height 0.65)
+      :config
+      (which-key-setup-side-window-bottom)
+      (which-key-mode))
 #+end_src
 
 * Defaults

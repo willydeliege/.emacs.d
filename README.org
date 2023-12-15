@@ -1155,8 +1155,7 @@ Used to play with forges like GitHub or gitlab
 *** modus themes
 #+begin_src emacs-lisp
   (use-package modus-themes
-    :bind   ("<f6>" . modus-themes-toggle)
-    :config
+   :config
     (setq modus-themes-to-toggle '(modus-operandi-tinted modus-vivendi-tinted)
           modus-themes-org-blocks 'tinted-background))
 
@@ -1164,7 +1163,10 @@ Used to play with forges like GitHub or gitlab
 
 *** ef-themes
 #+begin_src emacs-lisp
-  (use-package ef-themes)
+  (use-package ef-themes
+    :bind   ("<f6>" . ef-themes-toggle)
+    :config
+    (setq ef-themes-to-toggle '(ef-duo-dark ef-duo-light)))
 #+end_src
 
 *** Doom-theme
@@ -1176,7 +1178,6 @@ Used to play with forges like GitHub or gitlab
 Change light to dark theme according to the sunset/sunrise
 #+begin_src emacs-lisp
   (use-package theme-changer
-    ;; this is a comment
     :config
     (setq calendar-location-name "Saint-Nicolas, BE"
      calendar-latitude 50.628

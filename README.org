@@ -344,7 +344,7 @@ Add org-mode to load-path (run this script by "C-c C-c")
                                     (file+headline ,(concat org-directory "notes.org") "Inbox")
                                     "* %? [[%:link][%:description]] \n Captured On: %U")))
     (defun capture-filename ()
-
+      "Select the project filename to capture to."
       (interactive)
       (let ((fpath (read-file-name "Project file name: "
                                    "~/org/*==project*"
@@ -364,6 +364,7 @@ Add org-mode to load-path (run this script by "C-c C-c")
                    "* %? " :tree-type year))
 
     (defun my/archive-project ()
+      "Steps to archive a =project="
       (let (
             (org-enforce-todo-dependencies nil)
             (org-capture-templates
@@ -378,6 +379,7 @@ Add org-mode to load-path (run this script by "C-c C-c")
         (denote-rename-file-using-front-matter (buffer-file-name))
         (org-capture nil "j")))
     (defun make-archive()
+      "Only archive when Tasks heading get the ARCHIVE tag."
       (when (and (member "ARCHIVE" (org-get-tags))
                  (member "Tasks" (org-heading-components)))
         (my/archive-project)))
@@ -537,16 +539,6 @@ Distraction-free writing
 
 ** Org modern
 #+begin_src emacs-lisp
-  (use-package org-modern
-    :after org
-    ;; :hook (org-agenda-finalize . org-modern-agenda)
-    :config ; add late to hook
-    (add-hook 'org-mode-hook #'org-modern-mode)
-    :init
-    (setq org-modern-statistics nil)
-    (setq line-spacing 0.1)
-    (setq org-modern-label-border 'auto))
-
   (use-package org-modern-indent
     :after org
     :elpaca (org-modern-indent :type git :host github :repo "jdtsmith/org-modern-indent")

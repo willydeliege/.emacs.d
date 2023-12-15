@@ -24,6 +24,7 @@ Emacs 27.0 introduced an early-init file. It allows customization before package
 #+begin_src emacs-lisp :lexical t
   (setq native-comp-async-report-warnings-errors nil)
 #+end_src
+
 *** Debugging
 Running this form will launch the debugger after loading a package.
 This is useful for finding out when a dependency is requiring a package (perhaps earlier than you want).
@@ -160,6 +161,7 @@ Header for the config init.el file
 #+begin_src emacs-lisp
   ;;; init.el --- Willydeliege's Emacs configuration -*- lexical-binding: t -*-
 #+end_src
+
 * Package manager
 Using elpaca as package manager
 #+begin_src emacs-lisp
@@ -222,6 +224,7 @@ We will use use-package
   ;; Block until current queue processed.
   (elpaca-wait)
 #+end_src
+
 ** Global emacs
 #+begin_src emacs-lisp
   (use-feature emacs
@@ -238,6 +241,7 @@ We will use use-package
 
     (setq create-lockfiles nil)
 
+    (setq max-mini-window-height 0.6)
     (setq-default fill-column 80)
     (global-visual-line-mode 1)
     (setq isearch-lazy-count t)
@@ -435,6 +439,7 @@ Add org-mode to load-path (run this script by "C-c C-c")
     :init
     (require 'org-checklist))
 #+end_src
+
 *** Time-stamp
 Update flag when saving files with last__{}modified
 #+begin_src emacs-lisp
@@ -513,6 +518,7 @@ Update flag when saving files with last__{}modified
 #+begin_src emacs-lisp
   (use-package visual-fill-column)
 #+end_src
+
 *** olivetti-mode
 Distraction-free writing
 #+begin_src emacs-lisp
@@ -527,13 +533,13 @@ Distraction-free writing
             (delete-other-windows)
             (text-scale-set 2)
             (setq display-line-numbers nil)
-            (visual-fill-column-mode 1)
+            ;; (visual-fill-column-mode)
             (olivetti-mode t))
         (progn
           (if (eq (length (window-list)) 1)
               (jump-to-register 1))
           (setq display-line-numbers 'relative)
-          (visual-fill-column-mode 0)
+          ;; (visual-fill-column-mode 0)
           (olivetti-mode 0)
           (text-scale-set 0))))
     :bind
@@ -714,6 +720,7 @@ Distraction-free writing
     (meow-setup)
     (meow-global-mode 1))
 #+end_src
+
 * Which-key
 #+begin_src emacs-lisp
   (use-package which-key
@@ -723,7 +730,7 @@ Distraction-free writing
     (which-key-side-window-max-height 0.76)
     (which-key-allow-imprecise-window-fit t)
     :config
-    (which-key-setup-side-window-bottom)
+    (which-key-setup-minibuffer)
     (which-key-mode))
 #+end_src
 
@@ -794,12 +801,15 @@ Better help buffer
     :bind (:map help-map
                 ("W" . woman)))
 #+end_src
+
 ** Terminals
+
 *** Vterm
 #+begin_src emacs-lisp
   (use-package vterm
     :hook (vterm-mode . puni-disable-puni-mode))
 #+end_src
+
 *** Meow-vterm
 #+begin_src emacs-lisp
   (use-package meow-vterm
@@ -807,12 +817,14 @@ Better help buffer
     :init
     (meow-vterm-enable))
 #+end_src
+
 *** Vterm toggle
 #+begin_src emacs-lisp
   (use-package vterm-toggle
     :bind (("C-c t t" . vterm-toggle)
            ("C-c t V" . vterm-toggle-cd)))
 #+end_src
+
 *** Multi vterm
 Use vterm as multiplexer
 #+begin_src emacs-lisp
@@ -849,10 +861,12 @@ Use vterm as multiplexer
     :init
     (exec-path-from-shell-initialize))
 #+end_src
+
 * Bookmarks
 #+begin_src emacs-lisp
   (use-package bookmark+ :after org :elpaca `(bookmark+ :type git :host github :repo "emacsmirror/bookmark-plus" :files (:defaults)))
 #+end_src
+
 * Dired
 ** Dired
 #+begin_src emacs-lisp
@@ -862,6 +876,7 @@ Use vterm as multiplexer
     (setq dired-listing-switches "-Al -h -v --group-directories-first"))
 
 #+end_src
+
 ** Dired sudo
 #+begin_src emacs-lisp
   (use-package dired-toggle-sudo)
@@ -1131,6 +1146,7 @@ Used to play with forges like GitHub or gitlab
     (global-set-key (kbd "C-z '") 'avy-goto-char-2)
     (global-set-key (kbd "C-z w") 'avy-goto-word-1))
 #+end_src
+
 ** Theme
 *** modus themes
 #+begin_src emacs-lisp
@@ -1141,14 +1157,17 @@ Used to play with forges like GitHub or gitlab
           modus-themes-org-blocks 'tinted-background))
 
 #+end_src
+
 *** ef-themes
 #+begin_src emacs-lisp
   (use-package ef-themes)
 #+end_src
-*** Doon-theme
+
+*** Doom-theme
 #+begin_src emacs-lisp
   (use-package doom-themes)
 #+end_src
+
 *** Theme changer
 Change light to dark theme according to the sunset/sunrise
 #+begin_src emacs-lisp
@@ -1158,7 +1177,7 @@ Change light to dark theme according to the sunset/sunrise
     (setq calendar-location-name "Saint-Nicolas, BE"
      calendar-latitude 50.628
      calendar-longitude 5.516)
-    (change-theme 'ef-duo-light 'doom-dark+))
+    (change-theme 'ef-duo-light 'ef-duo-dark))
 #+end_src
 
 ** Icons
@@ -1198,6 +1217,7 @@ Change light to dark theme according to the sunset/sunrise
     (setq doom-modeline-buffer-file-name-style 'buffer-neme)
     (doom-modeline-mode))
 #+end_src
+
 ** Windows
 #+begin_src emacs-lisp
   (use-package ace-window
@@ -1290,6 +1310,7 @@ Change light to dark theme according to the sunset/sunrise
                   (dashboard-refresh-buffer))))
     (dashboard-setup-startup-hook))
 #+end_src
+
 * Editing
 ** Sudo edit
 #+begin_src emacs-lisp
@@ -1298,6 +1319,7 @@ Change light to dark theme according to the sunset/sunrise
     :demand t
     :bind (:map embark-file-map ("s" . sudo-edit)))
 #+end_src
+
 ** Undoing
 #+begin_src emacs-lisp
   (use-package undo-tree
@@ -1307,7 +1329,9 @@ Change light to dark theme according to the sunset/sunrise
     (undo-tree-visualizer-timestamps t)
     :init
     (global-undo-tree-mode))
+  
 #+end_src
+
 ** Treemacs
 #+begin_src emacs-lisp
   (use-package treemacs
@@ -1423,6 +1447,7 @@ Change light to dark theme according to the sunset/sunrise
     ;; select a region and press any of the following keys: ", ', (, {, [.
     :hook ((prog-mode org-mode) . wrap-region-mode))
 #+end_src
+
 *** Puni
 "punipuni"（ぷにぷに）is a Japanese mimetic word means "soft", "bouncy", or "pillowy".
 
@@ -1436,6 +1461,7 @@ If you are surrounded by punipuni things, you feel safe and relieved. That's my 
     (puni-global-mode)
     (add-hook 'term-mode-hook #'puni-disable-puni-mode))
 #+end_src
+
 ** Scratch buffer
 #+begin_src emacs-lisp
   (use-package scratch
@@ -1628,6 +1654,7 @@ marginalia adds annotations in the mini buffer
   (use-package magit-todos
     :hook (magit-status-mode . magit-todos-mode))
 #+end_src
+
 *** Consult dir
 #+begin_src emacs-lisp
   (use-package consult-dir
@@ -1983,6 +2010,7 @@ marginalia adds annotations in the mini buffer
     :config
     (add-to-list 'consult-buffer-sources persp-consult-source))
 #+end_src
+
 ** Perspective tabs
 #+begin_src emacs-lisp
   (use-package perspective-tabs
@@ -2019,6 +2047,7 @@ marginalia adds annotations in the mini buffer
   (use-package nerd-icons-ibuffer
   :hook (ibuffer-mode . nerd-icons-ibuffer-mode))
 #+end_src
+
 * Mail
 ** Mu4e
 #+begin_src emacs-lisp
@@ -2154,11 +2183,13 @@ marginalia adds annotations in the mini buffer
                  '("org-contact-add" . mu4e-action-add-org-contact) t)
     (mu4e))
 #+end_src
+
 *** Mu4e contrib
 #+begin_src emacs-lisp
   (use-feature mu4e-contrib
     :after mu4e)
 #+end_src
+
 *** mu markers
 fancy markers
 #+begin_src emacs-lisp
@@ -2367,6 +2398,7 @@ Setup ANSI colors for the compilation buffer
 #+begin_src emacs-lisp
   (use-package haskell-mode)
 #+end_src
+
 *** lsp-haskell
 #+begin_src emacs-lisp
   (use-package lsp-haskell
@@ -2374,6 +2406,7 @@ Setup ANSI colors for the compilation buffer
     :hook ((haskell-mode . lsp)
            (haskell-literate-mode . lsp)))
 #+end_src
+
 ** Tree-sitter
 *** Automatic use of tree-sitter
 #+begin_src emacs-lisp
@@ -2393,6 +2426,7 @@ Setup ANSI colors for the compilation buffer
     (add-to-list 'treesit-auto-recipe-list my-java-tsauto-config)
     (global-treesit-auto-mode))
 #+end_src
+
 *** Text object
 #+begin_src emacs-lisp
 (use-package evil-textobj-tree-sitter)
@@ -2405,6 +2439,7 @@ Setup ANSI colors for the compilation buffer
      :hook (prog-mode . format-all-mode))
    
 #+end_src
+
 * Utilities
 ** Search the web
 #+begin_src emacs-lisp

@@ -878,7 +878,6 @@ Use vterm as multiplexer
     :hook (dired-mode . dired-hide-details-mode)
     :init
     (setq dired-listing-switches "-Al -h -v --group-directories-first"))
-
 #+end_src
 
 ** Dired sudo

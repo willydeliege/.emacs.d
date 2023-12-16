@@ -1510,6 +1510,34 @@ Just install Hunspell and Hunspell-fr, Hunspell-en, ...
     :bind ("M-;" . evilnc-comment-or-uncomment-lines))
 #+end_src
 
+** Multiple cursor
+#+begin_src emacs-lisp
+  (use-package multiple-cursors
+    :config
+    (global-set-key (kbd "C-S-c C-S-c") 'mc/edit-lines)
+    (global-set-key (kbd "C->") 'mc/mark-next-like-this)
+    (global-set-key (kbd "C-<") 'mc/mark-previous-like-this)
+    (global-set-key (kbd "C-c C-<") 'mc/mark-all-like-this))
+#+end_src
+test
+
+** Dogears
+Remember locations after jumping
+#+begin_src emacs-lisp
+  (use-package dogears
+    ;; :after consult
+    :hook (elpaca-after-init . dogears-mode)
+    :elpaca (dogears :fetcher github :repo "alphapapa/dogears.el"
+                     :files (:defaults (:exclude "helm-dogears.el")))
+    :bind (:map global-map
+                ("M-g d" . dogears-go)
+                ("M-g M-b" . dogears-back)
+                ("M-g M-f" . dogears-forward)
+                ("M-g M-d" . dogears-list)
+                ("M-g M-D" . dogears-sidebar))
+    :config
+    (add-to-list 'dogears-hooks 'consult-after-jump-hook))
+#+end_src
 * Completion
 ** Vertico + Marginalia
 vertico.el - VERTical Interactive COmpletion

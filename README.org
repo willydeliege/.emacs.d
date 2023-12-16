@@ -2016,7 +2016,7 @@ marginalia adds annotations in the mini buffer
     (add-to-list 'completion-at-point-functions #'cape-elisp-block))
 
   (use-package yasnippet-capf
-    :after cape
+    :after (cape yasnippet)
     :init
     (add-to-list 'completion-at-point-functions #'yasnippet-capf))
 #+end_src
@@ -2035,16 +2035,12 @@ marginalia adds annotations in the mini buffer
 #+begin_src emacs-lisp
   (use-package yasnippet
     :init
-    (unbind-key "C-c &" yas-minor-mode-map)
-    (yas-global-mode 1))
+    (yas-global-mode 1)
+    :config
+    (unbind-key "C-c &" yas-minor-mode-map))
   (use-package java-snippets)
   (use-package yasnippet-snippets
     :after yasnippet)
-  (use-package doom-snippets
-    :after yasnippet
-    :elpaca (doom-snippets :type git :host github :repo "doomemacs/snippets" :files ("*.el" "*")))
-  ;; doom snippets override all other snippets dirs
-  (setq yas-snippet-dirs '("/home/frederic/.emacs.d/snippets" "/home/frederic/.emacs.d/elpaca/builds/java-snippets/snippets" yasnippet-snippets-dir doom-snippets-dir))
 #+end_src
 
 * Projects

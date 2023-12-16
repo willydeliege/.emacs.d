@@ -283,11 +283,9 @@ Add org-mode to load-path (run this script by "C-c C-c")
     (org-enforce-todo-dependencies t)
     :custom-face
     (org-agenda-date-weekend-today ((t (:inherit org-agenda-date
-                                                 ;; :foreground tomato
                                                  :underline t
                                                  :height 1.3))))
     (org-agenda-date-today ((t (:inherit org-agenda-date
-                                         ;; :foreground tomato
                                          :underline t
                                          :height 1.3))))
     (org-level-1 ((t ( :height 1.2))))

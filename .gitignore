@@ -61,3 +61,4 @@ image-dired/
 /.#diary
 /diary
 /%backup%~
+/.mc-lists.el

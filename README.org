@@ -2013,7 +2013,7 @@ marginalia adds annotations in the mini buffer
     ;; NOTE: The order matters!
     :init
     (setq completion-at-point-functions
-          (list (cape-capf-super #'cape-dict #'cape-dabbrev #'cape-keyword #'cape-symbol)))
+          (list (cape-capf-super #'cape-dict #'cape-dabbrev #'cape-keyword #'cape-elisp-symbol)))
     (add-to-list 'completion-at-point-functions #'cape-emoji)
     (add-to-list 'completion-at-point-functions #'cape-file)
     (add-to-list 'completion-at-point-functions #'cape-elisp-block))

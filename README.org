@@ -203,7 +203,7 @@ Using elpaca as package manager
   (elpaca `(,@elpaca-order))
 #+end_src
 
-** USE-PACKAGE
+** use-package
 We will use use-package
 #+begin_src emacs-lisp
   ;; need org to be loaded before elpaca-use-package

@@ -2103,6 +2103,8 @@ marginalia adds annotations in the mini buffer
                            (:from       . 30)
                            (:subject)))
 
+    :init
+    (mu4e)
     :config
     (setq mu4e-context-policy 'pick-first)
     (setq mu4e-compose-context-policy nil)
@@ -2227,6 +2229,8 @@ fancy markers
     :after mu4e
     :bind (:map org-msg-edit-mode-map
                 ("C-c C-i" . message-goto-importance))
+    :init
+    (org-msg-mode)
     :config
     (defun message-goto-importance ()
       "Move point to the Importance header."
@@ -2243,8 +2247,7 @@ fancy markers
                                          (reply-to-text	. (text)))
           org-msg-convert-citation t )
     (setq org-msg-signature "\n\nRegards,\nFrédéric\n\n--\n\n*Frédéric Willem*\n/Tel: +32 456 64 00 02/\n")
-    (org-msg-mode))
-
+    )
 #+end_src
 
 ** org contacts

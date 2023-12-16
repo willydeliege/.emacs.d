@@ -366,9 +366,7 @@ Add org-mode to load-path (run this script by "C-c C-c")
                  '("t" "New [t]ask" entry
                    (function capture-filename)
                    "* TODO %?\n  %i\n  %a"
-                   :jump-to-captured t
-                   )
-                 )
+                   :jump-to-captured t))
     (add-to-list 'org-capture-templates
                  '("j" "[j]ournal entry" entry
                    (file+olp+datetree journal-file)

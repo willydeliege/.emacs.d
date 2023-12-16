@@ -1533,8 +1533,10 @@ Remember locations after jumping
                 ("M-g M-d" . dogears-list)
                 ("M-g M-D" . dogears-sidebar))
     :config
+    (add-to-list 'dogears-ignore-modes 'mu4e-view-mode)
     (add-to-list 'dogears-hooks 'consult-after-jump-hook))
 #+end_src
+
 * Completion
 ** Vertico + Marginalia
 vertico.el - VERTical Interactive COmpletion

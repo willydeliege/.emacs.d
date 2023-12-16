@@ -1689,11 +1689,27 @@ marginalia adds annotations in the mini buffer
 *** HL-TODO
 #+begin_src emacs-lisp
   (use-package hl-todo
-    :hook ((text-mode prog-mode) . hl-todo-mode)
-    :hook (elpaca-after-init . global-hl-todo-mode))
+    :hook ((prog-mode text-mode) . hl-todo-mode)
+    :init
+    (setq hl-todo-keyword-faces '(("HOLD" . "magenta")
+                                  ("TODO" . "red")
+                                  ("NEXT" . "blue")
+                                  ("THEM" . "#dc8cc3")
+                                  ("PROG" . "#7cb8bb")
+                                  ("OKAY" . "#7cb8bb")
+                                  ("DONT" . "#5f7f5f")
+                                  ("FAIL" . "#8c5353")
+                                  ("DONE" . "forest green")
+                                  ("NOTE" . "#d0bf8f")
+                                  ("MAYBE" . "#d0bf8f")
+                                  ("KLUDGE" . "#d0bf8f")
+                                  ("HACK" . "#d0bf8f")
+                                  ("TEMP" . "#d0bf8f")
+                                  ("FIXME" . "#cc9393")
+                                  ("XXXX*" . "#cc9393"))))
 
   (use-package flycheck-hl-todo
-    :defer 5 ; Need to be initialized after the rest of checkers
+    :defer 10 ; Need to be initialized after the rest of checkers
     :elpaca (:host github :repo "alvarogonzalezsotillo/flycheck-hl-todo")
     :config
     (flycheck-hl-todo-setup))

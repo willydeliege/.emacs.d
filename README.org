@@ -575,8 +575,7 @@ Distraction-free writing
 ** Org ql
 #+begin_src emacs-lisp
   (use-package org-ql
-    :after org
-    :demand t)
+    :commands (org-ql-find))
 #+end_src
 
 ** Org crypt
@@ -779,17 +778,11 @@ Better help buffer
   (use-package helpful
     :init
     (setq helpful--view-literal t)
-    :config
-    ;; Note that the built-in `describe-function' includes both functions
-    ;; and macros. `helpful-function' is functions only, so we provide
-    ;; `helpful-callable' as a drop-in replacement.
-    (global-set-key (kbd "C-h f") #'helpful-callable)
-    ;; Lookup the current symbol at point. C-c C-d is a common keybinding
-    ;; for this in lisp modes but C-c C-. is convenient for org-mode as well.
-    (global-set-key (kbd "C-c C-.") #'helpful-at-point)
-    (global-set-key (kbd "C-h v") #'helpful-variable)
-    (global-set-key (kbd "C-h k") #'helpful-key)
-    (global-set-key (kbd "C-h x") #'helpful-command))
+    :bind (("C-c C-." . helpful-at-point)
+           ("C-h f" . helpful-callable)
+           ("C-h v" . helpful-variable)
+           ("C-h k" . helpful-key)
+           ("C-h x" . helpful-command)))
 #+end_src
 
 *** Help package
@@ -842,14 +835,9 @@ Use vterm as multiplexer
   (use-feature eshell
     :bind ("C-c t e" . eshell))
   (use-package eshell-vterm
-    :demand t
+    :hook (eshell-mode . eshell-vterm-mode)
     :after eshell
-    :config
-    (eshell-vterm-mode))
-#+end_src
-
-*** Emacs shell
-#+begin_src emacs-lisp
+    :config)
 #+end_src
 
 *** Exec path
@@ -886,7 +874,6 @@ Use vterm as multiplexer
 ** Dired imenu
 #+begin_src emacs-lisp
   (use-package dired-imenu
-    :demand t
     :after dired)
 #+end_src
 
@@ -1137,10 +1124,9 @@ Used to play with forges like GitHub or gitlab
 
   ;; avy - jump to character
   (use-package avy
-    :config
-    (global-set-key (kbd "C-z ;") 'avy-goto-char)
-    (global-set-key (kbd "C-z '") 'avy-goto-char-2)
-    (global-set-key (kbd "C-z w") 'avy-goto-word-1))
+    :bind (("C-z ;" . avy-goto-char)
+           ("C-z '" . avy-goto-char-2)
+           ("C-z w" . avy-goto-word-1)))
 #+end_src
 
 ** Theme
@@ -1218,24 +1204,23 @@ Change light to dark theme according to the sunset/sunrise
 ** Windows
 #+begin_src emacs-lisp
   (use-package switch-window
-    ;; :bind ("M-o" . ace-window)
-    :init
+    :config
     (setq switch-window-minibuffer-shortcut ?z)
-    (global-set-key (kbd "M-o") 'switch-window)
-    (global-set-key (kbd "C-x 1") 'switch-window-then-maximize)
-    (global-set-key (kbd "C-x 2") 'switch-window-then-split-below)
-    (global-set-key (kbd "C-x 3") 'switch-window-then-split-right)
-    (global-set-key (kbd "C-x 0") 'switch-window-then-delete)
+    :bind (("M-o" . switch-window)
+           ("C-x 1" . switch-window-then-maximize)
+           ("C-x 2" . switch-window-then-split-below)
+           ("C-x 3" . switch-window-then-split-right)
+           ("C-x 0"  . switch-window-then-delete)
 
-    (global-set-key (kbd "C-x 4 d") 'switch-window-then-dired)
-    (global-set-key (kbd "C-x 4 f") 'switch-window-then-find-file)
-    (global-set-key (kbd "C-x 4 m") 'switch-window-then-compose-mail)
-    (global-set-key (kbd "C-x 4 r") 'switch-window-then-find-file-read-only)
+           ("C-x 4 d" . switch-window-then-dired)
+           ("C-x 4 f" . switch-window-then-find-file)
+           ("C-x 4 m" . switch-window-then-compose-mail)
+           ("C-x 4 r" . switch-window-then-find-file-read-only)
 
-    (global-set-key (kbd "C-x 4 C-f") 'switch-window-then-find-file)
-    (global-set-key (kbd "C-x 4 C-o") 'switch-window-then-display-buffer)
+           ("C-x 4 C-f" . switch-window-then-find-file)
+           ("C-x 4 C-o" . switch-window-then-display-buffer)
 
-    (global-set-key (kbd "C-x 4 0") 'switch-window-then-kill-buffer))
+           ("C-x 4 0" . switch-window-then-kill-buffer)))
 #+end_src
 
 #+begin_src emacs-lisp
@@ -1290,18 +1275,12 @@ Change light to dark theme according to the sunset/sunrise
 #+end_src
 #+begin_src emacs-lisp
   (use-package golden-ratio
-    :hook (elpaca-after-init . golden-ratio-mode)
-    :config
-    ;; Refer to issue #57 for the complete code, this is just for ease
-    (add-hook 'buffer-list-update-hook #'golden-ratio)
-    (add-hook 'focus-in-hook           #'golden-ratio)
-    (add-hook 'focus-out-hook          #'golden-ratio))
+    :hook (elpaca-after-init . golden-ratio-mode))
 #+end_src
 
 ** Dashboard
 #+begin_src emacs-lisp
   (use-package dashboard
-    :demand t
     :bind (:map dashboard-mode-map
                 ("n" . dashboard-next-line)
                 ("e" . dashboard-previous-line))
@@ -1311,7 +1290,6 @@ Change light to dark theme according to the sunset/sunrise
                             (bookmarks . 5)
                             (projects . 5)
                             (agenda . 5)))
-    :config
     (setq dashboard-center-content t)
     (setq dashboard-icon-type 'nerd-icons)
     (setq dashboard-set-file-icons t)
@@ -1331,7 +1309,6 @@ Change light to dark theme according to the sunset/sunrise
 #+begin_src emacs-lisp
   (use-package sudo-edit
     :after embark
-    :demand t
     :bind (:map embark-file-map ("s" . sudo-edit)))
 #+end_src
 
@@ -2042,7 +2019,7 @@ marginalia adds annotations in the mini buffer
     (yas-global-mode 1)
     :config
     (unbind-key "C-c &" yas-minor-mode-map))
-  (use-package java-snippets)
+  (use-package java-snippets :after yasnippet)
   (use-package yasnippet-snippets
     :after yasnippet)
 #+end_src
@@ -2100,7 +2077,6 @@ marginalia adds annotations in the mini buffer
 ** Mu4e
 #+begin_src emacs-lisp
   (use-package mu4e
-    :demand t
     :elpaca (mu4e :host github :files ("mu4e/*.el" "build/mu4e/mu4e-meta.el" "build/mu4e/mu4e-config.el" "build/mu4e/mu4e.info") :repo "djcb/mu"
                   :tag "v1.10.0"
                   :main "mu4e/mu4e.el"
@@ -2228,8 +2204,7 @@ marginalia adds annotations in the mini buffer
     (add-to-list 'mu4e-headers-actions
                  '("org-contact-add" . mu4e-action-add-org-contact) t)
     (add-to-list 'mu4e-view-actions
-                 '("org-contact-add" . mu4e-action-add-org-contact) t)
-    (mu4e))
+                 '("org-contact-add" . mu4e-action-add-org-contact) t))
 #+end_src
 
 *** Mu4e contrib
@@ -2249,7 +2224,6 @@ fancy markers
 ** Org message
 #+begin_src emacs-lisp
   (use-package org-msg
-    :demand t
     :after mu4e
     :bind (:map org-msg-edit-mode-map
                 ("C-c C-i" . message-goto-importance))
@@ -2276,7 +2250,6 @@ fancy markers
 ** org contacts
 #+begin_src emacs-lisp
   (use-package org-contacts
-    :demand t
     :after org-msg
     :hook (org-msg-edit-mode . org-contacts-setup-completion-at-point)
     :custom
@@ -2459,7 +2432,7 @@ Setup ANSI colors for the compilation buffer
 *** Automatic use of tree-sitter
 #+begin_src emacs-lisp
   (use-package treesit-auto
-    :demand t
+    :hook (elpaca-after-init . global-treesit-auto-mode)
     :config
     (setq treesit-auto-install 'prompt)
     (setq my-java-tsauto-config
@@ -2471,8 +2444,7 @@ Setup ANSI colors for the compilation buffer
            :revision "master"
            :source-dir "src"))
 
-    (add-to-list 'treesit-auto-recipe-list my-java-tsauto-config)
-    (global-treesit-auto-mode))
+    (add-to-list 'treesit-auto-recipe-list my-java-tsauto-config))
 #+end_src
 
 *** Text object

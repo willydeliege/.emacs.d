@@ -722,11 +722,12 @@ Distraction-free writing
   (use-package which-key
     :after meow
     :custom
-    (which-key-hide-alt-key-translations nil)
-    (which-key-side-window-max-height 0.76)
-    (which-key-allow-imprecise-window-fit t)
+    (which-key-side-window-max-height 0.6)
+    (which-key-max-description-length 24)
+    (which-key-side-window-max-width 7)
+    (which-key-allow-imprecise-window-fit nil)
+    (which-key-special-keys '("SPC" "TAB" "RET" "ESC" "DEL"))
     :config
-    (which-key-setup-side-window-bottom)
     (which-key-mode))
 #+end_src
 

@@ -350,10 +350,10 @@ Add org-mode to load-path (run this script by "C-c C-c")
      org-ellipsis "…")
     (setq org-capture-templates `( ("p" "Protocol" entry
                                     (file+headline ,(concat org-directory "notes.org") "Inbox")
-                                    "* %^{Title}\n Source:  %u, %:annotation \n#+BEGIN_QUOTE\n%i\n#+END_QUOTE\n\n\n%?")
+                                    "* %:description\n Source:  %u, %:annotation \n#+BEGIN_QUOTE\n%i\n#+END_QUOTE\n\n\n%?" :immediate-finish t)
                                    ("L" "Protocol Link" entry
                                     (file+headline ,(concat org-directory "notes.org") "Inbox")
-                                    "* %? [[%:link][%:description]] \n Captured On: %U")))
+                                    "* %? [[%:link][%:description]] \n Captured On: %U" :immediate-finish t)))
     (defun capture-filename ()
       "Select the project filename to capture to."
       (interactive)

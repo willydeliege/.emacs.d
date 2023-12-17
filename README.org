@@ -2088,11 +2088,13 @@ marginalia adds annotations in the mini buffer
                               ("ninja" "-C" "build")
                               (make-symbolic-link (expand-file-name "./build/mu/mu")
                                                   (expand-file-name "~/.local/bin/mu") 'ok-if-exists)))
-    :demand t
+    :defer 1
     :commands (mu4e mu4e-update-index mu4e-compose-new)
     :after org
     :unless my/using-android
     :bind (("<f5>"  . mu4e)
+           :map mu4e-main-mode-map
+           ("q" . meow-quit)
            :map mu4e-headers-mode-map
            ("C-c c" . mu4e-org-store-and-capture)
            ("¡"     . mu4e-headers-mark-all-unread-read)

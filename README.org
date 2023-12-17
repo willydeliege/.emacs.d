@@ -446,7 +446,7 @@ Update flag when saving files with last__{}modified
   (use-feature time-stamp
     :init
     (time-stamp-toggle-active 1)
-    (setq time-stamp-start "last_modified:[     ]+\\\\?[\"<]+"))
+    (setq time-stamp-start "\\\?[\"<]+"))
 #+end_src
 
 ** Org auto tangle
@@ -465,15 +465,15 @@ Update flag when saving files with last__{}modified
     (org-super-agenda-mode)
     (setq org-agenda-custom-commands
           '(("z" "My view"
-             ((agenda "" ((org-agenda-span 'week)
-                          (org-agenda-start-day nil)
+             ((agenda "" ((org-agenda-span 8)
+                          (org-agenda-start-day "+0d")
                           (org-super-agenda-groups
                            '((:name ""
-                              :time-grid t
-                              :date today
-                              :deadline today
-                              :scheduled today
-                              :order 1)
+                                    :time-grid t
+                                    :date today
+                                    :deadline today
+                                    :scheduled today
+                                    :order 1)
                              (:discard (:anything))))))
               (alltodo "" ((org-agenda-overriding-header "")
                            (org-super-agenda-groups
@@ -829,8 +829,7 @@ Use vterm as multiplexer
             ("C-c t n" . multi-vterm-next)
             ("C-c t p" . multi-vterm-prev))
     :config
-    (define-key vterm-mode-map [return]                      #'vterm-send-return)
-
+    (define-key vterm-mode-map [return]  #'vterm-send-return)
     (setq vterm-keymap-exceptions nil))
 #+end_src
 

@@ -2083,9 +2083,9 @@ marginalia adds annotations in the mini buffer
                   :pre-build (("./autogen.sh")
                               ("ninja" "-C" "build")
                               (make-symbolic-link (expand-file-name "./build/mu/mu")
-                                                  (expand-file-name "~/.local/bin/mu") 'ok-if-exists))
-                  :build (:not elpaca--compile-info))
-    :commands (mu4e mu4e-update-index)
+                                                  (expand-file-name "~/.local/bin/mu") 'ok-if-exists)))
+    :demand t
+    :commands (mu4e mu4e-update-index mu4e-compose-new)
     :after org
     :unless my/using-android
     :bind (("<f5>"  . mu4e)
@@ -2103,8 +2103,6 @@ marginalia adds annotations in the mini buffer
                            (:from       . 30)
                            (:subject)))
 
-    :init
-    (mu4e)
     :config
     (setq mu4e-context-policy 'pick-first)
     (setq mu4e-compose-context-policy nil)
@@ -2206,7 +2204,8 @@ marginalia adds annotations in the mini buffer
     (add-to-list 'mu4e-headers-actions
                  '("org-contact-add" . mu4e-action-add-org-contact) t)
     (add-to-list 'mu4e-view-actions
-                 '("org-contact-add" . mu4e-action-add-org-contact) t))
+                 '("org-contact-add" . mu4e-action-add-org-contact) t)
+    (mu4e t))
 #+end_src
 
 *** Mu4e contrib

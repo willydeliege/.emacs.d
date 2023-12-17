@@ -917,6 +917,7 @@ Use vterm as multiplexer
 
   (use-package magit
     :custom
+    (magit-commit-diff-inhibit-same-window t)
     (magit-diff-refine-hunk 'all)
     (magit-define-global-key-bindings 'recommended))
 #+end_src

@@ -255,16 +255,6 @@ We will use use-package
 * Org mode
 ** Org basics
 *** Org-mode
-Add org-mode to load-path (run this script by "C-c C-c")
-#+begin_src shell :tangle no
-  # After having clones this repo
-  git submodule init
-  git subodules update
-  cd ~/.emacs.d/lisp/org-mode/
-  # git checkout release_9.6.12 # or wathever the version you want to use
-  make autoloads
-  sudo make install
-#+end_src
 #+begin_src emacs-lisp
   (use-feature org
     :hook (org-mode                . my/prettify)
@@ -275,12 +265,11 @@ Add org-mode to load-path (run this script by "C-c C-c")
     :bind (("C-c l"               . org-store-link)
            ("C-c c"               . org-capture)
            ("C-c a"               . org-agenda)
-           (:map org-mode-map)
+           :map org-mode-map
            ("M-S-<return>"        . org-insert-subheading)
            ("C-c $"               . org-archive-subtree-default))
     :custom
     (org-return-follows-link t)
-    (org-agenda-skip-scheduled-if-deadline-is-shown t)
     (org-agenda-skip-deadline-prewarning-if-scheduled t)
     (org-agenda-skip-timestamp-if-deadline-is-shown t)
     (org-deadline-warning-days 5)
@@ -292,9 +281,9 @@ Add org-mode to load-path (run this script by "C-c C-c")
     (org-agenda-date-today ((t (:inherit org-agenda-date
                                          :underline t
                                          :height 1.3))))
-    (org-level-1 ((t ( :height 1.2))))
-    (org-level-2 ((t ( :height 1.15))))
-    (org-level-3 ((t ( :height 1.1))))
+    (org-level-1 ((t (:height 1.2))))
+    (org-level-2 ((t (:height 1.15))))
+    (org-level-3 ((t (:height 1.1))))
     :init
     (defun my/prettify ()
       (setq prettify-symbols-alist '((":PROPERTIES:" . "⚙️")
@@ -317,13 +306,13 @@ Add org-mode to load-path (run this script by "C-c C-c")
       (org-agenda))
     ;; Agenda styling
     (setq org-stuck-projects '("+Project/PROJ" ("NEXT" "WAIT" "MEETING" "HOLD") nil ""))
-    (setq     org-agenda-block-separator ?─
-              org-agenda-time-grid
-              '((daily today require-timed)
-                (800 1000 1200 1400 1600 1800 2000)
-                " ┄┄┄┄┄ " "┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄")
-              org-agenda-current-time-string
-              "⭠ now ─────────────────────────────────────────────────")
+    (setq  org-agenda-block-separator ?─
+           org-agenda-time-grid
+           '((daily today require-timed)
+             (800 1000 1200 1400 1600 1800 2000)
+             " ┄┄┄┄┄ " "┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄")
+           org-agenda-current-time-string
+           "⭠ now ─────────────────────────────────────────────────")
     (setq org-startup-indented t)
     (setq org-attach-store-link-p 'file)
     (org-babel-do-load-languages 'org-babel-load-languages
@@ -363,12 +352,12 @@ Add org-mode to load-path (run this script by "C-c C-c")
     (add-to-list 'org-capture-templates
                  '("t" "New [t]ask" entry
                    (function capture-filename)
-                   "* TODO %?\n  %i\n  %a"
+                   "* TODO %?\n  %i"
                    :jump-to-captured t))
     (add-to-list 'org-capture-templates
                  '("j" "[j]ournal entry" entry
                    (file+olp+datetree journal-file)
-                   "* %? " :tree-type year))
+                   "*  %<%I:%M %p>: %? " :tree-type year))
 
     (defun my/archive-project ()
       "Steps to archive a =project="
@@ -432,7 +421,7 @@ Add org-mode to load-path (run this script by "C-c C-c")
     (require 'org-protocol))
 #+end_src
 
-*** Org  contrib
+*** Org-contrib
 #+begin_src emacs-lisp
   (use-package org-contrib
     :after org
@@ -852,7 +841,7 @@ Use vterm as multiplexer
 
 * Bookmarks
 #+begin_src emacs-lisp
-  (use-package bookmark+ :after org :elpaca `(bookmark+ :type git :host github :repo "emacsmirror/bookmark-plus" :files (:defaults)))
+  
 #+end_src
 
 * Dired
@@ -946,16 +935,8 @@ Used to play with forges like GitHub or gitlab
     :hook ((magit-pre-refresh . diff-hl-magit-pre-refresh)
            (magit-post-refresh . diff-hl-magit-post-refresh)
            (dired-mode . diff-hl-dired-mode))
-    :custom-face
-    (diff-hl-insert ((((background light))
-                      (:background "blue"))
-                     (default
-                      (:background "light blue"))))
-    (diff-hl-change ((t (:background "dark orange"))))
-    (diff-hl-delete ((t (:background "red"))))
     :custom
     (diff-hl-draw-borders nil)
-    (diff-hl-show-hunk-inline-popup-smart-lines nil)
     (diff-hl-show-staged-changes nil)
     :init
     (global-diff-hl-mode 1)
@@ -1453,7 +1434,15 @@ If you are surrounded by punipuni things, you feel safe and relieved. That's my 
 
 #+begin_src emacs-lisp
   (use-package puni
-    :hook (elpaca-after-init . puni-global-mode)
+    :hook (prog-mode . puni-mode)
+    :bind (:map puni-mode-map
+                ("M-D"         . puni-splice)
+                ("M-<up>"      . puni-splice-killing-forward)
+                ("M-<down>"    . puni-splice-killing-backward)
+                ("C-<right>"   . puni-slurp-forward)
+                ("C-<left>"    . puni-barf-forward)
+                ("C-M-<left>"  . puni-slurp-backward)
+                ("C-M-<right>" . puni-barf-backward))
     :config
     (add-hook 'term-mode-hook #'puni-disable-puni-mode))
 #+end_src
@@ -1647,12 +1636,6 @@ marginalia adds annotations in the mini buffer
     ;; Optionally make narrowing help available in the minibuffer.
     ;; You may want to use `embark-prefix-help-command' or which-key instead.
     (define-key consult-narrow-map (vconcat consult-narrow-key "?") #''consult-narrow-help)
-
-    (defun bookmark-files-only()
-      (bookmark-all-names (bmkp-file-alist-only)))
-    (consult-customize consult--source-bookmark
-                       :items (lambda ()
-                                (bookmark-all-names (bmkp-file-alist-only))))
     (consult-customize consult--source-buffer :hidden t :default nil))
 #+end_src
 
@@ -2191,19 +2174,19 @@ marginalia adds annotations in the mini buffer
     (setq org-export-show-temporary-export-buffer nil)
     ;; set a more visible mu4e view (with dark-mode enabled)
     ;; (setq shr-color-visible-luminance-min 0)
-    (setq mu4e-update-interval 60)
+    (setq mu4e-update-interval 600)
 
     (add-to-list 'org-capture-templates
                  '("m" "Email Workflow"))
     (add-to-list 'org-capture-templates
                  '("mt" "Capture to task" entry
                    (function capture-filename)
-                   "* REPLY to %:fromname in %a ")) ;; don't immdeiate-finsh want to be able to set a todo
+                   "* REPLY to %:fromname in %a\n%i ")) ;; don't immdeiate-finsh want to be able to set a todo
     ;; template to capture events
     (add-to-list 'org-capture-templates
                  '("#" "used by gnus-icalendar-org" entry
                    (function capture-filename)
-                   "%i")) ;; don't immdeiate-finsh want to be able to set a todo
+                   "%i")) ;; don't immediate-finsh want to be able to set a todo
 
 
     (setq mu4e-org-contacts-file "/home/frederic/org/contacts.org")

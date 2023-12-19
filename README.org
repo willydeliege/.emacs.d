@@ -2,7 +2,7 @@
 #+PROPERTY: header-args :tangle-mode o444 :tangle init.el :results none :lexical t
 #+OPTIONS: toc:2 num:nil
 #+auto_tangle: t
-
+test
 * Emacs configuration
 After spending lot of time with doom Emacs, willing to switch to a more native emacs config while keeping evil mode
 * Using straight properly with initiating in early-init.el

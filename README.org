@@ -2,7 +2,6 @@
 #+PROPERTY: header-args :tangle-mode o444 :tangle init.el :results none :lexical t
 #+OPTIONS: toc:2 num:nil
 #+auto_tangle: t
-test
 * Emacs configuration
 After spending lot of time with doom Emacs, willing to switch to a more native emacs config while keeping evil mode
 * Using straight properly with initiating in early-init.el
@@ -207,10 +206,12 @@ Using elpaca as package manager
 We will use use-package
 #+begin_src emacs-lisp
   ;; need org to be loaded before elpaca-use-package
-  (elpaca (org :tag "release_9.6.12"))
+  (elpaca (org :depth nil
+   	     :tag "release_9.6.12"
+  	     :pin t))
   (defmacro use-feature (name &rest args)
     "Like `use-package' but accounting for asynchronous installation.
-  NAME and ARGS are in `use-package'."
+     NAME and ARGS are in `use-package'."
     (declare (indent defun))
     `(use-package ,name
        :elpaca nil
@@ -252,16 +253,53 @@ We will use use-package
     (global-set-key  (kbd "C-x C") 'save-buffers-kill-emacs))
 #+end_src
 
+* Defaults
+#+begin_src emacs-lisp
+  ;; Save the last place edited in files
+  (save-place-mode 1)
+  (setq save-place-file (locate-user-emacs-file "places" ".emacs-places")
+        save-place-forget-unreadable-files nil)
+  (setq display-time-day-and-date t)
+  (setq display-time-default-load-average nil)
+  (setq display-time-24hr-format t)
+  (display-time-mode 1)
+  (display-battery-mode 1)
+  (setq recentf-max-menu-items 25)
+  (setq recentf-max-saved-items 25)
+  (add-hook 'text-mode-hook 'display-line-numbers-mode)
+  (add-hook 'prog-mode-hook 'display-line-numbers-mode)
+  (setq-default display-line-numbers-type 'relative
+                display-line-numbers-width 4)
+  (setq browse-url-browser-function 'browse-url-generic
+        browse-url-generic-program "google-chrome")
+  (setq my/uname (shell-command-to-string "uname -a"))
+  (global-prettify-symbols-mode)
+  (defun delete-visited-file (buffer-name)
+    "Delete the file visited by the buffer named BUFFER-NAME."
+    (interactive "bDelete file visited by buffer ")
+    (let* ((buffer (get-buffer buffer-name))
+           (filename (buffer-file-name buffer)))
+      (when buffer
+        (when (and filename
+                   (file-exists-p filename))
+          (delete-file filename))
+        (kill-buffer buffer))))
+  (keymap-global-set "C-x D" 'delete-visited-file)
+  (setq my/using-android (string-match "Android" my/uname))
+#+end_src
+
+* Personal information
+#+begin_src emacs-lisp
+  (setq user-full-name "Frédéric Willem"
+        user-mail-address "frederic.willem@gmail.com")
+#+end_src
+
 * Org mode
 ** Org basics
 *** Org-mode
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp 
   (use-feature org
     :hook (org-mode                . my/prettify)
-    :hook (server-after-make-frame . (lambda ()
-                                       (build-agenda)
-                                       (org-agenda nil "z")
-                                       (delete-other-windows)))
     :bind (("C-c l"               . org-store-link)
            ("C-c c"               . org-capture)
            ("C-c a"               . org-agenda)
@@ -601,7 +639,8 @@ Distraction-free writing
                    "* %^{Title}\n  %^{URL}p %^{USERNAME}p %^{PASSWORD}p")))
 #+end_src
 
-* meow
+* Keys
+** meow
 #+begin_src emacs-lisp
   (use-package meow
     :hook (meow-mode . meow-org-note-insert)
@@ -620,20 +659,21 @@ Distraction-free writing
           (meow-insert-mode)))
     :config
     (defun meow-setup ()
-      (setq meow-cheatsheet-layout meow-cheatsheet-layout-colemak-dh
-            meow-use-clipboard t)
+      (setq meow-use-clipboard t)
       (add-to-list 'meow-keypad-start-keys '(?z . ?z))
       (add-to-list 'meow-mode-state-list '(mu4e-view-mode . motion))
       (add-to-list 'meow-mode-state-list '(cfw:calendar-mode . motion))
       (setcdr (assq 'vterm-mode meow-mode-state-list) 'insert)
       (meow-motion-overwrite-define-key
        ;; Use e to move up, n to move down.
-       '("e" . meow-prev)
+       '("e" . "p")
+       ;; '("C-e" . "C-p")
        '("<escape>" . ignore))
       (meow-leader-define-key
-       '("?" . meow-cheatsheet)
-       ;; To execute the originally e in MOTION state, use SPC e.
-       '("e" . "H-e")
+       '("?" . "H-e")
+       ;; To the originally e in MOTION state, use SPC e.
+       '("e" . "C-p")
+       '("n" . "C-n")
        '("1" . meow-digit-argument)
        '("2" . meow-digit-argument)
        '("3" . meow-digit-argument)
@@ -709,7 +749,7 @@ Distraction-free writing
     (meow-global-mode 1))
 #+end_src
 
-* Which-key
+** Which-key
 #+begin_src emacs-lisp
   (use-package which-key
     :after meow
@@ -722,48 +762,6 @@ Distraction-free writing
     :config
     (which-key-mode))
 #+end_src
-
-* Defaults
-#+begin_src emacs-lisp
-  ;; Save the last place edited in files
-  (save-place-mode 1)
-  (setq save-place-file (locate-user-emacs-file "places" ".emacs-places")
-        save-place-forget-unreadable-files nil)
-  (setq display-time-day-and-date t)
-  (setq display-time-default-load-average nil)
-  (setq display-time-24hr-format t)
-  (display-time-mode 1)
-  (display-battery-mode 1)
-  (setq recentf-max-menu-items 25)
-  (setq recentf-max-saved-items 25)
-  (add-hook 'text-mode-hook 'display-line-numbers-mode)
-  (add-hook 'prog-mode-hook 'display-line-numbers-mode)
-  (setq-default display-line-numbers-type 'relative
-                display-line-numbers-width 4)
-  (setq browse-url-browser-function 'browse-url-generic
-        browse-url-generic-program "google-chrome")
-  (setq my/uname (shell-command-to-string "uname -a"))
-  (global-prettify-symbols-mode)
-  (defun delete-visited-file (buffer-name)
-    "Delete the file visited by the buffer named BUFFER-NAME."
-    (interactive "bDelete file visited by buffer ")
-    (let* ((buffer (get-buffer buffer-name))
-           (filename (buffer-file-name buffer)))
-      (when buffer
-        (when (and filename
-                   (file-exists-p filename))
-          (delete-file filename))
-        (kill-buffer buffer))))
-  (keymap-global-set "C-x D" 'delete-visited-file)
-  (setq my/using-android (string-match "Android" my/uname))
-#+end_src
-
-# ** Custom file
-# #+begin_src emacs-lisp
-#   (setq custom-file (concat user-emacs-directory "custom.el"))
-#   (when (file-exists-p custom-file)
-#     (load custom-file))
-# #+end_src
 
 ** Help
 Better help buffer
@@ -786,7 +784,6 @@ Better help buffer
 #+end_src
 
 ** Terminals
-
 *** Vterm
 #+begin_src emacs-lisp
   (use-package vterm
@@ -839,16 +836,13 @@ Use vterm as multiplexer
     (exec-path-from-shell-initialize))
 #+end_src
 
-* Bookmarks
-#+begin_src emacs-lisp
-  
-#+end_src
-
 * Dired
 ** Dired
 #+begin_src emacs-lisp
   (use-feature dired
     :hook (dired-mode . dired-hide-details-mode)
+    :custom
+    (dired-create-destination-dirs 'ask)
     :init
     (setq dired-listing-switches "-Al -h -v --group-directories-first"))
 #+end_src
@@ -905,9 +899,10 @@ Use vterm as multiplexer
 
   (use-package magit
     :custom
-    (magit-commit-diff-inhibit-same-window t)
     (magit-diff-refine-hunk 'all)
-    (magit-define-global-key-bindings 'recommended))
+    (magit-define-global-key-bindings 'recommended)
+    :config
+    (setq magit-display-buffer-function 'magit-display-buffer-same-window-except-diff-v1))
 #+end_src
 
 ** Orgit
@@ -1089,29 +1084,118 @@ Used to play with forges like GitHub or gitlab
 
 #+end_src
 
-* Personal information
-#+begin_src emacs-lisp
-  (setq user-full-name "Frédéric Willem"
-        user-mail-address "frederic.willem@gmail.com")
-#+end_src
-
 * UI
 ** avy
+;; avy - jump to character
+;; see https://karthinks.com/software/avy-can-do-anything/
 #+begin_src emacs-lisp
-  ;; Unbind Pesky Sleep Button and rebind as prefix key
-  (global-unset-key "\C-z")
-  (defalias 'ctl-z-keymap (make-sparse-keymap))
-  (defvar ctl-z-map (symbol-function 'ctl-z-keymap)
-    "Global keymap for characters following C-z.")
-  (define-key global-map "\C-z" 'ctl-z-keymap)
-  ;; Navigation
-  ;; Quickly jump to character(s) with =avy=.
-
-  ;; avy - jump to character
+  (use-package dictionary
+    )
   (use-package avy
-    :bind (("C-z ;" . avy-goto-char)
-           ("C-z '" . avy-goto-char-2)
-           ("C-z w" . avy-goto-word-1)))
+    :custom
+    (avy-keys '(?a ?r ?s ?t ?g ?n ?e ?i ?o))   ;; colemak-friendly
+    :config
+    (defun avy-action-kill-whole-line (pt)
+      (save-excursion
+        (goto-char pt)
+        (kill-whole-line))
+      (select-window
+       (cdr
+        (ring-ref avy-ring 0)))
+      t)
+
+    (setf (alist-get ?k avy-dispatch-alist) 'avy-action-kill-stay
+          (alist-get ?K avy-dispatch-alist) 'avy-action-kill-whole-line)
+    (defun avy-action-copy-whole-line (pt)
+      (save-excursion
+        (goto-char pt)
+        (cl-destructuring-bind (start . end)
+            (bounds-of-thing-at-point 'line)
+          (copy-region-as-kill start end)))
+      (select-window
+       (cdr
+        (ring-ref avy-ring 0)))
+      t)
+
+    (defun avy-action-yank-whole-line (pt)
+      (avy-action-copy-whole-line pt)
+      (save-excursion (yank))
+      t)
+
+    (setf (alist-get ?y avy-dispatch-alist) 'avy-action-yank
+          (alist-get ?w avy-dispatch-alist) 'avy-action-copy
+          (alist-get ?W avy-dispatch-alist) 'avy-action-copy-whole-line
+          (alist-get ?Y avy-dispatch-alist) 'avy-action-yank-whole-line)
+    (defun avy-action-teleport-whole-line (pt)
+      (avy-action-kill-whole-line pt)
+      (save-excursion (yank)) t)
+
+    (setf (alist-get ?t avy-dispatch-alist) 'avy-action-teleport
+          (alist-get ?T avy-dispatch-alist) 'avy-action-teleport-whole-line)
+
+    (defun avy-action-mark-to-char (pt)
+      (activate-mark)
+      (goto-char pt))
+
+    (setf (alist-get ?  avy-dispatch-alist) 'avy-action-mark-to-char)
+    (defun avy-action-flyspell (pt)
+      (save-excursion
+        (goto-char pt)
+        (when (require 'flyspell nil t)
+          (flyspell-auto-correct-word)))
+      (select-window
+       (cdr (ring-ref avy-ring 0)))
+      t)
+
+    ;; Bonjour Bind to semicolon (flyspell uses C-;)
+    (setf (alist-get ?\; avy-dispatch-alist) 'avy-action-flyspell)
+    ;; TODO add dictionnary
+    (defun dictionary-search-dwim (&optional arg)
+      "Search for definition of word at point. If region is active,
+      search for contents of region instead. If called with a prefix
+      argument, query for word to search."
+      (interactive "P")
+      (if arg
+          (dictionary-search nil)
+        (if (use-region-p)
+            (dictionary-search (buffer-substring-no-properties
+                                (region-beginning)
+                                (region-end)))
+          (if (thing-at-point 'word)
+              (dictionary-lookup-definition)
+            (dictionary-search-dwim '(4))))))
+
+    (defun avy-action-define (pt)
+      (save-excursion
+        (goto-char pt)
+        (dictionary-search-dwim))
+      (select-window
+       (cdr (ring-ref avy-ring 0)))
+      t)
+
+    (setf (alist-get ?= avy-dispatch-alist) 'avy-action-define)
+  
+    (defun avy-action-helpful (pt)
+      (save-excursion
+        (goto-char pt)
+        (helpful-at-point))
+      (select-window
+       (cdr (ring-ref avy-ring 0)))
+      t)
+
+    (setf (alist-get ?H avy-dispatch-alist) 'avy-action-helpful)
+    (defun avy-action-embark (pt)
+      (unwind-protect
+          (save-excursion
+            (goto-char pt)
+            (embark-act))
+        (select-window
+         (cdr (ring-ref avy-ring 0))))
+      t)
+
+    (setf (alist-get ?. avy-dispatch-alist) 'avy-action-embark)
+
+    :bind (("M-j" . avy-goto-char-timer)))
 #+end_src
 
 ** Theme
@@ -1278,15 +1362,28 @@ Change light to dark theme according to the sunset/sunrise
     (setq dashboard-center-content t)
     (setq dashboard-icon-type 'nerd-icons)
     (setq dashboard-set-file-icons t)
-    (setq initial-buffer-choice (lambda ()
-                                    (get-buffer-create "*dashboard*")))
     (add-hook 'elpaca-after-init-hook #'dashboard-insert-startupify-lists)
     (add-hook 'elpaca-after-init-hook #'dashboard-initialize)
     (add-hook 'server-after-make-frame-hook
               (lambda ()
                 (when (eq (buffer-local-value 'major-mode (current-buffer)) 'dashboard-mode)
                   (dashboard-refresh-buffer))))
-    (dashboard-setup-startup-hook))
+    (dashboard-setup-startup-hook)
+
+    (setq initial-buffer-choice (lambda () ;; startup routine
+                                  ;; If no file is open in any buffer
+                                  (progn (ignore) ;; TODO: fetch gcal
+                                         (dashboard-open)
+                                         (org-agenda nil "z")
+                                         (get-buffer "*Org Agenda*")))))
+#+end_src
+
+*** fortune
+#+begin_src emacs-lisp
+  (use-feature fortune
+    :custom
+    (fortune-dir "/usr/share/games/fortunes")
+    (fortune-file "/usr/share/games/fortunes/bofh-excuses"))
 #+end_src
 
 * Editing
@@ -2065,12 +2162,13 @@ marginalia adds annotations in the mini buffer
 #+begin_src emacs-lisp
   (use-package mu4e
     :elpaca (mu4e :host github :files ("mu4e/*.el" "build/mu4e/mu4e-meta.el" "build/mu4e/mu4e-config.el" "build/mu4e/mu4e.info") :repo "djcb/mu"
-                  :tag "v1.10.0"
+                  :tag "v1.10.8"
                   :main "mu4e/mu4e.el"
                   :pre-build (("./autogen.sh")
                               ("ninja" "-C" "build")
                               (make-symbolic-link (expand-file-name "./build/mu/mu")
-                                                  (expand-file-name "~/.local/bin/mu") 'ok-if-exists)))
+                                                  (expand-file-name "~/.local/bin/mu") 'ok-if-exists))
+                  :pin t)
     :defer 1
     :commands (mu4e mu4e-update-index mu4e-compose-new)
     :after org
@@ -2144,11 +2242,11 @@ marginalia adds annotations in the mini buffer
                     (mu4e-refile-folder	    .	"/maman/[Gmail].Tous les messages")
                     (mu4e-trash-folder	    .	"/maman/[Gmail].Corbeille")
                     (mu4e-maildir-shortcuts .	(list
-                                                           ( :maildir "/maman/INBOX" :key ?i)
-                                                           ( :maildir "/maman/[Gmail].Tous les messages"  :key ?a)
-                                                           ( :maildir "/maman/[Gmail].Messages envoy&AOk-s"  :key ?S)
-                                                           ( :maildir "/maman/[Gmail].Corbeille" :key ?t)
-                                                           ( :maildir "/maman/[Gmail].Suivis" :key ?s)))
+                                                   ( :maildir "/maman/INBOX" :key ?i)
+                                                   ( :maildir "/maman/[Gmail].Tous les messages"  :key ?a)
+                                                   ( :maildir "/maman/[Gmail].Messages envoy&AOk-s"  :key ?S)
+                                                   ( :maildir "/maman/[Gmail].Corbeille" :key ?t)
+                                                   ( :maildir "/maman/[Gmail].Suivis" :key ?s)))
                     (mu4e-bookmarks . nil)
 
                     ))))
@@ -2476,4 +2574,8 @@ See:[[https://github.com/progfolio/elpaca/issues/81][progfolio/elpaca#81 {Featur
   ;; see https://github.com/progfolio/elpaca/issues/81
   (setq custom-file (expand-file-name "customs.el" user-emacs-directory))
   (add-hook 'elpaca-after-init-hook (lambda () (load custom-file 'noerror)))
+#+end_src
+
+#+begin_src emacs-lisp
+
 #+end_src

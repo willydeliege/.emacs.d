@@ -161,6 +161,17 @@ Header for the config init.el file
   ;;; init.el --- Willydeliege's Emacs configuration -*- lexical-binding: t -*-
 #+end_src
 
+#+begin_src emacs-lisp
+;; time the loading of the .emacs
+;; keep this on top of your .emacs
+(defvar *emacs-load-start* (current-time))
+(defun anarcat/time-to-ms (time)
+  (+ (* (+ (* (car time) (expt 2 16)) (car (cdr time))) 1000000) (car (cdr (cdr time)))))
+(defun anarcat/display-timing ()
+  (message "Emacs loaded in %fms" (/ (- (anarcat/time-to-ms (current-time)) (anarcat/time-to-ms *emacs-load-start*)) 1000000.0)))
+(add-hook 'after-init-hook 'anarcat/display-timing t)
+#+end_src
+
 * Package manager
 Using elpaca as package manager
 #+begin_src emacs-lisp
@@ -207,15 +218,9 @@ We will use use-package
 #+begin_src emacs-lisp
   ;; need org to be loaded before elpaca-use-package
   (elpaca (org :depth nil
-   	     :tag "release_9.6.12"
-  	     :pin t))
-  (defmacro use-feature (name &rest args)
-    "Like `use-package' but accounting for asynchronous installation.
-     NAME and ARGS are in `use-package'."
-    (declare (indent defun))
-    `(use-package ,name
-       :elpaca nil
-       ,@args))
+               :tag "release_9.6.12"
+               :pin t))
+
   ;; Install use-package support
   (elpaca elpaca-use-package
     ;; Enable :elpaca use-package keyword.
@@ -224,6 +229,13 @@ We will use use-package
     (setq elpaca-use-package-by-default t))
   ;; Block until current queue processed.
   (elpaca-wait)
+  (defmacro use-feature (name &rest args)
+    "Like `use-package' but accounting for asynchronous installation.
+     NAME and ARGS are in `use-package'."
+    (declare (indent defun))
+    `(use-package ,name
+       :elpaca nil
+       ,@args))
 #+end_src
 
 ** Global emacs
@@ -254,25 +266,52 @@ We will use use-package
 #+end_src
 
 * Defaults
+** Save place
 #+begin_src emacs-lisp
   ;; Save the last place edited in files
-  (save-place-mode 1)
-  (setq save-place-file (locate-user-emacs-file "places" ".emacs-places")
-        save-place-forget-unreadable-files nil)
-  (setq display-time-day-and-date t)
-  (setq display-time-default-load-average nil)
-  (setq display-time-24hr-format t)
-  (display-time-mode 1)
+  (use-feature saveplace
+    :config
+    (save-place-mode 1)
+    (setq save-place-file (locate-user-emacs-file "places" ".emacs-places")
+          save-place-forget-unreadable-files nil))
+ 
+  #+end_src
+  
+** Recentf
+#+begin_src emacs-lisp
+  (use-feature recentf
+    :hook (emacs-startup .  recentf-mode)
+    :config
+    (setq recentf-max-menu-items 25)
+    (setq recentf-max-saved-items 25)
+    (add-to-list 'recentf-exclude "~/.emacs.d/.cache/treemacs-persist"))
+#+end_src
+   
+** Line numbers
+#+begin_src emacs-lisp
+  (use-feature display-line-numbers
+    :hook ((text-mode prog-mode) . display-line-numbers-mode)
+    :config
+    (setq-default display-line-numbers-type 'relative
+                  display-line-numbers-width 4))
+    #+end_src
+ 
+** Display time in modeline
+#+begin_src emacs-lisp
+  (use-feature display-time
+    :hook (after-init . display-time-mode)
+    :config
+    (setq display-time-day-and-date t)
+    (setq display-time-default-load-average nil)
+    (setq display-time-24hr-format t))
+  #+end_src
+  
+** Defaults
+#+begin_src emacs-lisp
   (display-battery-mode 1)
-  (setq recentf-max-menu-items 25)
-  (setq recentf-max-saved-items 25)
-  (add-hook 'text-mode-hook 'display-line-numbers-mode)
-  (add-hook 'prog-mode-hook 'display-line-numbers-mode)
-  (setq-default display-line-numbers-type 'relative
-                display-line-numbers-width 4)
   (setq browse-url-browser-function 'browse-url-generic
         browse-url-generic-program "google-chrome")
-  (setq my/uname (shell-command-to-string "uname -a"))
+  (defvar my/uname (shell-command-to-string "uname -a"))
   (global-prettify-symbols-mode)
   (defun delete-visited-file (buffer-name)
     "Delete the file visited by the buffer named BUFFER-NAME."
@@ -285,7 +324,205 @@ We will use use-package
           (delete-file filename))
         (kill-buffer buffer))))
   (keymap-global-set "C-x D" 'delete-visited-file)
-  (setq my/using-android (string-match "Android" my/uname))
+  (defvar my/using-android (string-match "Android" my/uname))
+#+end_src
+
+** Help
+*** Hepful
+Better help buffer
+#+begin_src emacs-lisp
+  (use-package helpful
+    :init
+    (setq helpful--view-literal t)
+    :bind (("C-c C-." . helpful-at-point)
+           ("C-h f" . helpful-callable)
+           ("C-h v" . helpful-variable)
+           ("C-h k" . helpful-key)
+           ("C-h x" . helpful-command)))
+#+end_src
+
+*** Womanizer
+#+begin_src emacs-lisp
+  (use-feature help
+    :bind (:map help-map
+                ("W" . woman)))
+#+end_src
+
+** Terminals
+*** Vterm
+#+begin_src emacs-lisp
+  (use-package vterm
+    :hook (vterm-mode . puni-disable-puni-mode))
+#+end_src
+
+*** Meow-vterm
+#+begin_src emacs-lisp
+  (use-package meow-vterm
+    :elpaca (meow-vterm :fetcher github :repo "accelbread/meow-vterm")
+    :init
+    (meow-vterm-enable))
+#+end_src
+
+*** Vterm toggle
+#+begin_src emacs-lisp
+  (use-package vterm-toggle
+    :bind (("C-c t t" . vterm-toggle)
+           ("C-c t V" . vterm-toggle-cd)))
+#+end_src
+
+*** Multi vterm
+Use vterm as multiplexer
+#+begin_src emacs-lisp
+  (use-package multi-vterm
+    :bind ( ("C-c t m" . multi-vterm)
+            :map vterm-mode-map
+            ("C-c t r" . multi-vterm-rename-buffer)
+            ("C-c t n" . multi-vterm-next)
+            ("C-c t p" . multi-vterm-prev))
+    :config
+    (define-key vterm-mode-map [return]  #'vterm-send-return)
+    (setq vterm-keymap-exceptions nil))
+#+end_src
+
+*** Eshell
+#+begin_src emacs-lisp
+  (use-feature eshell
+    :bind ("C-c t e" . eshell))
+  (use-package eshell-vterm
+    :hook (eshell-mode . eshell-vterm-mode)
+    :after eshell
+    :config)
+#+end_src
+
+*** Exec path
+#+begin_src emacs-lisp
+  (use-package exec-path-from-shell
+    :init
+    (exec-path-from-shell-initialize))
+#+end_src
+
+* Keys
+** meow
+#+begin_src emacs-lisp
+  (use-package meow
+    :hook (meow-mode . meow-org-note-insert)
+    :init
+    (defun meow-org-note-insert ()
+      "Enter insert mode in org note buffer.
+  This is needed for minor modes"
+      (if
+          (or
+           (equal
+            (buffer-name)
+            "*Org Note*")
+           (equal
+            (buffer-name)
+            "COMMIT_EDITMSG"))
+          (meow-insert-mode)))
+    :config
+    (defun meow-setup ()
+      (setq meow-use-clipboard t)
+      (add-to-list 'meow-keypad-start-keys '(?z . ?z))
+      (add-to-list 'meow-mode-state-list '(mu4e-view-mode . motion))
+      (add-to-list 'meow-mode-state-list '(cfw:calendar-mode . motion))
+      (setcdr (assq 'vterm-mode meow-mode-state-list) 'insert)
+      (meow-motion-overwrite-define-key
+       ;; Use e to move up, n to move down.
+       '("e" . "p")
+       ;; '("C-e" . "C-p")
+       '("<escape>" . ignore))
+      (meow-leader-define-key
+       '("?" . "H-e")
+       ;; To the originally e in MOTION state, use SPC e.
+       '("e" . "C-p")
+       '("n" . "C-n")
+       '("1" . meow-digit-argument)
+       '("2" . meow-digit-argument)
+       '("3" . meow-digit-argument)
+       '("4" . meow-digit-argument)
+       '("5" . meow-digit-argument)
+       '("6" . meow-digit-argument)
+       '("7" . meow-digit-argument)
+       '("8" . meow-digit-argument)
+       '("9" . meow-digit-argument)
+       '("0" . meow-digit-argument))
+      (meow-normal-define-key
+       '("0" . meow-expand-0)
+       '("1" . meow-expand-1)
+       '("2" . meow-expand-2)
+       '("3" . meow-expand-3)
+       '("4" . meow-expand-4)
+       '("5" . meow-expand-5)
+       '("6" . meow-expand-6)
+       '("7" . meow-expand-7)
+       '("8" . meow-expand-8)
+       '("9" . meow-expand-9)
+       '("-" . negative-argument)
+       '(";" . meow-reverse)
+       '("," . meow-inner-of-thing)
+       '("." . meow-bounds-of-thing)
+       '("=" . format-all-region-or-buffer)
+       '("[" . meow-beginning-of-thing)
+       '("]" . meow-end-of-thing)
+       '("/" . meow-visit)
+       '("a" . meow-append)
+       '("A" . meow-open-below)
+       '("b" . meow-back-word)
+       '("B" . meow-back-symbol)
+       '("c" . meow-change)
+       '("d" . meow-delete)
+       '("e" . meow-prev)
+       '("E" . meow-prev-expand)
+       '("f" . meow-find)
+       '("g" . meow-cancel-selection)
+       '("G" . meow-grab)
+       '("m" . meow-left)
+       '("M" . meow-left-expand)
+       '("i" . meow-right)
+       '("I" . meow-right-expand)
+       '("j" . meow-join)
+       '("k" . meow-kill)
+       '("l" . meow-line)
+       '("L" . meow-goto-line)
+       '("h" . meow-mark-word)
+       '("H" . meow-mark-symbol)
+       '("n" . meow-next)
+       '("N" . meow-next-expand)
+       '("o" . meow-block)
+       '("O" . meow-to-block)
+       '("p" . meow-yank)
+       '("q" . meow-quit)
+       '("r" . meow-replace)
+       '("s" . meow-insert)
+       '("S" . meow-open-above)
+       '("t" . meow-till)
+       '("u" . meow-undo)
+       '("U" . meow-undo-in-selection)
+       '("v" . meow-search)
+       '("w" . meow-next-word)
+       '("W" . meow-next-symbol)
+       '("x" . meow-delete)
+       '("X" . meow-backward-delete)
+       '("y" . meow-save)
+       '("z" . meow-pop-selection)
+       '("'" . repeat)
+       '("<escape>" . ignore)))
+    (meow-setup)
+    (meow-global-mode 1))
+#+end_src
+
+** Which-key
+#+begin_src emacs-lisp
+  (use-package which-key
+    :after meow
+    :custom
+    (which-key-side-window-max-height 0.6)
+    (which-key-max-description-length 24)
+    (which-key-side-window-max-width 7)
+    (which-key-allow-imprecise-window-fit nil)
+    (which-key-special-keys '("SPC" "TAB" "RET" "ESC" "DEL"))
+    :config
+    (which-key-mode))
 #+end_src
 
 * Personal information
@@ -637,203 +874,6 @@ Distraction-free writing
     (add-to-list 'org-capture-templates
                  '("p" "password" entry (file "~/org/password.org.gpg")
                    "* %^{Title}\n  %^{URL}p %^{USERNAME}p %^{PASSWORD}p")))
-#+end_src
-
-* Keys
-** meow
-#+begin_src emacs-lisp
-  (use-package meow
-    :hook (meow-mode . meow-org-note-insert)
-    :init
-    (defun meow-org-note-insert ()
-      "Enter insert mode in org note buffer.
-  This is needed for minor modes"
-      (if
-          (or
-           (equal
-            (buffer-name)
-            "*Org Note*")
-           (equal
-            (buffer-name)
-            "COMMIT_EDITMSG"))
-          (meow-insert-mode)))
-    :config
-    (defun meow-setup ()
-      (setq meow-use-clipboard t)
-      (add-to-list 'meow-keypad-start-keys '(?z . ?z))
-      (add-to-list 'meow-mode-state-list '(mu4e-view-mode . motion))
-      (add-to-list 'meow-mode-state-list '(cfw:calendar-mode . motion))
-      (setcdr (assq 'vterm-mode meow-mode-state-list) 'insert)
-      (meow-motion-overwrite-define-key
-       ;; Use e to move up, n to move down.
-       '("e" . "p")
-       ;; '("C-e" . "C-p")
-       '("<escape>" . ignore))
-      (meow-leader-define-key
-       '("?" . "H-e")
-       ;; To the originally e in MOTION state, use SPC e.
-       '("e" . "C-p")
-       '("n" . "C-n")
-       '("1" . meow-digit-argument)
-       '("2" . meow-digit-argument)
-       '("3" . meow-digit-argument)
-       '("4" . meow-digit-argument)
-       '("5" . meow-digit-argument)
-       '("6" . meow-digit-argument)
-       '("7" . meow-digit-argument)
-       '("8" . meow-digit-argument)
-       '("9" . meow-digit-argument)
-       '("0" . meow-digit-argument))
-      (meow-normal-define-key
-       '("0" . meow-expand-0)
-       '("1" . meow-expand-1)
-       '("2" . meow-expand-2)
-       '("3" . meow-expand-3)
-       '("4" . meow-expand-4)
-       '("5" . meow-expand-5)
-       '("6" . meow-expand-6)
-       '("7" . meow-expand-7)
-       '("8" . meow-expand-8)
-       '("9" . meow-expand-9)
-       '("-" . negative-argument)
-       '(";" . meow-reverse)
-       '("," . meow-inner-of-thing)
-       '("." . meow-bounds-of-thing)
-       '("=" . format-all-region-or-buffer)
-       '("[" . meow-beginning-of-thing)
-       '("]" . meow-end-of-thing)
-       '("/" . meow-visit)
-       '("a" . meow-append)
-       '("A" . meow-open-below)
-       '("b" . meow-back-word)
-       '("B" . meow-back-symbol)
-       '("c" . meow-change)
-       '("d" . meow-delete)
-       '("e" . meow-prev)
-       '("E" . meow-prev-expand)
-       '("f" . meow-find)
-       '("g" . meow-cancel-selection)
-       '("G" . meow-grab)
-       '("m" . meow-left)
-       '("M" . meow-left-expand)
-       '("i" . meow-right)
-       '("I" . meow-right-expand)
-       '("j" . meow-join)
-       '("k" . meow-kill)
-       '("l" . meow-line)
-       '("L" . meow-goto-line)
-       '("h" . meow-mark-word)
-       '("H" . meow-mark-symbol)
-       '("n" . meow-next)
-       '("N" . meow-next-expand)
-       '("o" . meow-block)
-       '("O" . meow-to-block)
-       '("p" . meow-yank)
-       '("q" . meow-quit)
-       '("r" . meow-replace)
-       '("s" . meow-insert)
-       '("S" . meow-open-above)
-       '("t" . meow-till)
-       '("u" . meow-undo)
-       '("U" . meow-undo-in-selection)
-       '("v" . meow-search)
-       '("w" . meow-next-word)
-       '("W" . meow-next-symbol)
-       '("x" . meow-delete)
-       '("X" . meow-backward-delete)
-       '("y" . meow-save)
-       '("z" . meow-pop-selection)
-       '("'" . repeat)
-       '("<escape>" . ignore)))
-    (meow-setup)
-    (meow-global-mode 1))
-#+end_src
-
-** Which-key
-#+begin_src emacs-lisp
-  (use-package which-key
-    :after meow
-    :custom
-    (which-key-side-window-max-height 0.6)
-    (which-key-max-description-length 24)
-    (which-key-side-window-max-width 7)
-    (which-key-allow-imprecise-window-fit nil)
-    (which-key-special-keys '("SPC" "TAB" "RET" "ESC" "DEL"))
-    :config
-    (which-key-mode))
-#+end_src
-
-** Help
-Better help buffer
-#+begin_src emacs-lisp
-  (use-package helpful
-    :init
-    (setq helpful--view-literal t)
-    :bind (("C-c C-." . helpful-at-point)
-           ("C-h f" . helpful-callable)
-           ("C-h v" . helpful-variable)
-           ("C-h k" . helpful-key)
-           ("C-h x" . helpful-command)))
-#+end_src
-
-*** Help package
-#+begin_src emacs-lisp
-  (use-feature help
-    :bind (:map help-map
-                ("W" . woman)))
-#+end_src
-
-** Terminals
-*** Vterm
-#+begin_src emacs-lisp
-  (use-package vterm
-    :hook (vterm-mode . puni-disable-puni-mode))
-#+end_src
-
-*** Meow-vterm
-#+begin_src emacs-lisp
-  (use-package meow-vterm
-    :elpaca (meow-vterm :fetcher github :repo "accelbread/meow-vterm")
-    :init
-    (meow-vterm-enable))
-#+end_src
-
-*** Vterm toggle
-#+begin_src emacs-lisp
-  (use-package vterm-toggle
-    :bind (("C-c t t" . vterm-toggle)
-           ("C-c t V" . vterm-toggle-cd)))
-#+end_src
-
-*** Multi vterm
-Use vterm as multiplexer
-#+begin_src emacs-lisp
-  (use-package multi-vterm
-    :bind ( ("C-c t m" . multi-vterm)
-            :map vterm-mode-map
-            ("C-c t r" . multi-vterm-rename-buffer)
-            ("C-c t n" . multi-vterm-next)
-            ("C-c t p" . multi-vterm-prev))
-    :config
-    (define-key vterm-mode-map [return]  #'vterm-send-return)
-    (setq vterm-keymap-exceptions nil))
-#+end_src
-
-*** Eshell
-#+begin_src emacs-lisp
-  (use-feature eshell
-    :bind ("C-c t e" . eshell))
-  (use-package eshell-vterm
-    :hook (eshell-mode . eshell-vterm-mode)
-    :after eshell
-    :config)
-#+end_src
-
-*** Exec path
-#+begin_src emacs-lisp
-  (use-package exec-path-from-shell
-    :init
-    (exec-path-from-shell-initialize))
 #+end_src
 
 * Dired
@@ -1345,45 +1385,6 @@ Change light to dark theme according to the sunset/sunrise
 #+begin_src emacs-lisp
   (use-package golden-ratio
     :hook (elpaca-after-init . golden-ratio-mode))
-#+end_src
-
-** Dashboard
-#+begin_src emacs-lisp
-  (use-package dashboard
-    :bind (:map dashboard-mode-map
-                ("n" . dashboard-next-line)
-                ("e" . dashboard-previous-line))
-    :init
-    (setq dashboard-projects-backend 'project-el)
-    (setq dashboard-items '((recents  . 5)
-                            (bookmarks . 5)
-                            (projects . 5)
-                            (agenda . 5)))
-    (setq dashboard-center-content t)
-    (setq dashboard-icon-type 'nerd-icons)
-    (setq dashboard-set-file-icons t)
-    (add-hook 'elpaca-after-init-hook #'dashboard-insert-startupify-lists)
-    (add-hook 'elpaca-after-init-hook #'dashboard-initialize)
-    (add-hook 'server-after-make-frame-hook
-              (lambda ()
-                (when (eq (buffer-local-value 'major-mode (current-buffer)) 'dashboard-mode)
-                  (dashboard-refresh-buffer))))
-    (dashboard-setup-startup-hook)
-
-    (setq initial-buffer-choice (lambda () ;; startup routine
-                                  ;; If no file is open in any buffer
-                                  (progn (ignore) ;; TODO: fetch gcal
-                                         (dashboard-open)
-                                         (org-agenda nil "z")
-                                         (get-buffer "*Org Agenda*")))))
-#+end_src
-
-*** fortune
-#+begin_src emacs-lisp
-  (use-feature fortune
-    :custom
-    (fortune-dir "/usr/share/games/fortunes")
-    (fortune-file "/usr/share/games/fortunes/bofh-excuses"))
 #+end_src
 
 * Editing
@@ -2556,15 +2557,6 @@ Setup ANSI colors for the compilation buffer
     :bind ("C-c k" . keyword-search)
     :init
     (add-to-list 'keyword-search-alist '(wikipedia-fr . "http://fr.wikipedia.org/wiki/%s")))
-#+end_src
-
-* Recentf
-#+begin_src emacs-lisp
-  (use-package recentf
-    :elpaca nil
-    :hook (emacs-startup .  recentf-mode)
-    :config
-    (add-to-list 'recentf-exclude "~/.emacs.d/.cache/treemacs-persist"))
 #+end_src
 
 * Custom.el

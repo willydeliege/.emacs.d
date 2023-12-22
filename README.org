@@ -537,9 +537,12 @@ Use vterm as multiplexer
 #+begin_src emacs-lisp 
   (use-feature org
     :hook (org-mode                . my/prettify)
+    :hook (server-after-make-frame . my/custom-agenda)
+
     :bind (("C-c l"               . org-store-link)
            ("C-c c"               . org-capture)
            ("C-c a"               . org-agenda)
+           ("C-c z"               . my/custom-agenda)
            :map org-mode-map
            ("M-S-<return>"        . org-insert-subheading)
            ("C-c $"               . org-archive-subtree-default))
@@ -573,12 +576,11 @@ Use vterm as multiplexer
       (interactive)
       (setq org-agenda-files (directory-files org-directory nil ".*==project.*"))
       (add-to-list 'org-agenda-files journal-file))
-    (add-function :before after-focus-change-function 'build-agenda)
     (defun my-org-agenda ()
       (interactive)
       (if (not org-agenda-files)
-          (build-agenda))
-      (org-agenda))
+          (build-agenda)))
+  
     ;; Agenda styling
     (setq org-stuck-projects '("+Project/PROJ" ("NEXT" "WAIT" "MEETING" "HOLD") nil ""))
     (setq  org-agenda-block-separator ?─
@@ -693,7 +695,17 @@ Use vterm as multiplexer
                   ("CANCELLED" :foreground "forest green" :weight bold)
                   ("MEETING" :foreground "forest green" :weight bold))))
     ;; make org-protocol available
-    (require 'org-protocol))
+    (require 'org-protocol)
+    (defun my/custom-agenda ()
+      "Open the agenda =z= view"
+      (interactive)
+      (my-org-agenda)
+      (org-agenda nil "z")
+      (delete-other-windows))
+    (unless (daemonp)
+      (setq initial-buffer-choice (lambda ()
+                                    (my/custom-agenda)
+                                    (get-buffer-create "*Org Agenda*")))))
 #+end_src
 
 *** Org-contrib

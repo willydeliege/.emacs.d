@@ -236,6 +236,17 @@ We will use use-package
     `(use-package ,name
        :elpaca nil
        ,@args))
+
+  (define-prefix-command 'elpaca-keymap)
+  (keymap-global-set "C-c M-p" 'elpaca-keymap)
+
+  (keymap-set 'elpaca-keymap "m" 'elpaca-manager)
+  (keymap-set 'elpaca-keymap "s" 'elpaca-status)
+  (keymap-set 'elpaca-keymap "f" 'elpaca-fetch-all)
+  (keymap-set 'elpaca-keymap "M" 'elpaca-merge-all)
+  (keymap-set 'elpaca-keymap "l" 'elpaca-log)
+  (keymap-set 'elpaca-keymap "b" 'elpaca-browse)
+  (keymap-set 'elpaca-keymap "v" 'elpaca-visit)
 #+end_src
 
 ** Global emacs

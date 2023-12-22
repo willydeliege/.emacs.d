@@ -401,6 +401,18 @@ Use vterm as multiplexer
     (exec-path-from-shell-initialize))
 #+end_src
 
+** Custom.el
+see [[https://github.com/protesilaos/dotfiles/blob/master/emacs/.emacs.d/prot-emacs.org#44-the-initel-setting-to-send-custom-file-to-oblivion][Prot's advice on custom.el]]
+#+begin_src emacs-lisp
+  ;; Disable the damn thing by making it disposable.
+  (setq custom-file (make-temp-file "emacs-custom-"))
+  (defun my/open-custon-file ()
+    "Open the custom file."
+    (interactive)
+    (find-file custom-file))
+  (keymap-global-set "C-x c" 'my/open-custon-file)
+#+end_src
+
 * Keys
 ** meow
 #+begin_src emacs-lisp
@@ -2571,15 +2583,3 @@ Setup ANSI colors for the compilation buffer
     (add-to-list 'keyword-search-alist '(wikipedia-fr . "http://fr.wikipedia.org/wiki/%s")))
 #+end_src
 
-* Custom.el
-Put this at the end of the init file
-See:[[https://github.com/progfolio/elpaca/issues/81][progfolio/elpaca#81 {Feature}: Better support for custom.el]]
-#+begin_src emacs-lisp :lexical t
-  ;; see https://github.com/progfolio/elpaca/issues/81
-  (setq custom-file (expand-file-name "customs.el" user-emacs-directory))
-  (add-hook 'elpaca-after-init-hook (lambda () (load custom-file 'noerror)))
-#+end_src
-
-#+begin_src emacs-lisp
-
-#+end_src

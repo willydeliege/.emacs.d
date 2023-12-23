@@ -25,6 +25,14 @@ Header for the config init.el file
 * Package manager
 Using [[https://github.com/radian-software/straight.el#getting-started][straight]] as package manager
 #+begin_src emacs-lisp
+  ;; Tell straight.el about the profiles we are going to be using.
+(setq straight-profiles
+      '((nil . "default.el")
+        ;; Packages which are pinned to a specific commit.
+        (pinned . "pinned.el")))
+  #+end_src
+  
+  #+begin_src emacs-lisp
   (defvar bootstrap-version)
   (let ((bootstrap-file
          (expand-file-name "straight/repos/straight.el/bootstrap.el" user-emacs-directory))
@@ -37,7 +45,15 @@ Using [[https://github.com/radian-software/straight.el#getting-started][straight
         (goto-char (point-max))
         (eval-print-last-sexp)))
     (load bootstrap-file nil 'nomessage))
-  (straight-use-package 'org)
+#+end_src
+
+#+begin_src emacs-lisp
+(autoload #'straight-x-pull-all "straight-x")
+(autoload #'straight-x-freeze-versions "straight-x")
+#+end_src
+  
+ #+begin_src emacs-lisp
+ (straight-use-package 'org)
 #+end_src
 
 ** USE-PACKAGE

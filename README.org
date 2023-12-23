@@ -320,9 +320,12 @@ Using [[https://github.com/radian-software/straight.el#getting-started][straight
 
 ** isearch
 #+begin_src emacs-lisp
-(use-feature isearch
-  :config
-  (setq isearch-lazy-count t))
+  (use-feature isearch
+    :config
+    (setq isearch-lazy-count t
+          isearch-repeat-on-direction-change t
+          isearch-wrap-pause nil
+          isearch-allow-prefix t))
 #+end_src
 
 ** Help
@@ -838,6 +841,7 @@ Distraction-free writing
   :config ; add late to hook
   (add-hook 'org-mode-hook #'org-modern-indent-mode 90))
 #+end_src
+
 ** Org notifications
 #+begin_src emacs-lisp
 (use-package org-alert

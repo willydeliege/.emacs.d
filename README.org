@@ -22,74 +22,6 @@ Header for the config init.el file
 #+end_src
 
 #+end_src
-* Package manager
-Using [[https://github.com/radian-software/straight.el#getting-started][straight]] as package manager
-#+begin_src emacs-lisp
-  ;; Tell straight.el about the profiles we are going to be using.
-(setq straight-profiles
-      '((nil . "default.el")
-        ;; Packages which are pinned to a specific commit.
-        (pinned . "pinned.el")))
-  #+end_src
-  
-  #+begin_src emacs-lisp
-  (defvar bootstrap-version)
-  (let ((bootstrap-file
-         (expand-file-name "straight/repos/straight.el/bootstrap.el" user-emacs-directory))
-        (bootstrap-version 6))
-    (unless (file-exists-p bootstrap-file)
-      (with-current-buffer
-          (url-retrieve-synchronously
-           "https://raw.githubusercontent.com/radian-software/straight.el/develop/install.el"
-           'silent 'inhibit-cookies)
-        (goto-char (point-max))
-        (eval-print-last-sexp)))
-    (load bootstrap-file nil 'nomessage))
-#+end_src
-
-#+begin_src emacs-lisp
-(autoload #'straight-x-pull-all "straight-x")
-(autoload #'straight-x-freeze-versions "straight-x")
-#+end_src
-  
- #+begin_src emacs-lisp
- (straight-use-package 'org)
-#+end_src
-
-** USE-PACKAGE
-We will use use-package
-#+begin_src emacs-lisp
-
-  (straight-use-package 'use-package)
-  (defun straight-update-packages ()
-    "Update all packages and restore pinned packages.
-  See straight/versions/default.el"
-    (interactive)
-    (message "Update all packages")
-    (straight-pull-all)
-    (message "Restore pinned versions...")
-    (straight-thaw-versions)
-    (message "Done"))
-    (keymap-global-set "C-c M-p p" 'straight-update-packages)
-    (keymap-global-set "C-c M-p u" 'straight-use-package)
-    (keymap-global-set "C-c M-p v" 'straight-visit-package)
-    (keymap-global-set "C-c M-p V" 'straight-visit-package-website)
-    (keymap-global-set "C-c M-p t" 'straight-thaw-versions)
-
-#+end_src
-and use straight by default
-#+begin_src emacs-lisp
-  (setq straight-use-package-by-default t)
-  (defmacro use-feature (name &rest args)
-    "Like `use-package' but with `straight-use-package-by-default' disabled.
-  NAME and ARGS are in `use-package'."
-    (declare (indent defun))
-    `(use-package ,name
-       :straight nil
-       :ensure nil
-       ,@args))
-#+end_src
-
 * Using straight properly with initiating in early-init.el
 ** early-init
 :PROPERTIES:
@@ -239,6 +171,83 @@ This helps with a bug I was hitting when using =desktop-save-mode='s =desktop-re
 #+begin_src emacs-lisp :lexical t
   (provide 'early-init)
   ;;; early-init.el ends here
+#+end_src
+
+* Package manager
+Using [[https://github.com/radian-software/straight.el#getting-started][straight]] as package manager
+#+begin_src emacs-lisp
+  ;; Tell straight.el about the profiles we are going to be using.
+(setq straight-profiles
+      '((nil . "default.el")
+        ;; Packages which are pinned to a specific commit.
+        (pinned . "pinned.el")))
+  #+end_src
+  
+  #+begin_src emacs-lisp
+  (defvar bootstrap-version)
+  (let ((bootstrap-file
+         (expand-file-name "straight/repos/straight.el/bootstrap.el" user-emacs-directory))
+        (bootstrap-version 6))
+    (unless (file-exists-p bootstrap-file)
+      (with-current-buffer
+          (url-retrieve-synchronously
+           "https://raw.githubusercontent.com/radian-software/straight.el/develop/install.el"
+           'silent 'inhibit-cookies)
+        (goto-char (point-max))
+        (eval-print-last-sexp)))
+    (load bootstrap-file nil 'nomessage))
+#+end_src
+
+#+begin_src emacs-lisp
+(autoload #'straight-x-pull-all "straight-x")
+(autoload #'straight-x-freeze-versions "straight-x")
+#+end_src
+  
+ #+begin_src emacs-lisp
+ (straight-use-package 'org)
+#+end_src
+
+** USE-PACKAGE
+*** We will use use-package
+#+begin_src emacs-lisp
+
+  (straight-use-package 'use-package)
+
+#+end_src
+*** and use straight by default
+#+begin_src emacs-lisp
+  (setq straight-use-package-by-default t)
+  (defmacro use-feature (name &rest args)
+    "Like `use-package' but with `straight-use-package-by-default' disabled.
+  NAME and ARGS are in `use-package'."
+    (declare (indent defun))
+    `(use-package ,name
+       :straight nil
+       :ensure nil
+       ,@args))
+  #+end_src
+*** keynap for straight.el
+#+begin_src emacs-lisp
+(defalias 'straight-keymap (make-sparse-keymap))
+   (defvar straight-map (symbol-function 'straight-keymap)
+     "Global keymap for straights commands.")
+   (define-key global-map (kbd "C-c M-p") 'straight-keymap)
+   (use-feature straight
+     :bind (:map straight-map
+                 ("u" . straight-use-package)
+                 ("r" . straight-recipes)
+                 ("P" . straight-pull-all)
+                 ("F" . straight-fetch-all)
+                 ("p" . straight-pull-package)
+                 ("f" . straight-fetch-package)
+                 ("v" . straight-visit-package)
+                 ("b" . straight-visit-package-website)))
+#+end_src
+
+* Personal information
+#+begin_src emacs-lisp
+  (setq user-full-name "Frédéric Willem"
+        user-mail-address "frederic.willem@gmail.com")
 #+end_src
 
 * Defaults
@@ -523,12 +532,6 @@ see [[https://github.com/protesilaos/dotfiles/blob/master/emacs/.emacs.d/prot-em
     (which-key-special-keys '("SPC" "TAB" "RET" "ESC" "DEL"))
     :config
     (which-key-mode))
-#+end_src
-
-* Personal information
-#+begin_src emacs-lisp
-  (setq user-full-name "Frédéric Willem"
-        user-mail-address "frederic.willem@gmail.com")
 #+end_src
 
 * Org mode

@@ -1,9 +1,79 @@
 #+TITLE: Emacs literate configuration
-#+PROPERTY: header-args :tangle-mode o444 :tangle init.el :results none :lexical t
+#+PROPERTY: header-args :tangle init.el :results none
 #+OPTIONS: toc:2 num:nil
 #+auto_tangle: t
+
 * Emacs configuration
 After spending lot of time with doom Emacs, willing to switch to a more native emacs config while keeping evil mode
+* Header
+Header for the config init.el file
+#+begin_src emacs-lisp
+    ;;; init.el --- Willydeliege's Emacs configuration -*- lexical-binding: t -*-
+
+  ;; time the loading of the .emacs
+  ;; keep this on top of your .emacs
+  (defvar *emacs-load-start* (current-time))
+  (defun anarcat/time-to-ms (time)
+    (+ (* (+ (* (car time) (expt 2 16)) (car (cdr time))) 1000000) (car (cdr (cdr time)))))
+  (defun anarcat/display-timing ()
+    (message "Emacs loaded in %fms" (/ (- (anarcat/time-to-ms (current-time)) (anarcat/time-to-ms *emacs-load-start*)) 1000000.0)))
+  (add-hook 'after-init-hook 'anarcat/display-timing t)
+  
+#+end_src
+
+#+end_src
+* Package manager
+Using [[https://github.com/radian-software/straight.el#getting-started][straight]] as package manager
+#+begin_src emacs-lisp
+  (defvar bootstrap-version)
+  (let ((bootstrap-file
+         (expand-file-name "straight/repos/straight.el/bootstrap.el" user-emacs-directory))
+        (bootstrap-version 6))
+    (unless (file-exists-p bootstrap-file)
+      (with-current-buffer
+          (url-retrieve-synchronously
+           "https://raw.githubusercontent.com/radian-software/straight.el/develop/install.el"
+           'silent 'inhibit-cookies)
+        (goto-char (point-max))
+        (eval-print-last-sexp)))
+    (load bootstrap-file nil 'nomessage))
+  (straight-use-package 'org)
+#+end_src
+
+** USE-PACKAGE
+We will use use-package
+#+begin_src emacs-lisp
+
+  (straight-use-package 'use-package)
+  (defun straight-update-packages ()
+    "Update all packages and restore pinned packages.
+  See straight/versions/default.el"
+    (interactive)
+    (message "Update all packages")
+    (straight-pull-all)
+    (message "Restore pinned versions...")
+    (straight-thaw-versions)
+    (message "Done"))
+    (keymap-global-set "C-c M-p p" 'straight-update-packages)
+    (keymap-global-set "C-c M-p u" 'straight-use-package)
+    (keymap-global-set "C-c M-p v" 'straight-visit-package)
+    (keymap-global-set "C-c M-p V" 'straight-visit-package-website)
+    (keymap-global-set "C-c M-p t" 'straight-thaw-versions)
+
+#+end_src
+and use straight by default
+#+begin_src emacs-lisp
+  (setq straight-use-package-by-default t)
+  (defmacro use-feature (name &rest args)
+    "Like `use-package' but with `straight-use-package-by-default' disabled.
+  NAME and ARGS are in `use-package'."
+    (declare (indent defun))
+    `(use-package ,name
+       :straight nil
+       :ensure nil
+       ,@args))
+#+end_src
+
 * Using straight properly with initiating in early-init.el
 ** early-init
 :PROPERTIES:
@@ -95,8 +165,8 @@ The following is a table shows values from popular Emacs configurations.
        (when (boundp 'after-focus-change-function)
          (add-function :after after-focus-change-function #'+gc-after-focus-change)))))
 
-  (with-eval-after-load 'elpaca
-    (add-hook 'elpaca-after-init-hook '+reset-init-values))
+  (with-eval-after-load 'straight
+    (add-hook 'after-init-hook '+reset-init-values))
 #+end_src
 
 *** UI
@@ -153,127 +223,6 @@ This helps with a bug I was hitting when using =desktop-save-mode='s =desktop-re
 #+begin_src emacs-lisp :lexical t
   (provide 'early-init)
   ;;; early-init.el ends here
-#+end_src
-
-* Header
-Header for the config init.el file
-#+begin_src emacs-lisp
-  ;;; init.el --- Willydeliege's Emacs configuration -*- lexical-binding: t -*-
-#+end_src
-
-#+begin_src emacs-lisp
-;; time the loading of the .emacs
-;; keep this on top of your .emacs
-(defvar *emacs-load-start* (current-time))
-(defun anarcat/time-to-ms (time)
-  (+ (* (+ (* (car time) (expt 2 16)) (car (cdr time))) 1000000) (car (cdr (cdr time)))))
-(defun anarcat/display-timing ()
-  (message "Emacs loaded in %fms" (/ (- (anarcat/time-to-ms (current-time)) (anarcat/time-to-ms *emacs-load-start*)) 1000000.0)))
-(add-hook 'after-init-hook 'anarcat/display-timing t)
-#+end_src
-
-* Package manager
-Using elpaca as package manager
-#+begin_src emacs-lisp
-  (defvar elpaca-installer-version 0.6)
-  (defvar elpaca-directory (expand-file-name "elpaca/" user-emacs-directory))
-  (defvar elpaca-builds-directory (expand-file-name "builds/" elpaca-directory))
-  (defvar elpaca-repos-directory (expand-file-name "repos/" elpaca-directory))
-  (defvar elpaca-order '(elpaca :repo "https://github.com/progfolio/elpaca.git"
-                                :ref nil
-                                :files (:defaults "elpaca-test.el" (:exclude "extensions"))
-                                :build (:not elpaca--activate-package)))
-  (let* ((repo  (expand-file-name "elpaca/" elpaca-repos-directory))
-         (build (expand-file-name "elpaca/" elpaca-builds-directory))
-         (order (cdr elpaca-order))
-         (default-directory repo))
-    (add-to-list 'load-path (if (file-exists-p build) build repo))
-    (unless (file-exists-p repo)
-      (make-directory repo t)
-      (when (< emacs-major-version 28) (require 'subr-x))
-      (condition-case-unless-debug err
-          (if-let ((buffer (pop-to-buffer-same-window "*elpaca-bootstrap*"))
-                   ((zerop (call-process "git" nil buffer t "clone"
-                                         (plist-get order :repo) repo)))
-                   ((zerop (call-process "git" nil buffer t "checkout"
-                                         (or (plist-get order :ref) "--"))))
-                   (emacs (concat invocation-directory invocation-name))
-                   ((zerop (call-process emacs nil buffer nil "-Q" "-L" "." "--batch"
-                                         "--eval" "(byte-recompile-directory \".\" 0 'force)")))
-                   ((require 'elpaca))
-                   ((elpaca-generate-autoloads "elpaca" repo)))
-              (progn (message "%s" (buffer-string)) (kill-buffer buffer))
-            (error "%s" (with-current-buffer buffer (buffer-string))))
-        ((error) (warn "%s" err) (delete-directory repo 'recursive))))
-    (unless (require 'elpaca-autoloads nil t)
-      (require 'elpaca)
-      (elpaca-generate-autoloads "elpaca" repo)
-      (load "./elpaca-autoloads")))
-  (add-hook 'after-init-hook #'elpaca-process-queues)
-  (elpaca `(,@elpaca-order))
-#+end_src
-
-** use-package
-We will use use-package
-#+begin_src emacs-lisp
-  ;; need org to be loaded before elpaca-use-package
-  (elpaca (org :depth nil
-               :tag "release_9.6.12"
-               :pin t))
-
-  ;; Install use-package support
-  (elpaca elpaca-use-package
-    ;; Enable :elpaca use-package keyword.
-    (elpaca-use-package-mode)
-    ;; Assume :elpaca t unless otherwise specified.
-    (setq elpaca-use-package-by-default t))
-  ;; Block until current queue processed.
-  (elpaca-wait)
-  (defmacro use-feature (name &rest args)
-    "Like `use-package' but accounting for asynchronous installation.
-     NAME and ARGS are in `use-package'."
-    (declare (indent defun))
-    `(use-package ,name
-       :elpaca nil
-       ,@args))
-
-  (define-prefix-command 'elpaca-keymap)
-  (keymap-global-set "C-c M-p" 'elpaca-keymap)
-
-  (keymap-set 'elpaca-keymap "m" 'elpaca-manager)
-  (keymap-set 'elpaca-keymap "s" 'elpaca-status)
-  (keymap-set 'elpaca-keymap "f" 'elpaca-fetch-all)
-  (keymap-set 'elpaca-keymap "M" 'elpaca-merge-all)
-  (keymap-set 'elpaca-keymap "l" 'elpaca-log)
-  (keymap-set 'elpaca-keymap "b" 'elpaca-browse)
-  (keymap-set 'elpaca-keymap "v" 'elpaca-visit)
-#+end_src
-
-** Global emacs
-#+begin_src emacs-lisp
-  (use-feature emacs
-    :init
-    (electric-pair-mode 1)
-    (setq warning-minimum-level :emergency)
-    :config
-    (setq backup-directory-alist `(("." . ,(expand-file-name "tmp/backups/" user-emacs-directory))))
-
-    ;; isearch
-    (setq isearch-wrap-pause 'no-ding
-          isearch-repeat-on-direction-change t
-          isearch-allow-motion t)
-    ;; auto-save-mode doesn't create the path automatically!
-    (make-directory (expand-file-name "tmp/auto-saves/" user-emacs-directory) t)
-    (setq auto-save-list-file-prefix (expand-file-name "tmp/auto-saves/sessions/" user-emacs-directory)
-          auto-save-file-name-transforms `((".*" ,(expand-file-name "tmp/auto-saves/" user-emacs-directory) t)))
-
-    (setq create-lockfiles nil)
-
-    (setq max-mini-window-height 0.6)
-    (setq-default fill-column 80)
-    (global-visual-line-mode 1)
-    (setq isearch-lazy-count t)
-    (global-set-key  (kbd "C-x C") 'save-buffers-kill-emacs))
 #+end_src
 
 * Defaults
@@ -369,7 +318,7 @@ Better help buffer
 *** Meow-vterm
 #+begin_src emacs-lisp
   (use-package meow-vterm
-    :elpaca (meow-vterm :fetcher github :repo "accelbread/meow-vterm")
+    :straight (meow-vterm :host github :repo "accelbread/meow-vterm")
     :init
     (meow-vterm-enable))
 #+end_src
@@ -563,12 +512,12 @@ see [[https://github.com/protesilaos/dotfiles/blob/master/emacs/.emacs.d/prot-em
     :hook (server-after-make-frame . my/custom-agenda)
 
     :bind (("C-c l"               . org-store-link)
-           ("C-c c"               . org-capture)
-           ("C-c a"               . org-agenda)
-           ("C-c z"               . my/custom-agenda)
-           :map org-mode-map
-           ("M-S-<return>"        . org-insert-subheading)
-           ("C-c $"               . org-archive-subtree-default))
+	   ("C-c c"               . org-capture)
+	   ("C-c a"               . org-agenda)
+	   ("C-c z"               . my/custom-agenda)
+	   :map org-mode-map
+	   ("M-S-<return>"        . org-insert-subheading)
+	   ("C-c $"               . org-archive-subtree-default))
     :custom
     (org-return-follows-link t)
     (org-agenda-skip-deadline-prewarning-if-scheduled t)
@@ -577,22 +526,22 @@ see [[https://github.com/protesilaos/dotfiles/blob/master/emacs/.emacs.d/prot-em
     (org-enforce-todo-dependencies t)
     :custom-face
     (org-agenda-date-weekend-today ((t (:inherit org-agenda-date
-                                                 :underline t
-                                                 :height 1.3))))
+						 :underline t
+						 :height 1.3))))
     (org-agenda-date-today ((t (:inherit org-agenda-date
-                                         :underline t
-                                         :height 1.3))))
+					 :underline t
+					 :height 1.3))))
     (org-level-1 ((t (:height 1.2))))
     (org-level-2 ((t (:height 1.15))))
     (org-level-3 ((t (:height 1.1))))
     :init
     (defun my/prettify ()
       (setq prettify-symbols-alist '((":PROPERTIES:" . "⚙️")
-                                     (":LOGBOOK:" . "☰")
-                                     ("DEADLINE:" . "📆")
-                                     ("CLOCK:" . "⏳")
-                                     ("SCHEDULED:"  . "🪟") ; It's a window - not a plus sign in a box
-                                     (":END:" . "🔚" ))))
+				     (":LOGBOOK:" . "☰")
+				     ("DEADLINE:" . "📆")
+				     ("CLOCK:" . "⏳")
+				     ("SCHEDULED:"  . "🪟") ; It's a window - not a plus sign in a box
+				     (":END:" . "🔚" ))))
     (setq org-directory "~/org/")
     (defvar journal-file "journal.org")
     (defun build-agenda ()
@@ -602,23 +551,23 @@ see [[https://github.com/protesilaos/dotfiles/blob/master/emacs/.emacs.d/prot-em
     (defun my-org-agenda ()
       (interactive)
       (if (not org-agenda-files)
-          (build-agenda)))
-  
+	  (build-agenda)))
+
     ;; Agenda styling
     (setq org-stuck-projects '("+Project/PROJ" ("NEXT" "WAIT" "MEETING" "HOLD") nil ""))
     (setq  org-agenda-block-separator ?─
-           org-agenda-time-grid
-           '((daily today require-timed)
-             (800 1000 1200 1400 1600 1800 2000)
-             " ┄┄┄┄┄ " "┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄")
-           org-agenda-current-time-string
-           "⭠ now ─────────────────────────────────────────────────")
+	   org-agenda-time-grid
+	   '((daily today require-timed)
+	     (800 1000 1200 1400 1600 1800 2000)
+	     " ┄┄┄┄┄ " "┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄")
+	   org-agenda-current-time-string
+	   "⭠ now ─────────────────────────────────────────────────")
     (setq org-startup-indented t)
     (setq org-attach-store-link-p 'file)
     (org-babel-do-load-languages 'org-babel-load-languages
-                                 (append org-babel-load-languages
-                                         '((shell     . t)
-                                           (java      . t))))
+				 (append org-babel-load-languages
+					 '((shell     . t)
+					   (java      . t))))
     (setq org-archive-default-command 'org-archive-to-archive-sibling)
     (setq org-confirm-babel-evaluate nil)
     (setq
@@ -636,87 +585,87 @@ see [[https://github.com/protesilaos/dotfiles/blob/master/emacs/.emacs.d/prot-em
      org-pretty-entities t
      org-ellipsis "…")
     (setq org-capture-templates `( ("p" "Protocol" entry
-                                    (file+headline ,(concat org-directory "notes.org") "Inbox")
-                                    "* %:description\n Source:  %u, %:annotation \n#+BEGIN_QUOTE\n%i\n#+END_QUOTE\n\n\n%?" :immediate-finish t)
-                                   ("L" "Protocol Link" entry
-                                    (file+headline ,(concat org-directory "notes.org") "Inbox")
-                                    "* %? [[%:link][%:description]] \n Captured On: %U" :immediate-finish t)))
+				    (file+headline ,(concat org-directory "notes.org") "Inbox")
+				    "* %:description\n Source:  %u, %:annotation \n#+BEGIN_QUOTE\n%i\n#+END_QUOTE\n\n\n%?" :immediate-finish t)
+				   ("L" "Protocol Link" entry
+				    (file+headline ,(concat org-directory "notes.org") "Inbox")
+				    "* %? [[%:link][%:description]] \n Captured On: %U" :immediate-finish t)))
     (defun capture-filename ()
       "Select the project filename to capture to."
       (interactive)
       (let ((fpath (read-file-name "Project file name: "
-                                   "~/org/*==project*"
-                                   nil nil nil)))
-        (find-file fpath)
-        (goto-char (org-find-exact-headline-in-buffer "Tasks"))))
+				   "~/org/*==project*"
+				   nil nil nil)))
+	(find-file fpath)
+	(goto-char (org-find-exact-headline-in-buffer "Tasks"))))
     (add-to-list 'org-capture-templates
-                 '("t" "New [t]ask" entry
-                   (function capture-filename)
-                   "* TODO %?\n  %i"
-                   :jump-to-captured t))
+		 '("t" "New [t]ask" entry
+		   (function capture-filename)
+		   "* TODO %?\n  %i"
+		   :jump-to-captured t))
     (add-to-list 'org-capture-templates
-                 '("j" "[j]ournal entry" entry
-                   (file+olp+datetree journal-file)
-                   "*  %<%I:%M %p>: %? " :tree-type year))
+		 '("j" "[j]ournal entry" entry
+		   (file+olp+datetree journal-file)
+		   "*  %<%I:%M %p>: %? " :tree-type year))
 
     (defun my/archive-project ()
       "Steps to archive a =project="
       (let (
-            (org-enforce-todo-dependencies nil)
-            (org-capture-templates
-             '(("j" "journal" entry
-                (file+olp+datetree journal-file)
-                "* DONE %a\nCLOSED: %U\n%(org-paste-subtree 1)" :immediate-finish t :tree-type year))))
-        (org-map-entries (lambda ()
-                           (org-todo 'done)) nil 'tree)
-        (org-copy-subtree)
-        (denote-keywords-add '("ARCHIVE"))
-        (denote-keywords-remove)
-        (denote-rename-file-using-front-matter (buffer-file-name))
-        (org-capture nil "j")))
+	    (org-enforce-todo-dependencies nil)
+	    (org-capture-templates
+	     '(("j" "journal" entry
+		(file+olp+datetree journal-file)
+		"* DONE %a\nCLOSED: %U\n%(org-paste-subtree 1)" :immediate-finish t :tree-type year))))
+	(org-map-entries (lambda ()
+			   (org-todo 'done)) nil 'tree)
+	(org-copy-subtree)
+	(denote-keywords-add '("ARCHIVE"))
+	(denote-keywords-remove)
+	(denote-rename-file-using-front-matter (buffer-file-name))
+	(org-capture nil "j")))
     (defun make-archive()
       "Only archive when Tasks heading get the ARCHIVE tag."
       (when (and (member "ARCHIVE" (org-get-tags))
-                 (member "Tasks" (org-heading-components)))
-        (my/archive-project)))
+		 (member "Tasks" (org-heading-components)))
+	(my/archive-project)))
     (add-hook 'org-after-tags-change-hook
-              'make-archive)
+	      'make-archive)
     (setq org-datetree-add-timestamp 'active)
     (setq org-refile-targets '((org-agenda-files :maxlevel . 3)))
     (setq org-outline-path-complete-in-steps nil)         ; Refile in a single go
     (setq org-startup-folded 'show2levels)
     (setq org-tag-alist '((:startgroup . nil)
-                          ("work" . ?w) ("family" . ?f)
-                          ("personal" . ?p)
-                          (:endgroup . nil)
-                          ("ARCHIVE" . ?a)))
+			  ("work" . ?w) ("family" . ?f)
+			  ("personal" . ?p)
+			  (:endgroup . nil)
+			  ("ARCHIVE" . ?a)))
     (setq org-todo-keywords
-          '((sequence
-             "TODO(t)"  ; A task that needs doing & is ready to do
-             "NEXT(n)"  ; The nex task in to perform in the project
-             "MEETING"  ; Meeting
-             "WAIT(w@)"  ; Something external is holding up this task
-             "HOLD(h@)"  ; This task is paused/on hold because of me
-             "IDEA(i)"  ; An unconfirmed and unapproved task or notion
-             "|"
-             "CANCELLED(c)"
-             "DONE(d)")  ; Task successfully completed
-            (sequence
-             "PROJ(p)"  ; A project, which usually contains other tasks
-             "|"
-             "KILL(k)")
-            (sequence
-             "REPLY(r)"
-             "|"
-             "REPLIED(R)")))
+	  '((sequence
+	     "TODO(t)"  ; A task that needs doing & is ready to do
+	     "NEXT(n)"  ; The nex task in to perform in the project
+	     "MEETING"  ; Meeting
+	     "WAIT(w@)"  ; Something external is holding up this task
+	     "HOLD(h@)"  ; This task is paused/on hold because of me
+	     "IDEA(i)"  ; An unconfirmed and unapproved task or notion
+	     "|"
+	     "CANCELLED(c)"
+	     "DONE(d)")  ; Task successfully completed
+	    (sequence
+	     "PROJ(p)"  ; A project, which usually contains other tasks
+	     "|"
+	     "KILL(k)")
+	    (sequence
+	     "REPLY(r)"
+	     "|"
+	     "REPLIED(R)")))
     (setq org-todo-keyword-faces
-          (quote (("TODO" :foreground "red" :weight bold)
-                  ("NEXT" :foreground "blue" :weight bold)
-                  ("WAITING" :foreground "orange" :weight bold)
-                  ("DONE" :foreground "forest green" :weight bold)
-                  ("HOLD" :foreground "magenta" :weight bold)
-                  ("CANCELLED" :foreground "forest green" :weight bold)
-                  ("MEETING" :foreground "forest green" :weight bold))))
+	  (quote (("TODO" :foreground "red" :weight bold)
+		  ("NEXT" :foreground "blue" :weight bold)
+		  ("WAITING" :foreground "orange" :weight bold)
+		  ("DONE" :foreground "forest green" :weight bold)
+		  ("HOLD" :foreground "magenta" :weight bold)
+		  ("CANCELLED" :foreground "forest green" :weight bold)
+		  ("MEETING" :foreground "forest green" :weight bold))))
     ;; make org-protocol available
     (require 'org-protocol)
     (defun my/custom-agenda ()
@@ -727,8 +676,8 @@ see [[https://github.com/protesilaos/dotfiles/blob/master/emacs/.emacs.d/prot-em
       (delete-other-windows))
     (unless (daemonp)
       (setq initial-buffer-choice (lambda ()
-                                    (my/custom-agenda)
-                                    (get-buffer-create "*Org Agenda*")))))
+				    (my/custom-agenda)
+				    (get-buffer-create "*Org Agenda*")))))
 #+end_src
 
 *** Org-contrib
@@ -849,7 +798,7 @@ Distraction-free writing
 #+begin_src emacs-lisp
   (use-package org-modern-indent
     :after org
-    :elpaca (org-modern-indent :type git :host github :repo "jdtsmith/org-modern-indent")
+    :straight (org-modern-indent :type git :host github :repo "jdtsmith/org-modern-indent")
     :config ; add late to hook
     (add-hook 'org-mode-hook #'org-modern-indent-mode 90))
 #+end_src
@@ -858,7 +807,7 @@ Distraction-free writing
 #+begin_src emacs-lisp
   (use-package org-alert
     :after org
-    :hook (elpaca-after-init . org-alert-enable)
+    :hook (after-init . org-alert-enable)
     :init
     (setq alert-default-style 'libnotify))
 #+end_src
@@ -895,7 +844,7 @@ Distraction-free writing
 #+begin_src emacs-lisp
   (use-package org-passwords
     :after org
-    :elpaca `(org-passwords :type git :repo "https://bitbucket.org/alfaromurillo/org-passwords.el.git" :files (:defaults))
+    :straight `(org-passwords :type git :repo "https://bitbucket.org/alfaromurillo/org-passwords.el.git" :files (:defaults))
     :bind (("C-c q" . org-passwords)
            :map org-passwords-mode-map
            ("C-c u" . org-passwords-copy-username)
@@ -1018,7 +967,7 @@ Used to play with forges like GitHub or gitlab
 #+begin_src emacs-lisp
   (use-package denote
     :after org
-    :elpaca (:host sourcehut :repo "protesilaos/denote")
+    :straight (:host sourcehut :repo "protesilaos/denote")
     :hook (dired-mode . denote-dired-mode)
     :bind (("C-c N n" . denote)
            ("C-c N c" . denote-region) ; "contents" mnemonic
@@ -1419,7 +1368,7 @@ Change light to dark theme according to the sunset/sunrise
 #+end_src
 #+begin_src emacs-lisp
   (use-package golden-ratio
-    :hook (elpaca-after-init . golden-ratio-mode))
+    :hook (after-init . golden-ratio-mode))
 #+end_src
 
 * Editing
@@ -1445,7 +1394,7 @@ Change light to dark theme according to the sunset/sunrise
 ** Treemacs
 #+begin_src emacs-lisp
   (use-package treemacs
-    :elpaca (treemacs
+    :straight (treemacs
              :type git
              :files (:defaults "icons" "src/elisp/treemacs*.el" "src/scripts/*.py"  "src/extra/*" "treemacs-pkg.el")
              :host github
@@ -1536,14 +1485,6 @@ Change light to dark theme according to the sunset/sunrise
 
       (treemacs-hide-gitignored-files-mode nil)))
 
-  (use-feature treemacs-mu4e
-    :after (treemacs mu4e)
-    :config
-    (setq treemacs-mu4e--count-script "/home/frederic/.emacs.d/elpaca/repos/treemacs/src/scripts/treemacs-count-mail.py"))
-
-  (use-package treemacs-magit
-    :after (treemacs magit))
-
   (use-package treemacs-nerd-icons
     :after treemacs
     :config
@@ -1620,8 +1561,8 @@ Remember locations after jumping
 #+begin_src emacs-lisp
   (use-package dogears
     ;; :after consult
-    :hook (elpaca-after-init . dogears-mode)
-    :elpaca (dogears :fetcher github :repo "alphapapa/dogears.el"
+    :hook (after-init . dogears-mode)
+    :straight (dogears :host github :repo "alphapapa/dogears.el"
                      :files (:defaults (:exclude "helm-dogears.el")))
     :bind (:map global-map
                 ("M-g d" . dogears-go)
@@ -1640,7 +1581,7 @@ vertico.el - VERTical Interactive COmpletion
 marginalia adds annotations in the mini buffer
 #+begin_src emacs-lisp
   (use-package vertico
-    :elpaca (vertico :files (:defaults "extensions/*.el"))
+    :straight (vertico :files (:defaults "extensions/*.el"))
     :bind (:map vertico-map
                 ("C-f"	.	vertico-exit)
                 ("?"	.	minibuffer-completion-help)
@@ -1793,7 +1734,7 @@ marginalia adds annotations in the mini buffer
 
   (use-package flycheck-hl-todo
     :defer 10 ; Need to be initialized after the rest of checkers
-    :elpaca (:host github :repo "alvarogonzalezsotillo/flycheck-hl-todo")
+    :straight (:host github :repo "alvarogonzalezsotillo/flycheck-hl-todo")
     :config
     (flycheck-hl-todo-setup))
   (use-package consult-todo
@@ -2040,7 +1981,7 @@ marginalia adds annotations in the mini buffer
 ** Corfu
 #+begin_src emacs-lisp
   (use-package corfu
-    :elpaca (corfu :files (:defaults "extensions/*.el"))
+    :straight (corfu :files (:defaults "extensions/*.el"))
     :bind (:map corfu-map
                 ("C-e" . corfu-previous)
                 ("<escape>" . corfu-quit))
@@ -2077,7 +2018,7 @@ marginalia adds annotations in the mini buffer
     (global-corfu-mode))
 
   (use-package corfu-terminal
-    :elpaca (corfu-terminal
+    :straight (corfu-terminal
              :type git
              :repo "https://codeberg.org/akib/emacs-corfu-terminal.git"))
   (use-feature corfu-quick
@@ -2160,7 +2101,7 @@ marginalia adds annotations in the mini buffer
 #+begin_src emacs-lisp
   (use-package perspective-tabs
     :after (perspective)
-    :elpaca (:host sourcehut :repo "woozong/perspective-tabs")
+    :straight (:host sourcehut :repo "woozong/perspective-tabs")
     :init
     (perspective-tabs-mode +1))
 #+end_src
@@ -2197,7 +2138,7 @@ marginalia adds annotations in the mini buffer
 ** Mu4e
 #+begin_src emacs-lisp
   (use-package mu4e
-    :elpaca (mu4e :host github :files ("mu4e/*.el" "build/mu4e/mu4e-meta.el" "build/mu4e/mu4e-config.el" "build/mu4e/mu4e.info") :repo "djcb/mu"
+    :straight (mu4e :host github :files ("mu4e/*.el" "build/mu4e/mu4e-meta.el" "build/mu4e/mu4e-config.el" "build/mu4e/mu4e.info") :repo "djcb/mu"
                   :tag "v1.10.8"
                   :main "mu4e/mu4e.el"
                   :pre-build (("./autogen.sh")
@@ -2535,7 +2476,7 @@ Setup ANSI colors for the compilation buffer
 
   ;; optionally if you want to use debugger
   (use-package dap-mode)
-  ;; (use-package dap-java :elpaca nil)
+  ;; (use-package dap-java :straight nil)
 
 #+end_src
 
@@ -2557,7 +2498,7 @@ Setup ANSI colors for the compilation buffer
 *** Automatic use of tree-sitter
 #+begin_src emacs-lisp
   (use-package treesit-auto
-    :hook (elpaca-after-init . global-treesit-auto-mode)
+    :hook (after-init . global-treesit-auto-mode)
     :config
     (setq treesit-auto-install 'prompt)
     (setq my-java-tsauto-config

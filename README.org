@@ -324,10 +324,19 @@ Using [[https://github.com/radian-software/straight.el#getting-started][straight
     :config
     (setq isearch-lazy-count t
           isearch-repeat-on-direction-change t
-          isearch-wrap-pause nil
+          isearch-wrap-pause 'no
           isearch-allow-prefix t))
 #+end_src
 
+** ispell
+#+begin_src emacs-lisp
+  (use-feature ispell
+    ;; :custom
+    ;; (ispell-dictionary "fr_FR,en_US,en_GB")
+    :config
+    (ispell-set-spellchecker-params))
+
+#+end_src
 ** Help
 *** Hepful
 Better help buffer
@@ -428,6 +437,7 @@ see [[https://github.com/protesilaos/dotfiles/blob/master/emacs/.emacs.d/prot-em
 
     (setq create-lockfiles nil))
 #+end_src
+
 * Keys
 ** meow
 #+begin_src emacs-lisp
@@ -843,7 +853,7 @@ Distraction-free writing
   (("<f9>" . my/distraction-free)))
 #+end_src
 
-* Org notifications
+** Org notifications
 #+begin_src emacs-lisp
 (use-package org-alert
   :after org
@@ -1150,116 +1160,115 @@ Used to play with forges like GitHub or gitlab
 
 * UI
 ** avy
-;; avy - jump to character
-;; see https://karthinks.com/software/avy-can-do-anything/
+avy - jump to character
+see https://karthinks.com/software/avy-can-do-anything/
 #+begin_src emacs-lisp
-(use-package dictionary
-  )
-(use-package avy
-  :custom
-  (avy-keys '(?a ?r ?s ?t ?g ?n ?e ?i ?o))   ;; colemak-friendly
-  :config
-  (defun avy-action-kill-whole-line (pt)
-    (save-excursion
-      (goto-char pt)
-      (kill-whole-line))
-    (select-window
-     (cdr
-      (ring-ref avy-ring 0)))
-    t)
-
-  (setf (alist-get ?k avy-dispatch-alist) 'avy-action-kill-stay
-        (alist-get ?K avy-dispatch-alist) 'avy-action-kill-whole-line)
-  (defun avy-action-copy-whole-line (pt)
-    (save-excursion
-      (goto-char pt)
-      (cl-destructuring-bind (start . end)
-          (bounds-of-thing-at-point 'line)
-        (copy-region-as-kill start end)))
-    (select-window
-     (cdr
-      (ring-ref avy-ring 0)))
-    t)
-
-  (defun avy-action-yank-whole-line (pt)
-    (avy-action-copy-whole-line pt)
-    (save-excursion (yank))
-    t)
-
-  (setf (alist-get ?y avy-dispatch-alist) 'avy-action-yank
-        (alist-get ?w avy-dispatch-alist) 'avy-action-copy
-        (alist-get ?W avy-dispatch-alist) 'avy-action-copy-whole-line
-        (alist-get ?Y avy-dispatch-alist) 'avy-action-yank-whole-line)
-  (defun avy-action-teleport-whole-line (pt)
-    (avy-action-kill-whole-line pt)
-    (save-excursion (yank)) t)
-
-  (setf (alist-get ?t avy-dispatch-alist) 'avy-action-teleport
-        (alist-get ?T avy-dispatch-alist) 'avy-action-teleport-whole-line)
-
-  (defun avy-action-mark-to-char (pt)
-    (activate-mark)
-    (goto-char pt))
-
-  (setf (alist-get ?  avy-dispatch-alist) 'avy-action-mark-to-char)
-  (defun avy-action-flyspell (pt)
-    (save-excursion
-      (goto-char pt)
-      (when (require 'flyspell nil t)
-        (flyspell-auto-correct-word)))
-    (select-window
-     (cdr (ring-ref avy-ring 0)))
-    t)
-
-  ;; Bonjour Bind to semicolon (flyspell uses C-;)
-  (setf (alist-get ?\; avy-dispatch-alist) 'avy-action-flyspell)
-  ;; TODO add dictionnary
-  (defun dictionary-search-dwim (&optional arg)
-    "Search for definition of word at point. If region is active,
-      search for contents of region instead. If called with a prefix
-      argument, query for word to search."
-    (interactive "P")
-    (if arg
-        (dictionary-search nil)
-      (if (use-region-p)
-          (dictionary-search (buffer-substring-no-properties
-                              (region-beginning)
-                              (region-end)))
-        (if (thing-at-point 'word)
-            (dictionary-lookup-definition)
-          (dictionary-search-dwim '(4))))))
-
-  (defun avy-action-define (pt)
-    (save-excursion
-      (goto-char pt)
-      (dictionary-search-dwim))
-    (select-window
-     (cdr (ring-ref avy-ring 0)))
-    t)
-
-  (setf (alist-get ?= avy-dispatch-alist) 'avy-action-define)
-
-  (defun avy-action-helpful (pt)
-    (save-excursion
-      (goto-char pt)
-      (helpful-at-point))
-    (select-window
-     (cdr (ring-ref avy-ring 0)))
-    t)
-
-  (setf (alist-get ?H avy-dispatch-alist) 'avy-action-helpful)
-  (defun avy-action-embark (pt)
-    (unwind-protect
-        (save-excursion
-          (goto-char pt)
-          (embark-act))
+  (use-package dictionary)
+  (use-package avy
+    :custom
+    (avy-keys '(?a ?r ?s ?t ?g ?n ?e ?i ?o))   ;; colemak-friendly
+    :config
+    (defun avy-action-kill-whole-line (pt)
+      (save-excursion
+        (goto-char pt)
+        (kill-whole-line))
       (select-window
-       (cdr (ring-ref avy-ring 0))))
-    t)
+       (cdr
+        (ring-ref avy-ring 0)))
+      t)
 
-  (setf (alist-get ?. avy-dispatch-alist) 'avy-action-embark)
+    (setf (alist-get ?k avy-dispatch-alist) 'avy-action-kill-stay
+          (alist-get ?K avy-dispatch-alist) 'avy-action-kill-whole-line)
+    (defun avy-action-copy-whole-line (pt)
+      (save-excursion
+        (goto-char pt)
+        (cl-destructuring-bind (start . end)
+            (bounds-of-thing-at-point 'line)
+          (copy-region-as-kill start end)))
+      (select-window
+       (cdr
+        (ring-ref avy-ring 0)))
+      t)
 
-  :bind (("M-j" . avy-goto-char-timer)))
+    (defun avy-action-yank-whole-line (pt)
+      (avy-action-copy-whole-line pt)
+      (save-excursion (yank))
+      t)
+
+    (setf (alist-get ?y avy-dispatch-alist) 'avy-action-yank
+          (alist-get ?w avy-dispatch-alist) 'avy-action-copy
+          (alist-get ?W avy-dispatch-alist) 'avy-action-copy-whole-line
+          (alist-get ?Y avy-dispatch-alist) 'avy-action-yank-whole-line)
+    (defun avy-action-teleport-whole-line (pt)
+      (avy-action-kill-whole-line pt)
+      (save-excursion (yank)) t)
+
+    (setf (alist-get ?t avy-dispatch-alist) 'avy-action-teleport
+          (alist-get ?T avy-dispatch-alist) 'avy-action-teleport-whole-line)
+
+    (defun avy-action-mark-to-char (pt)
+      (activate-mark)
+      (goto-char pt))
+
+    (setf (alist-get ?  avy-dispatch-alist) 'avy-action-mark-to-char)
+    (defun avy-action-flyspell (pt)
+      (save-excursion
+        (goto-char pt)
+        (when (require 'flyspell nil t)
+          (flyspell-auto-correct-word)))
+      (select-window
+       (cdr (ring-ref avy-ring 0)))
+      t)
+
+    ;; Bonjour Bind to semicolon (flyspell uses C-;)
+    (setf (alist-get ?\; avy-dispatch-alist) 'avy-action-flyspell)
+    ;; TODO add dictionnary
+    (defun dictionary-search-dwim (&optional arg)
+      "Search for definition of word at point. If region is active,
+        search for contents of region instead. If called with a prefix
+        argument, query for word to search."
+      (interactive "P")
+      (if arg
+          (dictionary-search nil)
+        (if (use-region-p)
+            (dictionary-search (buffer-substring-no-properties
+                                (region-beginning)
+                                (region-end)))
+          (if (thing-at-point 'word)
+              (dictionary-lookup-definition)
+            (dictionary-search-dwim '(4))))))
+
+    (defun avy-action-define (pt)
+      (save-excursion
+        (goto-char pt)
+        (dictionary-search-dwim))
+      (select-window
+       (cdr (ring-ref avy-ring 0)))
+      t)
+
+    (setf (alist-get ?= avy-dispatch-alist) 'avy-action-define)
+
+    (defun avy-action-helpful (pt)
+      (save-excursion
+        (goto-char pt)
+        (helpful-at-point))
+      (select-window
+       (cdr (ring-ref avy-ring 0)))
+      t)
+
+    (setf (alist-get ?H avy-dispatch-alist) 'avy-action-helpful)
+    (defun avy-action-embark (pt)
+      (unwind-protect
+          (save-excursion
+            (goto-char pt)
+            (embark-act))
+        (select-window
+         (cdr (ring-ref avy-ring 0))))
+      t)
+
+    (setf (alist-get ?. avy-dispatch-alist) 'avy-action-embark)
+
+    :bind (("M-j" . avy-goto-char-timer)))
 #+end_src
 
 ** Theme
@@ -1587,7 +1596,7 @@ Just install Hunspell and Hunspell-fr, Hunspell-en, ...
   (setq jinx-languages "fr_FR en_US en_GB"))
 #+end_src
 
-** Commenter
+** Commentaires
 #+begin_src emacs-lisp
 (use-package evil-nerd-commenter
   :bind ("M-;" . evilnc-comment-or-uncomment-lines))

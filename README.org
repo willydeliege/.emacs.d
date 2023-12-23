@@ -303,6 +303,12 @@ This helps with a bug I was hitting when using =desktop-save-mode='s =desktop-re
   (defvar my/using-android (string-match "Android" my/uname))
 #+end_src
 
+** isearch
+#+begin_src emacs-lisp
+  (use-feature isearch
+    :config
+    (setq isearch-lazy-count t))
+#+end_src
 ** Help
 *** Hepful
 Better help buffer
@@ -1535,6 +1541,14 @@ If you are surrounded by punipuni things, you feel safe and relieved. That's my 
                 ("C-M-<right>" . puni-barf-backward))
     :config
     (add-hook 'term-mode-hook #'puni-disable-puni-mode))
+#+end_src
+
+
+*** Electric pair mode
+#+begin_src emacs-lisp
+  (use-feature elec-pair
+    :init
+    (electric-pair-mode))
 #+end_src
 
 ** Scratch buffer

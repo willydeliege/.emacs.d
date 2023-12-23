@@ -252,7 +252,13 @@ This helps with a bug I was hitting when using =desktop-save-mode='s =desktop-re
           save-place-forget-unreadable-files nil))
  
   #+end_src
-  
+
+** Emacs
+#+begin_src emacs-lisp
+  (use-feature emacs
+    :bind ("C-x C" . save-buffers-kill-emacs))
+#+end_src
+
 ** Recentf
 #+begin_src emacs-lisp
   (use-feature recentf
@@ -423,7 +429,7 @@ see [[https://github.com/protesilaos/dotfiles/blob/master/emacs/.emacs.d/prot-em
       (meow-motion-overwrite-define-key
        ;; Use e to move up, n to move down.
        '("e" . "p")
-       ;; '("C-e" . "C-p")
+       '("'" . repeat)
        '("<escape>" . ignore))
       (meow-leader-define-key
        '("?" . "H-e")
@@ -946,7 +952,7 @@ Distraction-free writing
   (use-package magit
     :custom
     (magit-diff-refine-hunk 'all)
-    (magit-define-global-key-bindings 'recommended)
+    (magit-define-global-key-bindings 'default)
     :config
     (setq magit-display-buffer-function 'magit-display-buffer-same-window-except-diff-v1))
 #+end_src

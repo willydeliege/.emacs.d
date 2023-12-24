@@ -361,8 +361,23 @@ Better help buffer
 ** Terminals
 *** Vterm
 #+begin_src emacs-lisp
-(use-package vterm
-  :hook (vterm-mode . puni-disable-puni-mode))
+  (use-package vterm
+    :bind (:map project-prefix-map
+                ("t" . project-vterm))
+    :preface
+    (defun project-vterm ()
+      (interactive)
+      (defvar vterm-buffer-name)
+      (let* ((default-directory (project-root     (project-current t)))
+             (vterm-buffer-name (project-prefixed-buffer-name "vterm"))
+             (vterm-buffer (get-buffer vterm-buffer-name)))
+        (if (and vterm-buffer (not current-prefix-arg))
+            (pop-to-buffer vterm-buffer  (bound-and-true-p display-comint-buffer-action))
+          (vterm))))
+    :init
+    (with-eval-after-load 'project
+      (add-to-list 'project-switch-commands     '(project-vterm "Vterm") t))
+    :hook (vterm-mode . puni-disable-puni-mode))
 #+end_src
 
 *** Meow-vterm

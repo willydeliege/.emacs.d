@@ -2160,7 +2160,7 @@ marginalia adds annotations in the mini buffer
 * Projects
 ** Project.el
 #+begin_src emacs-lisp
-  (use-feature project
+  (use-package project
     :bind ("C-x C-p" . nil)
     :bind-keymap ("C-x C-p" . project-prefix-map))
 #+end_src
@@ -2573,7 +2573,7 @@ Setup ANSI colors for the compilation buffer
 ** Tree-sitter
 *** Automatic use of tree-sitter
 #+begin_src emacs-lisp
-(use-package -auto
+(use-package treesit-auto
   :hook (after-init . global-treesit-auto-mode)
   :config
   (setq treesit-auto-install 'prompt)

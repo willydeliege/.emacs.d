@@ -226,7 +226,7 @@ Using [[https://github.com/radian-software/straight.el#getting-started][straight
      :ensure nil
      ,@args))
 #+end_src
-*** keynap for straight.el
+*** keymap for straight.el
 #+begin_src emacs-lisp
 (defalias 'straight-keymap (make-sparse-keymap))
 (defvar straight-map (symbol-function 'straight-keymap)
@@ -984,15 +984,17 @@ Distraction-free writing
 * Version control
 ** Magit
 #+begin_src emacs-lisp
-;; wanted by magit
-(use-package transient)
+    ;; wanted by magit
+    (use-package transient)
 
-(use-package magit
-  :custom
-  (magit-diff-refine-hunk 'all)
-  (magit-define-global-key-bindings 'default)
-  :config
-  (setq magit-display-buffer-function 'magit-display-buffer-same-window-except-diff-v1))
+    (use-package magit
+      :bind (:map ctl-x-map
+             ("C-M-g" . magit-status))
+      :custom
+      (magit-diff-refine-hunk 'all)
+      (magit-define-global-key-bindings 'default)
+      :config
+      (setq magit-display-buffer-function 'magit-display-buffer-same-window-except-diff-v1))
 #+end_src
 
 ** Orgit
@@ -2161,7 +2163,6 @@ marginalia adds annotations in the mini buffer
 ** Project.el
 #+begin_src emacs-lisp
   (use-package project
-    :bind ("C-x C-p" . nil)
     :bind-keymap ("C-x C-p" . project-prefix-map))
 #+end_src
 ** Perspective

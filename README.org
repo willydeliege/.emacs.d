@@ -235,7 +235,7 @@ Using [[https://github.com/radian-software/straight.el#getting-started][straight
 (use-feature straight
   :bind (:map straight-map
               ("u" . straight-use-package)
-              ("r" . straight-recipes)
+              ("r" . straight-get-recipe)
               ("P" . straight-pull-all)
               ("F" . straight-fetch-all)
               ("p" . straight-pull-package)
@@ -2573,7 +2573,7 @@ Setup ANSI colors for the compilation buffer
 ** Tree-sitter
 *** Automatic use of tree-sitter
 #+begin_src emacs-lisp
-(use-package treesit-auto
+(use-package -auto
   :hook (after-init . global-treesit-auto-mode)
   :config
   (setq treesit-auto-install 'prompt)

@@ -994,17 +994,22 @@ Distraction-free writing
 * Version control
 ** Magit
 #+begin_src emacs-lisp
-    ;; wanted by magit
-    (use-package transient)
+  ;; wanted by magit
+  (use-package transient)
 
-    (use-package magit
-      :bind (:map ctl-x-map
-             ("C-M-g" . magit-status))
-      :custom
-      (magit-diff-refine-hunk 'all)
-      (magit-define-global-key-bindings 'default)
-      :config
-      (setq magit-display-buffer-function 'magit-display-buffer-same-window-except-diff-v1))
+  (use-package magit
+    :bind (:map ctl-x-map
+           ("C-M-g" . magit-status)
+           :map project-prefix-map
+           ("m" . magit-project-status))
+    :custom
+    (magit-diff-refine-hunk 'all)
+    (magit-define-global-key-bindings 'default)
+    :init
+    (with-eval-after-load 'project
+      (add-to-list 'project-switch-commands     '(magit-project-status "magit") t))  
+    :config
+    (setq magit-display-buffer-function 'magit-display-buffer-same-window-except-diff-v1))
 #+end_src
 
 ** Orgit
@@ -1042,30 +1047,30 @@ Used to play with forges like GitHub or gitlab
 
 * Denote
 ** Denote Protesilaos Stavrou
+
 #+begin_src emacs-lisp
 (use-package denote
   :after org
   :straight (:host sourcehut :repo "protesilaos/denote")
   :hook (dired-mode . denote-dired-mode)
-  :bind (("C-c N n" . denote)
-         ("C-c N c" . denote-region) ; "contents" mnemonic
-         ("C-c N N" . denote-type)
-         ("C-c N d" . denote-date)
-         ("C-c N z" . denote-signature) ; "zettelkasten" mnemonic
-         ("C-c N s" . denote-subdirectory)
-         ("C-c N t" . denote-template)
-         ("C-c N r" . denote-rename-file)
-         ("C-c N R" . denote-rename-file-using-front-matter)
-         ("C-c N p" . my/find-project-files)
+  :bind (("C-c n n" . denote)
+         ("C-c n c" . denote-region) ; "contents" mnemonic
+         ("C-c n n" . denote-type)
+         ("C-c n d" . denote-date)
+         ("C-c n z" . denote-signature) ; "zettelkasten" mnemonic
+         ("C-c n s" . denote-subdirectory)
+         ("C-c n t" . denote-template)
+         ("C-c n r" . denote-rename-file)
+         ("C-c n R" . denote-rename-file-using-front-matter)
+         ("C-c n p" . my/find-project-files)
          :map org-mode-map
-         ("C-c N i" . denote-link) ; "insert" mnemonic
-         ("C-c N I" . denote-add-links)
-         ("C-c N b" . denote-backlinks)
-         ("C-c N k a" . denote-keywords-add)
-         ("C-c N k r" . denote-keywords-remove)
-         ("C-c N f f" . denote-find-link)
-         ("C-c N f b" . denote-find-backlink)
-
+         ("C-c n i" . denote-link) ; "insert" mnemonic
+         ("C-c n I" . denote-add-links)
+         ("C-c n b" . denote-backlinks)
+         ("C-c n k a" . denote-keywords-add)
+         ("C-c n k r" . denote-keywords-remove)
+         ("C-c n f f" . denote-find-link)
+         ("C-c n f b" . denote-find-backlink)
          ;; Key bindings specifically for Dired.
          :map dired-mode-map
          ("C-c C-d C-i" . denote-link-dired-marked-notes)

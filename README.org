@@ -2178,7 +2178,9 @@ marginalia adds annotations in the mini buffer
 ** Project.el
 #+begin_src emacs-lisp
   (use-package project
-    :bind-keymap ("C-x C-p" . project-prefix-map))
+    :init
+    (define-key ctl-x-map (kbd "C-p") project-prefix-map))
+
 #+end_src
 ** Perspective
 #+begin_src emacs-lisp

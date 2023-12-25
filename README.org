@@ -226,7 +226,7 @@ Using [[https://github.com/radian-software/straight.el#getting-started][straight
      :ensure nil
      ,@args))
 #+end_src
-*** keymap for straight.el
+*** Keymap for straight.el
 #+begin_src emacs-lisp
 (defalias 'straight-keymap (make-sparse-keymap))
 (defvar straight-map (symbol-function 'straight-keymap)

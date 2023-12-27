@@ -999,6 +999,7 @@ Distraction-free writing
   (use-package magit
     :bind (:map ctl-x-map
            ("C-M-g" . magit-status)
+           ("g" . magit-status)
            :map project-prefix-map
            ("m" . magit-project-status))
     :custom

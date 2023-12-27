@@ -264,8 +264,10 @@ Using [[https://github.com/radian-software/straight.el#getting-started][straight
 
 ** Emacs
 #+begin_src emacs-lisp
-(use-feature emacs
-  :bind ("C-x C" . save-buffers-kill-emacs))
+  (use-feature emacs
+    :bind ("C-x C" . save-buffers-kill-emacs)
+    :init
+    (shell-command "xcape -e 'Control_L=Escape'"))
 #+end_src
 
 ** Recentf

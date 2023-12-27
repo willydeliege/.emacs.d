@@ -1014,7 +1014,7 @@ Distraction-free writing
 
 ** Orgit
 #+begin_src emacs-lisp
-(use-package orgit :after org)
+(use-package orgit :after magit)
 #+end_src
 
 ** Forge
@@ -1027,7 +1027,7 @@ Used to play with forges like GitHub or gitlab
 ** Orgit for forge
 #+begin_src emacs-lisp
 (use-package orgit-forge
-  :after (org forge))
+  :after (orgit forge))
 #+end_src
 
 ** Diff-hl

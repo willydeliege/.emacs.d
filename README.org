@@ -494,7 +494,10 @@ see [[https://github.com/protesilaos/dotfiles/blob/master/emacs/.emacs.d/prot-em
           (meow-insert-mode)))
     :config
     (defun meow-setup ()
-      (setq meow-use-clipboard t)
+      (setq meow-use-clipboard t
+            meow-select-on-change nil
+            meow-use-cursor-position-hack t
+            meow-use-enhanced-selection-effect t)  ;; optional, for visual effect
       (add-to-list 'meow-mode-state-list '(mu4e-view-mode . motion))
       (add-to-list 'meow-mode-state-list '(cfw:calendar-mode . motion))
       (setcdr (assq 'vterm-mode meow-mode-state-list) 'insert)

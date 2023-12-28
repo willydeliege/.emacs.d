@@ -199,12 +199,19 @@ Using [[https://github.com/radian-software/straight.el#getting-started][straight
 #+end_src
 
 #+begin_src emacs-lisp
-(autoload #'straight-x-pull-all "straight-x")
-(autoload #'straight-x-freeze-versions "straight-x")
+  (autoload #'straight-x-pull-all "straight-x")
+  (autoload #'straight-x-freeze-versions "straight-x")
 #+end_src
 
 #+begin_src emacs-lisp
-(straight-use-package '(org :type built-in))
+(let ((straight-current-profile 'pinned))
+  (straight-use-package 'org)
+  (straight-use-package 'org-contrib)  ;; Pin org-mode and mu4e versions.
+  (straight-use-package 'mu4e)
+  (add-to-list 'straight-x-pinned-packages
+              '("mu4e" . "a8f002bfa8fbcc79bcfe9888be35f20448e593e2")
+              '("org" . "4ad657d01d4f6ba0e75b870293e2f3951efb0d16")))
+
 #+end_src
 
 ** USE-PACKAGE
@@ -228,20 +235,23 @@ Using [[https://github.com/radian-software/straight.el#getting-started][straight
 #+end_src
 *** Keymap for straight.el
 #+begin_src emacs-lisp
-(defalias 'straight-keymap (make-sparse-keymap))
-(defvar straight-map (symbol-function 'straight-keymap)
-  "Global keymap for straights commands.")
-(define-key global-map (kbd "C-c M-p") 'straight-keymap)
-(use-feature straight
-  :bind (:map straight-map
-              ("u" . straight-use-package)
-              ("r" . straight-get-recipe)
-              ("P" . straight-pull-all)
-              ("F" . straight-fetch-all)
-              ("p" . straight-pull-package)
-              ("f" . straight-fetch-package)
-              ("v" . straight-visit-package)
-              ("b" . straight-visit-package-website)))
+  (defalias 'straight-keymap (make-sparse-keymap))
+  (defvar straight-map (symbol-function 'straight-keymap)
+    "Global keymap for straights commands.")
+  (define-key global-map (kbd "C-c M-p") 'straight-keymap)
+  (defun my-pull-all ()
+    (interactive)
+    (call-interactively (straight-pull-all)))
+  (use-feature straight
+    :bind (:map straight-map
+                ("u" . straight-use-package)
+                ("r" . straight-get-recipe)
+                ("P" . my-pull-all)
+                ("F" . straight-fetch-all)
+                ("p" . straight-pull-package)
+                ("f" . straight-fetch-package)
+                ("v" . straight-visit-package)
+                ("b" . straight-visit-package-website)))
 #+end_src
 
 * Personal information
@@ -467,19 +477,7 @@ see [[https://github.com/protesilaos/dotfiles/blob/master/emacs/.emacs.d/prot-em
 #+begin_src emacs-lisp
   (use-package meow
     :hook (meow-mode . meow-org-note-insert)
-    :hook (meow-motion-mode . my-motion-mode-hook)
     :init
-    (defun my-motion-mode-hook ()
-      "Custom `meow-motion-mode' behaviours."
-      (let ((keymap (make-sparse-keymap)))
-        (set-keymap-parent keymap key-translation-map)
-        (setq-local key-translation-map keymap)
-        (define-key key-translation-map (kbd "e") (kbd "p"))
-        (define-key key-translation-map (kbd "p") (kbd "e"))
-        (define-key key-translation-map (kbd "C-e") (kbd "C-p"))
-        (define-key key-translation-map (kbd "C-p") (kbd "C-e"))
-        (define-key key-translation-map (kbd "E") (kbd "P"))
-        (define-key key-translation-map (kbd "P") (kbd "E"))))
     (defun meow-org-note-insert ()
       "Enter insert mode in org note buffer.
       This is needed for minor modes"
@@ -998,16 +996,16 @@ Distraction-free writing
 
   (use-package magit
     :bind (:map ctl-x-map
-           ("C-M-g" . magit-status)
-           ("g" . magit-status)
-           :map project-prefix-map
-           ("m" . magit-project-status))
+                ("C-M-g" . magit-status)
+                ("g" . magit-status)
+                :map project-prefix-map
+                ("m" . magit-project-status))
     :custom
     (magit-diff-refine-hunk 'all)
     (magit-define-global-key-bindings 'default)
     :init
     (with-eval-after-load 'project
-      (add-to-list 'project-switch-commands     '(magit-project-status "magit") t))  
+      (add-to-list 'project-switch-commands     '(magit-project-status "magit") t))
     :config
     (setq magit-display-buffer-function 'magit-display-buffer-same-window-except-diff-v1))
 #+end_src
@@ -1033,7 +1031,6 @@ Used to play with forges like GitHub or gitlab
 ** Diff-hl
 #+begin_src emacs-lisp
 (use-package diff-hl
-  :after (magit dired)
   :hook ((magit-pre-refresh . diff-hl-magit-pre-refresh)
          (magit-post-refresh . diff-hl-magit-post-refresh)
          (dired-mode . diff-hl-dired-mode))
@@ -2155,138 +2152,131 @@ marginalia adds annotations in the mini buffer
 * Mail
 ** Mu4e
 #+begin_src emacs-lisp
-(use-package mu4e
-  :straight (mu4e :files ("mu4e/*.el" "build/mu4e/mu4e-meta.el" "build/mu4e/mu4e-config.el" "build/mu4e/mu4e.info")
-                  :local-repo "~/.emacs.d/elisp/mu-1.10.8/"
-                  :main "mu4e/mu4e.el"
-                  :pre-build (("./autogen.sh")
-                              ("ninja" "-C" "build")
-                              (make-symbolic-link (expand-file-name "./build/mu/mu")
-                                                  (expand-file-name "~/.local/bin/mu") 'ok-if-exists)))
-  :defer 1
-  :commands (mu4e mu4e-update-index mu4e-compose-new)
-  :after org
-  :unless my/using-android
-  :bind (("<f5>"  . mu4e)
-         :map mu4e-main-mode-map
-         ("q" . meow-quit)
-         :map mu4e-headers-mode-map
-         ("C-c c" . mu4e-org-store-and-capture)
-         ("¡"     . mu4e-headers-mark-all-unread-read)
-         :map mu4e-view-mode-map
-         ("C-c c" . mu4e-org-store-and-capture))
-  :custom
-  (mu4e-hide-index-messages t)
-  (mu4e-attachment-dir "~/Downloads/")
+  (use-feature mu4e
+    :defer 1
+    :commands (mu4e mu4e-update-index mu4e-compose-new)
+    :after org
+    :unless my/using-android
+    :bind (("<f5>"  . mu4e)
+           :map mu4e-main-mode-map
+           ("q" . meow-quit)
+           :map mu4e-headers-mode-map
+           ("C-c c" . mu4e-org-store-and-capture)
+           ("¡"     . mu4e-headers-mark-all-unread-read)
+           :map mu4e-view-mode-map
+           ("C-c c" . mu4e-org-store-and-capture))
+    :custom
+    (mu4e-hide-index-messages t)
+    (mu4e-attachment-dir "~/Downloads/")
 
-  (mu4e-headers-fields '((:human-date . 12)
-                         (:flags      . 6)
-                         (:from       . 30)
-                         (:subject)))
+    (mu4e-headers-fields '((:human-date . 12)
+                           (:flags      . 6)
+                           (:from       . 30)
+                           (:subject)))
 
-  :config
-  (setq mu4e-context-policy 'pick-first)
-  (setq mu4e-compose-context-policy nil)
-  (setq mu4e-contexts
-        (list
-         ;; Work account
-         (make-mu4e-context
-          :name "frederic"
-          :match-func
-          (lambda (msg)
-            (when msg
-              (string-prefix-p "/frederic" (mu4e-message-field msg :maildir))))
-          :vars '((user-mail-address                                              . "frederic.willem@gmail.com")
-                  (user-full-name                                                 . "Frédéric Willem")
-                  (mu4e-drafts-folder                                             . "/frederic/[Gmail].Drafts")
-                  (mu4e-sent-folder                                               . "/frederic/[Gmail].Sent Mail")
-                  (mu4e-refile-folder                                             . "/frederic/[Gmail].All Mail")
-                  (mu4e-trash-folder                                              . "/frederic/[Gmail].Trash")
-                  (mu4e-maildir-shortcuts                                         . (list ( :maildir "/frederic/INBOX" :key ?i)
-                                                                                          ( :maildir "/frederic/[Gmail].All Mail"  :key ?a)
-                                                                                          ( :maildir "/frederic/[Gmail].Sent Mail"  :key ?S)
-                                                                                          ( :maildir "/frederic/[Gmail].Trash" :key ?t)
-                                                                                          ( :maildir "/frederic/[Gmail].Starred" :key ?s)) )
+    :config
+    (setq mu4e-context-policy 'pick-first)
+    (setq mu4e-compose-context-policy nil)
+    (setq mu4e-contexts
+          (list
+           ;; Work account
+           (make-mu4e-context
+            :name "frederic"
+            :match-func
+            (lambda (msg)
+              (when msg
+                (string-prefix-p "/frederic" (mu4e-message-field msg :maildir))))
+            :vars '((user-mail-address                                              . "frederic.willem@gmail.com")
+                    (user-full-name                                                 . "Frédéric Willem")
+                    (mu4e-drafts-folder                                             . "/frederic/[Gmail].Drafts")
+                    (mu4e-sent-folder                                               . "/frederic/[Gmail].Sent Mail")
+                    (mu4e-refile-folder                                             . "/frederic/[Gmail].All Mail")
+                    (mu4e-trash-folder                                              . "/frederic/[Gmail].Trash")
+                    (mu4e-maildir-shortcuts                                         . (list ( :maildir "/frederic/INBOX" :key ?i)
+                                                                                            ( :maildir "/frederic/[Gmail].All Mail"  :key ?a)
+                                                                                            ( :maildir "/frederic/[Gmail].Sent Mail"  :key ?S)
+                                                                                            ( :maildir "/frederic/[Gmail].Trash" :key ?t)
+                                                                                            ( :maildir "/frederic/[Gmail].Starred" :key ?s)) )
 
-                  (mu4e-bookmarks                                                 . (( :name  "Unread messages"
-                                                                                       :query "maildir:/frederic/INBOX AND flag:unread AND NOT flag:trashed"
-                                                                                       :key ?u)
-                                                                                     ( :name  "All Unread messages"
-                                                                                       :query "maildir:/frederic/* AND flag:unread"
-                                                                                       :key ?U)
-                                                                                     ( :name "Important messages"
-                                                                                       :query "prio:high AND NOT flag:trashed AND NOT maildir:\"/frederic/[Gmail]/Sent mail\""
-                                                                                       :key ?i)
-                                                                                     ( :name "Today's messages"
-                                                                                       :query "maildir:/frederic/* AND date:today..now"
-                                                                                       :key ?t)
-                                                                                     ( :name "Last 7 days"
-                                                                                       :query "maildir:/frederic/* AND date:7d..now"
-                                                                                       :hide-unread t
-                                                                                       :key ?w)))))
+                    (mu4e-bookmarks                                                 . (( :name  "Unread messages"
+                                                                                         :query "maildir:/frederic/INBOX AND flag:unread AND NOT flag:trashed"
+                                                                                         :key ?u)
+                                                                                       ( :name  "All Unread messages"
+                                                                                         :query "maildir:/frederic/* AND flag:unread"
+                                                                                         :key ?U)
+                                                                                       ( :name "Important messages"
+                                                                                         :query "prio:high AND NOT flag:trashed AND NOT maildir:\"/frederic/[Gmail]/Sent mail\""
+                                                                                         :key ?i)
+                                                                                       ( :name "Today's messages"
+                                                                                         :query "maildir:/frederic/* AND date:today..now"
+                                                                                         :key ?t)
+                                                                                       ( :name "Last 7 days"
+                                                                                         :query "maildir:/frederic/* AND date:7d..now"
+                                                                                         :hide-unread t
+                                                                                         :key ?w)))))
 
-         (make-mu4e-context
-          :name "maman"
-          :match-func
-          (lambda (msg)
-            (when msg
-              (string-prefix-p "/maman" (mu4e-message-field msg :maildir))))
-          :vars '((user-mail-address	    .	"michellelambert1202@gmail.com")
-                  (user-full-name	    .	"Michelle Lambert")
-                  (mu4e-refile-folder	    .	"/maman/[Gmail].Tous les messages")
-                  (mu4e-trash-folder	    .	"/maman/[Gmail].Corbeille")
-                  (mu4e-maildir-shortcuts .	(list
-                                                 ( :maildir "/maman/INBOX" :key ?i)
-                                                 ( :maildir "/maman/[Gmail].Tous les messages"  :key ?a)
-                                                 ( :maildir "/maman/[Gmail].Messages envoy&AOk-s"  :key ?S)
-                                                 ( :maildir "/maman/[Gmail].Corbeille" :key ?t)
-                                                 ( :maildir "/maman/[Gmail].Suivis" :key ?s)))
-                  (mu4e-bookmarks . nil)
+           (make-mu4e-context
+            :name "maman"
+            :match-func
+            (lambda (msg)
+              (when msg
+                (string-prefix-p "/maman" (mu4e-message-field msg :maildir))))
+            :vars '((user-mail-address	    .	"michellelambert1202@gmail.com")
+                    (user-full-name	    .	"Michelle Lambert")
+                    (mu4e-refile-folder	    .	"/maman/[Gmail].Tous les messages")
+                    (mu4e-trash-folder	    .	"/maman/[Gmail].Corbeille")
+                    (mu4e-maildir-shortcuts .	(list
+                                                   ( :maildir "/maman/INBOX" :key ?i)
+                                                   ( :maildir "/maman/[Gmail].Tous les messages"  :key ?a)
+                                                   ( :maildir "/maman/[Gmail].Messages envoy&AOk-s"  :key ?S)
+                                                   ( :maildir "/maman/[Gmail].Corbeille" :key ?t)
+                                                   ( :maildir "/maman/[Gmail].Suivis" :key ?s)))
+                    (mu4e-bookmarks . nil)
 
-                  ))))
+                    ))))
 
 
-  (require 'mu4e-icalendar)
-  (mu4e-icalendar-setup)
-  (setq gnus-icalendar-org-capture-file "~/org/Inbox.org")
-  (setq gnus-icalendar-org-capture-headline '("Calendar"))
-  (gnus-icalendar-org-setup)
-  (setq mail-user-agent 'mu4e-user-agent)
-  (setq mu4e-confirm-quit nil)
-  (setq mu4e-get-mail-command "offlineimap")
-  (setq mu4e-completing-read-function 'completing-read)
-  ;; (setq mu4e-change-filenames-when-moving t)
-  (setq sendmail-program (executable-find "msmtp")
-        send-mail-function #'smtpmail-send-it
-        message-sendmail-f-is-evil t
-        message-sendmail-extra-arguments '("--read-envelope-from")
-        message-send-mail-function #'message-send-mail-with-sendmail)
-  ;; don[t show buffer after sending
-  (setq message-kill-buffer-on-exit t)
-  (setq org-export-show-temporary-export-buffer nil)
-  ;; set a more visible mu4e view (with dark-mode enabled)
-  ;; (setq shr-color-visible-luminance-min 0)
-  (setq mu4e-update-interval 600)
+    (require 'mu4e-icalendar)
+    (mu4e-icalendar-setup)
+    (setq gnus-icalendar-org-capture-file "~/org/Inbox.org")
+    (setq gnus-icalendar-org-capture-headline '("Calendar"))
+    (gnus-icalendar-org-setup)
+    (setq mail-user-agent 'mu4e-user-agent)
+    (setq mu4e-confirm-quit nil)
+    (setq mu4e-get-mail-command "offlineimap")
+    (setq mu4e-completing-read-function 'completing-read)
+    ;; (setq mu4e-change-filenames-when-moving t)
+    (setq sendmail-program (executable-find "msmtp")
+          send-mail-function #'smtpmail-send-it
+          message-sendmail-f-is-evil t
+          message-sendmail-extra-arguments '("--read-envelope-from")
+          message-send-mail-function #'message-send-mail-with-sendmail)
+    ;; don[t show buffer after sending
+    (setq message-kill-buffer-on-exit t)
+    (setq org-export-show-temporary-export-buffer nil)
+    ;; set a more visible mu4e view (with dark-mode enabled)
+    ;; (setq shr-color-visible-luminance-min 0)
+    (setq mu4e-update-interval 600)
 
-  (add-to-list 'org-capture-templates
-               '("m" "Email Workflow"))
-  (add-to-list 'org-capture-templates
-               '("mt" "Capture to task" entry
-                 (function capture-filename)
-                 "* REPLY to %:fromname in %a\n%i ")) ;; don't immdeiate-finsh want to be able to set a todo
-  ;; template to capture events
-  (add-to-list 'org-capture-templates
-               '("#" "used by gnus-icalendar-org" entry
-                 (function capture-filename)
-                 "%i")) ;; don't immediate-finsh want to be able to set a todo
+    (add-to-list 'org-capture-templates
+                 '("m" "Email Workflow"))
+    (add-to-list 'org-capture-templates
+                 '("mt" "Capture to task" entry
+                   (function capture-filename)
+                   "* REPLY to %:fromname in %a\n%i ")) ;; don't immdeiate-finsh want to be able to set a todo
+    ;; template to capture events
+    (add-to-list 'org-capture-templates
+                 '("#" "used by gnus-icalendar-org" entry
+                   (function capture-filename)
+                   "%i")) ;; don't immediate-finsh want to be able to set a todo
 
 
-  (setq mu4e-org-contacts-file "/home/frederic/org/contacts.org")
-  (add-to-list 'mu4e-headers-actions
-               '("org-contact-add" . mu4e-action-add-org-contact) t)
-  (add-to-list 'mu4e-view-actions
-               '("org-contact-add" . mu4e-action-add-org-contact) t)
-  (mu4e t))
+    (setq mu4e-org-contacts-file "/home/frederic/org/contacts.org")
+    (add-to-list 'mu4e-headers-actions
+                 '("org-contact-add" . mu4e-action-add-org-contact) t)
+    (add-to-list 'mu4e-view-actions
+                 '("org-contact-add" . mu4e-action-add-org-contact) t)
+    (mu4e t))
 #+end_src
 
 *** Mu4e contrib
@@ -2470,7 +2460,6 @@ Setup ANSI colors for the compilation buffer
     (setf (alist-get 'styles (alist-get 'lsp-capf completion-category-defaults))
           '(orderless))) ;; Configure orderless
   :hook (((java-mode java-ts-mode) . lsp)
-         (lsp-mode . lsp-enable-which-key-integration)
          (lsp-completion-mode . my/lsp-mode-setup-completion))
   :commands lsp)
 
@@ -2511,6 +2500,10 @@ Setup ANSI colors for the compilation buffer
 #+end_src
 
 ** Tree-sitter
+*** ~Treesit~
+#+begin_src emacs-lisp
+  (use-package treesit :straight (:type built-in))
+#+end_src
 *** Automatic use of tree-sitter
 #+begin_src emacs-lisp
 (use-package treesit-auto
@@ -2531,7 +2524,26 @@ Setup ANSI colors for the compilation buffer
 
 *** Text object
 #+begin_src emacs-lisp
-(use-package evil-textobj-tree-sitter)
+  (use-package ts-movement
+  :straight (ts-movement :host github :repo "haritkapadia/ts-movement") 
+    :init
+    (define-key ts-movement-map (kbd "C-c . d") #'tsm/delete-overlay-at-point)
+    (define-key ts-movement-map (kbd "C-c . D") #'tsm/clear-overlays-of-type)
+    (define-key ts-movement-map (kbd "C-c . b") #'tsm/node-prev)
+    (define-key ts-movement-map (kbd "C-c . C-b") #'tsm/backward-overlay)
+    (define-key ts-movement-map (kbd "C-c . C-f") #'tsm/forward-overlay)
+    (define-key ts-movement-map (kbd "C-c . f") #'tsm/node-next)
+    (define-key ts-movement-map (kbd "C-c . p") #'tsm/node-parent)
+    (define-key ts-movement-map (kbd "C-c . n") #'tsm/node-child)
+    (define-key ts-movement-map (kbd "C-c . N") #'tsm/node-children)
+    (define-key ts-movement-map (kbd "C-c . s") #'tsm/node-children-of-type)
+    (define-key ts-movement-map (kbd "C-c . a") #'tsm/node-start)
+    (define-key ts-movement-map (kbd "C-c . e") #'tsm/node-end)
+    (define-key ts-movement-map (kbd "C-c . m") #'tsm/node-mark)
+    (define-key ts-movement-map (kbd "C-c . c") #'tsm/mc/mark-all-overlays)
+    :hook ((bash-ts-mode . ts-movement-mode)
+           (java-ts-mode . ts-movement-mode))
+    )
 #+end_src
 
 ** Formatting

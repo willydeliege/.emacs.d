@@ -501,13 +501,13 @@ see [[https://github.com/protesilaos/dotfiles/blob/master/emacs/.emacs.d/prot-em
       (setcdr (assq 'vterm-mode meow-mode-state-list) 'insert)
       (meow-motion-overwrite-define-key
        ;; switch 'e' and 'p'
-       ;; '("e" . "p")
-       ;; '("E" . "P")
-       ;; '("C-e" . "C-p")
+       '("e" . meow-prev)
        '("'" . repeat)
        '("<escape>" . ignore))
       (meow-leader-define-key
        ;; To the originally e in MOTION state, use SPC e.
+       '("e" . "H-e")
+       '("_" . meow-universal-argument)
        '("1" . meow-digit-argument)
        '("2" . meow-digit-argument)
        '("3" . meow-digit-argument)
@@ -590,7 +590,6 @@ see [[https://github.com/protesilaos/dotfiles/blob/master/emacs/.emacs.d/prot-em
   (use-feature org
     :hook (org-mode                . my/prettify)
     :hook (server-after-make-frame . my/custom-agenda)
-
     :bind (("C-c l"               . org-store-link)
            ("C-c c"               . org-capture)
            ("C-c a"               . org-agenda)
@@ -769,7 +768,7 @@ see [[https://github.com/protesilaos/dotfiles/blob/master/emacs/.emacs.d/prot-em
   :init
   (require 'org-checklist))
 #+end_src
-
+ 
 *** Time-stamp
 Update flag when saving files with last__{}modified
 #+begin_src emacs-lisp

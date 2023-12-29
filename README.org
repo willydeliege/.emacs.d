@@ -946,12 +946,15 @@ Distraction-free writing
 
 ** Dired sudo
 #+begin_src emacs-lisp
-(use-package dired-toggle-sudo)
+(use-package dired-toggle-sudo :after dired)
 #+end_src
 
 ** Dired subtree
 #+begin_src emacs-lisp
-(use-package dired-subtree)
+  (use-package dired-subtree
+    :after dired
+    :bind (:map dired-mode-map
+                ("TAB" . dired-subtree-toggle)))
 #+end_src
 
 ** Dired imenu

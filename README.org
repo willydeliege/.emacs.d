@@ -1563,9 +1563,9 @@ Change light to dark theme according to the sunset/sunrise
 ** Parens
 *** Wrap-region
 #+begin_src emacs-lisp
-(use-package wrap-region
-  ;; select a region and press any of the following keys: ", ', (, {, [.
-  :hook ((prog-mode org-mode) . wrap-region-mode))
+  (use-package wrap-region
+    ;; select a region and press any of the following keys: ", ', (, {, [."
+    :hook ((prog-mode org-mode) . wrap-region-mode))
 #+end_src
 
 *** Puni

@@ -21,7 +21,6 @@ Header for the config init.el file
 
 #+end_src
 
-#+end_src
 * Using straight properly with initiating in early-init.el
 ** early-init
 :PROPERTIES:
@@ -269,7 +268,6 @@ Using [[https://github.com/radian-software/straight.el#getting-started][straight
   (save-place-mode 1)
   (setq save-place-file (locate-user-emacs-file "places" ".emacs-places")
         save-place-forget-unreadable-files nil))
-
 #+end_src
 
 ** Emacs
@@ -617,7 +615,7 @@ see [[https://github.com/protesilaos/dotfiles/blob/master/emacs/.emacs.d/prot-em
     (defun my/prettify ()
       (setq prettify-symbols-alist '((":PROPERTIES:" . "⚙️")
                                      (":LOGBOOK:" . "☰")
-                                     ("#+begin_src" . ?✎) ;; ➤ 🖝 ➟ ➤ ✎
+                                     ("#+begin_src" . ?✎)
                                      ("#+end_src"   . ?□)
                                      ("DEADLINE:" . "📆")
                                      ("CLOCK:" . "⏳")
@@ -768,15 +766,6 @@ see [[https://github.com/protesilaos/dotfiles/blob/master/emacs/.emacs.d/prot-em
   :init
   (require 'org-checklist))
 #+end_src
- 
-*** Time-stamp
-Update flag when saving files with last__{}modified
-#+begin_src emacs-lisp
-(use-feature time-stamp
-  :init
-  (time-stamp-toggle-active 1)
-  (setq time-stamp-start "\\\?[\"<]+"))
-#+end_src
 
 ** Org auto tangle
 #+begin_src emacs-lisp
@@ -911,7 +900,6 @@ Distraction-free writing
   (setq org-tags-exclude-from-inheritance '("crypt"))
   (setq org-crypt-key "frederic.willem@gmail.com"))
 #+end_src
-
 ** Org passwords
 #+begin_src emacs-lisp
 (use-package org-passwords
@@ -1332,8 +1320,8 @@ Change light to dark theme according to the sunset/sunrise
 (use-package theme-changer
   :config
   (setq calendar-location-name "Saint-Nicolas, BE"
-	calendar-latitude 50.628
-	calendar-longitude 5.516)
+        calendar-latitude 50.628
+        calendar-longitude 5.516)
   (change-theme 'ef-duo-light 'ef-duo-dark))
 #+end_src
 
@@ -2527,7 +2515,7 @@ Setup ANSI colors for the compilation buffer
 *** Text object
 #+begin_src emacs-lisp
   (use-package ts-movement
-  :straight (ts-movement :host github :repo "haritkapadia/ts-movement") 
+  :straight (ts-movement :host github :repo "haritkapadia/ts-movement")
     :init
     (define-key ts-movement-map (kbd "C-c . d") #'tsm/delete-overlay-at-point)
     (define-key ts-movement-map (kbd "C-c . D") #'tsm/clear-overlays-of-type)

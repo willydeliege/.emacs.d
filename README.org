@@ -299,12 +299,10 @@ Using [[https://github.com/radian-software/straight.el#getting-started][straight
 
 ** Display time in modeline
 #+begin_src emacs-lisp
-(use-feature display-time
-  :hook (after-init . display-time-mode)
-  :config
   (setq display-time-day-and-date t)
   (setq display-time-default-load-average nil)
-  (setq display-time-24hr-format t))
+  (setq display-time-24hr-format t)
+  (display-time-mode)
 #+end_src
 
 ** Defaults
@@ -867,7 +865,6 @@ Distraction-free writing
 ** Org notifications
 #+begin_src emacs-lisp
 (use-package org-alert
-  :after org
   :hook (after-init . org-alert-enable)
   :init
   (setq alert-default-style 'libnotify))

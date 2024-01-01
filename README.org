@@ -1440,9 +1440,9 @@ Change light to dark theme according to the sunset/sunrise
 * Editing
 ** Sudo edit
 #+begin_src emacs-lisp
-(use-package sudo-edit
-  :after embark
-  :bind (:map embark-file-map ("s" . sudo-edit)))
+  (use-package sudo-edit
+    :after embark
+    :bind (:map embark-file-map ("s" . sudo-edit-find-file)))
 #+end_src
 
 ** Undoing

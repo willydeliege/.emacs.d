@@ -209,7 +209,7 @@ Using [[https://github.com/radian-software/straight.el#getting-started][straight
   (straight-use-package 'mu4e)
   (add-to-list 'straight-x-pinned-packages
               '("mu4e" . "a8f002bfa8fbcc79bcfe9888be35f20448e593e2")
-              '("org" . "4ad657d01d4f6ba0e75b870293e2f3951efb0d16")))
+              '("org" . "cebd08a6bb396fd74e3e3d341f539df73bc43b4e")))
 
 #+end_src
 

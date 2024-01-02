@@ -2202,6 +2202,9 @@ fancy markers
 #+begin_src emacs-lisp
   (use-package org-mime
     :after mu4e
+    :custom
+    (message-cite-reply-position 'above)
+    (message-cite-style 'message-cite-style-gmail)
     :hook (message-send . org-mime-confirm-when-no-multipart)
     :bind (:map message-mode-map
                 ("C-c M-o" . org-mime-htmlize)

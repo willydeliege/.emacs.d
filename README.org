@@ -920,6 +920,10 @@ Distraction-free writing
                  "* %^{Title}\n  %^{URL}p %^{USERNAME}p %^{PASSWORD}p")))
 #+end_src
 
+** org-timeblock
+#+begin_src emacs-lisp
+  (use-package org-timeblock)
+#+end_src
 * Dired
 ** Dired
 #+begin_src emacs-lisp

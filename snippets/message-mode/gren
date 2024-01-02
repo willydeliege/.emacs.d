@@ -1,0 +1,11 @@
+# -*- mode: snippet -*-
+# name: English greetings
+# key: gren
+# --
+Hello $1,
+
+$0
+
+Regards,
+
+Frédéric

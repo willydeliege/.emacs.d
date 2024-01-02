@@ -1,0 +1,12 @@
+# -*- mode: snippet -*-
+# name: French greetings
+# key: grfr
+# --
+Bonjour $1,
+
+$0
+
+Bien à vous,
+
+Frédéric
+

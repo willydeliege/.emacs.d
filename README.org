@@ -1,6 +1,6 @@
 #+TITLE: Emacs literate configuration
 #+PROPERTY: header-args :tangle init.el :results none
-#+OPTIONS: toc:2 num:nil
+#+OPTIONS: toc:nil num:nil
 #+auto_tangle: t
 
 * Emacs configuration
@@ -173,6 +173,7 @@ This helps with a bug I was hitting when using =desktop-save-mode='s =desktop-re
 #+end_src
 
 * Package manager
+** straight
 Using [[https://github.com/radian-software/straight.el#getting-started][straight]] as package manager
 #+begin_src emacs-lisp
 ;; Tell straight.el about the profiles we are going to be using.
@@ -347,7 +348,7 @@ Using [[https://github.com/radian-software/straight.el#getting-started][straight
 #+end_src
 
 ** Help
-*** Hepful
+*** Helpful
 Better help buffer
 #+begin_src emacs-lisp
 (use-package helpful
@@ -897,6 +898,7 @@ Distraction-free writing
   (setq org-tags-exclude-from-inheritance '("crypt"))
   (setq org-crypt-key "frederic.willem@gmail.com"))
 #+end_src
+
 ** Org passwords
 #+begin_src emacs-lisp
 (use-package org-passwords
@@ -1988,6 +1990,7 @@ marginalia adds annotations in the mini buffer
     (define-key ctl-x-map (kbd "C-p") project-prefix-map))
 
 #+end_src
+
 ** Perspective
 #+begin_src emacs-lisp
 (use-package perspective

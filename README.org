@@ -922,12 +922,14 @@ Distraction-free writing
 * Dired
 ** Dired
 #+begin_src emacs-lisp
-(use-feature dired
-  :hook (dired-mode . dired-hide-details-mode)
-  :custom
-  (dired-create-destination-dirs 'ask)
-  :init
-  (setq dired-listing-switches "-Al -h -v --group-directories-first"))
+  (use-feature dired
+    :hook (dired-mode . dired-hide-details-mode)
+    :hook (dired-mode . dired-omit-mode)
+    :custom
+    (dired-create-destination-dirs 'ask)
+    :init
+    (setq dired-omit-files (rx (seq bol "." (not (any "."))))
+          dired-listing-switches "-Al -h -v --group-directories-first"))
 #+end_src
 
 ** Dired sudo
@@ -2057,7 +2059,7 @@ marginalia adds annotations in the mini buffer
            ("C-c c" . mu4e-org-store-and-capture))
     :custom
     (mu4e-hide-index-messages t)
-    (mu4e-sent-messages-behavior 'delete)
+    (mu4e-sent-messages-behavior 'delete) ;; managed by gmail
     (mu4e-attachment-dir "~/Downloads/")
 
     (mu4e-headers-fields '((:human-date . 12)
@@ -2081,7 +2083,7 @@ marginalia adds annotations in the mini buffer
                     (user-full-name                                                 . "Frédéric Willem")
                     (mu4e-drafts-folder                                             . "/frederic/[Gmail].Drafts")
                     (mu4e-sent-folder                                               . "/frederic/[Gmail].Sent Mail")
-                    (mu4e-refile-folder                                             . "/frederic/[Gmail].All Mail")
+                    (mu4e-refile-folder                                             . "/frederic/[Gmail].Starred")
                     (mu4e-trash-folder                                              . "/frederic/[Gmail].Trash")
                     (mu4e-maildir-shortcuts                                         . (list ( :maildir "/frederic/INBOX" :key ?i)
                                                                                             ( :maildir "/frederic/[Gmail].All Mail"  :key ?a)

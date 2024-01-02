@@ -2054,6 +2054,7 @@ marginalia adds annotations in the mini buffer
            ("C-c c" . mu4e-org-store-and-capture))
     :custom
     (mu4e-hide-index-messages t)
+    (mu4e-sent-messages-behavior 'delete)
     (mu4e-attachment-dir "~/Downloads/")
 
     (mu4e-headers-fields '((:human-date . 12)
@@ -2133,6 +2134,13 @@ marginalia adds annotations in the mini buffer
     (setq mu4e-get-mail-command "offlineimap")
     (setq mu4e-completing-read-function 'completing-read)
     ;; (setq mu4e-change-filenames-when-moving t)
+    (defun my-confirm-empty-subject ()
+      "Allow user to quit when current message subject is empty."
+      (or (message-field-value "Subject")
+          (yes-or-no-p "Really send without Subject? ")
+          (keyboard-quit)))
+
+    (add-hook 'message-send-hook #'my-confirm-empty-subject)
     (setq sendmail-program (executable-find "msmtp")
           send-mail-function #'smtpmail-send-it
           message-sendmail-f-is-evil t
@@ -2180,55 +2188,60 @@ fancy markers
   :init (mu4e-marker-icons-mode 1))
 #+end_src
 
-** Org message
+*** Org mime
 #+begin_src emacs-lisp
-(use-package org-msg
-  :after mu4e
-  :bind (:map org-msg-edit-mode-map
-              ("C-c C-i" . message-goto-importance))
-  :init
-  (org-msg-mode)
-  :config
-  (defun message-goto-importance ()
-    "Move point to the Importance header."
-    (interactive nil message-mode)
-    (push-mark)
-    (message-position-on-field "Importance" "Subject"))
-  (setq org-msg-options "html-postamble:nil H:5 num:nil ^:{} toc:nil author:nil email:nil \\n:t"
-        org-msg-startup "hidestars indent inlineimages"
-        org-msg-greeting-fmt "\nHi%s,\n\n"
-        org-msg-recipient-names '(("frederic.willem@gmail.com" . "Frédéric"))
-        org-msg-greeting-name-limit 3
-        org-msg-default-alternatives '((new		. (text html))
-                                       (reply-to-html	. (text html))
-                                       (reply-to-text	. (text)))
-        org-msg-convert-citation t )
-  (setq org-msg-signature "\n\nRegards,\nFrédéric\n\n--\n\n*Frédéric Willem*\n/Tel: +32 456 64 00 02/\n")
-  )
+  (use-package org-mime
+    :after mu4e
+    :hook (message-send . org-mime-confirm-when-no-multipart)
+    :bind (:map message-mode-map
+                ("C-c M-o" . org-mime-htmlize)
+                ("C-c M-O" . org-mime-edit-mail-in-org-mode)
+                :map org-mode-map
+                ("C-c M-o" . org-mime-org-buffer-htmlize))
+    :config
+    (add-hook 'org-mime-html-hook
+              (lambda ()
+                (org-mime-change-element-style
+                 "pre" (format "color: %s; background-color: %s; padding: 0.5em;"
+                               "#E6E1DC" "#232323"))))
+
+    ;; the following can be used to nicely offset block quotes in email bodies
+    (add-hook 'org-mime-html-hook
+              (lambda ()
+                (org-mime-change-element-style
+                 "blockquote" "border-left: 2px solid gray; padding-left: 4px;")))
+    :init
+    (setq org-mime-export-options '(:with-latex dvipng
+                                                :section-numbers nil
+                                                :with-author nil
+                                                :with-toc nil)))
+#+end_src
+
+#+begin_src emacs-lisp
+  (use-package htmlize)
 #+end_src
 
 ** org contacts
 #+begin_src emacs-lisp
-(use-package org-contacts
-  :after org-msg
-  :hook (org-msg-edit-mode . org-contacts-setup-completion-at-point)
-  :custom
-  (org-contacts-files '("~/org/contacts.org" "~/org/contacts-maman.org"))
-  :config
-  (add-to-list 'org-capture-templates
-               '("c" "Contacts" entry (file "~/org/contacts.org")
-                 "* %(org-contacts-template-name)
-  :PROPERTIES:
-  :EMAIL: %(org-contacts-template-email)
-  :PHONE:
-  :ALIAS:
-  :NICKNAME:
-  :IGNORE:
-  :ICON:
-  :NOTE:
-  :ADDRESS:
-  :BIRTHDAY:
-  :END:")))
+  (use-package org-contacts
+    :hook (mu4e-compose-mode . org-contacts-setup-completion-at-point)
+    :custom
+    (org-contacts-files '("~/org/contacts.org" "~/org/contacts-maman.org"))
+    :config
+    (add-to-list 'org-capture-templates
+                 '("c" "Contacts" entry (file "~/org/contacts.org")
+                   "* %(org-contacts-template-name)
+    :PROPERTIES:
+    :EMAIL: %(org-contacts-template-email)
+    :PHONE:
+    :ALIAS:
+    :NICKNAME:
+    :IGNORE:
+    :ICON:
+    :NOTE:
+    :ADDRESS:
+    :BIRTHDAY:
+    :END:")))
 #+end_src
 
 ** PDF Tools

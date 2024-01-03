@@ -464,6 +464,15 @@ see [[https://github.com/protesilaos/dotfiles/blob/master/emacs/.emacs.d/prot-em
     (setq create-lockfiles nil))
 #+end_src
 
+** GPG
+#+begin_src emacs-lisp
+  (use-feature epa-file
+    :init
+    (epa-file-enable)
+    (setq epa-file-encrypt-to "frederic.willem@gmail.com")
+    (setq epg-pinentry-mode 'loopback))
+#+end_src
+
 ** Mini buffer
 #+begin_src emacs-lisp
   (setq enable-recursive-minibuffers t)

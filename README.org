@@ -791,58 +791,60 @@ see [[https://github.com/protesilaos/dotfiles/blob/master/emacs/.emacs.d/prot-em
 ** Org-agenda
 *** org-super-agenda
 #+begin_src emacs-lisp
-(use-package org-super-agenda
-  :after org
-  :config
-  (org-super-agenda-mode)
-  (setq org-agenda-custom-commands
-        '(("z" "My view"
-           ((agenda "" ((org-agenda-span 8)
-                        (org-agenda-start-day "+0d")
-                        (org-super-agenda-groups
-                         '((:name ""
-                                  :time-grid t
-                                  :date today
-                                  :deadline today
-                                  :scheduled today
-                                  :order 1)
-                           (:discard (:anything))))))
-            (alltodo "" ((org-agenda-overriding-header "")
-                         (org-super-agenda-groups
-                          '(;; Each group has an implicit boolean OR operator between its selectors.
-                            (:name "Important"
-                                   :priority "A"
-                                   :face (:foreground "firebrick1"))
-                            (:name "Passed deadline"
-                                   :and (:deadline past :todo ("TODO" "WAIT" "HOLD" "NEXT"))
-                                   :face (:foreground "#7f1b19"))
-                            (:scheduled past)
-                            (:scheduled future)
-                            (:priority<= "B"
-                                         ;; Show this section after "Today" and "Important", because
-                                         ;; their order is unspecified, defaulting to 0. Sections
-                                         ;; are displayed lowest-number-first.
-                                         :order 1)
-                            (:name "Meeting"
-                                   :todo "MEETING"
-                                   :order 7)
-                            (:name "Next"
-                                   :todo "NEXT"
-                                   :order 8)
-                            (:name "Waiting"
-                                   :todo "WAIT"
-                                   :order 9)
-                            (:name "On hold"
-                                   :todo "HOLD"
-                                   :order 10)
-                            (:discard (:todo "PROJ"))))))))))
-  (add-to-list 'org-agenda-custom-commands
-               '("w" "Weekly review" agenda ""
-                 ((org-agenda-span 8)
-                  (org-agenda-start-day "-7d")
-                  (org-agenda-skip-archived-trees nil)
-                  (org-agenda-start-with-log-mode 'only)
-                  (org-agenda-log-mode-items '(state closed clock))))))
+  (use-package org-super-agenda
+    :after org
+    :config
+    (org-super-agenda-mode)
+    (setq org-agenda-custom-commands
+          '(("z" "My view"
+             ((agenda "" ((org-agenda-span 2)
+                          (org-agenda-start-day "+0d")
+                          (org-super-agenda-groups
+                           '((:name ""
+                                    :time-grid t
+                                    :date today
+                                    :deadline today
+                                    :scheduled today)
+                             ;; :order 1)
+                             (:name "---------------------------------------------------------------------------------------" :anything)
+                             ;; (:discard (:anything))
+                             ))))
+              (alltodo "" ((org-agenda-overriding-header "")
+                           (org-super-agenda-groups
+                            '(;; Each group has an implicit boolean OR operator between its selectors.
+                              (:name "Important"
+                                     :priority "A"
+                                     :face (:foreground "firebrick1"))
+                              (:name "Passed deadline"
+                                     :and (:deadline past :todo ("TODO" "WAIT" "HOLD" "NEXT"))
+                                     :face (:foreground "#7f1b19"))
+                              (:scheduled past)
+                              (:scheduled future)
+                              (:priority<= "B"
+                                           ;; Show this section after "Today" and "Important", because
+                                           ;; their order is unspecified, defaulting to 0. Sections
+                                           ;; are displayed lowest-number-first.
+                                           :order 1)
+                              (:name "Meeting"
+                                     :todo "MEETING"
+                                     :order 7)
+                              (:name "Next"
+                                     :todo "NEXT"
+                                     :order 8)
+                              (:name "Waiting"
+                                     :todo "WAIT"
+                                     :order 9)
+                              (:name "On hold"
+                                     :todo "HOLD"
+                                     :order 10)
+                              (:discard (:todo "PROJ"))))))))))
+    (add-to-list 'org-agenda-custom-commands
+                 '("w" "Weekly review" agenda ""
+                   ((org-agenda-span 8)
+                    (org-agenda-start-day "-7d")
+                    (org-agenda-skip-archived-trees nil)
+                    (org-agenda-start-with-log-mode 'only)
+                    (org-agenda-log-mode-items '(state closed clock))))))
 #+end_src
 
 ** Olivetti

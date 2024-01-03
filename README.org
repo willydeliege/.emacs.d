@@ -276,6 +276,7 @@ Using [[https://github.com/radian-software/straight.el#getting-started][straight
   (use-feature emacs
     :bind ("C-x C" . save-buffers-kill-emacs)
     :init
+    (require 'diary-lib)
     (shell-command "xcape -e 'Control_L=Escape'"))
 #+end_src
 
@@ -2176,7 +2177,7 @@ marginalia adds annotations in the mini buffer
                    "%i")) ;; don't immediate-finsh want to be able to set a todo
 
 
-    (setq mu4e-org-contacts-file "/home/frederic/org/contacts.org")
+    (setq mu4e-org-contacts-file "~/org/contacts.org")
     (add-to-list 'mu4e-headers-actions
                  '("org-contact-add" . mu4e-action-add-org-contact) t)
     (add-to-list 'mu4e-view-actions
@@ -2237,8 +2238,10 @@ fancy markers
 ** org contacts
 #+begin_src emacs-lisp
   (use-package org-contacts
+    :demand t
     :hook (mu4e-compose-mode . org-contacts-setup-completion-at-point)
     :custom
+    (org-contacts-matcher "N<>\"\"|EMAIL<>\"\"|ALIAS<>\"\"|PHONE<>\"\"|ADDRESS<>\"\"|BIRTHDAY<>\"\"")
     (org-contacts-files '("~/org/contacts.org" "~/org/contacts-maman.org"))
     :config
     (add-to-list 'org-capture-templates

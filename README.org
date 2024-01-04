@@ -287,12 +287,12 @@ Using [[https://github.com/radian-software/straight.el#getting-started][straight
 #+begin_src emacs-lisp
   (use-feature winner
     :bind (:map winner-mode-map
-                ("C-c <left>" . nil)
-                ("C-c <right>" . nil)
                 ("C-\\" . winner-undo)
                 ("C-|" . winner-redo))
     :init
-    (winner-mode))
+    (winner-mode)
+    (keymap-unset winner-mode-map "C-c <left>")
+    (keymap-unset winner-mode-map "C-c <right>"))
 #+end_src
 
 ** Recentf

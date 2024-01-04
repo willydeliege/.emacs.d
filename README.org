@@ -494,6 +494,17 @@ see [[https://github.com/protesilaos/dotfiles/blob/master/emacs/.emacs.d/prot-em
   (minibuffer-depth-indicate-mode)
 #+end_src
 
+** Scroll
+#+begin_src emacs-lisp
+  (use-feature pixel-scroll
+    :bind
+    ([remap scroll-up-command]   . pixel-scroll-interpolate-down)
+    ([remap scroll-down-command] . pixel-scroll-interpolate-up)
+    :custom
+    (pixel-scroll-precision-interpolate-page t)
+    :init
+    (pixel-scroll-precision-mode 1))
+#+end_src
 * Keys
 ** meow
 #+begin_src emacs-lisp

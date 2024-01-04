@@ -626,10 +626,10 @@ see [[https://github.com/protesilaos/dotfiles/blob/master/emacs/.emacs.d/prot-em
     :hook (org-mode                . my/prettify)
     ;; :hook (server-after-make-frame . my/custom-agenda)
     :bind (("C-c l"               . org-store-link)
-           ("C-c c"               . org-capture)
            ("C-c a"               . org-agenda)
            :map ctrl-z-map
-           ("z"               . my/custom-agenda)
+           ("z"               . org-capture)
+           ("a"               . my/custom-agenda)
            :map org-mode-map
            ("C-c $"               . org-archive-subtree-default))
     :custom
@@ -1076,16 +1076,24 @@ Used to play with forges like GitHub or gitlab
 
 ** Diff-hl
 #+begin_src emacs-lisp
-(use-package diff-hl
-  :hook ((magit-pre-refresh . diff-hl-magit-pre-refresh)
-         (magit-post-refresh . diff-hl-magit-post-refresh)
-         (dired-mode . diff-hl-dired-mode))
-  :custom
-  (diff-hl-draw-borders nil)
-  (diff-hl-show-staged-changes nil)
-  :init
-  (global-diff-hl-mode 1)
-  (diff-hl-flydiff-mode 1))
+  (use-package diff-hl
+    :bind (:map ctrl-z-map
+                ("v *" . diff-hl-show-hunk)
+                ("v S" . diff-hl-stage-current-hunk)
+                ("v [" . diff-hl-previous-hunk)
+                ("v ]" . diff-hl-next-hunk)
+                ("v n" . diff-hl-revert-hunk)
+                ("v {" . diff-hl-show-hunk-previous)
+                ("v }" . diff-hl-show-hunk-next))
+    :hook ((magit-pre-refresh . diff-hl-magit-pre-refresh)
+           (magit-post-refresh . diff-hl-magit-post-refresh)
+           (dired-mode . diff-hl-dired-mode))
+    :custom
+    (diff-hl-draw-borders nil)
+    (diff-hl-show-staged-changes nil)
+    :init
+    (global-diff-hl-mode 1)
+    (diff-hl-flydiff-mode 1))
 #+end_src
 
 * Denote

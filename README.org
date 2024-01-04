@@ -204,13 +204,14 @@ Using [[https://github.com/radian-software/straight.el#getting-started][straight
 #+end_src
 
 #+begin_src emacs-lisp
-(let ((straight-current-profile 'pinned))
-  (straight-use-package 'org)
+  (straight-use-package '(org :type built-in))
   (straight-use-package 'org-contrib)  ;; Pin org-mode and mu4e versions.
-  (straight-use-package 'mu4e)
-  (add-to-list 'straight-x-pinned-packages
-              '("mu4e" . "a8f002bfa8fbcc79bcfe9888be35f20448e593e2")
-              '("org" . "cebd08a6bb396fd74e3e3d341f539df73bc43b4e")))
+  (let ((straight-current-profile 'pinned))
+
+    (straight-use-package 'mu4e)
+    (add-to-list 'straight-x-pinned-packages
+                '("mu4e" . "a8f002bfa8fbcc79bcfe9888be35f20448e593e2")
+                '("org" . "cebd08a6bb396fd74e3e3d341f539df73bc43b4e")))
 
 #+end_src
 
@@ -280,6 +281,18 @@ Using [[https://github.com/radian-software/straight.el#getting-started][straight
     (shell-command "xcape -e 'Control_L=Escape'")
     (defvar ctrl-z-map (make-sparse-keymap))
     (global-set-key [(control ?z)] ctrl-z-map))
+#+end_src
+
+** Winner-mode
+#+begin_src emacs-lisp
+  (use-feature winner
+    :bind (:map winner-mode-map
+                ("C-c <left>" . nil)
+                ("C-c <right>" . nil)
+                ("C-\\" . winner-undo)
+                ("C-|" . winner-redo))
+    :init
+    (winner-mode))
 #+end_src
 
 ** Recentf
@@ -792,6 +805,7 @@ see [[https://github.com/protesilaos/dotfiles/blob/master/emacs/.emacs.d/prot-em
 *** org-super-agenda
 #+begin_src emacs-lisp
   (use-package org-super-agenda
+    :straight (org-super-agenda :type git :flavor melpa :host github :repo "willydeliege/org-super-agenda")
     :after org
     :config
     (org-super-agenda-mode)
@@ -812,9 +826,13 @@ see [[https://github.com/protesilaos/dotfiles/blob/master/emacs/.emacs.d/prot-em
               (alltodo "" ((org-agenda-overriding-header "")
                            (org-super-agenda-groups
                             '(;; Each group has an implicit boolean OR operator between its selectors.
-                              (:name "Important"
-                                     :priority "A"
+                              (:name "Important/Urgent"
+                                     :and (:deadline (before "+2d") :priority "A")
+                                     :and (:scheduled (before "+2d") :priority "A")
                                      :face (:foreground "firebrick1"))
+                              (:name "Important/Not urgent"
+                                     :and (:deadline (after "+2d") :priority "A")
+                                     :and (:scheduled (after "+2d") :priority "A"))
                               (:name "Passed deadline"
                                      :and (:deadline past :todo ("TODO" "WAIT" "HOLD" "NEXT"))
                                      :face (:foreground "#7f1b19"))

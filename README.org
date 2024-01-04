@@ -613,7 +613,7 @@ see [[https://github.com/protesilaos/dotfiles/blob/master/emacs/.emacs.d/prot-em
 #+begin_src emacs-lisp
   (use-feature org
     :hook (org-mode                . my/prettify)
-    :hook (server-after-make-frame . my/custom-agenda)
+    ;; :hook (server-after-make-frame . my/custom-agenda)
     :bind (("C-c l"               . org-store-link)
            ("C-c c"               . org-capture)
            ("C-c a"               . org-agenda)
@@ -625,6 +625,7 @@ see [[https://github.com/protesilaos/dotfiles/blob/master/emacs/.emacs.d/prot-em
     (org-return-follows-link t)
     (org-agenda-skip-deadline-prewarning-if-scheduled t)
     (org-agenda-skip-timestamp-if-deadline-is-shown t)
+    (org-agenda-restore-windows-after-quit t)
     (org-deadline-warning-days 5)
     (org-enforce-todo-dependencies t)
     :custom-face

@@ -974,6 +974,7 @@ Distraction-free writing
     :bind (:map ctrl-z-map
                 ("t" . org-timeblock)))
 #+end_src
+
 * Dired
 ** Dired
 #+begin_src emacs-lisp
@@ -2298,7 +2299,7 @@ fancy markers
     :demand t
     :hook (mu4e-compose-mode . org-contacts-setup-completion-at-point)
     :bind (:map ctrl-z-map
-                ("c" . org-contacts))
+                ("k" . org-contacts))
     :custom
     (org-contacts-matcher "N<>\"\"|EMAIL<>\"\"|ALIAS<>\"\"|PHONE<>\"\"|ADDRESS<>\"\"|BIRTHDAY<>\"\"")
     (org-contacts-files '("~/org/contacts.org" "~/org/contacts-maman.org"))

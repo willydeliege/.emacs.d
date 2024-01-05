@@ -950,7 +950,7 @@ Distraction-free writing
 ** Org passwords
 #+begin_src emacs-lisp
   (use-package org-passwords
-    :after org
+    :defer 5
     :straight `(org-passwords :type git :repo "https://bitbucket.org/alfaromurillo/org-passwords.el.git" :files (:defaults))
     :bind ((:map ctrl-z-map
                  ("q" . org-passwords)
@@ -964,7 +964,7 @@ Distraction-free writing
     (setq enable-recursive-minibuffers t)
     (setq org-passwords-random-words-dictionary "/etc/dictionaries-common/words")
     (add-to-list 'org-capture-templates
-                 '("p" "password" entry (file "~/org/password.org.gpg")
+                 '("P" "password" entry (file "~/org/password.org.gpg")
                    "* %^{Title}\n  %^{URL}p %^{USERNAME}p %^{PASSWORD}p")))
 #+end_src
 

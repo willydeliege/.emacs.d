@@ -2197,7 +2197,7 @@ marginalia adds annotations in the mini buffer
     (mu4e-icalendar-setup)
     (setq gnus-icalendar-org-capture-file "~/org/Inbox.org")
     (setq gnus-icalendar-org-capture-headline '("Calendar"))
-    (gnus-icalendar-org-setup)
+    (setq gnus-icalendar-org-enabled-p t) ;; don't create capture template here
     (setq mail-user-agent 'mu4e-user-agent)
     (setq mu4e-confirm-quit nil)
     (setq mu4e-get-mail-command "offlineimap")

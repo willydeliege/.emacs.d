@@ -488,6 +488,7 @@ see [[https://github.com/protesilaos/dotfiles/blob/master/emacs/.emacs.d/prot-em
     :init
     (pixel-scroll-precision-mode 1))
 #+end_src
+
 * Keys
 ** meow
 #+begin_src emacs-lisp

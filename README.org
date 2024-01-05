@@ -198,23 +198,6 @@ Using [[https://github.com/radian-software/straight.el#getting-started][straight
   (load bootstrap-file nil 'nomessage))
 #+end_src
 
-#+begin_src emacs-lisp
-  (autoload #'straight-x-pull-all "straight-x")
-  (autoload #'straight-x-freeze-versions "straight-x")
-#+end_src
-
-#+begin_src emacs-lisp
-  (straight-use-package '(org :type built-in))
-  (straight-use-package 'org-contrib)  ;; Pin org-mode and mu4e versions.
-  (let ((straight-current-profile 'pinned))
-
-    (straight-use-package 'mu4e)
-    (add-to-list 'straight-x-pinned-packages
-                '("mu4e" . "a8f002bfa8fbcc79bcfe9888be35f20448e593e2")
-                '("org" . "cebd08a6bb396fd74e3e3d341f539df73bc43b4e")))
-
-#+end_src
-
 ** USE-PACKAGE
 *** We will use use-package
 #+begin_src emacs-lisp
@@ -622,7 +605,8 @@ see [[https://github.com/protesilaos/dotfiles/blob/master/emacs/.emacs.d/prot-em
 ** Org basics
 *** Org-mode
 #+begin_src emacs-lisp
-  (use-feature org
+  (use-package org
+    :straight (:type built-in)
     :hook (org-mode                . my/prettify)
     ;; :hook (server-after-make-frame . my/custom-agenda)
     :bind (("C-c l"               . org-store-link)
@@ -2108,7 +2092,13 @@ marginalia adds annotations in the mini buffer
 * Mail
 ** Mu4e
 #+begin_src emacs-lisp
-  (use-feature mu4e
+  (use-package mu4e
+    :straight `(mu4e
+                :type git
+                :host github
+                :repo "djcb/mu"
+                :pre-build ,(cl-letf (((symbol-function #'el-get-package-directory) (lambda (package) (straight--repos-dir (format "%S" package)))) (el-get-install-info (straight--el-get-install-info)) (el-get-emacs (straight--emacs-path)) (el-get-dir (straight--repos-dir))) (pcase system-type (_ `(("./autogen.sh") ("make")))))
+                :files (:defaults "build/mu4e/*.el"))
     :defer 1
     :commands (mu4e mu4e-update-index mu4e-compose-new)
     :after org

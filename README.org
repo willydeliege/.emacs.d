@@ -1107,11 +1107,11 @@ Distraction-free writing
   (use-package transient)
 
   (use-package magit
-    :bind (:map ctl-x-map
-                ("C-M-g" . magit-status)
-                ("g" . magit-status)
-                :map project-prefix-map
-                ("m" . magit-project-status))
+    :bind (("C-M-g" . magit-status)
+           :map ctl-x-map
+           ("g" . magit-status)
+           :map project-prefix-map
+           ("m" . magit-project-status))
     :custom
     (magit-diff-refine-hunk 'all)
     (magit-define-global-key-bindings 'default)

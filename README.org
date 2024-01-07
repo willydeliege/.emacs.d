@@ -916,7 +916,7 @@ Distraction-free writing
 ** Org ql
 #+begin_src emacs-lisp
   (use-package org-ql
-    :commands (org-ql-find)
+    :after org-super-agenda
     :custom
     (org-ql-views
      '(("Overview: Agenda-like" :buffers-files org-agenda-files :query
@@ -983,9 +983,7 @@ Distraction-free writing
           (help-echo "Tasks with sub-tasks but no NEXT sub-tasks"))
         :buffers-files org-agenda-files :query
         (and
-         (ancestors
-          (todo "PROJ"))
-         (todo)
+         (todo "PROJ")
          (descendants
           (todo))
          (not
@@ -1577,20 +1575,20 @@ Change light to dark theme according to the sunset/sunrise
 
 ** Undoing
 #+begin_src emacs-lisp
-;; (use-package undo-tree
-;;   :custom
-;;   (undo-tree-visualizer-diff t)
-;;   (undo-tree-history-directory-alist '(("." . "~/.emacs.d/undo")))
-;;   (undo-tree-visualizer-timestamps t)
-;;   :init
-;;   (global-undo-tree-mode))
+  (use-package undo-fu)
+  #+end_src
 
-#+end_src
+#+begin_src emacs-lisp
+  (use-package undo-fu-session
+    :hook (after-init . undo-fu-session-global-mode))
+  #+end_src
+
 #+begin_src emacs-lisp
   (use-package vundo
-    :bind (map: ctl-x-map
-                ("u" . vundo)))
+    :demand t
+    :bind ("C-x u" . vundo))
 #+end_src
+
 ** Parens
 *** Wrap-region
 #+begin_src emacs-lisp

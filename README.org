@@ -656,7 +656,8 @@ see [[https://github.com/protesilaos/dotfiles/blob/master/emacs/.emacs.d/prot-em
       (if (not org-agenda-files)
           (build-agenda)))
 
-    ;; Agenda styling
+     (add-function :before after-focus-change-function 'build-agenda)
+   ;; Agenda styling
     (setq org-stuck-projects '("+Project/PROJ" ("NEXT" "WAIT" "MEETING" "HOLD") nil ""))
     (setq  org-agenda-block-separator ?─
            org-agenda-time-grid
@@ -776,11 +777,7 @@ see [[https://github.com/protesilaos/dotfiles/blob/master/emacs/.emacs.d/prot-em
       (interactive)
       (my-org-agenda)
       (org-agenda nil "z")
-      (delete-other-windows))
-    (unless (daemonp)
-      (setq initial-buffer-choice (lambda ()
-                                    (my/custom-agenda)
-                                    (get-buffer-create "*Org Agenda*")))))
+      (delete-other-windows)))
 #+end_src
 
 *** Org-contrib

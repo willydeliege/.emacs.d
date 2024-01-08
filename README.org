@@ -1576,12 +1576,12 @@ Change light to dark theme according to the sunset/sunrise
 ** Undoing
 #+begin_src emacs-lisp
   (use-package undo-fu)
-  #+end_src
+#+end_src
 
 #+begin_src emacs-lisp
   (use-package undo-fu-session
     :hook (after-init . undo-fu-session-global-mode))
-  #+end_src
+#+end_src
 
 #+begin_src emacs-lisp
   (use-package vundo
@@ -1590,7 +1590,15 @@ Change light to dark theme according to the sunset/sunrise
 #+end_src
 
 ** Parens
+*** Electric pair mode
+#+begin_src emacs-lisp
+(use-feature elec-pair
+  :init
+  (electric-pair-mode))
+#+end_src
+
 *** Wrap-region
+Emacs minor mode to wrap region with tag or punctuations
 #+begin_src emacs-lisp
   (use-package wrap-region
     ;; select a region and press any of the following keys: ", ', (, {, [."
@@ -1619,14 +1627,8 @@ If you are surrounded by punipuni things, you feel safe and relieved. That's my 
   (add-hook 'term-mode-hook #'puni-disable-puni-mode))
 #+end_src
 
-*** Electric pair mode
-#+begin_src emacs-lisp
-(use-feature elec-pair
-  :init
-  (electric-pair-mode))
-#+end_src
-
 ** Scratch buffer
+Mode-specific scratch buffers
 #+begin_src emacs-lisp
 (use-package scratch
   :bind  (:map ctrl-z-map ("s" . scratch)))
@@ -1652,6 +1654,7 @@ Just install Hunspell and Hunspell-fr, Hunspell-en, ...
 #+end_src
 
 ** Multiple cursor
+Multiple cursors for Emacs. This is some pretty crazy functionality, so yes, there are kinks. Don't be afraid though
 #+begin_src emacs-lisp
 (use-package multiple-cursors
   :bind (( "C-S-c C-S-c" . mc/edit-lines)
@@ -1664,20 +1667,20 @@ test
 ** Dogears
 Remember locations after jumping
 #+begin_src emacs-lisp
-(use-package dogears
-  ;; :after consult
-  :hook (after-init . dogears-mode)
-  :straight (dogears :host github :repo "alphapapa/dogears.el"
-                     :files (:defaults (:exclude "helm-dogears.el")))
-  :bind (:map global-map
-              ("M-g d" . dogears-go)
-              ("M-g M-b" . dogears-back)
-              ("M-g M-f" . dogears-forward)
-              ("M-g M-d" . dogears-list)
-              ("M-g M-D" . dogears-sidebar))
-  :config
-  (add-to-list 'dogears-ignore-modes 'mu4e-view-mode)
-  (add-to-list 'dogears-hooks 'consult-after-jump-hook))
+  (use-package dogears
+    ;; :after consult
+    :hook (after-init . dogears-mode)
+    :straight (dogears :host github :repo "alphapapa/dogears.el"
+                       :files (:defaults (:exclude "helm-dogears.el")))
+    :bind (:map global-map
+                ("M-g d" . dogears-go)
+                ("M-g M-b" . dogears-back)
+                ("M-g M-f" . dogears-forward)
+                ("M-g M-d" . dogears-list)
+                ("M-g M-D" . dogears-sidebar))
+    :config
+    (add-to-list 'dogears-ignore-modes 'mu4e-view-mode)
+    (add-to-list 'dogears-hooks 'consult-after-jump-hook))
 #+end_src
 
 * Completion
@@ -1713,6 +1716,7 @@ marginalia adds annotations in the mini buffer
 #+end_src
 
 ** Consult
+🔍 consult.el - Consulting completing-read
 #+begin_src emacs-lisp
 ;; Consult users will also want the embark-consult package.
 (use-package embark-consult
@@ -1860,6 +1864,7 @@ marginalia adds annotations in the mini buffer
 #+end_src
 
 ** Embark
+Emacs Mini-Buffer Actions Rooted in Keymaps
 #+begin_src emacs-lisp
   (use-package embark
     :bind (("C-h B" . embark-bindings) ;; alternative for `describe-bindings'
@@ -1961,6 +1966,7 @@ marginalia adds annotations in the mini buffer
 #+end_src
 
 ** Orderless
+Emacs completion style that matches multiple regexps in any order
 #+begin_src emacs-lisp
 (use-package orderless
   :demand t
@@ -2006,6 +2012,7 @@ marginalia adds annotations in the mini buffer
 #+end_src
 
 ** Corfu
+🏝️ corfu.el - COmpletion in Region FUnction
 #+begin_src emacs-lisp
 (use-package corfu
   :straight (corfu :files (:defaults "extensions/*.el"))
@@ -2056,6 +2063,7 @@ marginalia adds annotations in the mini buffer
 #+end_src
 
 ** Cape
+🦸cape.el - Completion At Point Extensions
 #+begin_src emacs-lisp
 (use-package cape
   ;; Bind dedicated completion commands

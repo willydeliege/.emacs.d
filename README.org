@@ -1152,6 +1152,7 @@ Used to play with forges like GitHub or gitlab
     :custom
     (diff-hl-draw-borders nil)
     (diff-hl-show-staged-changes nil)
+    (diff-hl-show-hunk-inline-popup-smart-lines nil)
     :init
     (global-diff-hl-mode 1)
     (diff-hl-flydiff-mode 1))

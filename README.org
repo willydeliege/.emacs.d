@@ -2614,3 +2614,16 @@ Setup ANSI colors for the compilation buffer
   :init
   (add-to-list 'keyword-search-alist '(wikipedia-fr . "http://fr.wikipedia.org/wiki/%s")))
 #+end_src
+
+** Emacs everywhere
+System-wide popup Emacs windows for quick edits
+#+begin_src emacs-lisp
+  (use-package emacs-everywhere)
+#+end_src
+To use it, assign to a shortcut
+#+begin_src shell :tangle ~/.emacs.d/everywhere.sh
+#!/bin/bash
+
+emacsclient --eval "(emacs-everywhere)"
+#+end_src
+

@@ -2613,3 +2613,13 @@ To use it, assign to a shortcut
 emacsclient --eval "(emacs-everywhere)"
 #+end_src
 
+** Translate
+#+begin_src emacs-lisp
+  (use-package google-translate
+    :init
+    (require 'google-translate-smooth-ui)
+    (global-set-key "\C-zT" 'google-translate-buffer)
+    (setq google-translate-translation-directions-alist
+          '(("nl" . "fr") ("fr" . "nl") ("en" . "fr") ("fr" . "en"))))
+#+end_src
+

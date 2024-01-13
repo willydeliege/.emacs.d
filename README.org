@@ -2595,10 +2595,12 @@ Setup ANSI colors for the compilation buffer
 * Utilities
 ** Search the web
 #+begin_src emacs-lisp
-(use-package keyword-search
-  :bind (:map ctrl-z-map ("k" . keyword-search))
-  :init
-  (add-to-list 'keyword-search-alist '(wikipedia-fr . "http://fr.wikipedia.org/wiki/%s")))
+  (use-package keyword-search
+    :bind (:map ctrl-z-map ("k" . keyword-search))
+    :init
+    (add-to-list 'keyword-search-alist '(wikipedia-fr . "http://fr.wikipedia.org/wiki/%s"))
+    (add-to-list 'keyword-search-alist '(archlinux-package . "https://archlinux.org/packages/?sort=&arch=x86_64&q=%s"))
+    (add-to-list 'keyword-search-alist '(archlinux-wiki . "https://wiki.archlinux.org/index.php?search=%s")))
 #+end_src
 
 ** Emacs everywhere

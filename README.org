@@ -137,8 +137,8 @@ Fonts larger than the system default can cause frame resizing, which adds to sta
 
 Set default and backup fonts
 #+begin_src emacs-lisp :lexical t
-(push '(font . "FiraCode Nerd Font Mono-11") default-frame-alist)
-(set-face-font 'default "FiraCode")
+(push '(font . "JetBrainsMono NFM-11") default-frame-alist)
+(set-face-font 'default "JetBrainsMono NFM")
 (set-face-font 'variable-pitch "DejaVu Sans")
 (copy-face 'default 'fixed-pitch)
 #+end_src

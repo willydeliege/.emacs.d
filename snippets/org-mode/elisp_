@@ -1,6 +1,6 @@
 # -*- mode: snippet -*-
-# name: elisp
-# key: elisp
+# name: eli
+# key: eli
 # --
 #+begin_src emacs-lisp
 $0

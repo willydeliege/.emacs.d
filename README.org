@@ -2159,12 +2159,17 @@ Emacs completion style that matches multiple regexps in any order
   (use-package persp-projectile)
 #+end_src
 
+** ibuffer projectile
+#+begin_src emacs-lisp
+  (use-package ibuffer-projectile)
+#+end_src
+
 ** Buffers
 #+begin_src emacs-lisp
   (use-feature ibuffer
     :bind ("C-x C-b" . ibuffer)
     :hook (ibuffer .  (lambda ()
-                        (persp-ibuffer-set-filter-groups)
+                        (ibuffer-projectile-set-filter-groups)
                         (unless (eq ibuffer-sorting-mode 'alphabetic)
                           (ibuffer-do-sort-by-alphabetic)))))
 #+end_src

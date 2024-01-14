@@ -2174,7 +2174,6 @@ Emacs completion style that matches multiple regexps in any order
   :hook (ibuffer-mode . nerd-icons-ibuffer-mode))
 #+end_src
 
-
 * Mail
 ** Mu4e
 #+begin_src emacs-lisp

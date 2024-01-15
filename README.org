@@ -1901,6 +1901,12 @@ Emacs Mini-Buffer Actions Rooted in Keymaps
               (rename-buffer new-name)
               (set-visited-file-name new-name)
               (set-buffer-modified-p nil))))))
+
+    (defun my-diff-buffer-with-file (file)
+      "Used for embark.
+  FILE is needed only for embark call."
+      (diff-buffer-with-file (current-buffer)))
+
     (defun embark-target-this-buffer-file ()
       (cons 'this-buffer-file (or (buffer-file-name) (buffer-name))))
 
@@ -1913,7 +1919,7 @@ Emacs Mini-Buffer Actions Rooted in Keymaps
       "b" 'byte-compile-file
       "S" 'sudo-edit-find-file
       "r" 'rename-file-and-buffer
-      "d" 'diff-buffer-with-file
+      "d" 'my-diff-buffer-with-file
       "=" 'ediff-buffers
       "C-=" 'ediff-files
       "!" 'shell-command
@@ -1923,7 +1929,7 @@ Emacs Mini-Buffer Actions Rooted in Keymaps
       "k" 'kill-this-buffer
       "z" 'bury-buffer
       "|" 'embark-shell-command-on-buffer
-      "g" 'revert-buffer-quick)
+      "g" 'revert-buffer)
     (add-to-list 'embark-keymap-alist '(this-buffer-file . this-buffer-file-map))
 
     (defun embark-act-on-buffer-file (&optional arg)

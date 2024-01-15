@@ -619,6 +619,9 @@ see [[https://github.com/protesilaos/dotfiles/blob/master/emacs/.emacs.d/prot-em
     (org-agenda-restore-windows-after-quit t)
     (org-deadline-warning-days 5)
     (org-enforce-todo-dependencies t)
+    (org-refile-targets
+   '((org-agenda-files :maxlevel . 3)
+     ("~/org/20231208T101149--recettes.org" :maxlevel . 1)))
     :custom-face
     (org-agenda-date-weekend-today ((t (:inherit org-agenda-date
                                                  :underline t
@@ -730,7 +733,6 @@ see [[https://github.com/protesilaos/dotfiles/blob/master/emacs/.emacs.d/prot-em
     (add-hook 'org-after-tags-change-hook
               'make-archive)
     (setq org-datetree-add-timestamp 'active)
-    (setq org-refile-targets '((org-agenda-files :maxlevel . 3)))
     (setq org-outline-path-complete-in-steps nil)         ; Refile in a single go
     (setq org-startup-folded 'show2levels)
     (setq org-tag-alist '((:startgroup . nil)

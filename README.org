@@ -593,6 +593,7 @@ see [[https://github.com/protesilaos/dotfiles/blob/master/emacs/.emacs.d/prot-em
 #+begin_src emacs-lisp
   (use-package which-key
     :init
+    (setq which-key-side-window-max-height 17)
     (which-key-mode))
 #+end_src
 

@@ -610,8 +610,7 @@ see [[https://github.com/protesilaos/dotfiles/blob/master/emacs/.emacs.d/prot-em
            ("a"               . my/custom-agenda)
            :map org-mode-map
            ("C-c &"               . nil)
-           ("C-c C-&"             . org-mark-ring-goto)
-           ("C-c $"               . org-archive-subtree-default))
+           ("C-c C-&"             . org-mark-ring-goto)) ;; yasnippets conflict
     :custom
     (org-return-follows-link t)
     (org-agenda-skip-deadline-prewarning-if-scheduled t)

@@ -626,13 +626,13 @@ see [[https://github.com/protesilaos/dotfiles/blob/master/emacs/.emacs.d/prot-em
     :custom-face
     (org-agenda-date-weekend-today ((t (:inherit org-agenda-date
                                                  :underline t
-                                                 :height 1.3))))
+                                                 :height 1.4))))
     (org-agenda-date-today ((t (:inherit org-agenda-date
                                          :underline t
-                                         :height 1.3))))
-    (org-level-1 ((t (:height 1.2))))
-    (org-level-2 ((t (:height 1.15))))
-    (org-level-3 ((t (:height 1.1))))
+                                         :height 1.4))))
+    ;; (org-level-1 ((t (:height 1.2))))
+    ;; (org-level-2 ((t (:height 1.15))))
+    ;; (org-level-3 ((t (:height 1.1))))
     :init
     (defun my/prettify ()
       (setq prettify-symbols-alist '((":PROPERTIES:" . "⚙️")

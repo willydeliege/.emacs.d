@@ -258,6 +258,7 @@ Using [[https://github.com/radian-software/straight.el#getting-started][straight
   (use-feature emacs
     :bind ("C-x C" . save-buffers-kill-emacs)
     :init
+    (setq use-short-answers t)
     (require 'diary-lib)
     (shell-command "xcape -e 'Control_L=Escape'")
     (defvar ctrl-z-map (make-sparse-keymap))

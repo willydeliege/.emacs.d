@@ -779,10 +779,13 @@ see [[https://github.com/protesilaos/dotfiles/blob/master/emacs/.emacs.d/prot-em
 
 *** Org-contrib
 #+begin_src emacs-lisp
-(use-package org-contrib
-  :after org
-  :init
-  (require 'org-checklist))
+  (use-package org-contrib
+    :after org
+    :straight (org-contrib :type git
+                           :repo "https://github.com/emacsmirror/org-contrib"
+                           :files (:defaults "lisp/*.el"))
+    :init
+    (require 'org-checklist))
 #+end_src
 
 ** Org auto tangle
@@ -2197,7 +2200,7 @@ Emacs completion style that matches multiple regexps in any order
   (add-to-list 'consult-buffer-sources persp-consult-source))
 #+end_src
 
-** Perspective tabs
+** COMMENT Perspective tabs
 #+begin_src emacs-lisp
 (use-package perspective-tabs
   :after (perspective)
@@ -2205,7 +2208,6 @@ Emacs completion style that matches multiple regexps in any order
   :init
   (perspective-tabs-mode +1))
 #+end_src
-
 ** Perspectives projectile bridge
 #+begin_src emacs-lisp
   (use-package persp-projectile)

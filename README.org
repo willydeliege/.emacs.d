@@ -2191,23 +2191,15 @@ Emacs completion style that matches multiple regexps in any order
 
 ** Perspective
 #+begin_src emacs-lisp
-(use-package perspective
-  :custom
-  (persp-mode-prefix-key (kbd "C-c w"))  ; pick your own prefix key here
-  :init
-  (persp-mode)
-  :config
-  (add-to-list 'consult-buffer-sources persp-consult-source))
+  (use-package perspective
+    :custom
+    (persp-mode-prefix-key (kbd "C-z w"))  ; pick your own prefix key here
+    :init
+    (persp-mode)
+    :config
+    (add-to-list 'consult-buffer-sources persp-consult-source))
 #+end_src
 
-** COMMENT Perspective tabs
-#+begin_src emacs-lisp
-(use-package perspective-tabs
-  :after (perspective)
-  :straight (:host sourcehut :repo "woozong/perspective-tabs")
-  :init
-  (perspective-tabs-mode +1))
-#+end_src
 ** Perspectives projectile bridge
 #+begin_src emacs-lisp
   (use-package persp-projectile)

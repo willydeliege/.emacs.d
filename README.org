@@ -671,7 +671,7 @@ see [[https://github.com/protesilaos/dotfiles/blob/master/emacs/.emacs.d/prot-em
                                  (append org-babel-load-languages
                                          '((shell     . t)
                                            (java      . t))))
-    (setq org-archive-default-command 'org-archive-to-archive-sibling)
+    ;; (setq org-archive-default-command 'org-archive-to-archive-sibling)
     (setq org-confirm-babel-evaluate nil)
     (setq
      ;; Edit settings

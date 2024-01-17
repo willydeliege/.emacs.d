@@ -645,7 +645,7 @@ see [[https://github.com/protesilaos/dotfiles/blob/master/emacs/.emacs.d/prot-em
                                      ("SCHEDULED:"  . "🪟") ; It's a window - not a plus sign in a box
                                      (":END:" . "🔚" ))))
     (setq org-directory "~/org/")
-    (defvar journal-file "journal.org")
+    (defvar journal-file "~/org/journal.org")
     (defun build-agenda ()
       (interactive)
       (setq org-agenda-files (directory-files org-directory nil ".*==project.*"))
@@ -1518,10 +1518,9 @@ Change light to dark theme according to the sunset/sunrise
 
 #+begin_src emacs-lisp
   (use-package shackle
-    :disabled t
     :init
     (setq shackle-default-alignment 'below
-          shackle-default-size 0.4
+          shackle-default-size 0.38
           shackle-rules '(
                           ("\\`\\*help.*?\\*\\'" :regexp t :align t :close-on-realign t :size 0.33 :select t)
                           ('helpful-mode :align t :close-on-realign t :size 0.33 :select t)

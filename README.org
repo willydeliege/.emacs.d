@@ -279,12 +279,13 @@ Using [[https://github.com/radian-software/straight.el#getting-started][straight
 
 ** Recentf
 #+begin_src emacs-lisp
-(use-feature recentf
-  :hook (emacs-startup .  recentf-mode)
-  :config
-  (setq recentf-max-menu-items 25)
-  (setq recentf-max-saved-items 25)
-  (add-to-list 'recentf-exclude "~/.emacs.d/.cache/treemacs-persist"))
+  (use-feature recentf
+    :hook (emacs-startup .  recentf-mode)
+    :config
+    (setq recentf-max-menu-items 25)
+    (setq recentf-max-saved-items 25)
+    (add-to-list 'recentf-exclude "~/.emacs.d/.cache/treemacs-persist")
+    (add-to-list 'recentf-exclude "^.*\\.org_archive$"))
 #+end_src
 
 ** Line numbers
@@ -696,7 +697,8 @@ see [[https://github.com/protesilaos/dotfiles/blob/master/emacs/.emacs.d/prot-em
     (defun capture-filename ()
       "Select the project filename to capture to."
       (interactive)
-      (let ((fpath (read-file-name "Project file name: "
+      (let* ((completion-ignored-extensions '(".org_archive"))
+            (fpath (read-file-name "Project file name: "
                                    "~/org/*==project*"
                                    nil nil nil)))
         (find-file fpath)
@@ -1045,6 +1047,8 @@ Distraction-free writing
     :custom
     (dired-create-destination-dirs 'ask)
     :init
+    (require 'dired-x)
+    (add-to-list 'dired-omit-extensions ".org_archive")
     (setq dired-omit-files (rx (seq bol "." (not (any "."))))
           dired-listing-switches "-Al -h -v --group-directories-first"))
 #+end_src

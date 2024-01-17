@@ -656,8 +656,8 @@ see [[https://github.com/protesilaos/dotfiles/blob/master/emacs/.emacs.d/prot-em
       (if (not org-agenda-files)
           (build-agenda)))
 
-     (add-function :before after-focus-change-function 'build-agenda)
-   ;; Agenda styling
+    (add-function :before after-focus-change-function 'build-agenda)
+    ;; Agenda Styling
     (setq org-stuck-projects '("+Project/PROJ" ("NEXT" "WAIT" "MEETING" "HOLD") nil ""))
     (setq  org-agenda-block-separator ?─
            org-agenda-time-grid

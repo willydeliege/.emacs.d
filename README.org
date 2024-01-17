@@ -1423,7 +1423,7 @@ see https://karthinks.com/software/avy-can-do-anything/
 #+end_src
 
 ** Theme
-*** modus themes
+*** COMMENT modus themes
 #+begin_src emacs-lisp
 (use-package modus-themes
   :config
@@ -1440,7 +1440,7 @@ see https://karthinks.com/software/avy-can-do-anything/
   (setq ef-themes-to-toggle '(ef-duo-dark ef-duo-light)))
 #+end_src
 
-*** Doom-theme
+*** COMMENT Doom-theme
 #+begin_src emacs-lisp
 (use-package doom-themes)
 #+end_src

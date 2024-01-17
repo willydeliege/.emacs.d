@@ -1566,8 +1566,7 @@ Change light to dark theme according to the sunset/sunrise
 
 #+end_src
 #+begin_src emacs-lisp
-(use-package golden-ratio
-  :hook (after-init . golden-ratio-mode))
+  (use-package golden-ratio)
 #+end_src
 
 * Editing

@@ -1294,21 +1294,6 @@ Used to play with forges like GitHub or gitlab
   (add-hook 'context-menu-functions #'denote-context-menu))
 #+end_src
 
-** Denote menu
-#+begin_src emacs-lisp
-(use-package denote-menu
-  :after org
-  :bind ("C-c d" . list-denotes)
-  :init
-  (require 'denote-org-dblock)
-  (setq denote-menu-show-file-signature t)
-  (defun my/denote-menu-filter-project-oonly ()
-    (interactive)
-    (setq denote-menu-current-regex "==project")
-    (denote-menu-update-entries)))
-
-#+end_src
-
 * UI
 ** avy
 avy - jump to character

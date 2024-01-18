@@ -2193,6 +2193,14 @@ Emacs completion style that matches multiple regexps in any order
   (use-package persp-projectile)
 #+end_src
 
+** Perspective tabs
+#+begin_src emacs-lisp
+  (use-package perspective-tabs
+    :after (perspective)
+    :straight (:host sourcehut :repo "woozong/perspective-tabs")
+    :init
+    (perspective-tabs-mode +1))
+#+end_src
 ** ibuffer projectile
 #+begin_src emacs-lisp
   (use-package ibuffer-projectile)

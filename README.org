@@ -2434,13 +2434,6 @@ fancy markers
     :END:")))
 #+end_src
 
-** PDF Tools
-#+begin_src emacs-lisp
-(use-package pdf-tools
-  :init
-  (pdf-loader-install))
-#+end_src
-
 * Calendars
 ** Calendar
 #+begin_src emacs-lisp
@@ -2673,4 +2666,12 @@ emacsclient --eval "(emacs-everywhere)"
     (setq google-translate-translation-directions-alist
           '(("nl" . "fr") ("fr" . "nl") ("en" . "fr") ("fr" . "en"))))
 #+end_src
+
+** PDF Tools
+#+begin_src emacs-lisp
+(use-package pdf-tools
+  :init
+  (pdf-loader-install))
+#+end_src
+
 

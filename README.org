@@ -1143,6 +1143,8 @@ Used to play with forges like GitHub or gitlab
 ** Diff-hl
 #+begin_src emacs-lisp
   (use-package diff-hl
+    :hook (after-init . global-diff-hl-mode)
+    :hook (after-init . diff-hl-flydiff-mode)
     :bind (:map ctrl-z-map
                 ("v *" . diff-hl-show-hunk)
                 ("v S" . diff-hl-stage-current-hunk)
@@ -1157,10 +1159,7 @@ Used to play with forges like GitHub or gitlab
     :custom
     (diff-hl-draw-borders nil)
     (diff-hl-show-staged-changes nil)
-    (diff-hl-show-hunk-inline-popup-smart-lines nil)
-    :init
-    (global-diff-hl-mode 1)
-    (diff-hl-flydiff-mode 1))
+    (diff-hl-show-hunk-inline-popup-smart-lines nil))
 #+end_src
 
 * Denote
@@ -1473,32 +1472,32 @@ Change light to dark theme according to the sunset/sunrise
 ** Modeline
 *** Doom-modeline
 #+begin_src emacs-lisp
-(use-package doom-modeline
-  :init
-  (setq doom-modeline-buffer-file-name-style 'buffer-neme)
-  (doom-modeline-mode))
+  (use-package doom-modeline
+    :hook (after-init . doom-modeline-mode)
+    :init
+    (setq doom-modeline-buffer-file-name-style 'buffer-neme))
 #+end_src
 
 ** Windows
 #+begin_src emacs-lisp
-(use-package switch-window
-  :config
-  (setq switch-window-minibuffer-shortcut ?z)
-  :bind (("M-o" . switch-window)
-         ("C-x 1" . switch-window-then-maximize)
-         ("C-x 2" . switch-window-then-split-below)
-         ("C-x 3" . switch-window-then-split-right)
-         ("C-x 0"  . switch-window-then-delete)
+  (use-package switch-window
+    :config
+    (setq switch-window-minibuffer-shortcut ?z)
+    :bind (("M-o" . switch-window)
+           ("C-x 1" . switch-window-then-maximize)
+           ("C-x 2" . switch-window-then-split-below)
+           ("C-x 3" . switch-window-then-split-right)
+           ("C-x 0"  . switch-window-then-delete)
 
-         ("C-x 4 d" . switch-window-then-dired)
-         ("C-x 4 f" . switch-window-then-find-file)
-         ("C-x 4 m" . switch-window-then-compose-mail)
-         ("C-x 4 r" . switch-window-then-find-file-read-only)
+           ("C-x 4 d" . switch-window-then-dired)
+           ("C-x 4 f" . switch-window-then-find-file)
+           ("C-x 4 m" . switch-window-then-compose-mail)
+           ("C-x 4 r" . switch-window-then-find-file-read-only)
 
-         ("C-x 4 C-f" . switch-window-then-find-file)
-         ("C-x 4 C-o" . switch-window-then-display-buffer)
+           ("C-x 4 C-f" . switch-window-then-find-file)
+           ("C-x 4 C-o" . switch-window-then-display-buffer)
 
-         ("C-x 4 0" . switch-window-then-kill-buffer)))
+           ("C-x 4 0" . switch-window-then-kill-buffer)))
 #+end_src
 
 #+begin_src emacs-lisp
@@ -1581,9 +1580,9 @@ Change light to dark theme according to the sunset/sunrise
 ** Parens
 *** Electric pair mode
 #+begin_src emacs-lisp
-(use-feature elec-pair
-  :init
-  (electric-pair-mode))
+  (use-feature elec-pair
+    :init
+    (electric-pair-mode))
 #+end_src
 
 *** Wrap-region
@@ -1673,35 +1672,35 @@ Remember locations after jumping
 #+end_src
 
 * Completion
-** Vertico + Marginalia
+** Vertico
 vertico.el - VERTical Interactive COmpletion
 marginalia adds annotations in the mini buffer
 #+begin_src emacs-lisp
-(use-package vertico
-  :straight (vertico :files (:defaults "extensions/*.el"))
-  :bind (:map vertico-map
-              ("C-f"	.	vertico-exit)
-              ("?"	.	minibuffer-completion-help)
-              ("M-RET"	.	minibuffer-complete)
-              :map minibuffer-local-map
-              ("C-h"	.	backward-kill-word))
-  :custom
-  (vertico-cycle t)
-  :init
-  (vertico-mode))
+  (use-package vertico
+    :straight (vertico :files (:defaults "extensions/*.el"))
+    :hook (after-init . vertico-mode)
+    :bind (:map vertico-map
+                ("C-f"	.	vertico-exit)
+                ("?"	.	minibuffer-completion-help)
+                ("M-RET"	.	minibuffer-complete)
+                :map minibuffer-local-map
+                ("C-h"	.	backward-kill-word))
+    :custom
+    (vertico-cycle t))
+  #+end_src
 (use-feature savehist
   :init
   (savehist-mode))
-
-(use-package marginalia
-  :after vertico
-  ;; Bind `marginalia-cycle' locally in the minibuffer.  To make the binding
-  ;; available in the *Completions* buffer, add it to the
-  ;; `completion-list-mode-map'.
-  :bind (:map minibuffer-local-map
-              ("M-A" . marginalia-cycle))
-  :init
-  (marginalia-mode))
+** Marginalia
+#+begin_src emacs-lisp
+  (use-package marginalia
+    :after vertico
+    :hook (after-init . marginalia-mode)
+    ;; Bind `marginalia-cycle' locally in the minibuffer.  To make the binding
+    ;; available in the *Completions* buffer, add it to the
+    ;; `completion-list-mode-map'.
+    :bind (:map minibuffer-local-map
+                ("M-A" . marginalia-cycle)))
 #+end_src
 
 ** Consult
@@ -2162,8 +2161,7 @@ Emacs completion style that matches multiple regexps in any order
 
 #+begin_src emacs-lisp
   (use-package yasnippet
-    :init
-    (yas-global-mode 1))
+    :hook (aftes-init . yas-global-mode))
     #+end_src
   
 * Projects
@@ -2180,10 +2178,9 @@ Emacs completion style that matches multiple regexps in any order
 ** Perspective
 #+begin_src emacs-lisp
   (use-package perspective
+    :hook (after-init . persp-mode)
     :custom
     (persp-mode-prefix-key (kbd "C-z w"))  ; pick your own prefix key here
-    :init
-    (persp-mode)
     :config
     (add-to-list 'consult-buffer-sources persp-consult-source))
 #+end_src
@@ -2196,10 +2193,12 @@ Emacs completion style that matches multiple regexps in any order
 ** Perspective tabs
 #+begin_src emacs-lisp
   (use-package perspective-tabs
-    :after (perspective)
+    :after perspective
     :straight (:host sourcehut :repo "woozong/perspective-tabs")
     :init
-    (perspective-tabs-mode +1))
+    (with-eval-after-load 'persp-mode
+      (progn
+        perspective-tabs-mode)))
 #+end_src
 ** ibuffer projectile
 #+begin_src emacs-lisp
@@ -2211,7 +2210,7 @@ Emacs completion style that matches multiple regexps in any order
   (use-feature ibuffer
     :bind ("C-x C-b" . ibuffer)
     :hook (ibuffer .  (lambda ()
-                        (ibuffer-projectile-set-filter-groups)
+                        (persp-ibuffer-set-filter-groups)
                         (unless (eq ibuffer-sorting-mode 'alphabetic)
                           (ibuffer-do-sort-by-alphabetic)))))
 #+end_src
@@ -2682,4 +2681,8 @@ emacsclient --eval "(emacs-everywhere)"
   (pdf-loader-install))
 #+end_src
 
+** Bookmark-Plus
+#+begin_src emacs-lisp
+  (use-package bookmark+)
+#+end_src 
 

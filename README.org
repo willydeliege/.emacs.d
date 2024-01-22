@@ -249,8 +249,7 @@ Using [[https://github.com/radian-software/straight.el#getting-started][straight
 (use-feature saveplace
   :config
   (save-place-mode 1)
-  (setq save-place-file (locate-user-emacs-file "places" ".emacs-places")
-        save-place-forget-unreadable-files nil))
+  (setq save-place-file (locate-user-emacs-file "places" ".emacs-places")))
 #+end_src
 
 ** Emacs
@@ -268,11 +267,11 @@ Using [[https://github.com/radian-software/straight.el#getting-started][straight
 ** Winner-mode
 #+begin_src emacs-lisp
   (use-feature winner
+    :hook (after-init . winner-mode)
     :bind (:map winner-mode-map
                 ("C-\\" . winner-undo)
                 ("C-|" . winner-redo))
-    :init
-    (winner-mode)
+    :config
     (keymap-unset winner-mode-map "C-c <left>")
     (keymap-unset winner-mode-map "C-c <right>"))
 #+end_src
@@ -1687,20 +1686,21 @@ marginalia adds annotations in the mini buffer
                 ("C-h"	.	backward-kill-word))
     :custom
     (vertico-cycle t))
+  (use-feature savehist
+    :hook (after-init . savehist-mode))
   #+end_src
-(use-feature savehist
-  :init
-  (savehist-mode))
+
 ** Marginalia
 #+begin_src emacs-lisp
   (use-package marginalia
     :after vertico
-    :hook (after-init . marginalia-mode)
     ;; Bind `marginalia-cycle' locally in the minibuffer.  To make the binding
     ;; available in the *Completions* buffer, add it to the
     ;; `completion-list-mode-map'.
     :bind (:map minibuffer-local-map
-                ("M-A" . marginalia-cycle)))
+                ("M-A" . marginalia-cycle))
+    :init
+    (marginalia-mode))
 #+end_src
 
 ** Consult
@@ -2161,7 +2161,7 @@ Emacs completion style that matches multiple regexps in any order
 
 #+begin_src emacs-lisp
   (use-package yasnippet
-    :hook (aftes-init . yas-global-mode))
+    :init  (yas-global-mode))
     #+end_src
   
 * Projects
@@ -2178,9 +2178,10 @@ Emacs completion style that matches multiple regexps in any order
 ** Perspective
 #+begin_src emacs-lisp
   (use-package perspective
-    :hook (after-init . persp-mode)
     :custom
     (persp-mode-prefix-key (kbd "C-z w"))  ; pick your own prefix key here
+    :init
+    (persp-mode)
     :config
     (add-to-list 'consult-buffer-sources persp-consult-source))
 #+end_src
@@ -2196,9 +2197,7 @@ Emacs completion style that matches multiple regexps in any order
     :after perspective
     :straight (:host sourcehut :repo "woozong/perspective-tabs")
     :init
-    (with-eval-after-load 'persp-mode
-      (progn
-        perspective-tabs-mode)))
+    (perspective-tabs-mode))
 #+end_src
 ** ibuffer projectile
 #+begin_src emacs-lisp

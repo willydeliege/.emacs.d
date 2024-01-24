@@ -260,22 +260,7 @@ Using [[https://github.com/radian-software/straight.el#getting-started][straight
     (setq use-short-answers t)
     (require 'diary-lib)
     (shell-command "xcape -e 'Control_L=Escape'")
-    ;; map backspace [delete-backward-char] to C-h
-    (define-key key-translation-map [?\C-?] [?\C-h])
-
-    ;; map M-backspace [backward-kill-word] to M-h
-    (define-key key-translation-map [?\M-\d] [?\M-h])
-
-    ;; map C-h to backspace
-    (define-key key-translation-map [?\C-h] [?\C-?])
-
-    ;; map M-h [mark-paragraph] to M-backspace
-    (define-key key-translation-map [?\M-h] [?\M-\d])
-
-    ;; tip: Tab is available as C-i
-    ;;      RET is available as C-j or C-m
-    ;;      ESC is available as C-[
-
+   
     ;; utility keymapp
     (defvar ctrl-z-map (make-sparse-keymap))
     (global-set-key [(control ?z)] ctrl-z-map))

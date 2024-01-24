@@ -898,10 +898,11 @@ Distraction-free writing
 
 ** Org notifications
 #+begin_src emacs-lisp
-(use-package org-alert
-  :hook (after-init . org-alert-enable)
-  :init
-  (setq alert-default-style 'libnotify))
+  (use-package org-alert
+    :hook (after-init . org-alert-enable)
+    :init
+    (setq alert-default-style 'libnotify
+          org-alert-notify-after-event-cutoff 60))
 #+end_src
 
 ** Org clip link

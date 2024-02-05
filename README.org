@@ -149,7 +149,7 @@ Ignore X resources.
 
 Miscellaneous
 #+begin_src emacs-lisp
-(add-to-list 'default-frame-alist '(fullscreen . maximized))
+;; (add-to-list 'default-frame-alist '(fullscreen . maximized))
 #+end_src
 
 Taken from:
@@ -1297,6 +1297,7 @@ Used to play with forges like GitHub or gitlab
   ;; `context-menu-mode'.
   (add-hook 'context-menu-functions #'denote-context-menu))
 #+end_src
+
 ** Org-roam
 #+begin_src emacs-lisp
   (use-package org-roam
@@ -1311,6 +1312,7 @@ Used to play with forges like GitHub or gitlab
     :config
     (org-roam-setup))
 #+end_src
+
 * UI
 ** avy
 avy - jump to character

@@ -2704,3 +2704,8 @@ emacsclient --eval "(emacs-everywhere)"
   (use-package bookmark+)
 #+end_src 
 
+** Ripgrep
+#+begin_src emacs-lisp
+  (use-package ripgrep)
+  #+end_src
+  

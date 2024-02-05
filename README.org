@@ -258,9 +258,8 @@ Using [[https://github.com/radian-software/straight.el#getting-started][straight
     :bind ("C-x C" . save-buffers-kill-emacs)
     :init
     (setq use-short-answers t)
+    ;; (setq initial-major-mode 'org-mode)
     (require 'diary-lib)
-    (shell-command "xcape -e 'Control_L=Escape'")
-   
     ;; utility keymapp
     (defvar ctrl-z-map (make-sparse-keymap))
     (global-set-key [(control ?z)] ctrl-z-map))
@@ -431,9 +430,11 @@ Use vterm as multiplexer
 
 *** Exec path
 #+begin_src emacs-lisp
-(use-package exec-path-from-shell
-  :init
-  (exec-path-from-shell-initialize))
+  (use-package exec-path-from-shell
+    :defer 5
+    :config
+    (exec-path-from-shell-initialize)
+    (shell-command "xcape -e 'Control_L=Escape'"))
 #+end_src
 
 ** Custom.el

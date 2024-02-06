@@ -466,8 +466,9 @@ see [[https://github.com/protesilaos/dotfiles/blob/master/emacs/.emacs.d/prot-em
 ** GPG
 #+begin_src emacs-lisp
   (use-feature epa-file
-    :init
-    (epa-file-enable)
+    :defer 1
+    :config
+    ;; (epa-file-enable)
     (setq epa-file-encrypt-to "frederic.willem@gmail.com")
     (setq epg-pinentry-mode 'loopback))
 #+end_src
@@ -805,6 +806,7 @@ see [[https://github.com/protesilaos/dotfiles/blob/master/emacs/.emacs.d/prot-em
 *** org-super-agenda
 #+begin_src emacs-lisp
   (use-package org-super-agenda
+    :defer 1
     :straight (org-super-agenda :type git :flavor melpa :host github :repo "willydeliege/org-super-agenda")
     :after org
     :config
@@ -2181,7 +2183,8 @@ Emacs completion style that matches multiple regexps in any order
 
 #+begin_src emacs-lisp
   (use-package yasnippet
-    :init  (yas-global-mode))
+    :defer 3
+    :config  (yas-global-mode))
     #+end_src
   
 * Projects
@@ -2702,11 +2705,12 @@ emacsclient --eval "(emacs-everywhere)"
 
 ** Bookmark-Plus
 #+begin_src emacs-lisp
-  (use-package bookmark+)
+  (use-package bookmark+
+    :defer 2)
 #+end_src 
 
 ** Ripgrep
 #+begin_src emacs-lisp
   (use-package ripgrep)
-  #+end_src
+ #+end_src
   

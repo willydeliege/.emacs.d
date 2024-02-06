@@ -433,8 +433,7 @@ Use vterm as multiplexer
   (use-package exec-path-from-shell
     :defer 5
     :config
-    (exec-path-from-shell-initialize)
-    (shell-command "xcape -e 'Control_L=Escape'"))
+    (exec-path-from-shell-initialize))
 #+end_src
 
 ** Custom.el

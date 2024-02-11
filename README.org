@@ -742,9 +742,9 @@ see [[https://github.com/protesilaos/dotfiles/blob/master/emacs/.emacs.d/prot-em
       "Select the project filename to capture to."
       (interactive)
       (let* ((completion-ignored-extensions '(".org_archive"))
-            (fpath (read-file-name "Project file name: "
-                                   "~/org/*==project*"
-                                   nil nil nil)))
+             (fpath (read-file-name "Project file name: "
+                                    "~/org/*==project*"
+                                    nil nil nil)))
         (find-file fpath)
         (goto-char (org-find-exact-headline-in-buffer "Tasks"))))
     (add-to-list 'org-capture-templates

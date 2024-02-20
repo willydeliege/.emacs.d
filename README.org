@@ -149,7 +149,8 @@ Ignore X resources.
 
 Miscellaneous
 #+begin_src emacs-lisp
-;; (add-to-list 'default-frame-alist '(fullscreen . maximized))
+(add-to-list 'default-frame-alist '(fullscreen .  maximized
+))
 #+end_src
 
 Taken from:

@@ -2286,147 +2286,148 @@ Emacs completion style that matches multiple regexps in any order
 * Mail
 ** Mu4e
 #+begin_src emacs-lisp
-    (use-package mu4e
-      :straight `(mu4e
-                  :type git
-                  :host github
-                  :repo "djcb/mu"
-                  :pre-build ,(cl-letf (((symbol-function #'el-get-package-directory) (lambda (package) (straight--repos-dir (format "%S" package)))) (el-get-install-info (straight--el-get-install-info)) (el-get-emacs (straight--emacs-path)) (el-get-dir (straight--repos-dir))) (pcase system-type (_ `(("./autogen.sh") ("make")))))
-                  :files (:defaults "build/mu4e/*.el"))
-      :defer 1
-      :commands (mu4e mu4e-update-index mu4e-compose-new)
-      :after org
-      :unless my/using-android
-      :bind (("<f5>"  . mu4e)
-             :map mu4e-main-mode-map
-             ("q" . meow-quit)
-             :map mu4e-headers-mode-map
-             ("C-c c" . mu4e-org-store-and-capture)
-             ("¡"     . mu4e-headers-mark-all-unread-read)
-             :map mu4e-view-mode-map
-             ("C-c c" . mu4e-org-store-and-capture))
-      :custom
-      (mu4e-hide-index-messages t)
-      (mu4e-sent-messages-behavior 'delete) ;; managed by gmail
-      (mu4e-attachment-dir "~/Downloads/")
+  (use-package mu4e
+    :straight `(mu4e
+                :type git
+                :host github
+                :repo "djcb/mu"
+                :branch "release/1.10"
+                :pre-build ,(cl-letf (((symbol-function #'el-get-package-directory) (lambda (package) (straight--repos-dir (format "%S" package)))) (el-get-install-info (straight--el-get-install-info)) (el-get-emacs (straight--emacs-path)) (el-get-dir (straight--repos-dir))) (pcase system-type (_ `(("./autogen.sh") ("make")))))
+                :files (:defaults "build/mu4e/*.el"))
+    :defer 1
+    :commands (mu4e mu4e-update-index mu4e-compose-new)
+    :after org
+    :unless my/using-android
+    :bind (("<f5>"  . mu4e)
+           :map mu4e-main-mode-map
+           ("q" . meow-quit)
+           :map mu4e-headers-mode-map
+           ("C-c c" . mu4e-org-store-and-capture)
+           ("¡"     . mu4e-headers-mark-all-unread-read)
+           :map mu4e-view-mode-map
+           ("C-c c" . mu4e-org-store-and-capture))
+    :custom
+    (mu4e-hide-index-messages t)
+    (mu4e-sent-messages-behavior 'delete) ;; managed by gmail
+    (mu4e-attachment-dir "~/Downloads/")
 
-      (mu4e-headers-fields '((:human-date . 12)
-                             (:flags      . 6)
-                             (:from       . 30)
-                             (:subject)))
+    (mu4e-headers-fields '((:human-date . 12)
+                           (:flags      . 6)
+                           (:from       . 30)
+                           (:subject)))
 
-      :config
-      (setq mu4e-context-policy 'pick-first)
-      (setq mu4e-compose-context-policy nil)
-      (setq mu4e-contexts
-            (list
-             ;; Work account
-             (make-mu4e-context
-              :name "frederic"
-              :match-func
-              (lambda (msg)
-                (when msg
-                  (string-prefix-p "/frederic" (mu4e-message-field msg :maildir))))
-              :vars '((user-mail-address                                              . "frederic.willem@gmail.com")
-                      (user-full-name                                                 . "Frédéric Willem")
-                      (mu4e-drafts-folder                                             . "/frederic/[Gmail].Drafts")
-                      (mu4e-sent-folder                                               . "/frederic/[Gmail].Sent Mail")
-                      (mu4e-refile-folder                                             . "/frederic/[Gmail].Starred")
-                      (mu4e-trash-folder                                              . "/frederic/[Gmail].Trash")
-                      (mu4e-maildir-shortcuts                                         . (list ( :maildir "/frederic/INBOX" :key ?i)
-                                                                                              ( :maildir "/frederic/[Gmail].All Mail"  :key ?a)
-                                                                                              ( :maildir "/frederic/[Gmail].Sent Mail"  :key ?S)
-                                                                                              ( :maildir "/frederic/[Gmail].Trash" :key ?t)
-                                                                                              ( :maildir "/frederic/[Gmail].Starred" :key ?s)) )
+    :config
+    (setq mu4e-context-policy 'pick-first)
+    (setq mu4e-compose-context-policy nil)
+    (setq mu4e-contexts
+          (list
+           ;; Work account
+           (make-mu4e-context
+            :name "frederic"
+            :match-func
+            (lambda (msg)
+              (when msg
+                (string-prefix-p "/frederic" (mu4e-message-field msg :maildir))))
+            :vars '((user-mail-address                                              . "frederic.willem@gmail.com")
+                    (user-full-name                                                 . "Frédéric Willem")
+                    (mu4e-drafts-folder                                             . "/frederic/[Gmail].Drafts")
+                    (mu4e-sent-folder                                               . "/frederic/[Gmail].Sent Mail")
+                    (mu4e-refile-folder                                             . "/frederic/[Gmail].Starred")
+                    (mu4e-trash-folder                                              . "/frederic/[Gmail].Trash")
+                    (mu4e-maildir-shortcuts                                         . (list ( :maildir "/frederic/INBOX" :key ?i)
+                                                                                            ( :maildir "/frederic/[Gmail].All Mail"  :key ?a)
+                                                                                            ( :maildir "/frederic/[Gmail].Sent Mail"  :key ?S)
+                                                                                            ( :maildir "/frederic/[Gmail].Trash" :key ?t)
+                                                                                            ( :maildir "/frederic/[Gmail].Starred" :key ?s)) )
 
-                      (mu4e-bookmarks                                                 . (( :name  "Unread messages"
-                                                                                           :query "maildir:/frederic/INBOX AND flag:unread AND NOT flag:trashed"
-                                                                                           :key ?u)
-                                                                                         ( :name  "All Unread messages"
-                                                                                           :query "maildir:/frederic/* AND flag:unread"
-                                                                                           :key ?U)
-                                                                                         ( :name "Important messages"
-                                                                                           :query "prio:high AND NOT flag:trashed AND NOT maildir:\"/frederic/[Gmail]/Sent mail\""
-                                                                                           :key ?i)
-                                                                                         ( :name "Today's messages"
-                                                                                           :query "maildir:/frederic/* AND date:today..now"
-                                                                                           :key ?t)
-                                                                                         ( :name "Last 7 days"
-                                                                                           :query "maildir:/frederic/* AND date:7d..now"
-                                                                                           :hide-unread t
-                                                                                           :key ?w)))))
+                    (mu4e-bookmarks                                                 . (( :name  "Unread messages"
+                                                                                         :query "maildir:/frederic/INBOX AND flag:unread AND NOT flag:trashed"
+                                                                                         :key ?u)
+                                                                                       ( :name  "All Unread messages"
+                                                                                         :query "maildir:/frederic/* AND flag:unread"
+                                                                                         :key ?U)
+                                                                                       ( :name "Important messages"
+                                                                                         :query "prio:high AND NOT flag:trashed AND NOT maildir:\"/frederic/[Gmail]/Sent mail\""
+                                                                                         :key ?i)
+                                                                                       ( :name "Today's messages"
+                                                                                         :query "maildir:/frederic/* AND date:today..now"
+                                                                                         :key ?t)
+                                                                                       ( :name "Last 7 days"
+                                                                                         :query "maildir:/frederic/* AND date:7d..now"
+                                                                                         :hide-unread t
+                                                                                         :key ?w)))))
 
-             ;; (make-mu4e-context
-             ;;  :name "maman"
-             ;;  :match-func
-             ;;  (lambda (msg)
-             ;;    (when msg
-             ;;      (string-prefix-p "/maman" (mu4e-message-field msg :maildir))))
-             ;;  :vars '((user-mail-address	    .	"michellelambert1202@gmail.com")
-             ;;          (user-full-name	    .	"Michelle Lambert")
-             ;;          (mu4e-refile-folder	    .	"/maman/[Gmail].Tous les messages")
-             ;;          (mu4e-trash-folder	    .	"/maman/[Gmail].Corbeille")
-             ;;          (mu4e-maildir-shortcuts .	(list
-             ;;                                         ( :maildir "/maman/INBOX" :key ?i)
-             ;;                                         ( :maildir "/maman/[Gmail].Tous les messages"  :key ?a)
-             ;;                                         ( :maildir "/maman/[Gmail].Messages envoy&AOk-s"  :key ?S)
-             ;;                                         ( :maildir "/maman/[Gmail].Corbeille" :key ?t)
-             ;;                                         ( :maildir "/maman/[Gmail].Suivis" :key ?s)))
-             ;;          (mu4e-bookmarks . nil)
+           ;; (make-mu4e-context
+           ;;  :name "maman"
+           ;;  :match-func
+           ;;  (lambda (msg)
+           ;;    (when msg
+           ;;      (string-prefix-p "/maman" (mu4e-message-field msg :maildir))))
+           ;;  :vars '((user-mail-address	    .	"michellelambert1202@gmail.com")
+           ;;          (user-full-name	    .	"Michelle Lambert")
+           ;;          (mu4e-refile-folder	    .	"/maman/[Gmail].Tous les messages")
+           ;;          (mu4e-trash-folder	    .	"/maman/[Gmail].Corbeille")
+           ;;          (mu4e-maildir-shortcuts .	(list
+           ;;                                         ( :maildir "/maman/INBOX" :key ?i)
+           ;;                                         ( :maildir "/maman/[Gmail].Tous les messages"  :key ?a)
+           ;;                                         ( :maildir "/maman/[Gmail].Messages envoy&AOk-s"  :key ?S)
+           ;;                                         ( :maildir "/maman/[Gmail].Corbeille" :key ?t)
+           ;;                                         ( :maildir "/maman/[Gmail].Suivis" :key ?s)))
+           ;;          (mu4e-bookmarks . nil)
 
-             ;;          ))
-             ))
-
-
-      (require 'mu4e-icalendar)
-      (mu4e-icalendar-setup)
-      (setq gnus-icalendar-org-capture-file "~/org/Inbox.org")
-      (setq gnus-icalendar-org-capture-headline '("Calendar"))
-      (setq gnus-icalendar-org-enabled-p t) ;; don't create capture template here
-      (setq mail-user-agent 'mu4e-user-agent)
-      (setq mu4e-confirm-quit nil)
-      (setq mu4e-get-mail-command "offlineimap")
-      (setq mu4e-completing-read-function 'completing-read)
-      ;; (setq mu4e-change-filenames-when-moving t)
-      (defun my-confirm-empty-subject ()
-        "Allow user to quit when current message subject is empty."
-        (or (message-field-value "Subject")
-            (yes-or-no-p "Really send without Subject? ")
-            (keyboard-quit)))
-
-      (add-hook 'message-send-hook #'my-confirm-empty-subject)
-      (setq sendmail-program (executable-find "msmtp")
-            send-mail-function #'smtpmail-send-it
-            message-sendmail-f-is-evil t
-            message-sendmail-extra-arguments '("--read-envelope-from")
-            message-send-mail-function #'message-send-mail-with-sendmail)
-      ;; don[t show buffer after sending
-      (setq message-kill-buffer-on-exit t)
-      (setq org-export-show-temporary-export-buffer nil)
-      ;; set a more visible mu4e view (with dark-mode enabled)
-      ;; (setq shr-color-visible-luminance-min 0)
-      (setq mu4e-update-interval 600)
-
-      (add-to-list 'org-capture-templates
-                   '("m" "Email Workflow"))
-      (add-to-list 'org-capture-templates
-                   '("mt" "Capture to task" entry
-                     (function capture-filename)
-                     "* REPLY to %:fromname in %a\n%i ")) ;; don't immdeiate-finsh want to be able to set a todo
-      ;; template to capture events
-      (add-to-list 'org-capture-templates
-                   '("#" "used by gnus-icalendar-org" entry
-                     (function capture-filename)
-                     "%i")) ;; don't immediate-finsh want to be able to set a todo
+           ;;          ))
+           ))
 
 
-      (setq mu4e-org-contacts-file "~/org/contacts.org")
-      (add-to-list 'mu4e-headers-actions
-                   '("org-contact-add" . mu4e-action-add-org-contact) t)
-      (add-to-list 'mu4e-view-actions
-                   '("org-contact-add" . mu4e-action-add-org-contact) t)
-      (mu4e t)
-      (mu4e-modeline-mode -1))
+    (require 'mu4e-icalendar)
+    (mu4e-icalendar-setup)
+    (setq gnus-icalendar-org-capture-file "~/org/Inbox.org")
+    (setq gnus-icalendar-org-capture-headline '("Calendar"))
+    (setq gnus-icalendar-org-enabled-p t) ;; don't create capture template here
+    (setq mail-user-agent 'mu4e-user-agent)
+    (setq mu4e-confirm-quit nil)
+    (setq mu4e-get-mail-command "offlineimap")
+    (setq mu4e-completing-read-function 'completing-read)
+    ;; (setq mu4e-change-filenames-when-moving t)
+    (defun my-confirm-empty-subject ()
+      "Allow user to quit when current message subject is empty."
+      (or (message-field-value "Subject")
+          (yes-or-no-p "Really send without Subject? ")
+          (keyboard-quit)))
+
+    (add-hook 'message-send-hook #'my-confirm-empty-subject)
+    (setq sendmail-program (executable-find "msmtp")
+          send-mail-function #'smtpmail-send-it
+          message-sendmail-f-is-evil t
+          message-sendmail-extra-arguments '("--read-envelope-from")
+          message-send-mail-function #'message-send-mail-with-sendmail)
+    ;; don[t show buffer after sending
+    (setq message-kill-buffer-on-exit t)
+    (setq org-export-show-temporary-export-buffer nil)
+    ;; set a more visible mu4e view (with dark-mode enabled)
+    ;; (setq shr-color-visible-luminance-min 0)
+    (setq mu4e-update-interval 600)
+
+    (add-to-list 'org-capture-templates
+                 '("m" "Email Workflow"))
+    (add-to-list 'org-capture-templates
+                 '("mt" "Capture to task" entry
+                   (function capture-filename)
+                   "* REPLY to %:fromname in %a\n%i ")) ;; don't immdeiate-finsh want to be able to set a todo
+    ;; template to capture events
+    (add-to-list 'org-capture-templates
+                 '("#" "used by gnus-icalendar-org" entry
+                   (function capture-filename)
+                   "%i")) ;; don't immediate-finsh want to be able to set a todo
+
+
+    (setq mu4e-org-contacts-file "~/org/contacts.org")
+    (add-to-list 'mu4e-headers-actions
+                 '("org-contact-add" . mu4e-action-add-org-contact) t)
+    (add-to-list 'mu4e-view-actions
+                 '("org-contact-add" . mu4e-action-add-org-contact) t)
+    (mu4e t)
+    (mu4e-modeline-mode -1))
 #+end_src
 
 *** Mu4e contrib

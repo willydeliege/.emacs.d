@@ -2762,3 +2762,9 @@ emacsclient --eval "(emacs-everywhere)"
   (use-package ripgrep)
  #+end_src
   
+** Chez-moi
+#+begin_src emacs-lisp
+  (use-package chezmoi
+    :bind (:map ctrl-z-map
+    ("m" . chezmoi-find)))
+#+end_src

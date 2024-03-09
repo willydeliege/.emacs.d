@@ -2664,20 +2664,21 @@ Setup ANSI colors for the compilation buffer
 #+end_src
 *** Automatic use of tree-sitter
 #+begin_src emacs-lisp
-(use-package treesit-auto
-  :hook (after-init . global-treesit-auto-mode)
-  :config
-  (setq treesit-auto-install 'prompt)
-  (setq my-java-tsauto-config
-        (make-treesit-auto-recipe
-         :lang 'java
-         :ts-mode 'java-ts-mode
-         :remap '(java-mode)
-         :url "https://github.com/tree-sitter/tree-sitter-java"
-         :revision "master"
-         :source-dir "src"))
+  (use-package treesit-auto
+    :disabled t
+    :hook (after-init . global-treesit-auto-mode)
+    :config
+    (setq treesit-auto-install 'prompt)
+    (setq my-java-tsauto-config
+          (make-treesit-auto-recipe
+           :lang 'java
+           :ts-mode 'java-ts-mode
+           :remap '(java-mode)
+           :url "https://github.com/tree-sitter/tree-sitter-java"
+           :revision "master"
+           :source-dir "src"))
 
-  (add-to-list 'treesit-auto-recipe-list my-java-tsauto-config))
+    (add-to-list 'treesit-auto-recipe-list my-java-tsauto-config))
 #+end_src
 
 *** Text object

@@ -292,7 +292,7 @@ Using [[https://github.com/radian-software/straight.el#getting-started][straight
 ** Line numbers
 #+begin_src emacs-lisp
 (use-feature display-line-numbers
-  :hook ((text-mode prog-mode) . display-line-numbers-mode)
+  :hook ((text-mode prog-mode conf-mode) . display-line-numbers-mode)
   :config
   (setq-default display-line-numbers-type 'relative
                 display-line-numbers-width 4))

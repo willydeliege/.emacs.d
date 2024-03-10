@@ -258,11 +258,15 @@ Using [[https://github.com/radian-software/straight.el#getting-started][straight
   (use-feature emacs
     :bind ("C-x C" . save-buffers-kill-emacs)
     :init
+    (global-hl-line-mode)
+    (global-visual-line-mode)
     (setq use-short-answers t)
     ;; (setq initial-major-mode 'org-mode)
     (require 'diary-lib)
     ;; utility keymapp
     (defvar ctrl-z-map (make-sparse-keymap))
+    (add-hook 'after-save-hook
+              'executable-make-buffer-file-executable-if-script-p)
     (global-set-key [(control ?z)] ctrl-z-map))
 #+end_src
 

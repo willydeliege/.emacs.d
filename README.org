@@ -605,6 +605,10 @@ see [[https://github.com/protesilaos/dotfiles/blob/master/emacs/.emacs.d/prot-em
     (which-key-mode))
 #+end_src
 
+** auto-mnormode
+#+begin_src emacs-lisp
+  (use-package auto-minor-mode)
+#+end_src
 * Org mode
 ** Org basics
 *** Org-mode
@@ -2771,6 +2775,13 @@ emacsclient --eval "(emacs-everywhere)"
 ** Chez-moi
 #+begin_src emacs-lisp
   (use-package chezmoi
+    :init
+    (add-to-list 'auto-minor-mode-alist '(".*chezmoi.*" . chezmoi-mode))
     :bind (:map ctrl-z-map
-    ("m" . chezmoi-find)))
+                ("m" . chezmoi-find)))
+#+end_src
+
+** Rainbow mode
+#+begin_src emacs-lisp
+  (use-package rainbow-mode)
 #+end_src

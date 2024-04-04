@@ -488,6 +488,7 @@ see [[https://github.com/protesilaos/dotfiles/blob/master/emacs/.emacs.d/prot-em
 ** meow
 #+begin_src emacs-lisp
   (use-package meow
+    :disabled t
     :hook (meow-mode . meow-org-note-insert)
     :init
     (defun meow-org-note-insert ()
@@ -592,13 +593,21 @@ see [[https://github.com/protesilaos/dotfiles/blob/master/emacs/.emacs.d/prot-em
     (meow-setup)
     (meow-global-mode 1))
 #+end_src
-
+** devil
+#+begin_src emacs-lisp
+  (use-package devil
+    :init
+    (global-set-key (kbd "C-,") 'devil-mode))
+#+end_src
 ** which-key 
 #+begin_src emacs-lisp
   (use-package which-key
+    :straight (:repo "wesnel/emacs-which-key")
     :init
     (setq which-key-side-window-max-height 17)
-    (which-key-mode))
+    (which-key-mode)
+    :config
+    (which-key-enable-devil-support))
 #+end_src
 
 ** auto-mnormode

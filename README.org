@@ -396,10 +396,11 @@ Better help buffer
 
 *** Meow-vterm
 #+begin_src emacs-lisp
-(use-package meow-vterm
-  :straight (meow-vterm :host github :repo "accelbread/meow-vterm")
-  :init
-  (meow-vterm-enable))
+  (use-package meow-vterm
+    :disabled t
+     :straight (meow-vterm :host github :repo "accelbread/meow-vterm")
+     :init
+     (meow-vterm-enable))
 #+end_src
 
 *** Vterm toggle
@@ -597,20 +598,46 @@ see [[https://github.com/protesilaos/dotfiles/blob/master/emacs/.emacs.d/prot-em
 #+begin_src emacs-lisp
   (use-package devil
     :init
+    ;; (global-devil-mode)
     (global-set-key (kbd "C-,") 'devil-mode))
+#+end_src
+** god mode
+#+begin_src emacs-lisp
+  (use-package god-mode
+    :init
+    (defun my-god-mode-update-cursor-type ()
+      (setq cursor-type (if (or god-local-mode buffer-read-only) 'box 'bar)))
+ 
+    (add-hook 'post-command-hook #'my-god-mode-update-cursor-type)
+    (require 'god-mode-isearch)
+    (define-key isearch-mode-map (kbd "<escape>") #'god-mode-isearch-activate)
+    (define-key god-mode-isearch-map (kbd "<escape>") #'god-mode-isearch-disable)
+
+    (god-mode)
+
+    (add-to-list 'god-exempt-major-modes 'notmuch-hello-mode)
+    (add-to-list 'god-exempt-major-modes 'notmuch-search-mode)
+    (add-to-list 'god-exempt-major-modes 'notmuch-show-mode)
+    (add-to-list 'god-exempt-major-modes 'notmuch-tree-mode)
+  
+    (global-set-key (kbd "<escape>") #'god-local-mode)
+
+    (define-key god-local-mode-map (kbd "[") #'backward-paragraph)
+    (define-key god-local-mode-map (kbd "]") #'forward-paragraph)
+    (define-key god-local-mode-map (kbd ".") #'repeat)
+    (define-key god-local-mode-map (kbd "i") #'god-local-mode))
 #+end_src
 ** which-key 
 #+begin_src emacs-lisp
   (use-package which-key
-    :straight (:repo "wesnel/emacs-which-key")
     :init
     (setq which-key-side-window-max-height 17)
     (which-key-mode)
     :config
-    (which-key-enable-devil-support))
+    (which-key-enable-god-mode-support))
 #+end_src
 
-** auto-mnormode
+** auto-minor-mode
 #+begin_src emacs-lisp
   (use-package auto-minor-mode)
 #+end_src
@@ -1167,11 +1194,6 @@ Distraction-free writing
   (use-package transient)
 
   (use-package magit
-    :bind (("C-M-g" . magit-status)
-           :map ctl-x-map
-           ("g" . magit-status)
-           :map project-prefix-map
-           ("m" . magit-project-status))
     :custom
     (magit-diff-refine-hunk 'all)
     (magit-define-global-key-bindings 'default)
@@ -1563,6 +1585,11 @@ Change light to dark theme according to the sunset/sunrise
            ("C-x 2" . switch-window-then-split-below)
            ("C-x 3" . switch-window-then-split-right)
            ("C-x 0"  . switch-window-then-delete)
+           ;; god-mode friendly
+           ("C-x C-1" . switch-window-then-maximize)
+           ("C-x C-2" . switch-window-then-split-below)
+           ("C-x C-3" . switch-window-then-split-right)
+           ("C-x C-0"  . switch-window-then-delete)
 
            ("C-x 4 d" . switch-window-then-dired)
            ("C-x 4 f" . switch-window-then-find-file)
@@ -1703,9 +1730,8 @@ Just install Hunspell and Hunspell-fr, Hunspell-en, ...
 (use-package jinx
   :unless my/using-android
   :hook (emacs-startup . global-jinx-mode)
-  :bind (("C-M-$" . jinx-languages)
-         :map meow-normal-state-keymap
-         ("$" . jinx-correct))
+  :bind (("M-$" . jinx-correct)
+         ("C-M-$" . jinx-languages))
   :init
   (setq jinx-languages "fr_FR en_US en_GB"))
 #+end_src
@@ -2429,6 +2455,7 @@ fancy markers
   (use-package notmuch
     :defer 1
     :bind (("<f5>" . notmuch-hello)
+           ("C-<f5>" . notmuch-hello)
            ("C-x m" . notmuch-mua-new-mail)
            :map notmuch-show-part-map
            ("h" . notmuch-show-view-html+))
@@ -2574,18 +2601,14 @@ Setup ANSI colors for the compilation buffer
 ** Java + Lsp
 #+begin_src emacs-lisp
 (use-package lsp-mode
-  :custom
-  (lsp-completion-provider :none) ;; we use Corfu!
   :init
-  ;; set prefix for lsp-command-keymap (few alternatives - "C-l", "C-c l")
   (setq lsp-keymap-prefix "C-c l")
-  (defun my/lsp-mode-setup-completion ()
-    (setf (alist-get 'styles (alist-get 'lsp-capf completion-category-defaults))
-          '(orderless))) ;; Configure orderless
   :hook (((java-mode java-ts-mode) . lsp)
          (lsp-completion-mode . my/lsp-mode-setup-completion))
   :commands lsp)
+#+end_src
 
+#+begin_src emacs-lisp
 (use-package lsp-java
   :config
   (setq lombok-library-path (concat user-emacs-directory "lombok.jar"))
@@ -2598,14 +2621,24 @@ Setup ANSI colors for the compilation buffer
   (push (concat "-javaagent:"
                 (expand-file-name lombok-library-path))
         lsp-java-vmargs))
+#+end_src
+
+#+begin_src emacs-lisp
 ;; optionally
 (use-package lsp-ui :commands lsp-ui-mode)
-(use-package lsp-treemacs :commands lsp-treemacs-errors-list)
+#+end_src
 
+#+begin_src emacs-lisp
+(use-package lsp-treemacs :commands lsp-treemacs-errors-list)
+#+end_src
+
+#+begin_src emacs-lisp
 ;; optionally if you want to use debugger
 (use-package dap-mode)
-;; (use-package dap-java :straight nil)
+#+end_src
 
+#+begin_src emacs-lisp
+(use-package dap-java :straight nil)
 #+end_src
 
 ** Haskell

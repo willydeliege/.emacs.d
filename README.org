@@ -2484,7 +2484,7 @@ fancy markers
                     value)))))
         (notmuch-show-view-part)))
     (setq sendmail-program "gmi")
-    (setq message-sendmail-extra-arguments '("send" "--quiet" "-t" "-C" "~/.mail/account.gmail"))
+    (setq message-sendmail-extra-arguments '("send" "--quiet" "-t" "-C" "~/.mail"))
     (setq send-mail-function 'sendmail-send-it)
     (setq message-send-mail-function 'message-send-mail-with-sendmail)
     (require 'notmuch-address)

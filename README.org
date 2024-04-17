@@ -24,7 +24,7 @@ Header for the config init.el file
 * Using straight properly with initiating in early-init.el
 ** early-init
 :PROPERTIES:
-:header-args: :tangle-mode o444 :results silent :tangle ~/.emacs.d/early-init.el
+:header-args: :tangle-mode o444 :results silent :tangle ~/.config/emacs/early-init.el
 :END:
 Emacs 27.0 introduced an early-init file. It allows customization before package and UI initialization.
 #+begin_src emacs-lisp :lexical t
@@ -289,7 +289,7 @@ Using [[https://github.com/radian-software/straight.el#getting-started][straight
     :config
     (setq recentf-max-menu-items 25)
     (setq recentf-max-saved-items 25)
-    (add-to-list 'recentf-exclude "~/.emacs.d/.cache/treemacs-persist")
+    (add-to-list 'recentf-exclude "~/.config/emacs/.cache/treemacs-persist")
     (add-to-list 'recentf-exclude "^.*\\.org_archive$"))
 #+end_src
 
@@ -486,121 +486,6 @@ see [[https://github.com/protesilaos/dotfiles/blob/master/emacs/.emacs.d/prot-em
 #+end_src
 
 * Keys
-** meow
-#+begin_src emacs-lisp
-  (use-package meow
-    :disabled t
-    :hook (meow-mode . meow-org-note-insert)
-    :init
-    (defun meow-org-note-insert ()
-      "Enter insert mode in org note buffer.
-      This is needed for minor modes"
-      (if
-          (or
-           (equal
-            (buffer-name)
-            "*Org Note*")
-           (equal
-            (buffer-name)
-            "COMMIT_EDITMSG"))
-          (meow-insert-mode)))
-    :config
-    (defun meow-setup ()
-      (setq meow-use-clipboard t
-            meow-select-on-change nil
-            meow-use-cursor-position-hack t
-            meow-use-enhanced-selection-effect t)  ;; optional, for visual effect
-      (add-to-list 'meow-mode-state-list '(mu4e-view-mode . motion))
-      (add-to-list 'meow-mode-state-list '(cfw:calendar-mode . motion))
-      (setcdr (assq 'vterm-mode meow-mode-state-list) 'insert)
-      (add-to-list 'meow-keypad-start-keys '(?z . ?z) t)
-      (dolist (state '((notmuch-hello-mode . motion)
-                       (notmuch-search-mode . motion)
-                       (notmuch-tree-mode . motion)
-                       (notmuch-show-mode . motion)))
-        (add-to-list 'meow-mode-state-list state))
-      (meow-leader-define-key
-       '("2" . meow-digit-argument)
-       '("3" . meow-digit-argument)
-       '("4" . meow-digit-argument)
-       '("5" . meow-digit-argument)
-       '("6" . meow-digit-argument)
-       '("7" . meow-digit-argument)
-       '("8" . meow-digit-argument)
-       '("9" . meow-digit-argument)
-       '("0" . meow-digit-argument))
-      (meow-normal-define-key
-       '("0" . meow-expand-0)
-       '("1" . meow-expand-1)
-       '("2" . meow-expand-2)
-       '("3" . meow-expand-3)
-       '("4" . meow-expand-4)
-       '("5" . meow-expand-5)
-       '("6" . meow-expand-6)
-       '("7" . meow-expand-7)
-       '("8" . meow-expand-8)
-       '("9" . meow-expand-9)
-       '("-" . negative-argument)
-       '(";" . meow-reverse)
-       '("," . meow-inner-of-thing)
-       '("." . meow-bounds-of-thing)
-       '("=" . format-all-region-or-buffer)
-       '("[" . meow-beginning-of-thing)
-       '("]" . meow-end-of-thing)
-       '("/" . meow-visit)
-       '("a" . meow-append)
-       '("A" . meow-open-below)
-       '("b" . meow-back-word)
-       '("B" . meow-back-symbol)
-       '("c" . meow-change)
-       '("d" . meow-delete)
-       '("e" . meow-prev)
-       '("E" . meow-prev-expand)
-       '("f" . meow-find)
-       '("g" . meow-cancel-selection)
-       '("G" . meow-grab)
-       '("h" . meow-left)
-       '("N" . meow-left-expand)
-       '("i" . meow-right)
-       '("I" . meow-right-expand)
-       '("j" . meow-join)
-       '("k" . meow-kill)
-       '("l" . meow-line)
-       '("L" . meow-goto-line)
-       '("m" . meow-mark-word)
-       '("M" . meow-mark-symbol)
-       '("n" . meow-next)
-       '("N" . meow-next-expand)
-       '("o" . meow-block)
-       '("O" . meow-to-block)
-       '("p" . meow-yank)
-       '("q" . meow-quit)
-       '("r" . meow-replace)
-       '("s" . meow-insert)
-       '("S" . meow-open-above)
-       '("t" . meow-till)
-       '("u" . meow-undo)
-       '("U" . meow-undo-in-selection)
-       '("v" . meow-search)
-       '("w" . meow-next-word)
-       '("W" . meow-next-symbol)
-       '("x" . meow-delete)
-       '("X" . meow-backward-delete)
-       '("y" . meow-save)
-       '("z" . meow-pop-selection)
-       '("'" . repeat)
-       '("_" . meow-universal-argument)
-       '("<escape>" . ignore)))
-    (meow-setup)
-    (meow-global-mode 1))
-#+end_src
-** devil
-#+begin_src emacs-lisp
-  (use-package devil
-    :init
-    ;; (global-devil-mode)
-    (global-set-key (kbd "C-,") 'devil-mode))
-#+end_src
 ** god mode
 #+begin_src emacs-lisp
   (use-package god-mode
@@ -2488,7 +2373,7 @@ fancy markers
     (setq send-mail-function 'sendmail-send-it)
     (setq message-send-mail-function 'message-send-mail-with-sendmail)
     (require 'notmuch-address)
-    (setq notmuch-address-command "~/.emacs.d/gook")
+    (setq notmuch-address-command "~/.config/emacs/gook")
     :config
     (add-to-list 'notmuch-tagging-keys '("t" ("+trash" "-inbox" "-unread") "Move to trash")))
 #+end_src
@@ -2728,7 +2613,7 @@ System-wide popup Emacs windows for quick edits
   (use-package emacs-everywhere)
 #+end_src
 To use it, assign to a shortcut
-#+begin_src shell :tangle ~/.emacs.d/everywhere.sh
+#+begin_src shell :tangle ~/.config/emacs/everywhere.sh
 #!/bin/bash
 
 emacsclient --eval "(emacs-everywhere)"

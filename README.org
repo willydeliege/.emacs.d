@@ -489,10 +489,11 @@ see [[https://github.com/protesilaos/dotfiles/blob/master/emacs/.emacs.d/prot-em
 ** god mode
 #+begin_src emacs-lisp
   (use-package god-mode
+    ;; :disabled t
     :init
     (defun my-god-mode-update-cursor-type ()
       (setq cursor-type (if (or god-local-mode buffer-read-only) 'box 'bar)))
- 
+
     (add-hook 'post-command-hook #'my-god-mode-update-cursor-type)
     (require 'god-mode-isearch)
     (define-key isearch-mode-map (kbd "<escape>") #'god-mode-isearch-activate)
@@ -504,7 +505,7 @@ see [[https://github.com/protesilaos/dotfiles/blob/master/emacs/.emacs.d/prot-em
     (add-to-list 'god-exempt-major-modes 'notmuch-search-mode)
     (add-to-list 'god-exempt-major-modes 'notmuch-show-mode)
     (add-to-list 'god-exempt-major-modes 'notmuch-tree-mode)
-  
+
     (global-set-key (kbd "<escape>") #'god-local-mode)
 
     (define-key god-local-mode-map (kbd "[") #'backward-paragraph)
@@ -551,9 +552,7 @@ see [[https://github.com/protesilaos/dotfiles/blob/master/emacs/.emacs.d/prot-em
     (org-agenda-restore-windows-after-quit t)
     (org-deadline-warning-days 5)
     (org-enforce-todo-dependencies t)
-    (org-refile-targets
-     '((org-agenda-files :maxlevel . 3)
-       ("~/org/20231208T101149--recettes.org" :maxlevel . 1)))
+
     :custom-face
     (org-agenda-date-weekend-today ((t (:inherit org-agenda-date
                                                  :underline t
@@ -615,27 +614,6 @@ see [[https://github.com/protesilaos/dotfiles/blob/master/emacs/.emacs.d/prot-em
                                      ("SCHEDULED:"  . "🪟") ; It's a window - not a plus sign in a box
                                      (":END:" . "🔚" ))))
     (setq org-directory "~/org/")
-    (defvar journal-file "~/org/journal.org")
-    (defun build-agenda ()
-      (interactive)
-      (setq org-agenda-files (directory-files org-directory nil ".*==project.*"))
-      (add-to-list 'org-agenda-files journal-file)
-      (add-to-list 'org-agenda-files "~/org/inbox.org"))
-    (defun my-org-agenda ()
-      (interactive)
-      (if (not org-agenda-files)
-          (build-agenda)))
-
-    (add-function :before after-focus-change-function 'build-agenda)
-    ;; Agenda Styling
-    (setq org-stuck-projects '("+Project/PROJ" ("NEXT" "WAIT" "MEETING" "HOLD") nil ""))
-    (setq  org-agenda-block-separator ?─
-           org-agenda-time-grid
-           '((daily today require-timed)
-             (800 1000 1200 1400 1600 1800 2000)
-             " ┄┄┄┄┄ " "┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄")
-           org-agenda-current-time-string
-           "⭠ now ─────────────────────────────────────────────────")
     (setq org-startup-indented t)
     (setq org-attach-store-link-p 'file)
     (org-babel-do-load-languages 'org-babel-load-languages
@@ -664,90 +642,36 @@ see [[https://github.com/protesilaos/dotfiles/blob/master/emacs/.emacs.d/prot-em
                                    ("L" "Protocol Link" entry
                                     (file+headline ,(concat org-directory "inbox.org") "Inbox")
                                     "* %? [[%:link][%:description]] \n Captured On: %U" :immediate-finish t)))
-    (defun capture-filename ()
-      "Select the project filename to capture to."
-      (interactive)
-      (let* ((completion-ignored-extensions '(".org_archive"))
-             (fpath (read-file-name "Project file name: "
-                                    "~/org/*==project*"
-                                    nil nil nil)))
-        (find-file fpath)
-        (goto-char (org-find-exact-headline-in-buffer "Tasks"))))
-    (add-to-list 'org-capture-templates
-                 '("t" "New [t]ask" entry
-                   (function capture-filename)
-                   "* TODO %?\n  %i"
-                   :jump-to-captured t))
-    (add-to-list 'org-capture-templates
-                 '("j" "[j]ournal entry" entry
-                   (file+olp+datetree journal-file)
-                   "*  %<%I:%M %p>: %? " :tree-type year))
+    
 
-    (defun my/archive-project ()
-      "Steps to archive a =project="
-      (let (
-            (org-enforce-todo-dependencies nil)
-            (org-capture-templates
-             '(("j" "journal" entry
-                (file+olp+datetree journal-file)
-                "* DONE %a\nCLOSED: %U\n%(org-paste-subtree 1)" :immediate-finish t :tree-type year))))
-        (org-map-entries (lambda ()
-                           (org-todo 'done)) nil 'tree)
-        (org-copy-subtree)
-        (denote-keywords-add '("ARCHIVE"))
-        (denote-keywords-remove)
-        (denote-rename-file-using-front-matter (buffer-file-name))
-        (org-capture nil "j")))
-    (defun make-archive()
-      "Only archive when Tasks heading get the ARCHIVE tag."
-      (when (and (member "ARCHIVE" (org-get-tags))
-                 (member "Tasks" (org-heading-components)))
-        (my/archive-project)))
-    (add-hook 'org-after-tags-change-hook
-              'make-archive)
-    (setq org-datetree-add-timestamp 'active)
-    (setq org-outline-path-complete-in-steps nil)         ; Refile in a single go
     (setq org-startup-folded 'show2levels)
-    (setq org-tag-alist '((:startgroup . nil)
-                          ("work" . ?w) ("family" . ?f)
-                          ("personal" . ?p)
-                          (:endgroup . nil)
-                          ("ARCHIVE" . ?a)))
-    (setq org-todo-keywords
-          '((sequence
-             "TODO(t)"  ; A task that needs doing & is ready to do
-             "NEXT(n)"  ; The nex task in to perform in the project
-             "MEETING"  ; Meeting
-             "WAIT(w@)"  ; Something external is holding up this task
-             "HOLD(h@)"  ; This task is paused/on hold because of me
-             "IDEA(i)"  ; An unconfirmed and unapproved task or notion
-             "|"
-             "CANCELLED(c)"
-             "DONE(d)")  ; Task successfully completed
-            (sequence
-             "PROJ(p)"  ; A project, which usually contains other tasks
-             "|"
-             "KILL(k)")
-            (sequence
-             "REPLY(r)"
-             "|"
-             "REPLIED(R)")))
-    (setq org-todo-keyword-faces
-          (quote (("TODO" :foreground "red" :weight bold)
-                  ("NEXT" :foreground "blue" :weight bold)
-                  ("WAITING" :foreground "orange" :weight bold)
-                  ("DONE" :foreground "forest green" :weight bold)
-                  ("HOLD" :foreground "magenta" :weight bold)
-                  ("CANCELLED" :foreground "forest green" :weight bold)
-                  ("MEETING" :foreground "forest green" :weight bold))))
+
     ;; make org-protocol available
     (require 'org-protocol)
-    (defun my/custom-agenda ()
-      "Open the agenda =z= view"
-      (interactive)
-      (my-org-agenda)
-      (org-agenda nil "z")
-      (delete-other-windows)))
+    )
+
+
+  #+end_src
+  
+  #+begin_src emacs-lisp
+    (use-package org-gtd
+      :after org
+      :demand t
+      :init
+      (setq org-gtd-update-ack "3.0.0")
+      (org-gtd-mode)
+      :custom
+      (org-gtd-directory "~/org/gtd")
+      (org-edna-use-inheritance t)
+      (org-gtd-organize-hooks '(org-gtd-set-area-of-focus org-set-tags-command))
+      :config
+      (org-edna-mode)
+      :bind
+      (("C-c c" . org-gtd-capture)
+       ("C-c d e" . org-gtd-engage)
+       ("C-c d p" . org-gtd-process-inbox)
+       :map org-gtd-clarify-map
+       ("C-c c" . org-gtd-organize)))
 #+end_src
 
 *** Org-contrib
@@ -761,6 +685,28 @@ see [[https://github.com/protesilaos/dotfiles/blob/master/emacs/.emacs.d/prot-em
     (require 'org-checklist))
 #+end_src
 
+#+begin_src emacs-lisp
+  (setq-default org-startup-indented t
+                org-pretty-entities t
+                org-use-sub-superscripts "{}"
+                org-hide-emphasis-markers t
+                org-startup-with-inline-images t
+                org-image-actual-width '(300))
+
+  ;; Show hidden emphasis markers
+  (use-package org-appear
+    :hook
+    (org-mode . org-appear-mode))
+  ;; Modernise Org mode interface
+  (use-package org-modern
+    :hook
+    (org-mode . global-org-modern-mode)
+    :custom
+    (org-modern-keyword nil)
+    (org-modern-checkbox nil)
+    (org-modern-table nil))
+
+#+end_src
 ** Org auto tangle
 #+begin_src emacs-lisp
 (use-package org-auto-tangle
@@ -768,69 +714,12 @@ see [[https://github.com/protesilaos/dotfiles/blob/master/emacs/.emacs.d/prot-em
   :hook (org-mode . org-auto-tangle-mode))
 #+end_src
 
-** Org-agenda
-*** org-super-agenda
+** COMMENT Org-agenda
+
 #+begin_src emacs-lisp
-  (use-package org-super-agenda
-    :defer 1
-    :straight (org-super-agenda :type git :flavor melpa :host github :repo "willydeliege/org-super-agenda")
-    :after org
-    :config
-    (org-super-agenda-mode)
-    (setq org-agenda-custom-commands
-          '(("z" "My view"
-             ((agenda "" ((org-agenda-span 2)
-                          (org-agenda-start-day "+0d")
-                          (org-super-agenda-groups
-                           '((:name ""
-                                    :time-grid t
-                                    :date today
-                                    :deadline today
-                                    :scheduled today)
-                             ;; :order 1)
-                             (:name "---------------------------------------------------------------------------------------" :anything)
-                             ;; (:discard (:anything))
-                             ))))
-              (alltodo "" ((org-agenda-overriding-header "")
-                           (org-super-agenda-groups
-                            '(;; Each group has an implicit boolean OR operator between its selectors.
-                              (:name "Important/Urgent"
-                                     :and (:deadline (before "+2d") :priority "A")
-                                     :and (:scheduled (before "+2d") :priority "A")
-                                     :face (:foreground "firebrick1"))
-                              (:name "Important/Not urgent"
-                                     :and (:deadline (after "+2d") :priority "A")
-                                     :and (:scheduled (after "+2d") :priority "A"))
-                              (:name "Passed deadline"
-                                     :and (:deadline past :todo ("TODO" "WAIT" "HOLD" "NEXT"))
-                                     :face (:foreground "#7f1b19"))
-                              (:scheduled past)
-                              (:scheduled future)
-                              (:priority<= "B"
-                                           ;; Show this section after "Today" and "Important", because
-                                           ;; their order is unspecified, defaulting to 0. Sections
-                                           ;; are displayed lowest-number-first.
-                                           :order 1)
-                              (:name "Meeting"
-                                     :todo "MEETING"
-                                     :order 7)
-                              (:name "Next"
-                                     :todo "NEXT"
-                                     :order 8)
-                              (:name "Waiting"
-                                     :todo "WAIT"
-                                     :order 9)
-                              (:name "On hold"
-                                     :todo "HOLD"
-                                     :order 10)
-                              (:discard (:todo "PROJ"))))))))))
-    (add-to-list 'org-agenda-custom-commands
-                 '("w" "Weekly review" agenda ""
-                   ((org-agenda-span 8)
-                    (org-agenda-start-day "-7d")
-                    (org-agenda-skip-archived-trees nil)
-                    (org-agenda-start-with-log-mode 'only)
-                    (org-agenda-log-mode-items '(state closed clock))))))
+    (use-feature org-agenda
+      :config
+      (setq org-agenda-files org-gtd-directory))
 #+end_src
 
 ** Olivetti
@@ -886,90 +775,6 @@ Distraction-free writing
 ** Org download
 #+begin_src emacs-lisp
 (use-package org-download :after org)
-#+end_src
-
-** Org ql
-#+begin_src emacs-lisp
-  (use-package org-ql
-    :after org-super-agenda
-    :custom
-    (org-ql-views
-     '(("Overview: Agenda-like" :buffers-files org-agenda-files :query
-        (and
-         (not
-          (done))
-         (or
-          (habit)
-          (deadline auto)
-          (scheduled :to today)
-          (ts-active :on today)))
-        :sort
-        (todo priority date)
-        :super-groups org-super-agenda-groups :title "Agenda-like")
-       ("Overview: NEXT tasks" :buffers-files org-agenda-files :query
-        (todo "NEXT")
-        :sort
-        (date priority)
-        :super-groups org-super-agenda-groups :title "Overview: NEXT tasks")
-       ("Calendar: Today" :buffers-files org-agenda-files :query
-        (ts-active :on today)
-        :title "Today" :super-groups org-super-agenda-groups :sort
-        (priority))
-       ("Calendar: This week" .
-        #[0 "\301 \302\303\304\305\304\306\304\307\310\301 \311\1!\10>\204\34\0\312\313\314\3D\"\210\211\315H\204\232\0\211\315\316\317\320\311\6\6!\10>\2048\0\312\313\314\6\10D\"\210\5\321H\204\223\0\5\321\311\6\10!\10>\210\6\7\322H\6\10\323H\6\11\324H\6\12\325H\6\13\326H\6\14\327H\5\203\215\0\4\203\215\0\3\203\215\0\2\203\215\0\1\203\215\0\211\203\215\0\330\331\6\7\6\7\6\7\6\7\6\7\6\7&\6!\266\206\202\221\0\330 \266\206I\210\5\321H\"!I\210\211\315H\262\1[\6\12#&\7\302\303\332\305\333\306\333\307\310\327\301 \311\1!\10>\204\300\0\312\313\314\3D\"\210\211\315H\204>\1\211\315\316\317\320\311\6\6!\10>\204\334\0\312\313\314\6\10D\"\210\5\321H\2047\1\5\321\311\6\10!\10>\210\6\7\322H\6\10\323H\6\11\324H\6\12\325H\6\13\326H\6\14\327H\5\2031\1\4\2031\1\3\2031\1\2\2031\1\1\2031\1\211\2031\1\330\331\6\7\6\7\6\7\6\7\6\7\6\7&\6!\266\206\2025\1\330 \266\206I\210\5\321H\"!I\210\211\315H\262\1Z\6\13#&\7\334\335 \336\337\5\340\6\6\257\5\341\342\343\344\345\346&\10\207"
-            [cl-struct-ts-tags ts-now ts-apply :hour 0 :minute :second ts-adjust day type-of signal wrong-type-argument ts 7 string-to-number format-time-string "%w" 17 3 2 1 4 5 6 float-time encode-time 23 59 org-ql-search org-agenda-files ts-active :from :to :title "This week" :super-groups org-super-agenda-groups :sort
-                               (priority)]
-            34 "Show items with an active timestamp during this calendar week." nil])
-       ("Calendar: Next week" .
-        #[0 "\301\302\303\304 #\305\306\307\310\307\311\307\301\302\304 \312\1!\10>\204 \0\313\314\315\3D\"\210\211\303H\204\236\0\211\303\316\317\320\312\6\6!\10>\204<\0\313\314\315\6\10D\"\210\5\321H\204\227\0\5\321\312\6\10!\10>\210\6\7\322H\6\10\323H\6\11\324H\6\12\325H\6\13\326H\6\14\327H\5\203\221\0\4\203\221\0\3\203\221\0\2\203\221\0\1\203\221\0\211\203\221\0\330\331\6\7\6\7\6\7\6\7\6\7\6\7&\6!\266\206\202\225\0\330 \266\206I\210\5\321H\"!I\210\211\303H\262\1[\6\12#&\7\305\306\332\310\333\311\333\301\302\327\304 \312\1!\10>\204\304\0\313\314\315\3D\"\210\211\303H\204B\1\211\303\316\317\320\312\6\6!\10>\204\340\0\313\314\315\6\10D\"\210\5\321H\204;\1\5\321\312\6\10!\10>\210\6\7\322H\6\10\323H\6\11\324H\6\12\325H\6\13\326H\6\14\327H\5\2035\1\4\2035\1\3\2035\1\2\2035\1\1\2035\1\211\2035\1\330\331\6\7\6\7\6\7\6\7\6\7\6\7&\6!\266\206\2029\1\330 \266\206I\210\5\321H\"!I\210\211\303H\262\1Z\6\13#&\7\334\335 \336\337\5\340\6\6\257\5\341\342\343\344\345\346&\10\207"
-            [cl-struct-ts-tags ts-adjust day 7 ts-now ts-apply :hour 0 :minute :second type-of signal wrong-type-argument ts string-to-number format-time-string "%w" 17 3 2 1 4 5 6 float-time encode-time 23 59 org-ql-search org-agenda-files ts-active :from :to :title "Next week" :super-groups org-super-agenda-groups :sort
-                               (priority)]
-            34 "Show items with an active timestamp during the next calendar week." nil])
-       ("Review: Recently timestamped" . org-ql-view-recent-items)
-       (#("Review: Dangling tasks" 0 22
-          (help-echo "Tasks whose ancestor is done"))
-        :buffers-files org-agenda-files :query
-        (and
-         (todo)
-         (ancestors
-          (done)))
-        :title
-        #("Review: Dangling tasks" 0 22
-          (help-echo "Tasks whose ancestor is done"))
-        :sort
-        (todo priority date)
-        :super-groups
-        ((:auto-parent t)))
-       (#("Review: Stale tasks" 0 19
-          (help-echo "Tasks without a timestamp in the past 2 weeks"))
-        :buffers-files org-agenda-files :query
-        (and
-         (ancestors
-          (todo "PROJ"))
-         (todo)
-         (not
-          (ts :from -14)))
-        :sort
-        (todo priority date)
-        :narrow nil :super-groups
-        ((:auto-parent t))
-        :title "Review: Stale tasks")
-       (#("Review: Stuck projects" 0 22
-          (help-echo "Tasks with sub-tasks but no NEXT sub-tasks"))
-        :buffers-files org-agenda-files :query
-        (and
-         (todo "PROJ")
-         (descendants
-          (todo))
-         (not
-          (descendants
-           (todo "NEXT"))))
-        :title
-        #("Review: Stuck projects" 0 22
-          (help-echo "Tasks with sub-tasks but no NEXT sub-tasks"))
-        :sort
-        (date priority)
-        :super-groups org-super-agenda-groups))))
 #+end_src
 
 ** Org crypt
@@ -1133,131 +938,156 @@ Used to play with forges like GitHub or gitlab
 ** Denote Protesilaos Stavrou
 
 #+begin_src emacs-lisp
-(use-package denote
-  :after org
-  :straight (:host sourcehut :repo "protesilaos/denote")
-  :hook (dired-mode . denote-dired-mode)
-  :bind (("C-c n n" . denote)
-         ("C-c n c" . denote-region) ; "contents" mnemonic
-         ("C-c n n" . denote-type)
-         ("C-c n d" . denote-date)
-         ("C-c n z" . denote-signature) ; "zettelkasten" mnemonic
-         ("C-c n s" . denote-subdirectory)
-         ("C-c n t" . denote-template)
-         ("C-c n r" . denote-rename-file)
-         ("C-c n R" . denote-rename-file-using-front-matter)
-         ("C-c n p" . my/find-project-files)
-         :map org-mode-map
-         ("C-c n i" . denote-link) ; "insert" mnemonic
-         ("C-c n I" . denote-add-links)
-         ("C-c n b" . denote-backlinks)
-         ("C-c n k a" . denote-keywords-add)
-         ("C-c n k r" . denote-keywords-remove)
-         ("C-c n f f" . denote-find-link)
-         ("C-c n f b" . denote-find-backlink)
-         ;; Key bindings specifically for Dired.
-         :map dired-mode-map
-         ("C-c C-d C-i" . denote-link-dired-marked-notes)
-         ("C-c C-d C-r" . denote-dired-rename-files)
-         ("C-c C-d C-k" . denote-dired-rename-marked-files-with-keywords)
-         ("C-c C-d C-R" . denote-dired-rename-marked-files-using-front-matter))
-  :init
-  (defun my/find-project-files()
-    "Open dired and select the projects files."
-    (interactive)
-    (dired "~/org/*==project*"))
-  :config
-  ;; Remember to check the doc strings of those variables.
-  (setq denote-directory org-directory)
-  (setq denote-known-keywords '("project" "family" "work" "personal" "archive"))
-  (setq denote-infer-keywords t)
-  (setq denote-sort-keywords t)
-  (setq denote-file-type nil) ; Org is the default, set others here
-  (setq denote-excluded-directories-regexp nil)
-  (setq denote-excluded-keywords-regexp nil)
-  (setq denote-prompts '(title keywords template signature))
+  (use-package denote
+    :after org
+        :hook (dired-mode . denote-dired-mode)
+    :bind (("C-c n n" . denote)
+           ("C-c n c" . denote-region) ; "contents" mnemonic
+           ("C-c n d" . denote-date)
+           ("C-c n z" . denote-signature) ; "zettelkasten" mnemonic
+           ("C-c n s" . denote-subdirectory)
+           ("C-c n t" . denote-template)
+           ("C-c n r" . denote-rename-file)
+           ("C-c n R" . denote-rename-file-using-front-matter)
+           :map org-mode-map
+           ("C-c n i" . denote-link) ; "insert" mnemonic
+           ("C-c n I" . denote-add-links)
+           ("C-c m D" . denote-org-dblock-insert-links)
+           ("C-c n b" . denote-backlinks)
+           ("C-c n k a" . denote-keywords-add)
+           ("C-c n k r" . denote-keywords-remove)
+           ("C-c n f f" . denote-find-link)
+           ("C-c n f b" . denote-find-backlink)
+           ;; Key bindings specifically for Dired.
+           :map dired-mode-map
+           ("C-c C-d C-i" . denote-link-dired-marked-notes)
+           ("C-c C-d C-r" . denote-dired-rename-files)
+           ("C-c C-d C-k" . denote-dired-rename-marked-files-with-keywords)
+           ("C-c C-d C-R" . denote-dired-rename-marked-files-using-front-matter))
+    :init
+    (defun my/find-project-files()
+      "Open dired and select the projects files."
+      (interactive)
+      (dired "~/org/*==project*"))
+    :config
+    ;; Remember to check the doc strings of those variables.
+    (setq denote-directory org-directory)
+    (setq denote-known-keywords '("project" "family" "work" "personal" "archive"))
+    (setq denote-infer-keywords t)
+    (setq denote-sort-keywords t)
+    (setq denote-file-type nil) ; Org is the default, set others here
+    (setq denote-excluded-directories-regexp nil)
+    (setq denote-excluded-keywords-regexp nil)
+    (setq denote-prompts '(title keywords template signature))
 
-  ;; Pick dates, where relevant, with Org's advanced interface:
-  (setq denote-date-prompt-use-org-read-date t)
+    ;; Pick dates, where relevant, with Org's advanced interface:
+    (setq denote-date-prompt-use-org-read-date t)
 
 
-  ;; Read this manual for how to specify `denote-templates'.  We do not
-  ;; include an example here to avoid potential confusion.
+    ;; Read this manual for how to specify `denote-templates'.  We do not
+    ;; include an example here to avoid potential confusion.
 
-  (setq denote-templates
-        '((empty . "")
-          (project .  "#+category: TO_FILL\n\n\n* Objective/Goals\n* Brainstorming\n* PROJ Tasks\n** TODO initial task\n* Communication\n* Dates\n* Notes\n* Reference material\n")))
+    (setq denote-templates
+          '((empty . "")
+            (project .  "#+category: TO_FILL\n\n\n* Objective/Goals\n* Brainstorming\n* PROJ Tasks\n** TODO initial task\n* Communication\n* Dates\n* Notes\n* Reference material\n")))
 
-  (setq denote-date-format nil) ; read doc string
-  (defun my-denote-org-extract-subtree (&optional silo)
-    "Create new Denote note using current Org subtree.
-   Make the new note use the Org file type, regardless of the value
-   of `denote-file-type'.
+    (setq denote-date-format nil) ; read doc string
+    (defun my-denote-org-extract-subtree (&optional silo)
+      "Create new Denote note using current Org subtree.
+     Make the new note use the Org file type, regardless of the value
+     of `denote-file-type'.
 
-   With an optional SILO argument as a prefix (\\[universal-argument]),
-   ask user to select a SILO from `my-denote-silo-directories'.
+     With an optional SILO argument as a prefix (\\[universal-argument]),
+     ask user to select a SILO from `my-denote-silo-directories'.
 
-   Use the subtree title as the note's title.  If available, use the
-   tags of the heading are used as note keywords.
+     Use the subtree title as the note's title.  If available, use the
+     tags of the heading are used as note keywords.
 
-   Delete the original subtree."
-    (interactive
-     (list (when current-prefix-arg
-             (completing-read "Select a silo: " my-denote-silo-directories nil t))))
-    (if-let ((text (org-get-entry))
-             (heading (org-get-heading :no-tags :no-todo :no-priority :no-comment)))
-        (let ((element (org-element-at-point))
-              (tags (org-get-tags))
-              (denote-user-enforced-denote-directory silo))
-          (delete-region (org-entry-beginning-position)
-                         (save-excursion (org-end-of-subtree t) (point)))
-          (denote heading
-                  tags
-                  'org
-                  nil
-                  (or
-                   ;; Check PROPERTIES drawer for :created: or :date:
-                   (org-element-property :CREATED element)
-                   (org-element-property :DATE element)
-                   ;; Check the subtree for CLOSED
-                   (org-element-property :raw-value
-                                         (org-element-property :closed element))))
-          (insert text))
-      (user-error "No subtree to extract; aborting")))
+     Delete the original subtree."
+      (interactive
+       (list (when current-prefix-arg
+               (completing-read "Select a silo: " my-denote-silo-directories nil t))))
+      (if-let ((text (org-get-entry))
+               (heading (org-get-heading :no-tags :no-todo :no-priority :no-comment)))
+          (let ((element (org-element-at-point))
+                (tags (org-get-tags))
+                (denote-user-enforced-denote-directory silo))
+            (delete-region (org-entry-beginning-position)
+                           (save-excursion (org-end-of-subtree t) (point)))
+            (denote heading
+                    tags
+                    'org
+                    nil
+                    (or
+                     ;; Check PROPERTIES drawer for :created: or :date:
+                     (org-element-property :CREATED element)
+                     (org-element-property :DATE element)
+                     ;; Check the subtree for CLOSED
+                     (org-element-property :raw-value
+                                           (org-element-property :closed element))))
+            (insert text))
+        (user-error "No subtree to extract; aborting")))
 
-  ;; By default, we do not show the context of links.  We just display
-  ;; file names.  This provides a more informative view.
-  (setq denote-backlinks-show-context t)
+    ;; By default, we do not show the context of links.  We just display
+    ;; file names.  This provides a more informative view.
+    (setq denote-backlinks-show-context t)
 
-  ;; Also see `denote-link-backlinks-display-buffer-action' which is a bit
-  ;; advanced.
+    ;; Also see `denote-link-backlinks-display-buffer-action' which is a bit
+    ;; advanced.
 
-  ;; If you use Markdown or plain text files (Org renders links as buttons
-  ;; right away)
-  (add-hook 'find-file-hook #'denote-link-buttonize-buffer)
+    ;; If you use Markdown or plain text files (Org renders links as buttons
+    ;; right away)
+    (add-hook 'find-file-hook #'denote-link-buttonize-buffer)
 
-  ;; We use different ways to specify a path for demo purposes.
-  (setq denote-dired-directories
-        (list denote-directory
-              (thread-last denote-directory (expand-file-name "attachments"))
-              ;; (expand-file-name "~/Documents/books")
-              ))
-
-
-  ;; Automatically rename Denote buffers using the `denote-rename-buffer-format'.
-  (denote-rename-buffer-mode 1)
+    ;; We use different ways to specify a path for demo purposes.
+    (setq denote-dired-directories
+          (list denote-directory
+                (thread-last denote-directory (expand-file-name "attachments"))
+                ;; (expand-file-name "~/Documents/books")
+                ))
 
 
-  (setq denote-org-capture-specifiers "%l\n%i\n%?")
-
-  ;; Also check the commands `denote-link-after-creating',
-  ;; `denote-link-or-create'.  You may want to bind them to keys as well.
+    ;; Automatically rename Denote buffers using the `denote-rename-buffer-format'.
+    (denote-rename-buffer-mode 1)
 
 
-  ;; If you want to have Denote commands available via a right click
-  ;; context menu, use the following and then enable
-  ;; `context-menu-mode'.
-  (add-hook 'context-menu-functions #'denote-context-menu))
+    (setq denote-org-capture-specifiers "%l\n%i\n%?")
+
+    ;; Also check the commands `denote-link-after-creating',
+    ;; `denote-link-or-create'.  You may want to bind them to keys as well.
+
+
+    ;; If you want to have Denote commands available via a right click
+    ;; context menu, use the following and then enable
+    ;; `context-menu-mode'.
+    (add-hook 'context-menu-functions #'denote-context-menu))
+#+end_src
+
+#+begin_src emacs-lisp
+(use-package denote-explore
+    :custom
+    ;; Where to store network data and in which format
+    (denote-explore-network-format 'graphviz)
+    :bind
+    (;; Statistics
+     ("C-c w e c" . denote-explore-count-notes)
+     ("C-c w e C" . denote-explore-count-keywords)
+     ("C-c w e b" . denote-explore-keywords-barchart)
+     ("C-c w e x" . denote-explore-extensions-barchart)
+     ;; Random walks
+     ("C-c w e r" . denote-explore-random-note)
+     ("C-c w e l" . denote-explore-random-link)
+     ("C-c w e k" . denote-explore-random-keyword)
+     ;; Denote Janitor
+     ("C-c w e d" . denote-explore-identify-duplicate-notes)
+     ("C-c w e z" . denote-explore-zero-keywords)
+     ("C-c w e s" . denote-explore-single-keywords)
+     ("C-c w e o" . denote-explore-sort-keywords)
+     ("C-c w e r" . denote-explore-rename-keywords)
+     ;; Visualise denote
+     ("C-c w e n" . denote-explore-network)
+     ("C-c w e v" . denote-explore-network-regenerate)
+     ("C-c w e D" . denote-explore-degree-barchart)))
 #+end_src
 
 ** Org-roam
@@ -2061,7 +1891,6 @@ Emacs completion style that matches multiple regexps in any order
  
 #+end_src
 
-  
 * Projects
 ** Project.el
 #+begin_src emacs-lisp
@@ -2388,7 +2217,11 @@ fancy markers
           notmuch-indicator-force-refresh-commands '(notmuch-refresh-this-buffer))
     (notmuch-indicator-mode 1))
 #+end_src
-*** Notmuch addressee completion
+*** Notmuch org link
+#+begin_src emacs-lisp
+  (use-package ol-notmuch
+    :demand t)
+#+end_src
 * Calendars
 ** Calendar
 #+begin_src emacs-lisp

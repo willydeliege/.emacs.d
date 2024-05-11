@@ -822,6 +822,7 @@ Distraction-free writing
     :hook (dired-mode . dired-hide-details-mode)
     :hook (dired-mode . dired-omit-mode)
     :custom
+    (dired-dwim-target t)
     (dired-create-destination-dirs 'ask)
     :init
     (require 'dired-x)
@@ -1494,6 +1495,7 @@ marginalia adds annotations in the mini buffer
 #+begin_src emacs-lisp
   (use-package vertico
     :hook (after-init . vertico-mode)
+    :hook (rfn-eshadow-update-overlay . vertico-directory-tidy)
     :bind (:map vertico-map
                 ("?"	.	minibuffer-completion-help)
                 ("M-RET"	.	minibuffer-complete)
@@ -1501,7 +1503,10 @@ marginalia adds annotations in the mini buffer
                 ("C-h"	.	backward-kill-word))
     :custom
     (vertico-cycle t))
-  (use-feature savehist
+  #+end_src
+  
+  #+begin_src emacs-lisp
+   (use-feature savehist
     :hook (after-init . savehist-mode))
   #+end_src
 

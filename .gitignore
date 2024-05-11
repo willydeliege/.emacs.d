@@ -62,4 +62,4 @@ image-dired/
 /diary
 /%backup%~
 /.mc-lists.el
-*.sh
+

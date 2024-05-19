@@ -539,7 +539,6 @@ see [[https://github.com/protesilaos/dotfiles/blob/master/emacs/.emacs.d/prot-em
            ("C-c a"               . org-agenda)
            :map ctrl-z-map
            ("z"               . org-capture)
-           ("a"               . my/custom-agenda)
            :map org-mode-map
            ("C-c &"               . nil)
            ("C-<return>"          . org-insert-subheading)

@@ -2179,6 +2179,7 @@ fancy markers
            :map notmuch-show-part-map
            ("h" . notmuch-show-view-html+))
     :custom
+    (notmuch-multipart/alternative-discouraged '("text/plain" "multipart/related"))
     (notmuch-archive-tags '("-inbox" "-unread"))
     (notmuch-saved-searches
      '((:name "inbox" :query "tag:inbox" :key "i")

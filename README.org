@@ -2209,7 +2209,12 @@ fancy markers
     (require 'notmuch-address)
     (setq notmuch-address-command "~/.config/emacs/gook")
     :config
-    (add-to-list 'notmuch-tagging-keys '("t" ("+trash" "-inbox" "-unread") "Move to trash")))
+    (setq notmuch-tagging-keys '(("t" ("+trash" "-inbox" "-unread") "Move to trash")
+                                 ("a" notmuch-archive-tags "Archive")
+                                 ("u" notmuch-show-mark-read-tags "Mark read")
+                                 ("f" ("+flagged") "Flag")
+                                 ("s" ("+spam" "-inbox" "-unread") "Mark as spam")
+                                 ("d" ("+deleted" "-inbox") "Delete"))))
 #+end_src
 *** Notmuch-indicator
 #+begin_src emacs-lisp

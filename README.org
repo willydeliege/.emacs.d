@@ -488,30 +488,30 @@ see [[https://github.com/protesilaos/dotfiles/blob/master/emacs/.emacs.d/prot-em
 * Keys
 ** god mode
 #+begin_src emacs-lisp
-  (use-package god-mode
-    ;; :disabled t
-    :init
-    (defun my-god-mode-update-cursor-type ()
-      (setq cursor-type (if (or god-local-mode buffer-read-only) 'box 'bar)))
+    (use-package god-mode
+      ;; :disabled t
+      :init
+      (defun my-god-mode-update-cursor-type ()
+        (setq cursor-type (if (or god-local-mode buffer-read-only) 'box 'bar)))
 
-    (add-hook 'post-command-hook #'my-god-mode-update-cursor-type)
-    (require 'god-mode-isearch)
-    (define-key isearch-mode-map (kbd "<escape>") #'god-mode-isearch-activate)
-    (define-key god-mode-isearch-map (kbd "<escape>") #'god-mode-isearch-disable)
+      (add-hook 'post-command-hook #'my-god-mode-update-cursor-type)
+      (require 'god-mode-isearch)
+      (define-key isearch-mode-map (kbd "<escape>") #'god-mode-isearch-activate)
+      (define-key god-mode-isearch-map (kbd "<escape>") #'god-mode-isearch-disable)
+      (god-mode)
 
-    (god-mode)
+      (add-to-list 'god-exempt-major-modes 'notmuch-hello-mode)
+      (add-to-list 'god-exempt-major-modes 'notmuch-search-mode)
+      (add-to-list 'god-exempt-major-modes 'notmuch-show-mode)
+      (add-to-list 'god-exempt-major-modes 'notmuch-tree-mode)
 
-    (add-to-list 'god-exempt-major-modes 'notmuch-hello-mode)
-    (add-to-list 'god-exempt-major-modes 'notmuch-search-mode)
-    (add-to-list 'god-exempt-major-modes 'notmuch-show-mode)
-    (add-to-list 'god-exempt-major-modes 'notmuch-tree-mode)
+      (global-set-key (kbd "<escape>") #'god-local-mode)
+      (global-set-key (kbd "M-]") #'god-local-mode)
 
-    (global-set-key (kbd "<escape>") #'god-local-mode)
-
-    (define-key god-local-mode-map (kbd "[") #'backward-paragraph)
-    (define-key god-local-mode-map (kbd "]") #'forward-paragraph)
-    (define-key god-local-mode-map (kbd ".") #'repeat)
-    (define-key god-local-mode-map (kbd "i") #'god-local-mode))
+      (define-key god-local-mode-map (kbd "[") #'backward-paragraph)
+      (define-key god-local-mode-map (kbd "]") #'forward-paragraph)
+      (define-key god-local-mode-map (kbd ".") #'repeat)
+      (define-key god-local-mode-map (kbd "i") #'god-local-mode))
 #+end_src
 ** which-key 
 #+begin_src emacs-lisp
@@ -2493,6 +2493,7 @@ emacsclient --eval "(emacs-everywhere)"
 ** Chez-moi
 #+begin_src emacs-lisp
   (use-package chezmoi
+    :demand t
     :init
     (add-to-list 'auto-minor-mode-alist '(".*chezmoi.*" . chezmoi-mode))
     :bind (:map ctrl-z-map

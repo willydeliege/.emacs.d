@@ -112,7 +112,7 @@ The following is a table shows values from popular Emacs configurations.
      (when (boundp 'after-focus-change-function)
        (add-function :after after-focus-change-function #'+gc-after-focus-change)))))
 
-(with-eval-after-load 'straight
+(with-eval-after-load 'straghit
   (add-hook 'after-init-hook '+reset-init-values))
 #+end_src
 
@@ -202,8 +202,9 @@ Using [[https://github.com/radian-software/straight.el#getting-started][straight
 ** USE-PACKAGE
 *** We will use use-package
 #+begin_src emacs-lisp
-
-(straight-use-package 'use-package)
+  (add-to-list 'load-path "/usr/share/emacs/site-lisp/org")
+  (straight-use-package '(org :type built-in))
+  (straight-use-package 'use-package)
 
 #+end_src
 *** and use straight by default
@@ -488,30 +489,31 @@ see [[https://github.com/protesilaos/dotfiles/blob/master/emacs/.emacs.d/prot-em
 * Keys
 ** god mode
 #+begin_src emacs-lisp
-    (use-package god-mode
-      ;; :disabled t
-      :init
-      (defun my-god-mode-update-cursor-type ()
-        (setq cursor-type (if (or god-local-mode buffer-read-only) 'box 'bar)))
+  (use-package god-mode
+    ;; :disabled t
+    :init
+    (defun my-god-mode-update-cursor-type ()
+      (setq cursor-type (if (or god-local-mode buffer-read-only) 'box 'bar)))
 
-      (add-hook 'post-command-hook #'my-god-mode-update-cursor-type)
-      (require 'god-mode-isearch)
-      (define-key isearch-mode-map (kbd "<escape>") #'god-mode-isearch-activate)
-      (define-key god-mode-isearch-map (kbd "<escape>") #'god-mode-isearch-disable)
-      (god-mode)
+    (add-hook 'post-command-hook #'my-god-mode-update-cursor-type)
+    (require 'god-mode-isearch)
+    (define-key isearch-mode-map (kbd "<escape>") #'god-mode-isearch-activate)
+    (define-key god-mode-isearch-map (kbd "<escape>") #'god-mode-isearch-disable)
+    (god-mode)
 
-      (add-to-list 'god-exempt-major-modes 'notmuch-hello-mode)
-      (add-to-list 'god-exempt-major-modes 'notmuch-search-mode)
-      (add-to-list 'god-exempt-major-modes 'notmuch-show-mode)
-      (add-to-list 'god-exempt-major-modes 'notmuch-tree-mode)
+    (add-to-list 'god-exempt-major-modes 'notmuch-hello-mode)
+    (add-to-list 'god-exempt-major-modes 'notmuch-search-mode)
+    (add-to-list 'god-exempt-major-modes 'notmuch-show-mode)
+    (add-to-list 'god-exempt-major-modes 'notmuch-tree-mode)
+    (add-to-list 'god-exempt-major-modes 'vterm-mode)
 
-      (global-set-key (kbd "<escape>") #'god-local-mode)
-      (global-set-key (kbd "M-]") #'god-local-mode)
+    (global-set-key (kbd "<escape>") #'god-local-mode)
+    (global-set-key (kbd "M-]") #'god-local-mode)
 
-      (define-key god-local-mode-map (kbd "[") #'backward-paragraph)
-      (define-key god-local-mode-map (kbd "]") #'forward-paragraph)
-      (define-key god-local-mode-map (kbd ".") #'repeat)
-      (define-key god-local-mode-map (kbd "i") #'god-local-mode))
+    (define-key god-local-mode-map (kbd "[") #'backward-paragraph)
+    (define-key god-local-mode-map (kbd "]") #'forward-paragraph)
+    (define-key god-local-mode-map (kbd ".") #'repeat)
+    (define-key god-local-mode-map (kbd "i") #'god-local-mode))
 #+end_src
 ** which-key 
 #+begin_src emacs-lisp
@@ -532,7 +534,6 @@ see [[https://github.com/protesilaos/dotfiles/blob/master/emacs/.emacs.d/prot-em
 *** Org-mode
 #+begin_src emacs-lisp
   (use-package org
-    :straight (:type built-in)
     :hook (org-mode                . my/prettify)
     ;; :hook (server-after-make-frame . my/custom-agenda)
     :bind (("C-c l"               . org-store-link)
@@ -1249,7 +1250,7 @@ Change light to dark theme according to the sunset/sunrise
   (setq calendar-location-name "Saint-Nicolas, BE"
         calendar-latitude 50.628
         calendar-longitude 5.516)
-  (change-theme 'ef-duo-light 'ef-duo-dark))
+  (change-theme 'ef-duo-dark 'ef-duo-dark))
 #+end_src
 
 ** Icons

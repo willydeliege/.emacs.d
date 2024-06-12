@@ -1475,7 +1475,6 @@ marginalia adds annotations in the mini buffer
            ;; M-s bindings in `search-map'
            ("M-s d" . consult-fd)
            ("M-s c" . consult-locate)
-           ("M-s g" . consult-git-grep)
            ("M-s r" . consult-ripgrep)
            ("M-s l" . consult-line)
            ("M-s L" . consult-line-multi)

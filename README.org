@@ -24,7 +24,7 @@ Header for the config init.el file
 * Using straight properly with initiating in early-init.el
 ** early-init
 :PROPERTIES:
-:header-args: :tangle-mode o444 :results silent :tangle ~/.config/emacs/early-init.el
+:header-args: :tangle-mode o444 :results silent :tangle ~/.emacs.d/early-init.el
 :END:
 Emacs 27.0 introduced an early-init file. It allows customization before package and UI initialization.
 #+begin_src emacs-lisp :lexical t
@@ -288,7 +288,7 @@ Using [[https://github.com/radian-software/straight.el#getting-started][straight
     :config
     (setq recentf-max-menu-items 25)
     (setq recentf-max-saved-items 25)
-    (add-to-list 'recentf-exclude "~/.config/emacs/.cache/treemacs-persist")
+    (add-to-list 'recentf-exclude "~/.emacs.d/.cache/treemacs-persist")
     (add-to-list 'recentf-exclude "^.*\\.org_archive$"))
 #+end_src
 
@@ -2366,7 +2366,7 @@ fancy markers
     (setq send-mail-function 'sendmail-send-it)
     (setq message-send-mail-function 'message-send-mail-with-sendmail)
     (require 'notmuch-address)
-    (setq notmuch-address-command "~/.config/emacs/gook")
+    (setq notmuch-address-command "~/.emacs.d/gook")
     :config
     (setq notmuch-tagging-keys '(("t" ("+trash" "-inbox" "-unread") "Move to trash")
                                  ("a" notmuch-archive-tags "Archive")
@@ -2615,7 +2615,7 @@ System-wide popup Emacs windows for quick edits
   (use-package emacs-everywhere)
 #+end_src
 To use it, assign to a shortcut
-#+begin_src shell :tangle ~/.config/emacs/everywhere.sh
+#+begin_src shell :tangle ~/.emacs.d/everywhere.sh
 #!/bin/bash
 
 emacsclient --eval "(emacs-everywhere)"

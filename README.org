@@ -1443,6 +1443,9 @@ marginalia adds annotations in the mini buffer
     :hook
     (embark-collect-mode . consult-preview-at-point-mode))
   ;; Example configuration for Consult
+  #+end_src
+  
+  #+begin_src emacs-lisp
   (use-package consult
     ;; Replace bindings. Lazily loaded due by `use-package'.
     :bind (;; C-c bindings in `mode-specific-map'

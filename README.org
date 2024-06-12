@@ -313,7 +313,7 @@ Using [[https://github.com/radian-software/straight.el#getting-started][straight
 #+begin_src emacs-lisp
 (display-battery-mode 1)
 (setq browse-url-browser-function 'browse-url-generic
-      browse-url-generic-program "brave")
+      browse-url-generic-program "firefox")
 (defvar my/uname (shell-command-to-string "uname -a"))
 (global-prettify-symbols-mode)
 (defun delete-visited-file (buffer-name)
